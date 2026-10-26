@@ -121,10 +121,10 @@ void main() {
     const String demoProjectId = 'demo-project-id';
     const String expectedName = demoProjectId;
     const FirebaseOptions expectedOptions = FirebaseOptions(
-      apiKey: '12345',
+      apiKey: 'ADemoProjectApiKey000000000000000000000',
       // Flutter tests use android as the default platform.
       appId: '1:1:android:1',
-      messagingSenderId: '',
+      messagingSenderId: '1',
       projectId: demoProjectId,
     );
 

@@ -30,7 +30,10 @@ final class LoadBundleStreamHandler: NSObject, FlutterStreamHandler {
   func onListen(withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink)
     -> FlutterError?
   {
-    task = firestore.loadBundle(bundle.data) { _, error in
+    // Observers only see updates made after they are added, so a bundle that
+    // finishes loading first would never report success and the Dart stream
+    // would never close. The completion handler reports the final snapshot.
+    task = firestore.loadBundle(bundle.data) { snapshot, error in
       if let error {
         let (code, message) = FirebaseFirestoreUtils.errorCodeAndMessage(from: error)
         DispatchQueue.main.async {
@@ -43,12 +46,16 @@ final class LoadBundleStreamHandler: NSObject, FlutterStreamHandler {
             )
           )
         }
+      } else {
+        DispatchQueue.main.async {
+          events(snapshot)
+        }
       }
     }
 
     task?.addObserver { progress in
       DispatchQueue.main.async {
-        if progress.state != .error {
+        if progress.state == .inProgress {
           events(progress)
         }
       }

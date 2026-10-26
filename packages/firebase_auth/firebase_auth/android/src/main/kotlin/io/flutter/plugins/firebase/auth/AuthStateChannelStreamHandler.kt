@@ -20,9 +20,9 @@ class AuthStateChannelStreamHandler(private val firebaseAuth: FirebaseAuth) : St
     val initialAuthState = AtomicBoolean(true)
 
     authStateListener =
-        FirebaseAuth.AuthStateListener { auth ->
-          if (initialAuthState.get()) {
-            initialAuthState.set(false)
+        FirebaseAuth.AuthStateListener { auth: FirebaseAuth ->
+          // Forward a null first callback after sign-out before subscription.
+          if (initialAuthState.getAndSet(false) && auth.currentUser != null) {
             return@AuthStateListener
           }
 

@@ -127,6 +127,73 @@ void main() {
         ),
       );
     });
+
+    test('with a blocked prompt omitting safetyRatings (AI-3)', () {
+      const response = '''
+{
+  "promptFeedback": {
+    "blockReason": "PROHIBITED_CONTENT"
+  }
+}
+''';
+      final decoded = jsonDecode(response) as Object;
+      final generateContentResponse =
+          DeveloperSerialization().parseGenerateContentResponse(decoded);
+      expect(generateContentResponse.promptFeedback, isNotNull);
+      expect(
+        generateContentResponse.promptFeedback!.blockReason?.toString(),
+        'prohibitedContent',
+      );
+      expect(generateContentResponse.promptFeedback!.safetyRatings, isEmpty);
+      expect(
+        () => generateContentResponse.text,
+        throwsA(
+          isA<FirebaseAIException>().having(
+            (e) => e.message,
+            'message',
+            startsWith('Response was blocked due to prohibitedContent'),
+          ),
+        ),
+      );
+    });
+
+    test('with unknown or partial safetyRatings on Developer API (AI-2)', () {
+      const response = '''
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [{"text": "Some text"}],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "safetyRatings": [
+        {
+          "category": "HARM_CATEGORY_DANGEROUS_CONTENT",
+          "probability": "HARM_PROBABILITY_UNSPECIFIED"
+        },
+        {
+          "category": "HARM_CATEGORY_HARASSMENT",
+          "probability": "FAKE_NEW_HARM_PROBABILITY"
+        },
+        {}
+      ]
+    }
+  ]
+}
+''';
+      final decoded = jsonDecode(response) as Object;
+      final generateContentResponse =
+          DeveloperSerialization().parseGenerateContentResponse(decoded);
+      final ratings = generateContentResponse.candidates.single.safetyRatings!;
+      expect(ratings, hasLength(3));
+      expect(ratings[0].category, HarmCategory.dangerousContent);
+      expect(ratings[0].probability, HarmProbability.unknown);
+      expect(ratings[1].category, HarmCategory.harassment);
+      expect(ratings[1].probability, HarmProbability.unknown);
+      expect(ratings[2].category, HarmCategory.unknown);
+      expect(ratings[2].probability, HarmProbability.unknown);
+    });
   });
 
   group('parses successful GenerateContentResponse', () {

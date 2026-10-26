@@ -5,6 +5,39 @@
 import FirebaseFirestore
 import Foundation
 
+// Firebase Apple SDK 13 renames these pipeline classes with a __ prefix.
+// CocoaPods stays on SDK 12, where the unprefixed Swift names still exist.
+// Package.swift defines FLT_FIREBASE_SDK_13 for Swift Package Manager builds.
+#if FLT_FIREBASE_SDK_13
+  typealias ExprBridge = __ExprBridge
+  typealias FieldBridge = __FieldBridge
+  typealias ConstantBridge = __ConstantBridge
+  typealias FunctionExprBridge = __FunctionExprBridge
+  typealias AggregateFunctionBridge = __AggregateFunctionBridge
+  typealias OrderingBridge = __OrderingBridge
+  typealias StageBridge = __StageBridge
+  typealias CollectionSourceStageBridge = __CollectionSourceStageBridge
+  typealias DatabaseSourceStageBridge = __DatabaseSourceStageBridge
+  typealias CollectionGroupSourceStageBridge = __CollectionGroupSourceStageBridge
+  typealias DocumentsSourceStageBridge = __DocumentsSourceStageBridge
+  typealias WhereStageBridge = __WhereStageBridge
+  typealias LimitStageBridge = __LimitStageBridge
+  typealias OffsetStageBridge = __OffsetStageBridge
+  typealias AddFieldsStageBridge = __AddFieldsStageBridge
+  typealias RemoveFieldsStageBridge = __RemoveFieldsStageBridge
+  typealias SelectStageBridge = __SelectStageBridge
+  typealias DistinctStageBridge = __DistinctStageBridge
+  typealias AggregateStageBridge = __AggregateStageBridge
+  typealias FindNearestStageBridge = __FindNearestStageBridge
+  typealias SearchStageBridge = __SearchStageBridge
+  typealias SortStageBridge = __SortStageBridge
+  typealias ReplaceWithStageBridge = __ReplaceWithStageBridge
+  typealias SampleStageBridge = __SampleStageBridge
+  typealias UnionStageBridge = __UnionStageBridge
+  typealias UnnestStageBridge = __UnnestStageBridge
+  typealias PipelineBridge = __PipelineBridge
+#endif
+
 #if os(iOS)
   import Flutter
 #elseif os(macOS)
@@ -152,17 +185,14 @@ private func constantExpression(from value: Any) throws -> any FirebaseFirestore
   if value is NSNull {
     return Constant.nil
   }
-  if let number = value as? NSNumber {
+    if let number = value as? NSNumber {
     if CFGetTypeID(number) == CFBooleanGetTypeID() {
       return Constant(number.boolValue)
     }
-    let doubleValue = number.doubleValue
-    if doubleValue.isFinite, doubleValue.rounded() == doubleValue,
-      doubleValue >= Double(Int.min), doubleValue <= Double(Int.max)
-    {
-      return Constant(number.intValue)
+    if CFNumberIsFloatType(number) {
+      return Constant(number.doubleValue)
     }
-    return Constant(number.doubleValue)
+    return Constant(number.intValue)
   }
   if let stringValue = value as? String {
     return Constant(stringValue)
@@ -999,7 +1029,15 @@ enum PipelineParser {
     completion: @escaping (Any?, Error?) -> Void
   ) {
     _ = options
-    if NSClassFromString("FIRPipelineBridge") == nil {
+    let pipelineClassName =
+      {
+        #if FLT_FIREBASE_SDK_13
+          return "__FIRPipelineBridge"
+        #else
+          return "FIRPipelineBridge"
+        #endif
+      }()
+    if NSClassFromString(pipelineClassName) == nil {
       completion(nil, pipelineUnavailableError())
       return
     }
@@ -1278,9 +1316,9 @@ enum PipelineParser {
             stage = SampleStageBridge(count: Int64(v))
           }
         } else if stageName == "aggregate" {
-          stage = try? parseAggregateStage(args: args, exprParser: exprParser)
+          stage = try parseAggregateStage(args: args, exprParser: exprParser)
         } else if stageName == "aggregate_with_options" {
-          stage = try? parseAggregateStageWithOptions(args: args, exprParser: exprParser)
+          stage = try parseAggregateStageWithOptions(args: args, exprParser: exprParser)
         } else if stageName == "unnest" {
           guard let exprMap = asMap(args["expression"]) else {
             throw parseError("unnest requires expression")
@@ -1340,7 +1378,9 @@ enum PipelineParser {
             throw parseError("find_nearest vector_value must be an array of numbers")
           }
           let queryVector = VectorValue(__array: numbers)
-          let distanceFieldExpr: ExprBridge? = distanceField.map { FieldBridge(name: $0) }
+          let distanceFieldExpr: ExprBridge? = distanceField.flatMap { name in
+            name.isEmpty ? nil : FieldBridge(name: name)
+          }
           stage = FindNearestStageBridge(
             field: embeddingField,
             vectorValue: queryVector,

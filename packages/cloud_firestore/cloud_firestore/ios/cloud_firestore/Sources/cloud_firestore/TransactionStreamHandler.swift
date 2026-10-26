@@ -52,7 +52,7 @@ final class TransactionStreamHandler: NSObject, FlutterStreamHandler {
 
     firestore.runTransaction(
       with: options,
-      block: { [weak self] transaction, _ in
+      block: { [weak self] transaction, errorPointer in
         guard let self else { return nil }
         self.started(transaction)
 
@@ -66,6 +66,11 @@ final class TransactionStreamHandler: NSObject, FlutterStreamHandler {
         let timedOut = self.semaphore.wait(
           timeout: .now() + .milliseconds(self.timeout)
         )
+
+        // Firestore may commit once this block returns, and a getDocument on a
+        // committed transaction aborts the app. Drop the transaction first.
+        self.ended()
+
         if timedOut == .timedOut {
           let (code, message) = FirebaseFirestoreUtils.errorCodeAndMessage(
             from: NSError(
@@ -77,6 +82,13 @@ final class TransactionStreamHandler: NSObject, FlutterStreamHandler {
           DispatchQueue.main.async {
             events(["error": ["code": code, "message": message]])
           }
+          // Outside FirestoreErrorDomain, so Firestore neither retries nor commits.
+          errorPointer?.pointee = NSError(
+            domain: "io.flutter.plugins.firebase.firestore",
+            code: FirestoreErrorCode.deadlineExceeded.rawValue,
+            userInfo: nil
+          )
+          return nil
         }
 
         if self.resultType == .failure {

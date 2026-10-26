@@ -107,7 +107,7 @@ jobs:
       AVD_TARGET: google_apis
     timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 35 }}
     steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       - uses: ./.github/actions/setup-flutterfire
         with:
           # Live tier has no emulator suite, so no firebase-tools and no Node.
@@ -211,7 +211,7 @@ jobs:
           fi
           exit $BUILD_EXIT
       - name: Start AVD then run E2E tests
-        uses: reactivecircus/android-emulator-runner@e89f39f1abbbd05b1113a29cf4db69e7540cae5a
+        uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d
         # Two alarm-bounded test attempts (15 min each, see the retry script)
         # plus AVD boot and the emulator suite have to fit; the old 20 minute
         # budget was killed by a single launch hang.

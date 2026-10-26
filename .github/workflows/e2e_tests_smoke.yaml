@@ -59,7 +59,7 @@ jobs:
       AVD_API_LEVEL: 34
       AVD_TARGET: google_apis
     steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       - uses: ./.github/actions/setup-flutterfire
         with:
           firebase-tools-version: '15.25.1'
@@ -124,7 +124,7 @@ jobs:
         timeout-minutes: 25
         run: flutter build apk --debug --target=integration_test/core_shard_test.dart --android-skip-build-dependency-validation
       - name: Start AVD then run E2E tests
-        uses: reactivecircus/android-emulator-runner@e89f39f1abbbd05b1113a29cf4db69e7540cae5a
+        uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d
         # Two alarm-bounded test attempts (see the retry script) plus AVD boot
         # and the emulator suite; a single launch hang used to burn the whole
         # 20-minute budget.
@@ -187,7 +187,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       - uses: ./.github/actions/setup-flutterfire
         with:
           node: 'false'
@@ -203,41 +203,25 @@ jobs:
     if: needs.changes.outputs.ios == 'true'
     permissions:
       contents: read
-    runs-on: macos-15
+    runs-on: xcode-27
     timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 35 }}
     steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
-      - name: Xcode
-        # Firebase iOS SDK: minimum Xcode 26.2.
-        run: sudo xcode-select -s /Applications/Xcode_26.2.app/Contents/Developer
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       - uses: ./.github/actions/setup-flutterfire
         with:
           firebase-tools-version: '15.25.1'
           bootstrap-scope: tests
-      - name: Disable Swift Package Manager
-        # Recent stable Flutter enables SPM by default; the smoke app's Apple
-        # builds are CocoaPods by design (tests/ios, tests/macos Podfiles).
-        run: flutter config --no-enable-swift-package-manager
-      - uses: hendrikmuhs/ccache-action@d62db5f07c26379fc4b4e0916f098a92573c3b03
+      - name: Enable Swift Package Manager
+        # tests/pubspec.yaml also pins this; there is no Podfile.
+        run: flutter config --enable-swift-package-manager
+      - uses: hendrikmuhs/ccache-action@f09c25b45002a07be2955cbe52e8cee55643f89d
         name: Xcode Compile Cache
         with:
-          # Distinct from the macOS job's key: both run on macos-15, so a shared
+          # Distinct from the macOS job's key: both run on xcode-27, so a shared
           # `xcode-cache-${{ runner.os }}` had the two jobs clobbering each other.
-          key: xcode-ccache-ios
+          key: xcode-ccache-ios-xcode27
           save: "${{ github.ref == 'refs/heads/main' }}"
           max-size: 700M
-      - uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
-        continue-on-error: true
-        name: Pods Cache
-        id: pods-cache
-        with:
-          # Must match the save path exactly
-          path: tests/ios/Pods
-          # Keyed on the Podfile and the pinned Firebase SDK version, not tests/pubspec.lock:
-          # that file is gitignored, so hashFiles() returned an empty string and the key
-          # never changed - the cache could never be invalidated.
-          key: pods-v4-${{ runner.os }}-ios-${{ hashFiles('tests/ios/Podfile', 'packages/firebase_core/firebase_core/ios/firebase_sdk_version.rb') }}
-          restore-keys: pods-v4-${{ runner.os }}-ios-
       - name: Firebase Emulator Cache
         id: firebase-emulator-cache
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
@@ -262,8 +246,26 @@ jobs:
           export CCACHE_DEPEND=true
           export CCACHE_INODECACHE=true
           ccache -s
-          flutter build ios --no-codesign --simulator --debug --target=./integration_test/core_shard_test.dart --dart-define=CI=true
+          set +e
+          flutter build ios --no-codesign --simulator --debug --target=./integration_test/core_shard_test.dart --dart-define=CI=true 2>&1 | tee build_output.log
+          BUILD_EXIT=${PIPESTATUS[0]}
+          # Same one-shot retry for the SPM package resolution race as
+          # reusable_e2e_ios.yaml - anything else fails immediately.
+          if [ "$BUILD_EXIT" -ne 0 ] && grep -q "Could not resolve package dependencies" build_output.log; then
+            echo "SPM package resolution race detected; retrying the build once."
+            flutter clean > /dev/null
+            flutter build ios --no-codesign --simulator --debug --target=./integration_test/core_shard_test.dart --dart-define=CI=true 2>&1 | tee build_output.log
+            BUILD_EXIT=${PIPESTATUS[0]}
+          fi
+          set -e
           ccache -s
+          # Flutter silently falls back to CocoaPods when the app has a Podfile
+          # or a plugin has no Package.swift.
+          if grep -q "Running pod install" build_output.log; then
+            echo "::error::flutter build ran pod install: the smoke app must build with Swift Package Manager only."
+            exit 1
+          fi
+          exit "$BUILD_EXIT"
       - name: Install Cloud Functions dependencies
         # `firebase emulators:exec` does not install these itself (the old
         # start-firebase-emulator.sh wrapper did); without them the functions
@@ -273,8 +275,8 @@ jobs:
       - uses: futureware-tech/simulator-action@e89aa8f93d3aec35083ff49d2854d07f7186f7f5
         id: simulator
         with:
-          # List of available simulators: https://github.com/actions/runner-images/blob/main/images/macos/macos-15-Readme.md#installed-simulators
-          model: "iPhone 16"
+          # List of available simulators: https://github.com/actions/runner-images/blob/main/images/macos/xcode-27-arm64-Readme.md#installed-simulators
+          model: "iPhone 17"
       - name: Ensure Simulator Ready
         timeout-minutes: 13
         env:
@@ -311,56 +313,31 @@ jobs:
           key: ${{ steps.firebase-emulator-cache.outputs.cache-primary-key }}
           # Must match the restore paths exactly
           path: ~/.cache/firebase/emulators
-      - name: Save Pods Cache
-        # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
-        if: github.ref == 'refs/heads/main'
-        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
-        continue-on-error: true
-        with:
-          key: ${{ steps.pods-cache.outputs.cache-primary-key }}
-          # Must match the restore paths exactly
-          path: tests/ios/Pods
 
   macos:
     needs: changes
     if: needs.changes.outputs.macos == 'true'
     permissions:
       contents: read
-    runs-on: macos-15
+    runs-on: xcode-27
     timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 35 }}
     steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
-      - name: Xcode
-        # Firebase iOS SDK: minimum Xcode 26.2.
-        run: sudo xcode-select -s /Applications/Xcode_26.2.app/Contents/Developer
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       - uses: ./.github/actions/setup-flutterfire
         with:
           firebase-tools-version: '15.25.1'
           bootstrap-scope: tests
-      - name: Disable Swift Package Manager
-        # Recent stable Flutter enables SPM by default; the smoke app's Apple
-        # builds are CocoaPods by design (tests/ios, tests/macos Podfiles).
-        run: flutter config --no-enable-swift-package-manager
-      - uses: hendrikmuhs/ccache-action@d62db5f07c26379fc4b4e0916f098a92573c3b03
+      - name: Enable Swift Package Manager
+        # tests/pubspec.yaml also pins this; there is no Podfile.
+        run: flutter config --enable-swift-package-manager
+      - uses: hendrikmuhs/ccache-action@f09c25b45002a07be2955cbe52e8cee55643f89d
         name: Xcode Compile Cache
         with:
-          # Distinct from the iOS job's key: both run on macos-15, so a shared
+          # Distinct from the iOS job's key: both run on xcode-27, so a shared
           # `xcode-cache-${{ runner.os }}` had the two jobs clobbering each other.
-          key: xcode-ccache-macos
+          key: xcode-ccache-macos-xcode27
           save: "${{ github.ref == 'refs/heads/main' }}"
           max-size: 700M
-      - name: Pods Cache
-        continue-on-error: true
-        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
-        id: pods-cache
-        with:
-          # Must match the save path exactly
-          path: tests/macos/Pods
-          # Keyed on the Podfile and the pinned Firebase SDK version, not tests/pubspec.lock:
-          # that file is gitignored, so hashFiles() returned an empty string and the key
-          # never changed - the cache could never be invalidated.
-          key: pods-v4-${{ runner.os }}-macos-${{ hashFiles('tests/macos/Podfile', 'packages/firebase_core/firebase_core/ios/firebase_sdk_version.rb') }}
-          restore-keys: pods-v4-${{ runner.os }}-macos-
       - name: Firebase Emulator Cache
         id: firebase-emulator-cache
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
@@ -385,8 +362,26 @@ jobs:
           export CCACHE_DEPEND=true
           export CCACHE_INODECACHE=true
           ccache -s
-          flutter build macos --debug --target=./integration_test/core_shard_test.dart --device-id=macos --dart-define=CI=true
+          set +e
+          flutter build macos --debug --target=./integration_test/core_shard_test.dart --device-id=macos --dart-define=CI=true 2>&1 | tee build_output.log
+          BUILD_EXIT=${PIPESTATUS[0]}
+          # Same one-shot retry for the SPM package resolution race as
+          # reusable_e2e_ios.yaml - anything else fails immediately.
+          if [ "$BUILD_EXIT" -ne 0 ] && grep -q "Could not resolve package dependencies" build_output.log; then
+            echo "SPM package resolution race detected; retrying the build once."
+            flutter clean > /dev/null
+            flutter build macos --debug --target=./integration_test/core_shard_test.dart --device-id=macos --dart-define=CI=true 2>&1 | tee build_output.log
+            BUILD_EXIT=${PIPESTATUS[0]}
+          fi
+          set -e
           ccache -s
+          # Flutter silently falls back to CocoaPods when the app has a Podfile
+          # or a plugin has no Package.swift.
+          if grep -q "Running pod install" build_output.log; then
+            echo "::error::flutter build ran pod install: the smoke app must build with Swift Package Manager only."
+            exit 1
+          fi
+          exit "$BUILD_EXIT"
       - name: Install Cloud Functions dependencies
         # `firebase emulators:exec` does not install these itself (the old
         # start-firebase-emulator.sh wrapper did); without them the functions
@@ -446,15 +441,6 @@ jobs:
           key: ${{ steps.firebase-emulator-cache.outputs.cache-primary-key }}
           # Must match the restore path exactly
           path: ~/.cache/firebase/emulators
-      - name: Save Pods Cache
-        continue-on-error: true
-        # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
-        if: github.ref == 'refs/heads/main'
-        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
-        with:
-          key: ${{ steps.pods-cache.outputs.cache-primary-key }}
-          # Must match the restore paths exactly
-          path: tests/macos/Pods
 
   web:
     needs: changes
@@ -464,7 +450,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 25 }}
     steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       - uses: ./.github/actions/setup-flutterfire
         timeout-minutes: 15
         with:
@@ -540,7 +526,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 25 }}
     steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       - uses: ./.github/actions/setup-flutterfire
         timeout-minutes: 15
         with:
@@ -621,7 +607,7 @@ jobs:
     runs-on: windows-latest
     timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 45 }}
     steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       - uses: ./.github/actions/setup-flutterfire
         with:
           npm-cache: 'false'

@@ -1,3 +1,11 @@
+## 3.9.2
+
+ - Update a dependency to the latest release.
+
+## 3.9.1
+
+ - Update a dependency to the latest release.
+
 ## 3.9.0
 
  - **REFACTOR**(platform_interface): replace Flutter UI and foundation imports with package:meta ([#18604](https://github.com/firebase/flutterfire/issues/18604)). ([fef6d420](https://github.com/firebase/flutterfire/commit/fef6d42090ea275f07117c085bd04710d9df51bc))

@@ -7,6 +7,20 @@ import 'package:firebase_core_platform_interface/firebase_core_platform_interfac
     show FirebasePlugin;
 import 'package:firebase_in_app_messaging_platform_interface/firebase_in_app_messaging_platform_interface.dart';
 
+export 'package:firebase_in_app_messaging_platform_interface/firebase_in_app_messaging_platform_interface.dart'
+    show
+        InAppMessagingAction,
+        InAppMessagingCampaignMetadata,
+        InAppMessagingClickEvent,
+        InAppMessagingDismissEvent,
+        InAppMessagingDismissType,
+        InAppMessagingDisplayErrorEvent,
+        InAppMessagingImpressionEvent,
+        InAppMessage,
+        InAppMessageAction,
+        InAppMessageText,
+        InAppMessageType;
+
 class FirebaseInAppMessaging extends FirebasePlugin {
   FirebaseInAppMessaging._({required this.app})
       : super(app.name, 'plugins.flutter.io/firebase_in_app_messaging');
@@ -63,4 +77,59 @@ class FirebaseInAppMessaging extends FirebasePlugin {
   Future<void> setAutomaticDataCollectionEnabled(bool enabled) {
     return _delegate.setAutomaticDataCollectionEnabled(enabled);
   }
+
+  /// Notifies when the user taps the action button of an in-app message.
+  ///
+  /// Use [InAppMessagingClickEvent.action] to know which URL the campaign
+  /// asked to open, and [InAppMessagingClickEvent.campaignMetadata] to know
+  /// which campaign the message came from.
+  ///
+  /// Listening to any of the message lifecycle streams makes the plugin become
+  /// the `InAppMessaging` display delegate on iOS. If your app also sets that
+  /// delegate from native code, the one set last wins.
+  Stream<InAppMessagingClickEvent> get onMessageClicked =>
+      _delegate.onMessageClicked;
+
+  /// Notifies when an in-app message has been displayed long enough to count
+  /// as an impression.
+  Stream<InAppMessagingImpressionEvent> get onMessageImpression =>
+      _delegate.onMessageImpression;
+
+  /// Notifies when an in-app message is dismissed.
+  ///
+  /// [InAppMessagingDismissEvent.dismissType] is always
+  /// [InAppMessagingDismissType.unknown] on Android, which does not report how
+  /// a message was dismissed.
+  Stream<InAppMessagingDismissEvent> get onMessageDismissed =>
+      _delegate.onMessageDismissed;
+
+  /// Notifies when an in-app message could not be rendered, for example
+  /// because its image failed to download.
+  Stream<InAppMessagingDisplayErrorEvent> get onMessageDisplayError =>
+      _delegate.onMessageDisplayError;
+
+  /// Opt in to custom Flutter rendering for In-App Messaging campaigns.
+  ///
+  /// When [enabled] is `true`, native modal / card / banner / image-only
+  /// templates are not shown. Eligible campaigns are delivered on
+  /// [onMessageDisplay] instead. Call this after [Firebase.initializeApp]
+  /// and before campaigns may trigger.
+  ///
+  /// Apps must report [InAppMessage.impress], [InAppMessage.click], or
+  /// [InAppMessage.dismiss] so analytics and frequency capping keep working.
+  /// The plugin does not open [InAppMessageAction.actionUrl].
+  ///
+  /// Reporting those callbacks still notifies the lifecycle streams
+  /// ([onMessageClicked], [onMessageImpression], and so on) if you listen
+  /// to them.
+  Future<void> setCustomDisplayEnabled(bool enabled) {
+    return _delegate.setCustomDisplayEnabled(enabled);
+  }
+
+  /// Campaigns the native SDK wants shown while custom display is enabled.
+  ///
+  /// This is not Firebase Cloud Messaging's `onMessage`, and it is not
+  /// [onMessageClicked]. It fires only after [setCustomDisplayEnabled] is
+  /// `true`, at the moment the SDK would have drawn a native template.
+  Stream<InAppMessage> get onMessageDisplay => _delegate.onMessageDisplay;
 }

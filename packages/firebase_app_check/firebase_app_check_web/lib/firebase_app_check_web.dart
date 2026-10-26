@@ -42,19 +42,24 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
       'app-check',
       productNameOverride: 'app_check',
       ensurePluginInitialized: (firebaseApp) async {
-        final instance =
-            FirebaseAppCheckWeb(app: Firebase.app(firebaseApp.name));
-        var recaptchaType = web.window.localStorage
-            .getItem(_sessionKeyRecaptchaType(firebaseApp.name));
-        var recaptchaSiteKey = web.window.localStorage
-            .getItem(_sessionKeyRecaptchaSiteKey(firebaseApp.name));
+        final instance = FirebaseAppCheckWeb(
+          app: Firebase.app(firebaseApp.name),
+        );
+        var recaptchaType = web.window.localStorage.getItem(
+          _sessionKeyRecaptchaType(firebaseApp.name),
+        );
+        var recaptchaSiteKey = web.window.localStorage.getItem(
+          _sessionKeyRecaptchaSiteKey(firebaseApp.name),
+        );
 
         // For backwards compatibility, with previously used session storage
         if (recaptchaType == null || recaptchaSiteKey == null) {
-          recaptchaType = web.window.sessionStorage
-              .getItem(_sessionKeyRecaptchaType(firebaseApp.name));
-          recaptchaSiteKey = web.window.sessionStorage
-              .getItem(_sessionKeyRecaptchaSiteKey(firebaseApp.name));
+          recaptchaType = web.window.sessionStorage.getItem(
+            _sessionKeyRecaptchaType(firebaseApp.name),
+          );
+          recaptchaSiteKey = web.window.sessionStorage.getItem(
+            _sessionKeyRecaptchaSiteKey(firebaseApp.name),
+          );
         }
 
         if (recaptchaType != null) {
@@ -74,7 +79,7 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
           } else {
             return;
           }
-          await instance.activate(webProvider: provider);
+          await instance.activate(providerWeb: provider);
         }
       },
     );
@@ -102,7 +107,8 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
   app_check_interop.AppCheck? get _delegate {
     if (_webAppCheck == null) {
       throw Exception(
-          "Before using other Firebase App Check APIs, FirebaseAppCheck.instance.activate() must be called first once you've initialized your Firebase app.");
+        "Before using other Firebase App Check APIs, FirebaseAppCheck.instance.activate() must be called first once you've initialized your Firebase app.",
+      );
     }
     return _webAppCheck;
   }
@@ -119,46 +125,41 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
 
   @override
   Future<void> activate({
-    WebProvider? webProvider,
-    @Deprecated(
-      'Use providerAndroid instead. '
-      'This parameter will be removed in a future major release.',
-    )
-    AndroidProvider? androidProvider,
-    @Deprecated(
-      'Use providerApple instead. '
-      'This parameter will be removed in a future major release.',
-    )
-    AppleProvider? appleProvider,
+    WebProvider? providerWeb,
     AndroidAppCheckProvider? providerAndroid,
     AppleAppCheckProvider? providerApple,
     WindowsAppCheckProvider? providerWindows,
   }) async {
     // save the recaptcha type and site key for future startups
-    if (webProvider != null) {
+    if (providerWeb != null) {
       final String recaptchaType;
-      if (webProvider is WebDebugProvider) {
+      if (providerWeb is WebDebugProvider) {
         recaptchaType = recaptchaTypeDebug;
-      } else if (webProvider is ReCaptchaV3Provider) {
+      } else if (providerWeb is ReCaptchaV3Provider) {
         recaptchaType = recaptchaTypeV3;
-      } else if (webProvider is ReCaptchaEnterpriseProvider) {
+      } else if (providerWeb is ReCaptchaEnterpriseProvider) {
         recaptchaType = recaptchaTypeEnterprise;
       } else {
-        throw Exception('Invalid web provider: $webProvider');
+        throw Exception('Invalid web provider: $providerWeb');
       }
-      web.window.localStorage
-          .setItem(_sessionKeyRecaptchaType(app.name), recaptchaType);
       web.window.localStorage.setItem(
-          _sessionKeyRecaptchaSiteKey(app.name),
-          webProvider is WebDebugProvider
-              ? webProvider.debugToken ?? ''
-              : webProvider.siteKey);
+        _sessionKeyRecaptchaType(app.name),
+        recaptchaType,
+      );
+      web.window.localStorage.setItem(
+        _sessionKeyRecaptchaSiteKey(app.name),
+        providerWeb is WebDebugProvider
+            ? providerWeb.debugToken ?? ''
+            : providerWeb.siteKey,
+      );
     }
 
     // activate API no longer exists, recaptcha key has to be passed on initialization of app-check instance.
     return convertWebExceptions<Future<void>>(() async {
       _webAppCheck ??= app_check_interop.getAppCheckInstance(
-          core_interop.app(app.name), webProvider);
+        core_interop.app(app.name),
+        providerWeb,
+      );
       _initialiseStreamController();
     });
   }
@@ -223,8 +224,6 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
   @override
   Stream<String?> get onTokenChange {
     _initialiseStreamController();
-    return convertWebExceptions(
-      () => _tokenChangesListeners[app.name]!.stream,
-    );
+    return convertWebExceptions(() => _tokenChangesListeners[app.name]!.stream);
   }
 }

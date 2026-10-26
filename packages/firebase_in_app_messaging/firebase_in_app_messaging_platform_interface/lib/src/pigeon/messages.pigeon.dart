@@ -48,6 +48,404 @@ List<Object?> wrapResponse(
   return <Object?>[error.code, error.message, error.details];
 }
 
+bool _deepEquals(Object? a, Object? b) {
+  if (identical(a, b)) {
+    return true;
+  }
+  if (a is double && b is double) {
+    if (a.isNaN && b.isNaN) {
+      return true;
+    }
+    return a == b;
+  }
+  if (a is List && b is List) {
+    return a.length == b.length &&
+        a.indexed
+            .every(((int, dynamic) item) => _deepEquals(item.$2, b[item.$1]));
+  }
+  if (a is Map && b is Map) {
+    if (a.length != b.length) {
+      return false;
+    }
+    for (final MapEntry<Object?, Object?> entryA in a.entries) {
+      bool found = false;
+      for (final MapEntry<Object?, Object?> entryB in b.entries) {
+        if (_deepEquals(entryA.key, entryB.key)) {
+          if (_deepEquals(entryA.value, entryB.value)) {
+            found = true;
+            break;
+          } else {
+            return false;
+          }
+        }
+      }
+      if (!found) {
+        return false;
+      }
+    }
+    return true;
+  }
+  return a == b;
+}
+
+int _deepHash(Object? value) {
+  if (value is List) {
+    return Object.hashAll(value.map(_deepHash));
+  }
+  if (value is Map) {
+    int result = 0;
+    for (final MapEntry<Object?, Object?> entry in value.entries) {
+      result += (_deepHash(entry.key) * 31) ^ _deepHash(entry.value);
+    }
+    return result;
+  }
+  if (value is double && value.isNaN) {
+    // Normalize NaN to a consistent hash.
+    return 0x7FF8000000000000.hashCode;
+  }
+  if (value is double && value == 0.0) {
+    // Normalize -0.0 to 0.0 so they have the same hash code.
+    return 0.0.hashCode;
+  }
+  return value.hashCode;
+}
+
+/// How an in-app message was dismissed.
+enum FiamDismissType {
+  /// The message was swiped away. Only reported on iOS, for banner messages.
+  swipe,
+
+  /// The user tapped a button to close the message.
+  clickedCancel,
+
+  /// The message was dismissed automatically. Only reported on iOS, for banner
+  /// messages.
+  auto,
+
+  /// The way the message was dismissed is unknown. Always reported on Android,
+  /// which does not expose a dismiss type.
+  unknown,
+}
+
+/// Metadata of the campaign an in-app message belongs to.
+class FiamCampaignMetadata {
+  FiamCampaignMetadata({
+    required this.campaignId,
+    required this.campaignName,
+    required this.isTestMessage,
+  });
+
+  String campaignId;
+
+  String campaignName;
+
+  bool isTestMessage;
+
+  List<Object?> _toList() {
+    return <Object?>[
+      campaignId,
+      campaignName,
+      isTestMessage,
+    ];
+  }
+
+  Object encode() {
+    return _toList();
+  }
+
+  static FiamCampaignMetadata decode(Object result) {
+    result as List<Object?>;
+    return FiamCampaignMetadata(
+      campaignId: result[0]! as String,
+      campaignName: result[1]! as String,
+      isTestMessage: result[2]! as bool,
+    );
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    if (other is! FiamCampaignMetadata || other.runtimeType != runtimeType) {
+      return false;
+    }
+    if (identical(this, other)) {
+      return true;
+    }
+    return _deepEquals(campaignId, other.campaignId) &&
+        _deepEquals(campaignName, other.campaignName) &&
+        _deepEquals(isTestMessage, other.isTestMessage);
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => _deepHash(<Object?>[runtimeType, ..._toList()]);
+}
+
+/// The action attached to the button a user tapped on an in-app message.
+class FiamAction {
+  FiamAction({
+    this.actionUrl,
+    this.buttonText,
+  });
+
+  String? actionUrl;
+
+  String? buttonText;
+
+  List<Object?> _toList() {
+    return <Object?>[
+      actionUrl,
+      buttonText,
+    ];
+  }
+
+  Object encode() {
+    return _toList();
+  }
+
+  static FiamAction decode(Object result) {
+    result as List<Object?>;
+    return FiamAction(
+      actionUrl: result[0] as String?,
+      buttonText: result[1] as String?,
+    );
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    if (other is! FiamAction || other.runtimeType != runtimeType) {
+      return false;
+    }
+    if (identical(this, other)) {
+      return true;
+    }
+    return _deepEquals(actionUrl, other.actionUrl) &&
+        _deepEquals(buttonText, other.buttonText);
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => _deepHash(<Object?>[runtimeType, ..._toList()]);
+}
+
+/// Styled text from a campaign, used by custom Flutter display.
+class FiamText {
+  FiamText({
+    required this.text,
+    this.hexColor,
+  });
+
+  String text;
+
+  String? hexColor;
+
+  List<Object?> _toList() {
+    return <Object?>[
+      text,
+      hexColor,
+    ];
+  }
+
+  Object encode() {
+    return _toList();
+  }
+
+  static FiamText decode(Object result) {
+    result as List<Object?>;
+    return FiamText(
+      text: result[0]! as String,
+      hexColor: result[1] as String?,
+    );
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    if (other is! FiamText || other.runtimeType != runtimeType) {
+      return false;
+    }
+    if (identical(this, other)) {
+      return true;
+    }
+    return _deepEquals(text, other.text) &&
+        _deepEquals(hexColor, other.hexColor);
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => _deepHash(<Object?>[runtimeType, ..._toList()]);
+}
+
+/// A campaign action forwarded for custom Flutter display.
+class FiamDisplayAction {
+  FiamDisplayAction({
+    required this.id,
+    this.actionUrl,
+    this.buttonText,
+    this.buttonTextHexColor,
+    this.buttonBackgroundHexColor,
+  });
+
+  String id;
+
+  String? actionUrl;
+
+  String? buttonText;
+
+  String? buttonTextHexColor;
+
+  String? buttonBackgroundHexColor;
+
+  List<Object?> _toList() {
+    return <Object?>[
+      id,
+      actionUrl,
+      buttonText,
+      buttonTextHexColor,
+      buttonBackgroundHexColor,
+    ];
+  }
+
+  Object encode() {
+    return _toList();
+  }
+
+  static FiamDisplayAction decode(Object result) {
+    result as List<Object?>;
+    return FiamDisplayAction(
+      id: result[0]! as String,
+      actionUrl: result[1] as String?,
+      buttonText: result[2] as String?,
+      buttonTextHexColor: result[3] as String?,
+      buttonBackgroundHexColor: result[4] as String?,
+    );
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    if (other is! FiamDisplayAction || other.runtimeType != runtimeType) {
+      return false;
+    }
+    if (identical(this, other)) {
+      return true;
+    }
+    return _deepEquals(id, other.id) &&
+        _deepEquals(actionUrl, other.actionUrl) &&
+        _deepEquals(buttonText, other.buttonText) &&
+        _deepEquals(buttonTextHexColor, other.buttonTextHexColor) &&
+        _deepEquals(buttonBackgroundHexColor, other.buttonBackgroundHexColor);
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => _deepHash(<Object?>[runtimeType, ..._toList()]);
+}
+
+/// Full campaign payload forwarded instead of native templates.
+class FiamDisplayMessage {
+  FiamDisplayMessage({
+    required this.campaignMetadata,
+    required this.messageType,
+    this.title,
+    this.body,
+    this.imageUrl,
+    this.landscapeImageUrl,
+    this.backgroundHexColor,
+    this.action,
+    this.primaryAction,
+    this.secondaryAction,
+    this.data,
+  });
+
+  FiamCampaignMetadata campaignMetadata;
+
+  /// One of BANNER, MODAL, CARD, IMAGE_ONLY, UNKNOWN.
+  String messageType;
+
+  FiamText? title;
+
+  FiamText? body;
+
+  String? imageUrl;
+
+  String? landscapeImageUrl;
+
+  String? backgroundHexColor;
+
+  FiamDisplayAction? action;
+
+  FiamDisplayAction? primaryAction;
+
+  FiamDisplayAction? secondaryAction;
+
+  Map<String?, String?>? data;
+
+  List<Object?> _toList() {
+    return <Object?>[
+      campaignMetadata,
+      messageType,
+      title,
+      body,
+      imageUrl,
+      landscapeImageUrl,
+      backgroundHexColor,
+      action,
+      primaryAction,
+      secondaryAction,
+      data,
+    ];
+  }
+
+  Object encode() {
+    return _toList();
+  }
+
+  static FiamDisplayMessage decode(Object result) {
+    result as List<Object?>;
+    return FiamDisplayMessage(
+      campaignMetadata: result[0]! as FiamCampaignMetadata,
+      messageType: result[1]! as String,
+      title: result[2] as FiamText?,
+      body: result[3] as FiamText?,
+      imageUrl: result[4] as String?,
+      landscapeImageUrl: result[5] as String?,
+      backgroundHexColor: result[6] as String?,
+      action: result[7] as FiamDisplayAction?,
+      primaryAction: result[8] as FiamDisplayAction?,
+      secondaryAction: result[9] as FiamDisplayAction?,
+      data: (result[10] as Map<Object?, Object?>?)?.cast<String?, String?>(),
+    );
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    if (other is! FiamDisplayMessage || other.runtimeType != runtimeType) {
+      return false;
+    }
+    if (identical(this, other)) {
+      return true;
+    }
+    return _deepEquals(campaignMetadata, other.campaignMetadata) &&
+        _deepEquals(messageType, other.messageType) &&
+        _deepEquals(title, other.title) &&
+        _deepEquals(body, other.body) &&
+        _deepEquals(imageUrl, other.imageUrl) &&
+        _deepEquals(landscapeImageUrl, other.landscapeImageUrl) &&
+        _deepEquals(backgroundHexColor, other.backgroundHexColor) &&
+        _deepEquals(action, other.action) &&
+        _deepEquals(primaryAction, other.primaryAction) &&
+        _deepEquals(secondaryAction, other.secondaryAction) &&
+        _deepEquals(data, other.data);
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => _deepHash(<Object?>[runtimeType, ..._toList()]);
+}
+
 class _PigeonCodec extends StandardMessageCodec {
   const _PigeonCodec();
   @override
@@ -55,6 +453,24 @@ class _PigeonCodec extends StandardMessageCodec {
     if (value is int) {
       buffer.putUint8(4);
       buffer.putInt64(value);
+    } else if (value is FiamDismissType) {
+      buffer.putUint8(129);
+      writeValue(buffer, value.index);
+    } else if (value is FiamCampaignMetadata) {
+      buffer.putUint8(130);
+      writeValue(buffer, value.encode());
+    } else if (value is FiamAction) {
+      buffer.putUint8(131);
+      writeValue(buffer, value.encode());
+    } else if (value is FiamText) {
+      buffer.putUint8(132);
+      writeValue(buffer, value.encode());
+    } else if (value is FiamDisplayAction) {
+      buffer.putUint8(133);
+      writeValue(buffer, value.encode());
+    } else if (value is FiamDisplayMessage) {
+      buffer.putUint8(134);
+      writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
     }
@@ -63,6 +479,19 @@ class _PigeonCodec extends StandardMessageCodec {
   @override
   Object? readValueOfType(int type, ReadBuffer buffer) {
     switch (type) {
+      case 129:
+        final value = readValue(buffer) as int?;
+        return value == null ? null : FiamDismissType.values[value];
+      case 130:
+        return FiamCampaignMetadata.decode(readValue(buffer)!);
+      case 131:
+        return FiamAction.decode(readValue(buffer)!);
+      case 132:
+        return FiamText.decode(readValue(buffer)!);
+      case 133:
+        return FiamDisplayAction.decode(readValue(buffer)!);
+      case 134:
+        return FiamDisplayMessage.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
     }
@@ -140,5 +569,269 @@ class FirebaseInAppMessagingHostApi {
       pigeonVar_channelName,
       isNullValid: true,
     );
+  }
+
+  /// Attaches the native message lifecycle listeners that forward events to
+  /// [FirebaseInAppMessagingFlutterApi]. Calling this more than once is a no-op.
+  Future<void> addEventListeners(String appName) async {
+    final pigeonVar_channelName =
+        'dev.flutter.pigeon.firebase_in_app_messaging_platform_interface.FirebaseInAppMessagingHostApi.addEventListeners$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture =
+        pigeonVar_channel.send(<Object?>[appName]);
+    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
+
+    _extractReplyValueOrThrow(
+      pigeonVar_replyList,
+      pigeonVar_channelName,
+      isNullValid: true,
+    );
+  }
+
+  Future<void> setCustomDisplayEnabled(String appName, bool enabled) async {
+    final pigeonVar_channelName =
+        'dev.flutter.pigeon.firebase_in_app_messaging_platform_interface.FirebaseInAppMessagingHostApi.setCustomDisplayEnabled$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture =
+        pigeonVar_channel.send(<Object?>[appName, enabled]);
+    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
+
+    _extractReplyValueOrThrow(
+      pigeonVar_replyList,
+      pigeonVar_channelName,
+      isNullValid: true,
+    );
+  }
+
+  Future<void> reportImpression(String campaignId) async {
+    final pigeonVar_channelName =
+        'dev.flutter.pigeon.firebase_in_app_messaging_platform_interface.FirebaseInAppMessagingHostApi.reportImpression$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture =
+        pigeonVar_channel.send(<Object?>[campaignId]);
+    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
+
+    _extractReplyValueOrThrow(
+      pigeonVar_replyList,
+      pigeonVar_channelName,
+      isNullValid: true,
+    );
+  }
+
+  Future<void> reportClick(String campaignId, String actionId) async {
+    final pigeonVar_channelName =
+        'dev.flutter.pigeon.firebase_in_app_messaging_platform_interface.FirebaseInAppMessagingHostApi.reportClick$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture =
+        pigeonVar_channel.send(<Object?>[campaignId, actionId]);
+    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
+
+    _extractReplyValueOrThrow(
+      pigeonVar_replyList,
+      pigeonVar_channelName,
+      isNullValid: true,
+    );
+  }
+
+  Future<void> reportDismiss(String campaignId, String dismissType) async {
+    final pigeonVar_channelName =
+        'dev.flutter.pigeon.firebase_in_app_messaging_platform_interface.FirebaseInAppMessagingHostApi.reportDismiss$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture =
+        pigeonVar_channel.send(<Object?>[campaignId, dismissType]);
+    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
+
+    _extractReplyValueOrThrow(
+      pigeonVar_replyList,
+      pigeonVar_channelName,
+      isNullValid: true,
+    );
+  }
+
+  Future<void> reportDisplayError(String campaignId, String reason) async {
+    final pigeonVar_channelName =
+        'dev.flutter.pigeon.firebase_in_app_messaging_platform_interface.FirebaseInAppMessagingHostApi.reportDisplayError$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture =
+        pigeonVar_channel.send(<Object?>[campaignId, reason]);
+    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
+
+    _extractReplyValueOrThrow(
+      pigeonVar_replyList,
+      pigeonVar_channelName,
+      isNullValid: true,
+    );
+  }
+}
+
+abstract class FirebaseInAppMessagingFlutterApi {
+  static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
+
+  void onMessageClicked(
+      FiamCampaignMetadata campaignMetadata, FiamAction action);
+
+  void onMessageImpression(FiamCampaignMetadata campaignMetadata);
+
+  void onMessageDismissed(
+      FiamCampaignMetadata campaignMetadata, FiamDismissType dismissType);
+
+  void onMessageDisplayError(
+      FiamCampaignMetadata campaignMetadata, String? errorMessage);
+
+  void onMessageDisplay(FiamDisplayMessage message);
+
+  static void setUp(
+    FirebaseInAppMessagingFlutterApi? api, {
+    BinaryMessenger? binaryMessenger,
+    String messageChannelSuffix = '',
+  }) {
+    messageChannelSuffix =
+        messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.firebase_in_app_messaging_platform_interface.FirebaseInAppMessagingFlutterApi.onMessageClicked$messageChannelSuffix',
+          pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final FiamCampaignMetadata arg_campaignMetadata =
+              args[0]! as FiamCampaignMetadata;
+          final FiamAction arg_action = args[1]! as FiamAction;
+          try {
+            api.onMessageClicked(arg_campaignMetadata, arg_action);
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.firebase_in_app_messaging_platform_interface.FirebaseInAppMessagingFlutterApi.onMessageImpression$messageChannelSuffix',
+          pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final FiamCampaignMetadata arg_campaignMetadata =
+              args[0]! as FiamCampaignMetadata;
+          try {
+            api.onMessageImpression(arg_campaignMetadata);
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.firebase_in_app_messaging_platform_interface.FirebaseInAppMessagingFlutterApi.onMessageDismissed$messageChannelSuffix',
+          pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final FiamCampaignMetadata arg_campaignMetadata =
+              args[0]! as FiamCampaignMetadata;
+          final FiamDismissType arg_dismissType = args[1]! as FiamDismissType;
+          try {
+            api.onMessageDismissed(arg_campaignMetadata, arg_dismissType);
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.firebase_in_app_messaging_platform_interface.FirebaseInAppMessagingFlutterApi.onMessageDisplayError$messageChannelSuffix',
+          pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final FiamCampaignMetadata arg_campaignMetadata =
+              args[0]! as FiamCampaignMetadata;
+          final String? arg_errorMessage = args[1] as String?;
+          try {
+            api.onMessageDisplayError(arg_campaignMetadata, arg_errorMessage);
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
+          }
+        });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.firebase_in_app_messaging_platform_interface.FirebaseInAppMessagingFlutterApi.onMessageDisplay$messageChannelSuffix',
+          pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final FiamDisplayMessage arg_message = args[0]! as FiamDisplayMessage;
+          try {
+            api.onMessageDisplay(arg_message);
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          } catch (e) {
+            return wrapResponse(
+                error: PlatformException(code: 'error', message: e.toString()));
+          }
+        });
+      }
+    }
   }
 }

@@ -3,7 +3,7 @@
 // found in the LICENSE file.
 
 /// Auto-generated file. Do not edit.
-public let versionNumber = "6.8.0"
+public let versionNumber = "7.1.0"
 
 let kFLTFirebaseFirestoreChannelName = "plugins.flutter.io/firebase_firestore"
 let kFLTFirebaseFirestoreQuerySnapshotEventChannelName =

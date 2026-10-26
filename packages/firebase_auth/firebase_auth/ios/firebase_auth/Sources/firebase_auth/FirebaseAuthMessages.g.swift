@@ -831,6 +831,7 @@ struct InternalActionCodeSettings: Hashable {
 struct InternalFirebaseAuthSettings: Hashable {
   var appVerificationDisabledForTesting: Bool
   var userAccessGroup: String? = nil
+  var migrateCurrentUser: Bool
   var phoneNumber: String? = nil
   var smsCode: String? = nil
   var forceRecaptchaFlow: Bool? = nil
@@ -839,13 +840,15 @@ struct InternalFirebaseAuthSettings: Hashable {
   static func fromList(_ pigeonVar_list: [Any?]) -> InternalFirebaseAuthSettings? {
     let appVerificationDisabledForTesting = pigeonVar_list[0] as! Bool
     let userAccessGroup: String? = nilOrValue(pigeonVar_list[1])
-    let phoneNumber: String? = nilOrValue(pigeonVar_list[2])
-    let smsCode: String? = nilOrValue(pigeonVar_list[3])
-    let forceRecaptchaFlow: Bool? = nilOrValue(pigeonVar_list[4])
+    let migrateCurrentUser = pigeonVar_list[2] as! Bool
+    let phoneNumber: String? = nilOrValue(pigeonVar_list[3])
+    let smsCode: String? = nilOrValue(pigeonVar_list[4])
+    let forceRecaptchaFlow: Bool? = nilOrValue(pigeonVar_list[5])
 
     return InternalFirebaseAuthSettings(
       appVerificationDisabledForTesting: appVerificationDisabledForTesting,
       userAccessGroup: userAccessGroup,
+      migrateCurrentUser: migrateCurrentUser,
       phoneNumber: phoneNumber,
       smsCode: smsCode,
       forceRecaptchaFlow: forceRecaptchaFlow
@@ -855,6 +858,7 @@ struct InternalFirebaseAuthSettings: Hashable {
     return [
       appVerificationDisabledForTesting,
       userAccessGroup,
+      migrateCurrentUser,
       phoneNumber,
       smsCode,
       forceRecaptchaFlow,
@@ -867,6 +871,7 @@ struct InternalFirebaseAuthSettings: Hashable {
     return deepEqualsFirebaseAuthMessages(
       lhs.appVerificationDisabledForTesting, rhs.appVerificationDisabledForTesting)
       && deepEqualsFirebaseAuthMessages(lhs.userAccessGroup, rhs.userAccessGroup)
+      && deepEqualsFirebaseAuthMessages(lhs.migrateCurrentUser, rhs.migrateCurrentUser)
       && deepEqualsFirebaseAuthMessages(lhs.phoneNumber, rhs.phoneNumber)
       && deepEqualsFirebaseAuthMessages(lhs.smsCode, rhs.smsCode)
       && deepEqualsFirebaseAuthMessages(lhs.forceRecaptchaFlow, rhs.forceRecaptchaFlow)
@@ -876,6 +881,7 @@ struct InternalFirebaseAuthSettings: Hashable {
     hasher.combine("InternalFirebaseAuthSettings")
     deepHashFirebaseAuthMessages(value: appVerificationDisabledForTesting, hasher: &hasher)
     deepHashFirebaseAuthMessages(value: userAccessGroup, hasher: &hasher)
+    deepHashFirebaseAuthMessages(value: migrateCurrentUser, hasher: &hasher)
     deepHashFirebaseAuthMessages(value: phoneNumber, hasher: &hasher)
     deepHashFirebaseAuthMessages(value: smsCode, hasher: &hasher)
     deepHashFirebaseAuthMessages(value: forceRecaptchaFlow, hasher: &hasher)
@@ -1343,9 +1349,12 @@ protocol FirebaseAuthHostApi {
   func setLanguageCode(
     app: AuthPigeonFirebaseApp, languageCode: String?,
     completion: @escaping (Result<String, Error>) -> Void)
+  /// Applies auth settings. When [InternalFirebaseAuthSettings.migrateCurrentUser]
+  /// is true and a user was migrated, returns that user so Dart can reconcile
+  /// [currentUser] before auth-state events arrive. Otherwise returns null.
   func setSettings(
     app: AuthPigeonFirebaseApp, settings: InternalFirebaseAuthSettings,
-    completion: @escaping (Result<Void, Error>) -> Void)
+    completion: @escaping (Result<InternalUserDetails?, Error>) -> Void)
   func verifyPasswordResetCode(
     app: AuthPigeonFirebaseApp, code: String, completion: @escaping (Result<String, Error>) -> Void)
   func verifyPhoneNumber(
@@ -1758,6 +1767,9 @@ class FirebaseAuthHostApiSetup {
     } else {
       setLanguageCodeChannel.setMessageHandler(nil)
     }
+    /// Applies auth settings. When [InternalFirebaseAuthSettings.migrateCurrentUser]
+    /// is true and a user was migrated, returns that user so Dart can reconcile
+    /// [currentUser] before auth-state events arrive. Otherwise returns null.
     let setSettingsChannel = FlutterBasicMessageChannel(
       name:
         "dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.setSettings\(channelSuffix)",
@@ -1769,8 +1781,8 @@ class FirebaseAuthHostApiSetup {
         let settingsArg = args[1] as! InternalFirebaseAuthSettings
         api.setSettings(app: appArg, settings: settingsArg) { result in
           switch result {
-          case .success:
-            reply(wrapResult(nil))
+          case .success(let res):
+            reply(wrapResult(res))
           case .failure(let error):
             reply(wrapError(error))
           }

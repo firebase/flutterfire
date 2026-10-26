@@ -1,3 +1,29 @@
+## 17.0.1
+
+ - **FIX**(android): replace Groovy space-assignment in plugin build.gradle files ([#18837](https://github.com/firebase/flutterfire/issues/18837)). ([09e913ac](https://github.com/firebase/flutterfire/commit/09e913acd98fa25ea6ff547141e7caf421b7b02d))
+ - **FIX**(messaging,ios): deliver background messages exactly once and stop dropping them at startup ([#18830](https://github.com/firebase/flutterfire/issues/18830)). ([04045d2a](https://github.com/firebase/flutterfire/commit/04045d2a040a1c2d0cf09a25b3d879659ac310fb))
+ - **FIX**(firebase_messaging,android): keep all fields of messages restored from the store ([#18823](https://github.com/firebase/flutterfire/issues/18823)). ([b969240a](https://github.com/firebase/flutterfire/commit/b969240a4ed84e87cc0c1ef59cc841856cb4cefd))
+
+## 17.0.0
+
+> Note: This release has breaking changes.
+
+ - **FIX**(messaging,android): start only one background engine when messages arrive in a burst ([#18791](https://github.com/firebase/flutterfire/issues/18791)). ([bedfd639](https://github.com/firebase/flutterfire/commit/bedfd63947d585ef2259c65fc048fa0493c35193))
+ - **FIX**(messaging,ios): deliver a tap on the push that launched the app in the background ([#18802](https://github.com/firebase/flutterfire/issues/18802)). ([7deacc75](https://github.com/firebase/flutterfire/commit/7deacc7502f6eb42ca773cd05437336d1e505e38))
+ - **FIX**(apple): build on Firebase Apple SDK 13 and require macOS 11 for Swift packages ([#18783](https://github.com/firebase/flutterfire/issues/18783)). ([aca14eab](https://github.com/firebase/flutterfire/commit/aca14eab5305d80011af473bc7dd289ef71b75e8))
+ - **FIX**(android): build on Firebase BoM 35 and require minSdk 24 ([#18782](https://github.com/firebase/flutterfire/issues/18782)). ([7555707d](https://github.com/firebase/flutterfire/commit/7555707dec23382dfce1e7841c00446a21c9a406))
+ - **FIX**(messaging,ios): do not suppress forwarded local notifications ([#18701](https://github.com/firebase/flutterfire/issues/18701)). ([128c7c62](https://github.com/firebase/flutterfire/commit/128c7c62b6ff9a1ad027d639695580c5c38a4982))
+ - **FIX**(messaging,ios): return NO from scene willConnectToSession ([#18733](https://github.com/firebase/flutterfire/issues/18733)). ([056c264e](https://github.com/firebase/flutterfire/commit/056c264e28a704c9b9ea8a7d2a23af8a59ba8332))
+ - **FEAT**(messaging): add FID registration APIs ([#18482](https://github.com/firebase/flutterfire/issues/18482)). ([ff6da47e](https://github.com/firebase/flutterfire/commit/ff6da47ea85fd62e4a2c267603d39f2077c6fdb3))
+ - **BREAKING** **FEAT**: bump Firebase iOS SDK to 13.0.0 ([#18771](https://github.com/firebase/flutterfire/issues/18771)). ([dbf7f754](https://github.com/firebase/flutterfire/commit/dbf7f7543a37386f7e8e314d8344be82b0483b77))
+
+## 16.7.0
+
+ - **FIX**(messaging,ios): register for APNs after Dart Firebase.initializeApp() ([#18650](https://github.com/firebase/flutterfire/issues/18650)). ([2ea8381a](https://github.com/firebase/flutterfire/commit/2ea8381a1ada9fa6946c87fc0d203f94f04c6212))
+ - **FIX**(messaging,android): skip onMessageOpenedApp for terminated notification taps ([#18663](https://github.com/firebase/flutterfire/issues/18663)). ([a57837ef](https://github.com/firebase/flutterfire/commit/a57837ef40f73f0187b45125ecc0d81811b71bd9))
+ - **FIX**(messaging,ios): register for APNs when UIScene plugins miss launch callbacks ([#18620](https://github.com/firebase/flutterfire/issues/18620)). ([2fd8aa88](https://github.com/firebase/flutterfire/commit/2fd8aa886fcd7faf281ca5a7645ddaebabc3cb7a))
+ - **FEAT**(core): bump Firebase iOS SDK to 12.19.0 ([#18683](https://github.com/firebase/flutterfire/issues/18683)). ([35e39637](https://github.com/firebase/flutterfire/commit/35e39637f4cbef0d70043047f80d6f6e80daf8fe))
+
 ## 16.6.0
 
  - **FIX**(ci): bump Kotlin Gradle plugin to 2.3.0 ([#18600](https://github.com/firebase/flutterfire/issues/18600)). ([4c3865e2](https://github.com/firebase/flutterfire/commit/4c3865e2e56bf59904a9f48a6e70f0f963df2cda))

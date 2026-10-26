@@ -270,9 +270,20 @@ external MultiFactorResolverJsImpl getMultiFactorResolver(
 @staticInterop
 abstract class AuthJsImpl {}
 
+@JS()
+@staticInterop
+abstract class EmulatorConfigJsImpl {}
+
+extension EmulatorConfigJsImplExtension on EmulatorConfigJsImpl {
+  external JSString get protocol;
+  external JSString get host;
+  external JSNumber? get port;
+}
+
 extension AuthJsImplExtension on AuthJsImpl {
   external AppJsImpl get app;
   external UserJsImpl? get currentUser;
+  external EmulatorConfigJsImpl? get emulatorConfig;
   external JSString? get languageCode;
   external set languageCode(JSString? s);
   external AuthSettings get settings;
@@ -630,7 +641,7 @@ extension AuthErrorExtension on AuthError {
   external set tenantId(JSString s);
   external JSString get phoneNumber;
   external set phoneNumber(JSString s);
-  external JSObject get customData;
+  external JSObject? get customData;
 }
 
 extension type AuthErrorCustomData._(JSObject _) implements JSObject {

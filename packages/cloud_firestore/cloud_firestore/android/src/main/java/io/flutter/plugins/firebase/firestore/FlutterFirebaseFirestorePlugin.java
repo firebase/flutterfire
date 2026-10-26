@@ -635,6 +635,8 @@ public class FlutterFirebaseFirestorePlugin
                     DocumentSnapshot.ServerTimestampBehavior.NONE));
           } catch (Exception e) {
             ExceptionConverter.sendErrorToFlutter(result, e);
+          } catch (Throwable t) {
+            ExceptionConverter.sendErrorToFlutter(result, new Exception(t));
           }
         });
   }

@@ -7,8 +7,8 @@
 
 import PackageDescription
 
-let libraryVersion = "13.5.0"
-let firebaseSdkVersion: Version = "12.18.0"
+let libraryVersion = "14.0.1"
+let firebaseSdkVersion: Version = "13.1.1"
 
 let package = Package(
   name: "firebase_storage",

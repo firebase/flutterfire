@@ -30,9 +30,7 @@ void main() {
         ),
       );
 
-      firebaseAppCheckPlatform = TestFirebaseAppCheckPlatform(
-        app,
-      );
+      firebaseAppCheckPlatform = TestFirebaseAppCheckPlatform(app);
     });
 
     test('Constructor', () {
@@ -52,8 +50,9 @@ void main() {
     });
 
     test('set.instance', () {
-      FirebaseAppCheckPlatform.instance =
-          TestFirebaseAppCheckPlatform(secondaryApp);
+      FirebaseAppCheckPlatform.instance = TestFirebaseAppCheckPlatform(
+        secondaryApp,
+      );
 
       expect(
         FirebaseAppCheckPlatform.instance,
@@ -79,7 +78,7 @@ void main() {
     test('throws if .activate() not implemented', () async {
       await expectLater(
         () => firebaseAppCheckPlatform.activate(
-          webProvider: ReCaptchaV3Provider('test key'),
+          providerWeb: ReCaptchaV3Provider('test key'),
         ),
         throwsA(
           isA<UnimplementedError>().having(

@@ -292,10 +292,12 @@ class UserWeb extends UserPlatform {
       newProfile = auth_interop.UserProfile(
         displayName: profile['displayName']?.toJS,
       );
-    } else {
+    } else if (profile.containsKey('photoURL')) {
       newProfile = auth_interop.UserProfile(
         photoURL: profile['photoURL']?.toJS,
       );
+    } else {
+      newProfile = auth_interop.UserProfile();
     }
 
     await guardAuthExceptions(

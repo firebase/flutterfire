@@ -146,6 +146,40 @@ void main() {
       expect(exception.code, 'unknown');
       expect(exception.message, 'a string detail');
     });
+
+    test('tolerates null values in the details map', () {
+      final exception = platformExceptionToFirebaseException(
+        PlatformException(
+          code: 'firebase_database',
+          message: 'a channel level message',
+          details: <String, Object?>{
+            'code': 'permission-denied',
+            'message': null,
+          },
+        ),
+        plugin: 'firebase_database',
+      );
+
+      expect(exception.code, 'permission-denied');
+      expect(exception.message, 'a channel level message');
+    });
+
+    test('tolerates non-string code and message values in the details map', () {
+      final exception = platformExceptionToFirebaseException(
+        PlatformException(
+          code: 'firebase_database',
+          message: 'a channel level message',
+          details: <String, Object?>{
+            'code': 403,
+            'message': <String>['not a string'],
+          },
+        ),
+        plugin: 'firebase_database',
+      );
+
+      expect(exception.code, 'unknown');
+      expect(exception.message, 'a channel level message');
+    });
   });
 
   group('convertPlatformExceptionToFirebaseException', () {

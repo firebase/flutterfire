@@ -4,9 +4,8 @@ name: reusable-e2e-ios
 # simulator and run the integration tests on it. Called by every
 # `e2e_tests_<product>.yaml` - every product supports iOS.
 #
-# This job is the repository's Swift Package Manager coverage (`ios-spm`,
-# default true); the macOS job is always CocoaPods, so both dependency managers
-# stay exercised.
+# Builds with Swift Package Manager only, like the macOS job: the examples
+# commit no Podfile.
 
 on:
   workflow_call:
@@ -68,25 +67,18 @@ on:
         default: '15.25.1'
       cache-key-suffix:
         description: >-
-          Short product token that makes the ccache/Pods cache keys unique, e.g.
+          Short product token that makes the ccache keys unique, e.g.
           'storage'. Two products sharing a suffix would clobber each other's
           caches, so this is required rather than defaulted.
         type: string
         required: true
-      ios-spm:
+      info-plist-overrides:
         description: >-
-          true  = iOS builds under Swift Package Manager (the Podfile is removed
-                  first, so `flutter build` does not prefer CocoaPods).
-          false = iOS stays on CocoaPods and gets a Pods cache, as
-                  firebase_crashlytics must (its Xcode project runs
-                  "${PODS_ROOT}/FirebaseCrashlytics/run") and as cloud_functions
-                  and firebase_performance currently must (Flutter's
-                  experimental SPM integration cannot resolve their examples on
-                  the CI Xcode).
-          The macOS job is always CocoaPods, so both dependency managers stay
-          covered either way.
-        type: boolean
-        default: true
+          Space-separated `Key=true|false` booleans written to the example's
+          ios/Runner/Info.plist before building, to run the tests under another
+          app configuration (e.g. `FirebaseAppDelegateProxyEnabled=false`).
+        type: string
+        default: ''
       nightly_test_mode:
         description: >-
           Passed down from nightly.yaml. Shortens the job timeout to 5 minutes.
@@ -115,25 +107,21 @@ jobs:
        github.actor != 'dependabot[bot]')
     permissions:
       contents: read
-    runs-on: macos-15
+    runs-on: xcode-27
     env:
       # Inputs consumed inside run: scripts are routed through env so their
       # values are data, never shell/template code (zizmor: template-injection).
       PACKAGE_PATH: ${{ inputs.package-path }}
       TEST_TARGET: ${{ inputs.test-target }}
       NATIVE_CONFIG_ARGS: ${{ inputs.native-config-args }}
+      INFO_PLIST_OVERRIDES: ${{ inputs.info-plist-overrides }}
     timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 60 }}
     steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
-      # No `xcode-select` pin: use the runner image's default Xcode. Firebase's
-      # iOS SDK minimum is 26.2 and every current macos-15 image is at or above
-      # it. The pin to exactly 26.2 was the reason SPM resolution kept failing:
-      # that toolchain canonicalizes the ephemeral symlink farm Flutter lays out
-      # for plugin packages and then looks for the siblings at their real paths
-      # ("Could not resolve package dependencies ... ios/firebase_core does not
-      # exist"); newer Xcode resolves the same layout. It is also why
-      # cloud_functions and firebase_performance are on CocoaPods for now - they
-      # can rejoin SPM once the default-Xcode runs prove clean.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      # Use the xcode-27 image default (Xcode 27 / iOS 27). Do not pin an older
+      # Xcode: pinning 26.2 on macos-15 made SPM fail by canonicalizing Flutter's
+      # ephemeral plugin symlink farm ("Could not resolve package dependencies
+      # ... ios/firebase_core does not exist").
       - uses: ./.github/actions/setup-flutterfire
         with:
           node: ${{ inputs.use-firebase-emulators && 'true' || 'false' }}
@@ -142,24 +130,15 @@ jobs:
           firebase-tools-version: ${{ inputs.use-firebase-emulators && inputs.firebase-tools-version || '' }}
           bootstrap-scope: ${{ inputs.package-scope }}
       - name: Enable Swift Package Manager for iOS
-        # This job is the repository's iOS Swift Package Manager coverage for the
-        # product: every plugin the example depends on ships a Package.swift, so
-        # the whole app resolves under SPM. The macOS job stays on CocoaPods, so
-        # both dependency managers are exercised.
-        if: inputs.ios-spm
+        # Every plugin the example depends on ships a Package.swift, so the
+        # whole app resolves under SPM. The example's pubspec also pins this.
         run: flutter config --enable-swift-package-manager
-      - name: Disable Swift Package Manager for iOS
-        # Recent stable Flutter enables SPM by default, which turns intended
-        # CocoaPods builds into hybrid ones. This job's CocoaPods coverage is
-        # deliberate (ios-spm: false), so opt out explicitly.
-        if: ${{ !inputs.ios-spm }}
-        run: flutter config --no-enable-swift-package-manager
-      - uses: hendrikmuhs/ccache-action@d62db5f07c26379fc4b4e0916f098a92573c3b03
+      - uses: hendrikmuhs/ccache-action@f09c25b45002a07be2955cbe52e8cee55643f89d
         name: Xcode Compile Cache
         with:
-          # Distinct from every other macos-15 job's key, otherwise the workflows
+          # Distinct from every other xcode-27 job's key, otherwise the workflows
           # clobber each other's cache.
-          key: xcode-ccache-${{ inputs.cache-key-suffix }}-ios
+          key: xcode-ccache-${{ inputs.cache-key-suffix }}-ios-xcode27
           save: "${{ github.ref == 'refs/heads/main' }}"
           max-size: 700M
       - name: Firebase Emulator Cache
@@ -201,29 +180,24 @@ jobs:
         run: |
           # shellcheck disable=SC2086 # an argument list: word-splitting is the point
           dart ./.github/workflows/scripts/generate-dummy-firebase-configs.dart $NATIVE_CONFIG_ARGS
-      - name: Prepare iOS project for Swift Package Manager
-        # Done here rather than in the repository: the committed Podfile is what
-        # CocoaPods users of the example rely on, and `flutter build` prefers
-        # CocoaPods whenever a Podfile is present.
-        if: inputs.ios-spm
-        working-directory: ${{ inputs.package-path }}/example/ios
+      - name: Apply Info.plist overrides
+        if: inputs.info-plist-overrides != ''
+        working-directory: ${{ inputs.package-path }}/example/ios/Runner
         run: |
-          if [ -f Podfile ]; then pod deintegrate; fi
-          rm -f Podfile Podfile.lock
-          rm -rf Pods
-      - name: Pods Cache
-        if: ${{ !inputs.ios-spm }}
-        continue-on-error: true
-        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
-        id: pods-cache
-        with:
-          # Must match the save path exactly
-          path: ${{ inputs.package-path }}/example/ios/Pods
-          # Keyed on the Podfile and the pinned Firebase SDK version, not on a
-          # pubspec.lock: those are gitignored, so hashFiles() returns an empty
-          # string and the key could never be invalidated.
-          key: pods-v1-${{ runner.os }}-${{ inputs.cache-key-suffix }}-ios-${{ hashFiles(format('{0}/example/ios/Podfile', inputs.package-path), 'packages/firebase_core/firebase_core/ios/firebase_sdk_version.rb') }}
-          restore-keys: pods-v1-${{ runner.os }}-${{ inputs.cache-key-suffix }}-ios-
+          for override in $INFO_PLIST_OVERRIDES; do
+            key="${override%%=*}"
+            value="${override#*=}"
+            if [[ ! "$key" =~ ^[A-Za-z0-9_]+$ || ! "$value" =~ ^(true|false)$ ]]; then
+              echo "::error::Invalid Info.plist override '$override', expected Key=true|false."
+              exit 1
+            fi
+            /usr/libexec/PlistBuddy -c "Delete :$key" Info.plist 2>/dev/null || true
+            /usr/libexec/PlistBuddy -c "Add :$key bool $value" Info.plist
+            echo "Info.plist: $key = $value"
+          done
+      - name: Link the example plugin's Swift package dependencies
+        # Keeps the plugin's local package override resolvable; see the script.
+        run: ./.github/workflows/scripts/link-example-plugin-package-deps.sh "$PACKAGE_PATH/example" ios
       - name: 'Build Application'
         working-directory: ${{ inputs.package-path }}/example
         timeout-minutes: 25
@@ -246,11 +220,30 @@ jobs:
           if [ $BUILD_EXIT -ne 0 ] && grep -q "Could not resolve package dependencies" build_output.log; then
             echo "SPM package resolution race detected; retrying the build once."
             flutter clean > /dev/null
-            flutter build ios --no-codesign --simulator --debug --target="./$TEST_TARGET" --dart-define=CI=true
+            flutter build ios --no-codesign --simulator --debug --target="./$TEST_TARGET" --dart-define=CI=true > build_output.log 2>&1
             BUILD_EXIT=$?
+            cat build_output.log
           fi
           set -e
           ccache -s
+          # Flutter silently falls back to CocoaPods when the example has a
+          # Podfile or a plugin has no Package.swift.
+          if grep -q "Running pod install" build_output.log; then
+            echo "::error::flutter build ran pod install: this example must build with Swift Package Manager only."
+            exit 1
+          fi
+          # Fail rather than silently test the default configuration.
+          if [ $BUILD_EXIT -eq 0 ]; then
+            for override in $INFO_PLIST_OVERRIDES; do
+              key="${override%%=*}"
+              value="${override#*=}"
+              built="$(/usr/libexec/PlistBuddy -c "Print :$key" build/ios/iphonesimulator/Runner.app/Info.plist)"
+              if [ "$built" != "$value" ]; then
+                echo "::error::Built Info.plist has $key = '$built', expected '$value'."
+                exit 1
+              fi
+            done
+          fi
           exit $BUILD_EXIT
       - name: Install Cloud Functions dependencies
         if: inputs.use-firebase-emulators
@@ -262,8 +255,8 @@ jobs:
       - uses: futureware-tech/simulator-action@e89aa8f93d3aec35083ff49d2854d07f7186f7f5
         id: simulator
         with:
-          # List of available simulators: https://github.com/actions/runner-images/blob/main/images/macos/macos-15-Readme.md#installed-simulators
-          model: "iPhone 16"
+          # List of available simulators: https://github.com/actions/runner-images/blob/main/images/macos/xcode-27-arm64-Readme.md#installed-simulators
+          model: "iPhone 17"
       - name: Ensure Simulator Ready
         timeout-minutes: 13
         env:
@@ -443,12 +436,3 @@ jobs:
           key: ${{ steps.firebase-emulator-cache.outputs.cache-primary-key }}
           # Must match the restore path exactly
           path: ~/.cache/firebase/emulators
-      - name: Save Pods Cache
-        continue-on-error: true
-        # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
-        if: ${{ !inputs.ios-spm && github.ref == 'refs/heads/main' }}
-        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
-        with:
-          key: ${{ steps.pods-cache.outputs.cache-primary-key }}
-          # Must match the restore path exactly
-          path: ${{ inputs.package-path }}/example/ios/Pods

@@ -32,6 +32,10 @@ enum FirestoreDataType: UInt8 {
   case firestoreQuery = 197
   case firestoreSettings = 198
   case vectorValue = 199
+  case minimumDouble = 200
+  case minimumInteger = 201
+  case maximumDouble = 202
+  case maximumInteger = 203
 }
 
 enum FirebaseFirestoreUtils {

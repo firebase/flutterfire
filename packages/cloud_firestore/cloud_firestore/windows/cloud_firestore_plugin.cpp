@@ -400,7 +400,10 @@ Firestore* GetFirestoreFromPigeon(const FirestorePigeonFirebaseApp& pigeonApp) {
   firebase::firestore::Settings settings;
 
   if (pigeonApp.settings().persistence_enabled()) {
-    bool persistEnabled = pigeonApp.settings().persistence_enabled();
+    // The getter returns `const bool*` (null when unset); dereference to read
+    // the actual value rather than testing pointer presence.
+    bool persistEnabled = *pigeonApp.settings().persistence_enabled();
+    settings.set_persistence_enabled(persistEnabled);
 
     // This is the maximum amount of cache allowed. We use the same number on
     // android.
@@ -1154,9 +1157,19 @@ class TransactionStreamHandler
             SendSuccessOnPlatformThread(events_state_,
                                         flutter::EncodableValue(result));
           } else {
-            SendErrorOnPlatformThread(events_state_, "transaction_error",
-                                      completed_future.error_message(),
-                                      flutter::EncodableValue());
+            // runTransaction reads this success payload. An EventChannel
+            // error never reaches the transaction future.
+            const firebase::firestore::Error errorCode =
+                static_cast<firebase::firestore::Error>(
+                    completed_future.error());
+            EncodableMap error;
+            error[EncodableValue("code")] =
+                EncodableValue(CloudFirestorePlugin::GetErrorCode(errorCode));
+            error[EncodableValue("message")] =
+                EncodableValue(completed_future.error_message());
+            result[EncodableValue("error")] = EncodableValue(error);
+            SendSuccessOnPlatformThread(events_state_,
+                                        flutter::EncodableValue(result));
           }
           EndStreamOnPlatformThread(events_state_);
         });
@@ -1254,7 +1267,13 @@ void CloudFirestorePlugin::TransactionGet(
       transaction->Get(reference, &error_code, &error_message);
 
   if (error_code != Error::kErrorOk) {
-    result(FlutterError(error_message));
+    // The one-argument FlutterError puts error_message in the code slot and
+    // sends no details, so Dart reports `unknown` with an empty message.
+    EncodableMap details;
+    details[EncodableValue("code")] =
+        EncodableValue(CloudFirestorePlugin::GetErrorCode(error_code));
+    details[EncodableValue("message")] = EncodableValue(error_message);
+    result(FlutterError("firebase_firestore", error_message, details));
   } else {
     result(ParseDocumentSnapshot(
         snapshot, DocumentSnapshot::ServerTimestampBehavior::kDefault));
@@ -1639,7 +1658,6 @@ void CloudFirestorePlugin::AggregateQuery(
   Firestore* firestore = GetFirestoreFromPigeon(app);
   Query query = ParseQuery(firestore, path, is_collection_group, parameters);
 
-  // C++ SDK does not support average and sum
   firebase::firestore::AggregateQuery aggregate_query;
 
   for (auto& queryRequest : queries) {
@@ -1652,11 +1670,15 @@ void CloudFirestorePlugin::AggregateQuery(
         aggregate_query = query.Count();
         break;
       case AggregateType::kSum:
-        std::cout << "Sum is not supported on C++" << std::endl;
-        break;
       case AggregateType::kAverage:
-        std::cout << "Average is not supported on C++" << std::endl;
-        break;
+        // The Firebase C++ SDK only implements count() aggregations. Reject
+        // the request instead of dropping the unsupported aggregations from
+        // the response, which left `getSum()` / `getAverage()` returning null
+        // as if the query had succeeded.
+        result(FlutterError("unimplemented",
+                            "Sum and average aggregations are not supported by "
+                            "the Firebase C++ SDK on Windows."));
+        return;
     }
   }
 
@@ -1686,14 +1708,10 @@ void CloudFirestorePlugin::AggregateQuery(
                     CustomEncodableValue(aggregateResponse));
                 break;
               }
-              case AggregateType::kSum: {
-                std::cout << "Sum is not supported on C++" << std::endl;
+              case AggregateType::kSum:
+              case AggregateType::kAverage:
+                // Unreachable: requests containing these are rejected above.
                 break;
-              }
-              case AggregateType::kAverage: {
-                std::cout << "Average is not supported on C++" << std::endl;
-                break;
-              }
             }
           }
 

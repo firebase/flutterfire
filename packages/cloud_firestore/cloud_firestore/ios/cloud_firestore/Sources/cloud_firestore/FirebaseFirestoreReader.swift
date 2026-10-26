@@ -69,6 +69,14 @@ class FirebaseFirestoreReader: FlutterStandardReader {
       return FieldValue.increment((readValue() as! NSNumber).doubleValue)
     case FirestoreDataType.incrementInteger.rawValue:
       return FieldValue.increment(Int64((readValue() as! NSNumber).intValue))
+    case FirestoreDataType.minimumDouble.rawValue:
+      return FieldValue.minimum((readValue() as! NSNumber).doubleValue)
+    case FirestoreDataType.minimumInteger.rawValue:
+      return FieldValue.minimum(Int64((readValue() as! NSNumber).intValue))
+    case FirestoreDataType.maximumDouble.rawValue:
+      return FieldValue.maximum((readValue() as! NSNumber).doubleValue)
+    case FirestoreDataType.maximumInteger.rawValue:
+      return FieldValue.maximum(Int64((readValue() as! NSNumber).intValue))
     case FirestoreDataType.documentId.rawValue:
       return FieldPath.documentID()
     case FirestoreDataType.firestoreInstance.rawValue:

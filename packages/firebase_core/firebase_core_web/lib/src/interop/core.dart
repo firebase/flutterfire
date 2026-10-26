@@ -34,23 +34,22 @@ App initializeApp({
   String? measurementId,
   String? appId,
 }) {
-  name ??= defaultFirebaseAppName;
-
-  return App.getInstance(
-    firebase_interop.initializeApp(
-      firebase_interop.FirebaseOptions(
-        apiKey: apiKey?.toJS,
-        authDomain: authDomain?.toJS,
-        databaseURL: databaseURL?.toJS,
-        projectId: projectId?.toJS,
-        storageBucket: storageBucket?.toJS,
-        messagingSenderId: messagingSenderId?.toJS,
-        measurementId: measurementId?.toJS,
-        appId: appId?.toJS,
-      ),
-      name.toJS,
-    ),
+  final options = firebase_interop.FirebaseOptions(
+    apiKey: apiKey?.toJS,
+    authDomain: authDomain?.toJS,
+    databaseURL: databaseURL?.toJS,
+    projectId: projectId?.toJS,
+    storageBucket: storageBucket?.toJS,
+    messagingSenderId: messagingSenderId?.toJS,
+    measurementId: measurementId?.toJS,
+    appId: appId?.toJS,
   );
+
+  final jsApp = (name != null && name != defaultFirebaseAppName)
+      ? firebase_interop.initializeApp(options, name.toJS)
+      : firebase_interop.initializeApp(options);
+
+  return App.getInstance(jsApp);
 }
 
 App app([String? name]) {

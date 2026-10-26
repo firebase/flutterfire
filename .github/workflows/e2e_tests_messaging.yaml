@@ -87,6 +87,27 @@ jobs:
       TESTS_E2E_FIREBASE_OPTIONS_DART: ${{ secrets.TESTS_E2E_FIREBASE_OPTIONS_DART }}
       TESTS_E2E_GOOGLE_SERVICES_JSON: ${{ secrets.TESTS_E2E_GOOGLE_SERVICES_JSON }}
 
+  # Apps that turn off the Firebase app delegate proxy get remote
+  # notifications through a different path in the plugin: run the delivery
+  # tests again with it disabled.
+  ios-app-delegate-proxy-disabled:
+    needs: changes
+    if: needs.changes.outputs.ios == 'true'
+    uses: ./.github/workflows/reusable_e2e_ios.yaml
+    with:
+      package-path: 'packages/firebase_messaging/firebase_messaging'
+      package-scope: 'firebase_messaging*'
+      cache-key-suffix: 'messaging'
+      test-target: 'integration_test/remote_notification_delivery_test.dart'
+      native-config-args: '--live-tier-plist=messaging'
+      inject-config-secrets: true
+      use-firebase-emulators: false
+      info-plist-overrides: 'FirebaseAppDelegateProxyEnabled=false'
+      nightly_test_mode: ${{ inputs.nightly_test_mode == true }}
+    secrets:
+      TESTS_E2E_FIREBASE_OPTIONS_DART: ${{ secrets.TESTS_E2E_FIREBASE_OPTIONS_DART }}
+      TESTS_E2E_GOOGLE_SERVICES_JSON: ${{ secrets.TESTS_E2E_GOOGLE_SERVICES_JSON }}
+
   macos:
     needs: changes
     if: needs.changes.outputs.macos == 'true'

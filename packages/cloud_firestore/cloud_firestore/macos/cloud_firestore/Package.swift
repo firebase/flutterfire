@@ -7,13 +7,13 @@
 
 import PackageDescription
 
-let libraryVersion = "6.9.0"
-let firebaseSdkVersion: Version = "12.18.0"
+let libraryVersion = "7.1.0"
+let firebaseSdkVersion: Version = "13.1.1"
 
 let package = Package(
   name: "cloud_firestore",
   platforms: [
-    .macOS("10.15")
+    .macOS("11.0")
   ],
   products: [
     .library(name: "cloud-firestore", targets: ["cloud_firestore"])
@@ -47,6 +47,9 @@ let package = Package(
       path: "Sources/cloud_firestore",
       resources: [
         .process("Resources")
+      ],
+      swiftSettings: [
+        .define("FLT_FIREBASE_SDK_13")
       ]
     ),
   ]

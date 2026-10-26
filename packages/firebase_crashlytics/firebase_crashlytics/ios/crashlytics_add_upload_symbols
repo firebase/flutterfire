@@ -53,36 +53,83 @@ else
     upload_symbols_args = options_dict[:additional_options]
 end
 
+PHASE_NAME = "[firebase_crashlytics] Crashlytics Upload Symbols"
+
+# Debug device builds (including flavored Debug-<flavor> configurations) use
+# DEBUG_INFORMATION_FORMAT=dwarf, so upload-symbols fails the build when it
+# cannot find a dSYM. Skip those builds, and skip any other configuration that
+# did not produce a dSYM instead of failing the Xcode build.
+def build_upload_symbols_script(upload_symbols_args)
+    command = "\"$PODS_ROOT/FirebaseCrashlytics/upload-symbols\" #{upload_symbols_args}".rstrip
+    <<~SCRIPT
+        case "$CONFIGURATION" in
+          Debug*)
+            exit 0
+            ;;
+        esac
+        case "$PLATFORM_NAME" in
+          *simulator)
+            exit 0
+            ;;
+        esac
+        DSYM_PATH="${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}"
+        if [ ! -d "$DSYM_PATH" ]; then
+          echo "warning: Skipping Crashlytics symbol upload. No dSYM at $DSYM_PATH."
+          exit 0
+        fi
+        #{command}
+    SCRIPT
+end
+
+# The historical generated phase is a single upload-symbols invocation. Custom
+# phases (a hand-written Debug guard, extra logic) are left untouched.
+def stock_upload_symbols_phase?(shell_script)
+    stripped = shell_script.to_s.strip
+    return false if stripped.empty?
+    return false if stripped.include?("\n")
+    return false unless stripped.include?("FirebaseCrashlytics/upload-symbols")
+    return false if stripped.include?("case ")
+    return false if stripped.include?("if ")
+    true
+end
+
 # Actually open and modify the project
 project = Xcodeproj::Project.open(project_path)
 project.targets.each do |target|
     if (target.name == "Runner")
-        # We need to make sure that we're not adding more than one run script to upload-symbols (or overwriting custom upload-symbols scripts).
-        target.shell_script_build_phases().each { |phase|
-            if (phase.shell_script.include? "FirebaseCrashlytics/upload-symbols")
-                puts("Run script to upload symbols already exists.")
-                exit(0)
-            end
-            if (phase.shell_script.include? "FirebaseCrashlytics/run")
-                puts("Run script to upload symbols already exists.")
-                exit(0)
-            end
-        }
-        phase = target.shell_script_build_phases().find {|item| item.name == "[firebase_crashlytics] Crashlytics Upload Symbols"}
+        phases = target.shell_script_build_phases()
 
-        # If no existing run scripts exist, then create one.
-        if (phase.nil?)
-            phase = target.new_shell_script_build_phase("[firebase_crashlytics] Crashlytics Upload Symbols")
-            phase.shell_script = "\"$PODS_ROOT/FirebaseCrashlytics/upload-symbols\" #{upload_symbols_args}"
-            phase.input_paths = [
-                "\"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}\"",
-                "\"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/\"",
-                "\"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Info.plist\"",
-                "\"$(TARGET_BUILD_DIR)/$(EXECUTABLE_PATH)\"",
-                "\"$(PROJECT_DIR)/firebase_app_id_file.json\"",
-            ]
-            project.save()
+        # A manual Crashlytics run script is user-owned.
+        if phases.any? { |phase| phase.shell_script.include?("FirebaseCrashlytics/run") }
+            puts("Run script to upload symbols already exists.")
+            exit(0)
         end
+
+        existing = phases.find { |phase|
+            phase.name == PHASE_NAME || phase.shell_script.include?("FirebaseCrashlytics/upload-symbols")
+        }
+        desired_script = build_upload_symbols_script(upload_symbols_args)
+
+        if existing
+            if stock_upload_symbols_phase?(existing.shell_script)
+                existing.shell_script = desired_script
+                project.save()
+                puts("Updated Crashlytics upload symbols run script.")
+            else
+                puts("Run script to upload symbols already exists.")
+            end
+            exit(0)
+        end
+
+        phase = target.new_shell_script_build_phase(PHASE_NAME)
+        phase.shell_script = desired_script
+        phase.input_paths = [
+            "\"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}\"",
+            "\"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/\"",
+            "\"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Info.plist\"",
+            "\"$(TARGET_BUILD_DIR)/$(EXECUTABLE_PATH)\"",
+            "\"$(PROJECT_DIR)/firebase_app_id_file.json\"",
+        ]
+        project.save()
     end
 end
-

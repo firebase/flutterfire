@@ -17,7 +17,10 @@ import 'dart:typed_data';
 
 import 'package:firebase_ai/src/api.dart';
 import 'package:firebase_ai/src/content.dart';
+import 'package:firebase_ai/src/speech_config.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+import 'utils/matchers.dart';
 
 // Mock google_ai classes (if needed)
 // ...
@@ -78,6 +81,36 @@ void main() {
       expect(content.parts[1], isA<InlineDataPart>());
     });
 
+    test('functionResponse() has role user', () {
+      final content = Content.functionResponse('testFunc', {'result': 'ok'});
+      expect(content.role, 'user');
+      expect(content.parts.length, 1);
+      expect(content.parts[0], isA<FunctionResponse>());
+      final json = content.toJson();
+      expect(json['role'], 'user');
+      expect(
+          (json['parts']! as List)[0]['functionResponse']['name'], 'testFunc');
+    });
+
+    test('functionResponses() has role user', () {
+      final content = Content.functionResponses([
+        const FunctionResponse('testFunc1', {'result': 1}),
+        const FunctionResponse('testFunc2', {'result': 2}),
+      ]);
+      expect(content.role, 'user');
+      expect(content.parts.length, 2);
+      final json = content.toJson();
+      expect(json['role'], 'user');
+    });
+
+    test('toJson sanitizes legacy function role to user', () {
+      final content =
+          Content('function', [const FunctionResponse('legacyFunc', {})]);
+      expect(content.role, 'function');
+      final json = content.toJson();
+      expect(json['role'], 'user');
+    });
+
     test('toJson', () {
       final content = Content('user',
           [const TextPart('Test'), InlineDataPart('image/png', Uint8List(0))]);
@@ -113,6 +146,55 @@ void main() {
       expect(json['text'], 'Test');
       expect(json['thought'], true);
       expect(json['thoughtSignature'], 'sig');
+      expect(json.containsKey('speechMetadata'), false);
+    });
+
+    test('TextPart with SpeechMetadata toJson', () {
+      const part = TextPart(
+        'Hello there!',
+        speechMetadata: SpeechMetadata(
+          speaker: 'Alice',
+          style: 'excitedly',
+        ),
+      );
+      expect(part.toJson(), {
+        'text': 'Hello there!',
+        'speechMetadata': {
+          'speaker': 'Alice',
+          'style': 'excitedly',
+        },
+      });
+
+      const speakerOnlyPart = TextPart(
+        'Hi!',
+        speechMetadata: SpeechMetadata(speaker: 'Bob'),
+      );
+      expect(speakerOnlyPart.toJson(), {
+        'text': 'Hi!',
+        'speechMetadata': {
+          'speaker': 'Bob',
+        },
+      });
+
+      const styleOnlyPart = TextPart(
+        'Shh...',
+        speechMetadata: SpeechMetadata(style: 'whispering'),
+      );
+      expect(styleOnlyPart.toJson(), {
+        'text': 'Shh...',
+        'speechMetadata': {
+          'style': 'whispering',
+        },
+      });
+
+      const emptyMetadataPart = TextPart(
+        'Plain',
+        speechMetadata: SpeechMetadata(),
+      );
+      expect(emptyMetadataPart.toJson(), {
+        'text': 'Plain',
+        'speechMetadata': <String, Object?>{},
+      });
     });
 
     test('DataPart with isThought and thoughtSignature toJson', () {
@@ -249,7 +331,57 @@ void main() {
       final json = {'text': 'Hello, world!'};
       final result = parsePart(json);
       expect(result, isA<TextPart>());
-      expect((result as TextPart).text, 'Hello, world!');
+      final textPart = result as TextPart;
+      expect(textPart.text, 'Hello, world!');
+      expect(textPart.speechMetadata, isNull);
+    });
+
+    test('parses TextPart with SpeechMetadata correctly', () {
+      final json = {
+        'text': 'Hello there!',
+        'speechMetadata': {
+          'speaker': 'Alice',
+          'style': 'excitedly',
+        },
+      };
+      final result = parsePart(json);
+      expect(result, isA<TextPart>());
+      final textPart = result as TextPart;
+      expect(textPart.text, 'Hello there!');
+      expect(
+        textPart.speechMetadata,
+        matchesSpeechMetadata(
+          const SpeechMetadata(speaker: 'Alice', style: 'excitedly'),
+        ),
+      );
+    });
+
+    test('parses TextPart with partial SpeechMetadata correctly', () {
+      final speakerOnlyJson = {
+        'text': 'Hi!',
+        'speechMetadata': {
+          'speaker': 'Bob',
+        },
+      };
+      final speakerOnlyResult = parsePart(speakerOnlyJson) as TextPart;
+      expect(speakerOnlyResult.text, 'Hi!');
+      expect(
+        speakerOnlyResult.speechMetadata,
+        matchesSpeechMetadata(const SpeechMetadata(speaker: 'Bob')),
+      );
+
+      final styleOnlyJson = {
+        'text': 'Shh...',
+        'speechMetadata': {
+          'style': 'whispering',
+        },
+      };
+      final styleOnlyResult = parsePart(styleOnlyJson) as TextPart;
+      expect(styleOnlyResult.text, 'Shh...');
+      expect(
+        styleOnlyResult.speechMetadata,
+        matchesSpeechMetadata(const SpeechMetadata(style: 'whispering')),
+      );
     });
 
     test('parses FunctionCall correctly', () {
@@ -280,6 +412,53 @@ void main() {
       final fileData = result as FileData;
       expect(fileData.fileUri, 'file:///path/to/file.txt');
       expect(fileData.mimeType, 'text/plain');
+    });
+
+    test('parses camelCase fileData correctly', () {
+      final json = {
+        'fileData': {
+          'fileUri': 'gs://bucket/image.png',
+          'mimeType': 'image/png',
+        }
+      };
+      final result = parsePart(json);
+      expect(result, isA<FileData>());
+      final fileData = result as FileData;
+      expect(fileData.fileUri, 'gs://bucket/image.png');
+      expect(fileData.mimeType, 'image/png');
+      expect(fileData.isThought, false);
+      expect((fileData.toJson() as Map).containsKey('thoughtSignature'), false);
+    });
+
+    test('parses camelCase fileData with thought and thoughtSignature', () {
+      final json = {
+        'thought': true,
+        'thoughtSignature': 'sig',
+        'fileData': {
+          'fileUri': 'gs://bucket/image.png',
+          'mimeType': 'image/png',
+        }
+      };
+      final result = parsePart(json);
+      expect(result, isA<FileData>());
+      final fileData = result as FileData;
+      expect(fileData.fileUri, 'gs://bucket/image.png');
+      expect(fileData.mimeType, 'image/png');
+      expect(fileData.isThought, true);
+      expect((fileData.toJson() as Map)['thoughtSignature'], 'sig');
+    });
+
+    test('parses camelCase fileData with mediaResolution', () {
+      final json = {
+        'fileData': {
+          'fileUri': 'gs://bucket/image.png',
+          'mimeType': 'image/png',
+        },
+        'mediaResolution': {'level': 'MEDIA_RESOLUTION_HIGH'},
+      };
+      final result = parsePart(json);
+      expect(result, isA<FileData>());
+      expect((result as FileData).mediaResolution, MediaResolution.high);
     });
 
     test('parses InlineDataPart correctly', () {

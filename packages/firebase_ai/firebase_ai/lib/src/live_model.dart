@@ -103,16 +103,18 @@ final class LiveGenerativeModel extends BaseModel {
         ? _agentPlatformModelString()
         : _googleAIModelString();
 
-    final headers = await BaseModel.firebaseTokens(
+    // Pass the provider (not its result) so that every connection, including
+    // `LiveSession.resumeSession`, fetches fresh App Check and Auth tokens.
+    final headersProvider = BaseModel.firebaseTokens(
       _appCheck,
       _auth,
       _app,
       _useLimitedUseAppCheckTokens,
-    )();
+    );
 
     return LiveSession.create(
       uri: uri,
-      headers: headers,
+      headersProvider: headersProvider,
       modelString: modelString,
       systemInstruction: _systemInstruction,
       tools: _tools,

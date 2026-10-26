@@ -5,8 +5,11 @@
 package io.flutter.plugins.firebase.crashlytics
 
 import android.content.Context
+import android.os.Build
+import android.os.Process
 import android.util.Log
 import androidx.annotation.VisibleForTesting
+import androidx.annotation.WorkerThread
 import java.io.File
 import java.io.FileInputStream
 import java.io.IOException
@@ -83,6 +86,48 @@ internal class ElfBuildIdReader private constructor() {
     private const val ELF64_PHDR_MIN_BYTES = 56
     private const val NOTE_HEADER_BYTES = 12
 
+    private val cachedBuildIdLock = Any()
+    @Volatile private var isCachedBuildIdRead = false
+    private var cachedBuildIdValue: String? = null
+
+    /**
+     * Returns [readBuildId], reading it once: libapp.so does not change while the process runs, so
+     * every engine shares the result. A read that fails is not kept, so a later call retries: a
+     * transient failure (memory or file descriptors) must not leave every report without the ID.
+     *
+     * Without extracted native libraries this opens the APK, so call it off the main thread.
+     */
+    @JvmStatic
+    @WorkerThread
+    fun cachedBuildId(context: Context): String? {
+      if (!isCachedBuildIdRead) {
+        synchronized(cachedBuildIdLock) {
+          if (!isCachedBuildIdRead) {
+            try {
+              cachedBuildIdValue = readBuildIdOrThrow(context)
+              isCachedBuildIdRead = true
+            } catch (exception: Exception) {
+              Log.d(TAG, "Could not read ELF build ID from libapp.so", exception)
+              return null
+            } catch (error: OutOfMemoryError) {
+              Log.d(TAG, "Could not read ELF build ID from libapp.so", error)
+              return null
+            }
+          }
+        }
+      }
+      return cachedBuildIdValue
+    }
+
+    @JvmStatic
+    @VisibleForTesting
+    fun clearCachedBuildId() {
+      synchronized(cachedBuildIdLock) {
+        cachedBuildIdValue = null
+        isCachedBuildIdRead = false
+      }
+    }
+
     /**
      * Reads the ELF build ID from libapp.so.
      *
@@ -92,20 +137,26 @@ internal class ElfBuildIdReader private constructor() {
      * @return the build ID as a lowercase hex string, or `null` if it cannot be read.
      */
     @JvmStatic
+    @WorkerThread
     fun readBuildId(context: Context): String? {
       return try {
-        val libApp = File(context.applicationInfo.nativeLibraryDir, "libapp.so")
-        if (libApp.exists()) {
-          readBuildIdFromFile(libApp)
-        } else {
-          readBuildIdFromApk(context)
-        }
+        readBuildIdOrThrow(context)
       } catch (exception: Exception) {
         Log.d(TAG, "Could not read ELF build ID from libapp.so", exception)
         null
       } catch (error: OutOfMemoryError) {
         Log.d(TAG, "Could not read ELF build ID from libapp.so", error)
         null
+      }
+    }
+
+    /** [readBuildId] that throws when libapp.so cannot be read, instead of returning `null`. */
+    private fun readBuildIdOrThrow(context: Context): String? {
+      val libApp = File(context.applicationInfo.nativeLibraryDir, "libapp.so")
+      return if (libApp.exists()) {
+        readBuildIdFromFile(libApp)
+      } else {
+        readBuildIdFromApk(context)
       }
     }
 
@@ -121,17 +172,38 @@ internal class ElfBuildIdReader private constructor() {
       return null
     }
 
-    private fun readBuildIdFromZip(apkPath: String): String? {
+    /**
+     * Reads the build ID of `lib/<abi>/libapp.so` for the first [abis] entry that exists.
+     *
+     * A universal APK stores one `libapp.so` per ABI, and `lib/arm64-v8a/libapp.so` is usually
+     * first. Taking that entry reports the arm64 build ID on every device, so Crashlytics
+     * symbolicates x86_64 and armeabi-v7a crashes with the arm64 symbols.
+     */
+    @JvmStatic
+    @VisibleForTesting
+    fun readBuildIdFromZip(apkPath: String, abis: Array<String>): String? {
       ZipFile(apkPath).use { zipFile ->
-        val entries = zipFile.entries()
-        while (entries.hasMoreElements()) {
-          val entry = entries.nextElement()
-          if (entry.name.endsWith("/libapp.so")) {
-            return readBuildIdFromSource { zipFile.getInputStream(entry) }
-          }
+        for (abi in abis) {
+          val entry = zipFile.getEntry("lib/$abi/libapp.so") ?: continue
+          return readBuildIdFromSource { zipFile.getInputStream(entry) }
         }
       }
       return null
+    }
+
+    private fun readBuildIdFromZip(apkPath: String): String? =
+        readBuildIdFromZip(apkPath, runtimeAbis())
+
+    /**
+     * ABIs this process can load, most preferred first.
+     *
+     * [Build.SUPPORTED_64_BIT_ABIS] and [Build.SUPPORTED_32_BIT_ABIS] follow the package manager's
+     * preference order, so the first one present in the APK is the library that is running.
+     * [Process.is64Bit] requires API 23, which is this plugin's minSdk.
+     */
+    private fun runtimeAbis(): Array<String> {
+      val abis = if (Process.is64Bit()) Build.SUPPORTED_64_BIT_ABIS else Build.SUPPORTED_32_BIT_ABIS
+      return abis ?: emptyArray()
     }
 
     private fun readBuildIdFromFile(elfFile: File): String? = readBuildIdFromSource {

@@ -112,10 +112,14 @@ public class FLTFirebaseFirestorePlugin: NSObject, FlutterPlugin, FLTFirebasePlu
 
   private func unregisterEventChannel(_ identifier: String) {
     listenersLock.lock()
-    eventChannels.removeValue(forKey: identifier)
+    let channel = eventChannels.removeValue(forKey: identifier)
     streamHandlers.removeValue(forKey: identifier)
     transactionHandlers.removeValue(forKey: identifier)
     listenersLock.unlock()
+    // onCancel calls this, and setStreamHandler(nil) re-enters onCancel.
+    DispatchQueue.main.async {
+      channel?.setStreamHandler(nil)
+    }
   }
 
   private func cleanupFirestoreInstances(_ completion: (() -> Void)?) {
@@ -376,7 +380,6 @@ public class FLTFirebaseFirestorePlugin: NSObject, FlutterPlugin, FLTFirebasePlu
         self.transactionLock.lock()
         self.transactions.removeValue(forKey: transactionId)
         self.transactionLock.unlock()
-        self.unregisterEventChannel(transactionId)
       }
     )
     listenersLock.lock()
@@ -410,11 +413,16 @@ public class FLTFirebaseFirestorePlugin: NSObject, FlutterPlugin, FLTFirebasePlu
       let firestore = self.firestore(from: app)
       let document = firestore.document(path)
 
+      // Read under the lock so the update block cannot return mid-read.
       self.transactionLock.lock()
       let transaction = self.transactions[transactionId]
+      let outcome: Result<DocumentSnapshot, Error>? =
+        transaction.map { transaction in
+          Result { try transaction.getDocument(document) }
+        }
       self.transactionLock.unlock()
 
-      guard let transaction else {
+      guard let outcome else {
         completion(
           .failure(
             FlutterError(
@@ -428,8 +436,8 @@ public class FLTFirebaseFirestorePlugin: NSObject, FlutterPlugin, FLTFirebasePlu
         return
       }
 
-      do {
-        let snapshot = try transaction.getDocument(document)
+      switch outcome {
+      case .success(let snapshot):
         completion(
           .success(
             PigeonParser.toPigeonDocumentSnapshot(
@@ -437,7 +445,7 @@ public class FLTFirebaseFirestorePlugin: NSObject, FlutterPlugin, FLTFirebasePlu
             )
           )
         )
-      } catch {
+      case .failure(let error):
         self.completeOnError(error, completion)
       }
     }

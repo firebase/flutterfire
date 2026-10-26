@@ -22,5 +22,6 @@ extension JSErrorExtension on JSError {
   external JSString? get stack;
 
   // "customData" - see Firebase AuthError docs: https://firebase.google.com/docs/reference/js/auth.autherror
-  external JSAny get customData;
+  // Auth errors from the JS SDK usually include this, but some error shapes omit it.
+  external JSAny? get customData;
 }

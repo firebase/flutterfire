@@ -1,3 +1,14 @@
+## 8.1.0
+
+ - **FIX**(cloud_firestore): stop dropping filters, settings and instance on copies ([#18819](https://github.com/firebase/flutterfire/issues/18819)). ([b9c4a8ec](https://github.com/firebase/flutterfire/commit/b9c4a8ecee23701cf43051abd6264a2d7dcc69fd))
+ - **FIX**(firestore): drop snapshot listeners cancelled while they register ([#18809](https://github.com/firebase/flutterfire/issues/18809)). ([f09c359f](https://github.com/firebase/flutterfire/commit/f09c359f44b4dff28a25210cc522c44413552a81))
+ - **FEAT**(firestore): add FieldValue.minimum and FieldValue.maximum ([#18697](https://github.com/firebase/flutterfire/issues/18697)). ([387c707b](https://github.com/firebase/flutterfire/commit/387c707b25bc9b27825a436f11202664a5634fe0))
+
+## 8.0.8
+
+ - **REFACTOR**(firestore): deprecate setIndexConfigurationFromJSON ([#18801](https://github.com/firebase/flutterfire/issues/18801)). ([caf683df](https://github.com/firebase/flutterfire/commit/caf683dfaefcdd2eea5a9d667b35e149bd916928))
+ - **FIX**(firestore,windows): report unimplemented for sum/average aggregations ([#18628](https://github.com/firebase/flutterfire/issues/18628)). ([a646d554](https://github.com/firebase/flutterfire/commit/a646d5546a4686b21b2b0015a9d4e5f41ca92757))
+
 ## 8.0.7
 
  - **REFACTOR**(platform_interface): replace Flutter UI and foundation imports with package:meta ([#18604](https://github.com/firebase/flutterfire/issues/18604)). ([fef6d420](https://github.com/firebase/flutterfire/commit/fef6d42090ea275f07117c085bd04710d9df51bc))

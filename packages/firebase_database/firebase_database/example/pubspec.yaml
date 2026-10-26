@@ -7,8 +7,8 @@ environment:
   flutter: '>=3.27.0'
 
 dependencies:
-  firebase_core: ^4.14.0
-  firebase_database: ^12.5.0
+  firebase_core: ^5.1.0
+  firebase_database: ^13.0.1
   flutter:
     sdk: flutter
 
@@ -20,7 +20,7 @@ dev_dependencies:
   firebase_core_platform_interface: ^8.1.1
   # `web_only.dart` (conditionally imported) asserts on the web plugin's
   # JS-interop surface directly.
-  firebase_database_web: ^0.2.7+14
+  firebase_database_web: ^0.2.9+16
   flutter_test:
     sdk: flutter
   integration_test:
@@ -31,3 +31,6 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  config:
+    # iOS and macOS build with Swift Package Manager only (no Podfile).
+    enable-swift-package-manager: true
