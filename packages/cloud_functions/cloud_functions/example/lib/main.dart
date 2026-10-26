@@ -4,14 +4,14 @@
 
 import 'dart:async';
 import 'dart:core';
-import 'dart:io';
 
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:cloud_functions_example/emulator_config.dart';
 import 'package:cloud_functions_example/firebase_options.dart';
 import 'package:cloud_functions_example/functions_backend.dart';
 import 'package:dart_cloud_functions/dart_cloud_functions.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 Future<void> main() async {
@@ -21,8 +21,10 @@ Future<void> main() async {
 
   // You should have the Functions Emulator running locally to use it
   // https://firebase.google.com/docs/functions/local-emulator
-  FirebaseFunctions.instance.useFunctionsEmulator('localhost', 5001);
-  DartFirebaseFunctions.instance.useFunctionsEmulator('localhost', 5001);
+  connectFunctionsEmulator(FirebaseFunctions.instance);
+  connectDartFunctionsEmulator(DartFirebaseFunctions.instance);
+  // Sign-in uses the Auth emulator, which the Functions emulator trusts.
+  await connectAuthEmulator();
 
   runApp(MyApp());
 }
@@ -47,6 +49,9 @@ class _MyAppState extends State<MyApp> {
   /// Which call produced the results on screen, so calls that return the same
   /// data can be told apart.
   String? resultSource;
+
+  /// Which user the server saw on the last "Who am I?" call.
+  String? identity;
 
   @override
   void initState() {
@@ -76,6 +81,7 @@ class _MyAppState extends State<MyApp> {
       fruit.clear();
       streamResult.clear();
       streamError = null;
+      identity = null;
       resultSource = describeCall(what, sender);
     });
     streamSubscription = sender
@@ -127,9 +133,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    final localhostMapped = kIsWeb || !Platform.isAndroid
-        ? 'localhost'
-        : '10.0.2.2';
+    final localhostMapped = emulatorUrlHost;
 
     return MaterialApp(
       home: Scaffold(
@@ -149,12 +153,24 @@ class _MyAppState extends State<MyApp> {
                     selectBackend(selection.single),
               ),
             ),
+            const _AuthStatusBar(),
             if (resultSource != null)
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: Text(
                   'Showing: $resultSource',
                   style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+            if (identity != null)
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: Text(
+                  identity!,
+                  style: const TextStyle(
+                    color: Colors.blue,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             if (streamError != null)
@@ -196,6 +212,25 @@ class _MyAppState extends State<MyApp> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
+                FloatingActionButton.extended(
+                  onPressed: () async {
+                    // Native attaches the signed-in user's token;
+                    // dart_cloud_functions doesn't yet (plan step 1.6).
+                    await callingFunction(
+                      'testEchoContext, called by name',
+                      (sender) => sender.callByName(
+                        'testEchoContext',
+                        timeout: const Duration(seconds: 5),
+                      ),
+                      context,
+                      show: showIdentity,
+                    );
+                  },
+                  label: const Text('Who am I?'),
+                  icon: const Icon(Icons.person),
+                  backgroundColor: Colors.deepOrange,
+                ),
+                const SizedBox(height: 10),
                 FloatingActionButton.extended(
                   onPressed: streamFunction,
                   label: const Text('Call Stream Function'),
@@ -249,8 +284,9 @@ class _MyAppState extends State<MyApp> {
   Future<void> callingFunction(
     String what,
     Future<Object?> Function(FunctionsBackend sender) call,
-    BuildContext context,
-  ) async {
+    BuildContext context, {
+    void Function(Object? data)? show,
+  }) async {
     // Capture the backend so switching mid-call doesn't mislabel the result.
     final sender = backend;
     final stopwatch = Stopwatch()..start();
@@ -265,7 +301,8 @@ class _MyAppState extends State<MyApp> {
         fruit.clear();
         streamResult.clear();
         streamError = null;
-        fruit.addAll(data! as List);
+        identity = null;
+        (show ?? showFruit)(data);
         resultSource = describeCall(what, sender, elapsed: stopwatch.elapsed);
       });
     } catch (e) {
@@ -275,6 +312,67 @@ class _MyAppState extends State<MyApp> {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('ERROR: $e')));
+    }
+  }
+
+  /// Shows a list of fruit returned by `listFruit` or `listfruits2ndgen`.
+  void showFruit(Object? data) => fruit.addAll(data! as List);
+
+  /// Shows which user `testEchoContext` says the server saw.
+  void showIdentity(Object? data) {
+    final echo = data! as Map;
+    final uid = echo['authUid'];
+    final token = echo['authorizationHeader'] == true ? 'sent' : 'not sent';
+    identity = uid == null
+        ? 'Server saw no signed-in user (auth token $token)'
+        : 'Server saw user $uid (auth token $token)';
+  }
+}
+
+/// Signs in anonymously or out against the Auth emulator, and shows the
+/// current user.
+class _AuthStatusBar extends StatelessWidget {
+  const _AuthStatusBar();
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<User?>(
+      stream: FirebaseAuth.instance.authStateChanges(),
+      builder: (context, snapshot) {
+        final user = snapshot.data;
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  user == null ? 'Signed out' : 'Signed in as ${user.uid}',
+                ),
+              ),
+              TextButton(
+                onPressed: () => _toggleSignIn(context, user),
+                child: Text(user == null ? 'Sign in anonymously' : 'Sign out'),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> _toggleSignIn(BuildContext context, User? user) async {
+    try {
+      if (user == null) {
+        await FirebaseAuth.instance.signInAnonymously();
+      } else {
+        await FirebaseAuth.instance.signOut();
+      }
+    } catch (e) {
+      // On macOS this fails without keychain entitlements.
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Auth error: $e')));
     }
   }
 }
