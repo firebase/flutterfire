@@ -154,13 +154,8 @@ class _RequestTimeoutTestPageState extends State<RequestTimeoutTestPage> {
     super.dispose();
   }
 
-  FirebaseAI _provider(bool agentPlatform) => agentPlatform
-      ? FirebaseAI.agentPlatform(
-          useLimitedUseAppCheckTokens: kUseLimitedUseAppCheckTokens,
-        )
-      : FirebaseAI.googleAI(
-          useLimitedUseAppCheckTokens: kUseLimitedUseAppCheckTokens,
-        );
+  FirebaseAI _provider(bool agentPlatform) =>
+      agentPlatform ? FirebaseAI.agentPlatform() : FirebaseAI.googleAI();
 
   /// Executes the call under test. Returns a short description of what was
   /// received on success; throws on any failure (including timeouts).
@@ -203,7 +198,6 @@ class _RequestTimeoutTestPageState extends State<RequestTimeoutTestPage> {
         final liveProvider = agentPlatform
             ? FirebaseAI.agentPlatform(
                 location: ExampleModels.liveAgentPlatformLocation,
-                useLimitedUseAppCheckTokens: kUseLimitedUseAppCheckTokens,
               )
             : provider;
         final model = liveProvider.liveGenerativeModel(
