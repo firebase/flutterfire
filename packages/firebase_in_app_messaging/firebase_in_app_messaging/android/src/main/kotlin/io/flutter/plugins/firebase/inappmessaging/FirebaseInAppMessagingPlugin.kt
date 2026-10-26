@@ -34,10 +34,7 @@ import java.util.concurrent.Executor
 
 /** FirebaseInAppMessagingPlugin */
 class FirebaseInAppMessagingPlugin :
-    FlutterFirebasePlugin,
-    FlutterPlugin,
-    FirebaseInAppMessagingHostApi,
-    FirebaseInAppMessagingDisplay {
+    FlutterFirebasePlugin, FlutterPlugin, FirebaseInAppMessagingHostApi {
   private var binaryMessenger: BinaryMessenger? = null
   private var flutterApi: FirebaseInAppMessagingFlutterApi? = null
   private var application: Application? = null
@@ -81,6 +78,24 @@ class FirebaseInAppMessagingPlugin :
 
   private var eventListenersAdded = false
 
+  private val messageDisplay =
+      object : FirebaseInAppMessagingDisplay {
+        override fun displayMessage(
+            inAppMessage: InAppMessage,
+            callbacks: FirebaseInAppMessagingDisplayCallbacks,
+        ) {
+          if (!customDisplayEnabled) {
+            return
+          }
+
+          val message = toDisplayMessage(inAppMessage)
+          pendingDisplays[message.campaignMetadata.campaignId] =
+              PendingDisplay(callbacks, collectActions(inAppMessage))
+
+          mainHandler.post { flutterApi?.onMessageDisplay(message) {} }
+        }
+      }
+
   private val lifecycleCallbacks =
       object : Application.ActivityLifecycleCallbacks {
         override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {}
@@ -90,10 +105,7 @@ class FirebaseInAppMessagingPlugin :
         override fun onActivityResumed(activity: Activity) {
           lastActivity = WeakReference(activity)
           if (customDisplayEnabled) {
-            FirebaseInAppMessaging.getInstance()
-                .setMessageDisplayComponent(
-                    this@FirebaseInAppMessagingPlugin,
-                )
+            FirebaseInAppMessaging.getInstance().setMessageDisplayComponent(messageDisplay)
           }
         }
 
@@ -128,21 +140,6 @@ class FirebaseInAppMessagingPlugin :
     binaryMessenger = null
     flutterApi = null
     FirebaseInAppMessagingHostApi.setUp(binding.binaryMessenger, null)
-  }
-
-  override fun displayMessage(
-      inAppMessage: InAppMessage,
-      callbacks: FirebaseInAppMessagingDisplayCallbacks,
-  ) {
-    if (!customDisplayEnabled) {
-      return
-    }
-
-    val message = toDisplayMessage(inAppMessage)
-    pendingDisplays[message.campaignMetadata.campaignId] =
-        PendingDisplay(callbacks, collectActions(inAppMessage))
-
-    mainHandler.post { flutterApi?.onMessageDisplay(message) {} }
   }
 
   private fun campaignMetadata(inAppMessage: InAppMessage): FiamCampaignMetadata {
@@ -305,7 +302,7 @@ class FirebaseInAppMessagingPlugin :
     customDisplayEnabled = enabled
     val fiam = FirebaseInAppMessaging.getInstance()
     if (enabled) {
-      fiam.setMessageDisplayComponent(this)
+      fiam.setMessageDisplayComponent(messageDisplay)
       if (!lifecycleRegistered) {
         application?.registerActivityLifecycleCallbacks(lifecycleCallbacks)
         lifecycleRegistered = true
