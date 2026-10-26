@@ -2,8 +2,10 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:cloud_functions_example/emulator_config.dart';
 import 'package:cloud_functions_example/firebase_options.dart';
 import 'package:dart_cloud_functions/dart_cloud_functions.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -35,8 +37,8 @@ void main() {
           rethrow;
         }
       }
-      functions = DartFirebaseFunctions.instance
-        ..useFunctionsEmulator('localhost', 5001);
+      functions = DartFirebaseFunctions.instance;
+      connectDartFunctionsEmulator(functions);
       callable = functions.httpsCallable('testFunctionDefaultRegion');
     });
 
@@ -147,8 +149,8 @@ void main() {
     });
 
     test('instanceFor() accepts a custom region', () async {
-      final europe = DartFirebaseFunctions.instanceFor(region: 'europe-west1')
-        ..useFunctionsEmulator('localhost', 5001);
+      final europe = DartFirebaseFunctions.instanceFor(region: 'europe-west1');
+      connectDartFunctionsEmulator(europe);
       final result =
           await europe.httpsCallable('testFunctionCustomRegion').call();
       expect(result.data, 'europe-west1');
@@ -170,12 +172,48 @@ void main() {
         ),
       );
     });
+
+    group(
+      'Auth token',
+      () {
+        setUpAll(() async {
+          await connectAuthEmulator();
+          // Auth persists the user across launches, so start signed out.
+          await FirebaseAuth.instance.signOut();
+        });
+
+        tearDown(() async {
+          await FirebaseAuth.instance.signOut();
+        });
+
+        test(
+          'reaches the function when signed in',
+          () async {
+            final credential = await FirebaseAuth.instance.signInAnonymously();
+
+            final result =
+                await functions.httpsCallable('testEchoContext').call();
+
+            expect(result.data['authUid'], credential.user!.uid);
+            expect(result.data['authorizationHeader'], isTrue);
+          },
+          skip: 'Needs token support (plan step 1.6)',
+        );
+
+        test('is not sent when signed out', () async {
+          final result =
+              await functions.httpsCallable('testEchoContext').call();
+
+          expect(result.data['authUid'], isNull);
+          expect(result.data['authorizationHeader'], isFalse);
+        });
+      },
+      // Firebase Auth on macOS needs keychain entitlements, which this
+      // example app doesn't have.
+      skip: !kIsWeb && defaultTargetPlatform == TargetPlatform.macOS,
+    );
   });
 }
 
-String get _listFruits2ndGenUrl {
-  final host = !kIsWeb && defaultTargetPlatform == TargetPlatform.android
-      ? '10.0.2.2'
-      : 'localhost';
-  return 'http://$host:5001/flutterfire-e2e-tests/us-central1/listfruits2ndgen';
-}
+String get _listFruits2ndGenUrl =>
+    'http://$emulatorUrlHost:5001/flutterfire-e2e-tests/us-central1/listfruits2ndgen';

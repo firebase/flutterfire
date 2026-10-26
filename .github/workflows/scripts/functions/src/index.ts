@@ -188,6 +188,18 @@ export const testMapConvertType = functions.https.onCall((data) => ({
   foo: 'bar',
 }));
 
+// For e2e testing which tokens reach the server. `authUid` is only set when
+// the Authorization header carried an ID token the server accepted.
+export const testEchoContext = functions.https.onCall((request) => {
+  const headers = request.rawRequest.headers;
+  return {
+    authUid: request.auth?.uid ?? null,
+    authorizationHeader: headers.authorization !== undefined,
+    appCheckHeader: headers['x-firebase-appcheck'] !== undefined,
+    instanceIdHeader: headers['firebase-instance-id-token'] !== undefined,
+  };
+});
+
 export const testStream = functions.https.onCall((req, res) => {
   const data = req.data;
   if (data === null || undefined) {

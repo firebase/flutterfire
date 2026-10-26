@@ -3,13 +3,14 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
 
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
+import 'package:cloud_functions_example/emulator_config.dart';
 import 'package:cloud_functions_example/firebase_options.dart';
 
 import 'report_test_results.dart';
@@ -20,6 +21,7 @@ String kTestFunctionCustomRegion = 'testFunctionCustomRegion';
 String kTestFunctionTimeout = 'testFunctionTimeout';
 String kTestMapConvertType = 'testMapConvertType';
 String kTestStreamResponse = 'testStreamResponse';
+String kTestEchoContext = 'testEchoContext';
 
 /// Guards against a dropped stream callback hanging the whole suite: a missing
 /// event fails the test instead of burning the job timeout.
@@ -47,7 +49,7 @@ void main() {
           rethrow;
         }
       }
-      FirebaseFunctions.instance.useFunctionsEmulator('localhost', 5001);
+      connectFunctionsEmulator(FirebaseFunctions.instance);
       callable = FirebaseFunctions.instance.httpsCallable(
         kTestFunctionDefaultRegion,
       );
@@ -167,9 +169,7 @@ void main() {
       );
 
       test('can be called using an String url', () async {
-        final localhostMapped = kIsWeb || !Platform.isAndroid
-            ? 'localhost'
-            : '10.0.2.2';
+        final localhostMapped = emulatorUrlHost;
 
         HttpsCallable
         callable = FirebaseFunctions.instance.httpsCallableFromUrl(
@@ -181,9 +181,7 @@ void main() {
       });
 
       test('can be called using an Uri url', () async {
-        final localhostMapped = kIsWeb || !Platform.isAndroid
-            ? 'localhost'
-            : '10.0.2.2';
+        final localhostMapped = emulatorUrlHost;
 
         HttpsCallable
         callable = FirebaseFunctions.instance.httpsCallableFromUri(
@@ -240,7 +238,7 @@ void main() {
     group('instanceFor', () {
       test('accepts a custom region', () async {
         final instance = FirebaseFunctions.instanceFor(region: 'europe-west1');
-        instance.useFunctionsEmulator('localhost', 5001);
+        connectFunctionsEmulator(instance);
         final customRegionCallable = instance.httpsCallable(
           kTestFunctionCustomRegion,
         );
@@ -254,7 +252,7 @@ void main() {
         'times out when the provided timeout option is exceeded',
         () async {
           final instance = FirebaseFunctions.instance;
-          instance.useFunctionsEmulator('localhost', 5001);
+          connectFunctionsEmulator(instance);
           final timeoutCallable = FirebaseFunctions.instance.httpsCallable(
             kTestFunctionTimeout,
             options: HttpsCallableOptions(timeout: const Duration(seconds: 3)),
@@ -279,7 +277,7 @@ void main() {
 
       test('allow passing of `limitedUseAppCheckToken` as option', () async {
         final instance = FirebaseFunctions.instance;
-        instance.useFunctionsEmulator('localhost', 5001);
+        connectFunctionsEmulator(instance);
         final timeoutCallable = FirebaseFunctions.instance.httpsCallable(
           kTestFunctionDefaultRegion,
           options: HttpsCallableOptions(
@@ -379,9 +377,7 @@ void main() {
       });
 
       test('can be called using an String url', () async {
-        final localhostMapped = kIsWeb || !Platform.isAndroid
-            ? 'localhost'
-            : '10.0.2.2';
+        final localhostMapped = emulatorUrlHost;
 
         HttpsCallable
         callable = FirebaseFunctions.instance.httpsCallableFromUrl(
@@ -393,9 +389,7 @@ void main() {
       });
 
       test('can be called using an Uri url', () async {
-        final localhostMapped = kIsWeb || !Platform.isAndroid
-            ? 'localhost'
-            : '10.0.2.2';
+        final localhostMapped = emulatorUrlHost;
 
         HttpsCallable
         callable = FirebaseFunctions.instance.httpsCallableFromUri(
@@ -409,9 +403,7 @@ void main() {
       });
 
       test('sends data when called using a url', () async {
-        final localhostMapped = kIsWeb || !Platform.isAndroid
-            ? 'localhost'
-            : '10.0.2.2';
+        final localhostMapped = emulatorUrlHost;
 
         HttpsCallable
         callable = FirebaseFunctions.instance.httpsCallableFromUrl(
@@ -521,7 +513,7 @@ void main() {
 
       test('throws error when aborted with TimeLimit signal', () async {
         final instance = FirebaseFunctions.instance;
-        instance.useFunctionsEmulator('localhost', 5001);
+        connectFunctionsEmulator(instance);
 
         final completer = Completer<void>();
 
@@ -556,7 +548,7 @@ void main() {
 
       test('throws error when aborted with Abort signal', () async {
         final instance = FirebaseFunctions.instance;
-        instance.useFunctionsEmulator('localhost', 5001);
+        connectFunctionsEmulator(instance);
 
         final completer = Completer<void>();
 
@@ -587,5 +579,43 @@ void main() {
         await completer.future.timeout(_completerTimeout);
       }, skip: !kIsWeb);
     });
+
+    group(
+      'Auth token',
+      () {
+        setUpAll(() async {
+          await connectAuthEmulator();
+          // Auth persists the user across launches, so start signed out.
+          await FirebaseAuth.instance.signOut();
+        });
+
+        tearDown(() async {
+          await FirebaseAuth.instance.signOut();
+        });
+
+        test('reaches the function when signed in', () async {
+          final credential = await FirebaseAuth.instance.signInAnonymously();
+
+          final result = await FirebaseFunctions.instance
+              .httpsCallable(kTestEchoContext)
+              .call();
+
+          expect(result.data['authUid'], equals(credential.user!.uid));
+          expect(result.data['authorizationHeader'], isTrue);
+        });
+
+        test('is not sent when signed out', () async {
+          final result = await FirebaseFunctions.instance
+              .httpsCallable(kTestEchoContext)
+              .call();
+
+          expect(result.data['authUid'], isNull);
+          expect(result.data['authorizationHeader'], isFalse);
+        });
+      },
+      // Firebase Auth on macOS needs keychain entitlements, which this
+      // example app doesn't have.
+      skip: !kIsWeb && defaultTargetPlatform == TargetPlatform.macOS,
+    );
   });
 }
