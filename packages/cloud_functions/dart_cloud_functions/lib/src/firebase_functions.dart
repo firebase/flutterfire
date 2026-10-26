@@ -1,0 +1,195 @@
+// Copyright 2026, the Chromium project authors. Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
+import 'dart:async';
+import 'dart:developer' as developer;
+
+import 'package:dart_cloud_functions/src/callable_protocol.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
+
+/// The entry point for calling callable Cloud Functions from Dart.
+///
+/// Mirrors `FirebaseFunctions` from `cloud_functions`.
+///
+/// ```dart
+/// final result = await DartFirebaseFunctions.instance
+///     .httpsCallable('listFruit')
+///     .call();
+/// print(result.data);
+/// ```
+class DartFirebaseFunctions {
+  DartFirebaseFunctions._(this.app, this.region, this._httpClient);
+
+  /// Creates an instance that isn't cached and sends requests with
+  /// [httpClient].
+  @visibleForTesting
+  DartFirebaseFunctions.withHttpClient(
+    http.Client httpClient, {
+    required FirebaseApp app,
+    String region = _defaultRegion,
+  }) : this._(app, region, httpClient);
+
+  static const _defaultRegion = 'us-central1';
+  static final Map<String, DartFirebaseFunctions> _instances = {};
+
+  /// The instance for the default [FirebaseApp] and the `us-central1` region.
+  static DartFirebaseFunctions get instance => instanceFor();
+
+  /// The instance for [app] (the default app when omitted) and [region].
+  static DartFirebaseFunctions instanceFor({
+    FirebaseApp? app,
+    String region = _defaultRegion,
+  }) {
+    final resolvedApp = app ?? Firebase.app();
+    return _instances.putIfAbsent(
+      '${resolvedApp.name}/$region',
+      () => DartFirebaseFunctions._(resolvedApp, region, null),
+    );
+  }
+
+  /// The app whose Firebase project hosts the functions.
+  final FirebaseApp app;
+
+  /// The region the functions are deployed to, such as `us-central1`.
+  final String region;
+
+  final http.Client? _httpClient;
+  String? _emulatorOrigin;
+
+  /// Sends calls by name to the Cloud Functions emulator at [host] and [port].
+  ///
+  /// On Android, `localhost` and `127.0.0.1` are mapped to `10.0.2.2`, which
+  /// is how the Android emulator reaches the host machine, unless
+  /// [automaticHostMapping] is false.
+  void useFunctionsEmulator(
+    String host,
+    int port, {
+    bool automaticHostMapping = true,
+  }) {
+    final isAndroid =
+        !kIsWeb && defaultTargetPlatform == TargetPlatform.android;
+    final isLoopback = host == 'localhost' || host == '127.0.0.1';
+    final mappedHost =
+        automaticHostMapping && isAndroid && isLoopback ? '10.0.2.2' : host;
+    _emulatorOrigin = 'http://$mappedHost:$port';
+  }
+
+  /// A reference to the callable function called [name].
+  DartHttpsCallable httpsCallable(
+    String name, {
+    DartHttpsCallableOptions options = const DartHttpsCallableOptions(),
+  }) {
+    return DartHttpsCallable._(this, name: name, options: options);
+  }
+
+  /// A reference to the callable function at [url], such as a 2nd gen
+  /// function's `*.run.app` URL.
+  DartHttpsCallable httpsCallableFromUrl(
+    String url, {
+    DartHttpsCallableOptions options = const DartHttpsCallableOptions(),
+  }) {
+    return httpsCallableFromUri(Uri.parse(url), options: options);
+  }
+
+  /// A reference to the callable function at [uri].
+  DartHttpsCallable httpsCallableFromUri(
+    Uri uri, {
+    DartHttpsCallableOptions options = const DartHttpsCallableOptions(),
+  }) {
+    return DartHttpsCallable._(this, uri: uri, options: options);
+  }
+}
+
+/// Options for a [DartHttpsCallable].
+///
+/// Mirrors `HttpsCallableOptions` from `cloud_functions`.
+@immutable
+class DartHttpsCallableOptions {
+  /// Creates options for a callable.
+  const DartHttpsCallableOptions({
+    this.timeout = const Duration(seconds: 60),
+  });
+
+  /// How long a call may take before it fails with `deadline-exceeded`.
+  final Duration timeout;
+}
+
+/// The value a callable function returned.
+///
+/// Mirrors `HttpsCallableResult` from `cloud_functions`.
+class DartHttpsCallableResult<T> {
+  DartHttpsCallableResult._(this.data);
+
+  /// The data the function returned.
+  ///
+  /// JSON objects arrive as `Map<String, dynamic>` and arrays as
+  /// `List<dynamic>`.
+  final T data;
+}
+
+/// A reference to a callable function.
+///
+/// Mirrors `HttpsCallable` from `cloud_functions`. Create one with
+/// [DartFirebaseFunctions.httpsCallable],
+/// [DartFirebaseFunctions.httpsCallableFromUrl] or
+/// [DartFirebaseFunctions.httpsCallableFromUri].
+class DartHttpsCallable {
+  DartHttpsCallable._(
+    this._functions, {
+    this.name,
+    this.uri,
+    required this.options,
+  });
+
+  final DartFirebaseFunctions _functions;
+
+  /// The function's name, when the callable was created by name.
+  final String? name;
+
+  /// The function's URL, when the callable was created from a URL.
+  final Uri? uri;
+
+  /// The options used for every call.
+  final DartHttpsCallableOptions options;
+
+  /// Calls the function with [data] and returns what it returned.
+  ///
+  /// [data] must be JSON-encodable: `null`, a `bool`, `num` or `String`, or a
+  /// `List` or `String`-keyed `Map` of those. Failures throw a
+  /// `DartFirebaseFunctionsException`.
+  Future<DartHttpsCallableResult<T>> call<T>([Object? data]) async {
+    final endpoint = callableEndpoint(
+      projectId: _functions.app.options.projectId,
+      region: _functions.region,
+      name: name,
+      uri: uri,
+      origin: _functions._emulatorOrigin,
+    );
+    developer.log('POST $endpoint', name: 'dart_cloud_functions');
+
+    final client = _functions._httpClient ?? http.Client();
+    try {
+      final response = await client
+          .post(
+            endpoint,
+            headers: callableRequestHeaders,
+            body: encodeCallableRequest(data),
+          )
+          .timeout(options.timeout);
+      final value =
+          decodeCallableResponse(response.statusCode, response.bodyBytes);
+      return DartHttpsCallableResult<T>._(value as T);
+    } on TimeoutException {
+      throw callableTimeoutException(options.timeout);
+    } on http.ClientException catch (error) {
+      throw callableNetworkException(error);
+    } finally {
+      // Closing a client we own also aborts a request that timed out.
+      if (_functions._httpClient == null) client.close();
+    }
+  }
+}
+

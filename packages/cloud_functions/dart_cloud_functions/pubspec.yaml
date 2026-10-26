@@ -1,0 +1,22 @@
+name: dart_cloud_functions
+description: >-
+  Experimental pure-Dart client for Firebase callable Cloud Functions. Calls
+  functions over HTTPS without the native Firebase SDKs.
+version: 0.0.1
+publish_to: none
+resolution: workspace
+
+environment:
+  sdk: '^3.6.0'
+  flutter: '>=3.27.0'
+
+dependencies:
+  firebase_core: ^5.0.0
+  flutter:
+    sdk: flutter
+  http: ^1.2.0
+
+dev_dependencies:
+  firebase_core_platform_interface: ^8.1.1
+  flutter_test:
+    sdk: flutter

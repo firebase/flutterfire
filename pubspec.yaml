@@ -14,6 +14,7 @@ workspace:
   - packages/cloud_functions/cloud_functions/example
   - packages/cloud_functions/cloud_functions_platform_interface
   - packages/cloud_functions/cloud_functions_web
+  - packages/cloud_functions/dart_cloud_functions
   - packages/firebase_ai/firebase_ai
   - packages/firebase_ai/firebase_ai/example
   - packages/firebase_analytics/firebase_analytics
