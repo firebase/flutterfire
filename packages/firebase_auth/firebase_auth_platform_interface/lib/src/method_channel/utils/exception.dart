@@ -146,7 +146,7 @@ FirebaseException platformExceptionToFirebaseAuthException(
 // Check for custom error codes that are not returned in the normal errors by Firebase SDKs
 // The error code is only returned in a String on Android
 String? _getCustomCode(Map? additionalData, String? message) {
-  final recognizedCodes = {
+  const recognizedCodes = {
     // This code happens when using Enumerate Email protection
     'INVALID_LOGIN_CREDENTIALS': 'invalid-login-credentials',
     // Use the same error code as on Apple platforms for blocking function errors.
