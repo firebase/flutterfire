@@ -5,6 +5,10 @@
 import FirebaseFirestore
 import Foundation
 
+#if canImport(cloud_firestore_objc)
+  import cloud_firestore_objc
+#endif
+
 enum PigeonParser {
   static func queryParseError(_ message: String) -> NSError {
     NSError(
@@ -85,102 +89,126 @@ enum PigeonParser {
     path: String,
     isCollectionGroup: Bool
   ) -> Query? {
-    do {
-      var query: Query
-      if isCollectionGroup {
-        query = firestore.collectionGroup(path)
-      } else {
-        query = firestore.collection(path)
+    var result: Query?
+    var swiftError: Error?
+    let exception = FLTFirestoreExceptionCatcher.perform {
+      do {
+        result = try buildQuery(
+          parameters: parameters,
+          firestore: firestore,
+          path: path,
+          isCollectionGroup: isCollectionGroup
+        )
+      } catch {
+        swiftError = error
       }
-
-      if let filters = parameters.filters as? [String: Any] {
-        query = try query.whereFilter(filterFromJson(filters))
+    }
+    if exception != nil || swiftError != nil {
+      if exception == nil {
+        NSLog(
+          "An error occurred while parsing query arguments, this is most likely an error with this SDK."
+        )
       }
-
-      if let whereConditions = parameters.where {
-        for item in whereConditions {
-          guard let condition = item, condition.count >= 3 else { continue }
-          guard let fieldPath = condition[0] as? FieldPath, let op = condition[1] as? String else {
-            throw queryParseError("Invalid query condition")
-          }
-          let value = condition[2]
-          switch op {
-          case "==":
-            query = query.whereField(fieldPath, isEqualTo: value as Any)
-          case "!=":
-            query = query.whereField(fieldPath, isNotEqualTo: value as Any)
-          case "<":
-            query = query.whereField(fieldPath, isLessThan: value as Any)
-          case "<=":
-            query = query.whereField(fieldPath, isLessThanOrEqualTo: value as Any)
-          case ">":
-            query = query.whereField(fieldPath, isGreaterThan: value as Any)
-          case ">=":
-            query = query.whereField(fieldPath, isGreaterThanOrEqualTo: value as Any)
-          case "array-contains":
-            query = query.whereField(fieldPath, arrayContains: value as Any)
-          case "array-contains-any":
-            query = query.whereField(fieldPath, arrayContainsAny: value as? [Any] ?? [])
-          case "in":
-            query = query.whereField(fieldPath, in: value as? [Any] ?? [])
-          case "not-in":
-            query = query.whereField(fieldPath, notIn: value as? [Any] ?? [])
-          default:
-            NSLog(
-              "FLTFirebaseFirestore: An invalid query operator %@ was received but not handled.",
-              op
-            )
-          }
-        }
-      }
-
-      if let limit = parameters.limit {
-        query = query.limit(to: Int(limit))
-      }
-      if let limitToLast = parameters.limitToLast {
-        query = query.limit(toLast: Int(limitToLast))
-      }
-
-      guard let orderBy = parameters.orderBy else {
-        return query
-      }
-
-      for orderByParameters in orderBy {
-        guard let orderByParameters, orderByParameters.count >= 2 else { continue }
-        guard let fieldPath = orderByParameters[0] as? FieldPath else {
-          throw queryParseError("Invalid orderBy field path")
-        }
-        let descending: Bool
-        if let number = orderByParameters[1] as? NSNumber {
-          descending = number.boolValue
-        } else if let boolValue = orderByParameters[1] as? Bool {
-          descending = boolValue
-        } else {
-          throw queryParseError("Invalid orderBy direction")
-        }
-        query = query.order(by: fieldPath, descending: descending)
-      }
-
-      if let startAt = parameters.startAt {
-        query = query.start(at: startAt as [Any])
-      }
-      if let startAfter = parameters.startAfter {
-        query = query.start(after: startAfter as [Any])
-      }
-      if let endAt = parameters.endAt {
-        query = query.end(at: endAt as [Any])
-      }
-      if let endBefore = parameters.endBefore {
-        query = query.end(before: endBefore as [Any])
-      }
-
-      return query
-    } catch {
-      NSLog(
-        "An error occurred while parsing query arguments, this is most likely an error with this SDK."
-      )
       return nil
     }
+    return result
+  }
+
+  private static func buildQuery(
+    parameters: InternalQueryParameters,
+    firestore: Firestore,
+    path: String,
+    isCollectionGroup: Bool
+  ) throws -> Query {
+    var query: Query
+    if isCollectionGroup {
+      query = firestore.collectionGroup(path)
+    } else {
+      query = firestore.collection(path)
+    }
+
+    if let filters = parameters.filters as? [String: Any] {
+      query = try query.whereFilter(filterFromJson(filters))
+    }
+
+    if let whereConditions = parameters.where {
+      for item in whereConditions {
+        guard let condition = item, condition.count >= 3 else { continue }
+        guard let fieldPath = condition[0] as? FieldPath, let op = condition[1] as? String else {
+          throw queryParseError("Invalid query condition")
+        }
+        let value = condition[2]
+        switch op {
+        case "==":
+          query = query.whereField(fieldPath, isEqualTo: value as Any)
+        case "!=":
+          query = query.whereField(fieldPath, isNotEqualTo: value as Any)
+        case "<":
+          query = query.whereField(fieldPath, isLessThan: value as Any)
+        case "<=":
+          query = query.whereField(fieldPath, isLessThanOrEqualTo: value as Any)
+        case ">":
+          query = query.whereField(fieldPath, isGreaterThan: value as Any)
+        case ">=":
+          query = query.whereField(fieldPath, isGreaterThanOrEqualTo: value as Any)
+        case "array-contains":
+          query = query.whereField(fieldPath, arrayContains: value as Any)
+        case "array-contains-any":
+          query = query.whereField(fieldPath, arrayContainsAny: value as? [Any] ?? [])
+        case "in":
+          query = query.whereField(fieldPath, in: value as? [Any] ?? [])
+        case "not-in":
+          query = query.whereField(fieldPath, notIn: value as? [Any] ?? [])
+        default:
+          NSLog(
+            "FLTFirebaseFirestore: An invalid query operator %@ was received but not handled.",
+            op
+          )
+        }
+      }
+    }
+
+    if let limit = parameters.limit {
+      query = query.limit(to: Int(limit))
+    }
+    if let limitToLast = parameters.limitToLast {
+      query = query.limit(toLast: Int(limitToLast))
+    }
+
+    guard let orderBy = parameters.orderBy else {
+      return query
+    }
+
+    for orderByParameters in orderBy {
+      guard let orderByParameters, orderByParameters.count >= 2 else { continue }
+      guard let fieldPath = orderByParameters[0] as? FieldPath else {
+        throw queryParseError("Invalid orderBy field path")
+      }
+      let descending: Bool
+      if let number = orderByParameters[1] as? NSNumber {
+        descending = number.boolValue
+      } else if let boolValue = orderByParameters[1] as? Bool {
+        descending = boolValue
+      } else {
+        throw queryParseError("Invalid orderBy direction")
+      }
+      query = query.order(by: fieldPath, descending: descending)
+    }
+
+    if let startAt = parameters.startAt {
+      query = query.start(at: startAt as [Any])
+    }
+    if let startAfter = parameters.startAfter {
+      query = query.start(after: startAfter as [Any])
+    }
+    if let endAt = parameters.endAt {
+      query = query.end(at: endAt as [Any])
+    }
+    if let endBefore = parameters.endBefore {
+      query = query.end(before: endBefore as [Any])
+    }
+
+    return query
   }
 
   static func parseSource(_ source: Source) -> FirestoreSource {

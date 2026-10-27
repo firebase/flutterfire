@@ -6,6 +6,10 @@ import FirebaseCore
 import FirebaseFirestore
 import Foundation
 
+#if canImport(cloud_firestore_objc)
+  import cloud_firestore_objc
+#endif
+
 #if canImport(firebase_core)
   import firebase_core
 #else
@@ -187,112 +191,126 @@ class FirebaseFirestoreReader: FlutterStandardReader {
   }
 
   private func readQuery() -> Query? {
-    do {
-      let values = readValue() as! [String: Any]
-      let firestore = values["firestore"] as! Firestore
-      let parameters = values["parameters"] as! [String: Any]
-      let whereConditions = parameters["where"] as? [Any] ?? []
-      let isCollectionGroup = (values["isCollectionGroup"] as! NSNumber).boolValue
-      let path = values["path"] as! String
-
-      var query: Query
-      if isCollectionGroup {
-        query = firestore.collectionGroup(path)
-      } else {
-        query = firestore.collection(path)
+    var result: Query?
+    var swiftError: Error?
+    let exception = FLTFirestoreExceptionCatcher.perform {
+      do {
+        result = try buildReadQuery()
+      } catch {
+        swiftError = error
       }
-
-      if let filters = parameters["filters"] as? [String: Any] {
-        query = try query.whereFilter(filterFromJson(filters))
+    }
+    if exception != nil || swiftError != nil {
+      if let swiftError, exception == nil {
+        NSLog(
+          "An error occurred while parsing query arguments, this is most likely an error with this SDK. %@",
+          swiftError.localizedDescription
+        )
       }
-
-      for item in whereConditions {
-        guard let condition = item as? [Any], condition.count >= 3,
-          let fieldPath = condition[0] as? FieldPath,
-          let op = condition[1] as? String
-        else {
-          throw PigeonParser.queryParseError("Invalid query condition")
-        }
-        let value = condition[2]
-        switch op {
-        case "==":
-          query = query.whereField(fieldPath, isEqualTo: value as Any)
-        case "!=":
-          query = query.whereField(fieldPath, isNotEqualTo: value as Any)
-        case "<":
-          query = query.whereField(fieldPath, isLessThan: value as Any)
-        case "<=":
-          query = query.whereField(fieldPath, isLessThanOrEqualTo: value as Any)
-        case ">":
-          query = query.whereField(fieldPath, isGreaterThan: value as Any)
-        case ">=":
-          query = query.whereField(fieldPath, isGreaterThanOrEqualTo: value as Any)
-        case "array-contains":
-          query = query.whereField(fieldPath, arrayContains: value as Any)
-        case "array-contains-any":
-          query = query.whereField(fieldPath, arrayContainsAny: value as? [Any] ?? [])
-        case "in":
-          query = query.whereField(fieldPath, in: value as? [Any] ?? [])
-        case "not-in":
-          query = query.whereField(fieldPath, notIn: value as? [Any] ?? [])
-        default:
-          NSLog(
-            "FLTFirebaseFirestore: An invalid query operator %@ was received but not handled.", op
-          )
-        }
-      }
-
-      if let limit = parameters["limit"], !(limit is NSNull) {
-        query = query.limit(to: (limit as! NSNumber).intValue)
-      }
-      if let limitToLast = parameters["limitToLast"], !(limitToLast is NSNull) {
-        query = query.limit(toLast: (limitToLast as! NSNumber).intValue)
-      }
-
-      let orderBy = parameters["orderBy"]
-      if orderBy is NSNull || orderBy == nil {
-        return query
-      }
-
-      guard let orderByEntries = orderBy as? [[Any]] else {
-        throw PigeonParser.queryParseError("Invalid orderBy parameters")
-      }
-      for orderByEntry in orderByEntries {
-        guard orderByEntry.count >= 2, let fieldPath = orderByEntry[0] as? FieldPath else {
-          throw PigeonParser.queryParseError("Invalid orderBy field path")
-        }
-        let descending: Bool
-        if let number = orderByEntry[1] as? NSNumber {
-          descending = number.boolValue
-        } else if let boolValue = orderByEntry[1] as? Bool {
-          descending = boolValue
-        } else {
-          throw PigeonParser.queryParseError("Invalid orderBy direction")
-        }
-        query = query.order(by: fieldPath, descending: descending)
-      }
-
-      if let startAt = parameters["startAt"], !(startAt is NSNull) {
-        query = query.start(at: startAt as! [Any])
-      }
-      if let startAfter = parameters["startAfter"], !(startAfter is NSNull) {
-        query = query.start(after: startAfter as! [Any])
-      }
-      if let endAt = parameters["endAt"], !(endAt is NSNull) {
-        query = query.end(at: endAt as! [Any])
-      }
-      if let endBefore = parameters["endBefore"], !(endBefore is NSNull) {
-        query = query.end(before: endBefore as! [Any])
-      }
-
-      return query
-    } catch {
-      NSLog(
-        "An error occurred while parsing query arguments, this is most likely an error with this SDK. %@",
-        error.localizedDescription
-      )
       return nil
     }
+    return result
+  }
+
+  private func buildReadQuery() throws -> Query {
+    let values = readValue() as! [String: Any]
+    let firestore = values["firestore"] as! Firestore
+    let parameters = values["parameters"] as! [String: Any]
+    let whereConditions = parameters["where"] as? [Any] ?? []
+    let isCollectionGroup = (values["isCollectionGroup"] as! NSNumber).boolValue
+    let path = values["path"] as! String
+
+    var query: Query
+    if isCollectionGroup {
+      query = firestore.collectionGroup(path)
+    } else {
+      query = firestore.collection(path)
+    }
+
+    if let filters = parameters["filters"] as? [String: Any] {
+      query = try query.whereFilter(filterFromJson(filters))
+    }
+
+    for item in whereConditions {
+      guard let condition = item as? [Any], condition.count >= 3,
+        let fieldPath = condition[0] as? FieldPath,
+        let op = condition[1] as? String
+      else {
+        throw PigeonParser.queryParseError("Invalid query condition")
+      }
+      let value = condition[2]
+      switch op {
+      case "==":
+        query = query.whereField(fieldPath, isEqualTo: value as Any)
+      case "!=":
+        query = query.whereField(fieldPath, isNotEqualTo: value as Any)
+      case "<":
+        query = query.whereField(fieldPath, isLessThan: value as Any)
+      case "<=":
+        query = query.whereField(fieldPath, isLessThanOrEqualTo: value as Any)
+      case ">":
+        query = query.whereField(fieldPath, isGreaterThan: value as Any)
+      case ">=":
+        query = query.whereField(fieldPath, isGreaterThanOrEqualTo: value as Any)
+      case "array-contains":
+        query = query.whereField(fieldPath, arrayContains: value as Any)
+      case "array-contains-any":
+        query = query.whereField(fieldPath, arrayContainsAny: value as? [Any] ?? [])
+      case "in":
+        query = query.whereField(fieldPath, in: value as? [Any] ?? [])
+      case "not-in":
+        query = query.whereField(fieldPath, notIn: value as? [Any] ?? [])
+      default:
+        NSLog(
+          "FLTFirebaseFirestore: An invalid query operator %@ was received but not handled.", op
+        )
+      }
+    }
+
+    if let limit = parameters["limit"], !(limit is NSNull) {
+      query = query.limit(to: (limit as! NSNumber).intValue)
+    }
+    if let limitToLast = parameters["limitToLast"], !(limitToLast is NSNull) {
+      query = query.limit(toLast: (limitToLast as! NSNumber).intValue)
+    }
+
+    let orderBy = parameters["orderBy"]
+    if orderBy is NSNull || orderBy == nil {
+      return query
+    }
+
+    guard let orderByEntries = orderBy as? [[Any]] else {
+      throw PigeonParser.queryParseError("Invalid orderBy parameters")
+    }
+    for orderByEntry in orderByEntries {
+      guard orderByEntry.count >= 2, let fieldPath = orderByEntry[0] as? FieldPath else {
+        throw PigeonParser.queryParseError("Invalid orderBy field path")
+      }
+      let descending: Bool
+      if let number = orderByEntry[1] as? NSNumber {
+        descending = number.boolValue
+      } else if let boolValue = orderByEntry[1] as? Bool {
+        descending = boolValue
+      } else {
+        throw PigeonParser.queryParseError("Invalid orderBy direction")
+      }
+      query = query.order(by: fieldPath, descending: descending)
+    }
+
+    if let startAt = parameters["startAt"], !(startAt is NSNull) {
+      query = query.start(at: startAt as! [Any])
+    }
+    if let startAfter = parameters["startAfter"], !(startAfter is NSNull) {
+      query = query.start(after: startAfter as! [Any])
+    }
+    if let endAt = parameters["endAt"], !(endAt is NSNull) {
+      query = query.end(at: endAt as! [Any])
+    }
+    if let endBefore = parameters["endBefore"], !(endBefore is NSNull) {
+      query = query.end(before: endBefore as! [Any])
+    }
+
+    return query
   }
 
   private func readFirestore() -> Firestore {

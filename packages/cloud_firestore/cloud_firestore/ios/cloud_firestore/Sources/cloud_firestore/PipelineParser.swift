@@ -185,7 +185,7 @@ private func constantExpression(from value: Any) throws -> any FirebaseFirestore
   if value is NSNull {
     return Constant.nil
   }
-    if let number = value as? NSNumber {
+  if let number = value as? NSNumber {
     if CFGetTypeID(number) == CFBooleanGetTypeID() {
       return Constant(number.boolValue)
     }
@@ -1502,7 +1502,7 @@ enum PipelineParser {
     if let groupMaps, !groupMaps.isEmpty {
       for gm in groupMaps {
         guard let gmMap = asMap(gm) else { continue }
-        guard let expr = try? exprParser.parseExpression(gmMap) else { continue }
+        let expr = try exprParser.parseExpression(gmMap)
         let groupKey = try keyForExpressionMap(gmMap)
         if groupKey.isEmpty {
           throw parseError(
