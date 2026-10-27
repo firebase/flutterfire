@@ -211,7 +211,7 @@ jobs:
           fi
           exit $BUILD_EXIT
       - name: Start AVD then run E2E tests
-        uses: reactivecircus/android-emulator-runner@e89f39f1abbbd05b1113a29cf4db69e7540cae5a
+        uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d
         # Two alarm-bounded test attempts (15 min each, see the retry script)
         # plus AVD boot and the emulator suite have to fit; the old 20 minute
         # budget was killed by a single launch hang.

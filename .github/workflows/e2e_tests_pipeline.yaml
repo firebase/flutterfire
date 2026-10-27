@@ -93,7 +93,7 @@ jobs:
           rm -rf "$HOME/.android/avd"
           ln -s /mnt/avd "$HOME/.android/avd"
       - name: Start AVD then run pipeline E2E tests
-        uses: reactivecircus/android-emulator-runner@e89f39f1abbbd05b1113a29cf4db69e7540cae5a
+        uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d
         env:
           ANDROID_AVD_HOME: /mnt/avd
         with:
@@ -195,19 +195,14 @@ jobs:
         # symlink farm; the image-default Xcode resolves it fine, as the
         # e2e-firestore SPM job proves every run.
         run: flutter config --enable-swift-package-manager
-      - name: Prepare iOS project for Swift Package Manager
-        # The committed Podfile is what CocoaPods users of the example rely
-        # on, and `flutter build` prefers CocoaPods whenever one is present.
-        working-directory: packages/cloud_firestore/cloud_firestore/pipeline_example/ios
-        run: |
-          if [ -f Podfile ]; then pod deintegrate; fi
-          rm -f Podfile Podfile.lock
-          rm -rf Pods
       - uses: futureware-tech/simulator-action@e89aa8f93d3aec35083ff49d2854d07f7186f7f5
         id: simulator
         with:
           # https://github.com/actions/runner-images/blob/main/images/macos/xcode-27-arm64-Readme.md#installed-simulators
           model: "iPhone 17"
+      - name: Link the example plugin's Swift package dependencies
+        # Keeps the plugin's local package override resolvable; see the script.
+        run: ./.github/workflows/scripts/link-example-plugin-package-deps.sh packages/cloud_firestore/cloud_firestore/pipeline_example ios
       - name: Build iOS (simulator)
         working-directory: packages/cloud_firestore/cloud_firestore/pipeline_example
         # A cold SwiftPM fetch (grpc/abseil binaries) plus the Xcode build has
@@ -225,8 +220,15 @@ jobs:
           cat build_output.log
           if [ $BUILD_EXIT -ne 0 ] && grep -q "Could not resolve package dependencies" build_output.log; then
             echo "SPM package resolution race detected; retrying the build once."
-            flutter build ios --no-codesign --simulator --debug --target=./integration_test/pipeline/pipeline_live_test.dart --dart-define=CI=true
+            flutter build ios --no-codesign --simulator --debug --target=./integration_test/pipeline/pipeline_live_test.dart --dart-define=CI=true > build_output.log 2>&1
             BUILD_EXIT=$?
+            cat build_output.log
+          fi
+          # Flutter silently falls back to CocoaPods when the example has a
+          # Podfile or a plugin has no Package.swift.
+          if grep -q "Running pod install" build_output.log; then
+            echo "::error::flutter build ran pod install: this example must build with Swift Package Manager only."
+            exit 1
           fi
           exit $BUILD_EXIT
       - name: Ensure Simulator Ready

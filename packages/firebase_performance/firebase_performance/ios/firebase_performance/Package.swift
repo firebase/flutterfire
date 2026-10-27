@@ -7,8 +7,8 @@
 
 import PackageDescription
 
-let libraryVersion = "0.11.6"
-let firebaseSdkVersion: Version = "12.19.0"
+let libraryVersion = "0.12.1"
+let firebaseSdkVersion: Version = "13.1.1"
 
 let package = Package(
   name: "firebase_performance",

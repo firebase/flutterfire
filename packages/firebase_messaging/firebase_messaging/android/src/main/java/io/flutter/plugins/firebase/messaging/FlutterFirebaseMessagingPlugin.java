@@ -57,6 +57,10 @@ public class FlutterFirebaseMessagingPlugin
 
   private static final String TAG = "FLTFireMsgPlugin";
 
+  // Messages sent to Dart before it has set up its handler on the channel, e.g. the token or a
+  // message received while the engine starts. Flutter only keeps one by default.
+  private static final int CHANNEL_BUFFER_SIZE = 64;
+
   /** Mirrors the de-duplication window the Messaging SDK keeps in FcmLifecycleCallbacks. */
   private static final int RECENTLY_LOGGED_MESSAGE_IDS_MAX_SIZE = 10;
 
@@ -66,9 +70,10 @@ public class FlutterFirebaseMessagingPlugin
   private MethodChannel channel;
   private Activity mainActivity;
 
-  private final LiveData<RemoteMessage> liveDataRemoteMessage =
-      FlutterFirebaseRemoteMessageLiveData.getInstance();
-  private Observer<RemoteMessage> remoteMessageObserver;
+  private final FlutterFirebaseRemoteMessageDispatcher remoteMessageDispatcher =
+      FlutterFirebaseRemoteMessageDispatcher.getInstance();
+  private FlutterFirebaseRemoteMessageDispatcher.Listener remoteMessageListener;
+  private boolean listeningToForegroundMessages = false;
   private final LiveData<String> liveDataToken = FlutterFirebaseTokenLiveData.getInstance();
   private Observer<String> tokenObserver;
   private final LiveData<String> liveDataRegistered =
@@ -78,13 +83,20 @@ public class FlutterFirebaseMessagingPlugin
       FlutterFirebaseUnregisteredLiveData.getInstance();
   private Observer<String> unregisteredObserver;
 
-  private RemoteMessage initialMessage;
-  // We store the initial notification in a separate variable
-  // because we cannot set the notification key in
-  // the initialMessage Java Builder
-  private Map<String, Object> initialMessageNotification;
+  // Kept as the map sent to Dart: a message restored from the store cannot be rebuilt as a
+  // RemoteMessage without losing fields such as from, sentTime and the notification.
+  private Map<String, Object> initialMessage;
 
   FlutterFirebasePermissionManager permissionManager;
+
+  // Sends a message to Dart. Messages sent before Dart has set up its handler on the channel wait
+  // in a buffer that only keeps one by default, so it is enlarged with every message rather than
+  // once at registration: engines created with `new FlutterEngine(...)` register plugins before
+  // they run Dart, and Flutter drops messages until then, and a hot restart resets the buffers.
+  private void invokeDartMethod(String method, Object arguments) {
+    channel.resizeChannelBuffer(CHANNEL_BUFFER_SIZE);
+    channel.invokeMethod(method, arguments);
+  }
 
   private void initInstance(BinaryMessenger messenger) {
     String channelName = "plugins.flutter.io/firebase_messaging";
@@ -92,18 +104,17 @@ public class FlutterFirebaseMessagingPlugin
     channel.setMethodCallHandler(this);
     permissionManager = new FlutterFirebasePermissionManager();
 
-    remoteMessageObserver =
+    remoteMessageListener =
         remoteMessage -> {
           Map<String, Object> content =
               FlutterFirebaseMessagingUtils.remoteMessageToMap(remoteMessage);
-          channel.invokeMethod("Messaging#onMessage", content);
+          invokeDartMethod("Messaging#onMessage", content);
         };
-    tokenObserver = token -> channel.invokeMethod("Messaging#onTokenRefresh", token);
-    registeredObserver = fid -> channel.invokeMethod("Messaging#onRegistered", fid);
-    unregisteredObserver = fid -> channel.invokeMethod("Messaging#onUnregistered", fid);
+    tokenObserver = token -> invokeDartMethod("Messaging#onTokenRefresh", token);
+    registeredObserver = fid -> invokeDartMethod("Messaging#onRegistered", fid);
+    unregisteredObserver = fid -> invokeDartMethod("Messaging#onUnregistered", fid);
     // We remove these observers in the onDetachedFromEngine method. Using "observeForever()"
     // allows us to use without a LifecycleOwner.
-    liveDataRemoteMessage.observeForever(remoteMessageObserver);
     liveDataToken.observeForever(tokenObserver);
     liveDataRegistered.observeForever(registeredObserver);
     liveDataUnregistered.observeForever(unregisteredObserver);
@@ -120,7 +131,8 @@ public class FlutterFirebaseMessagingPlugin
   @Override
   public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
     liveDataToken.removeObserver(tokenObserver);
-    liveDataRemoteMessage.removeObserver(remoteMessageObserver);
+    remoteMessageDispatcher.removeListener(remoteMessageListener);
+    listeningToForegroundMessages = false;
     liveDataRegistered.removeObserver(registeredObserver);
     liveDataUnregistered.removeObserver(unregisteredObserver);
   }
@@ -341,14 +353,8 @@ public class FlutterFirebaseMessagingPlugin
         () -> {
           try {
             if (initialMessage != null) {
-              Map<String, Object> remoteMessageMap =
-                  FlutterFirebaseMessagingUtils.remoteMessageToMap(initialMessage);
-              if (initialMessageNotification != null) {
-                remoteMessageMap.put("notification", initialMessageNotification);
-              }
-              taskCompletionSource.setResult(remoteMessageMap);
+              taskCompletionSource.setResult(initialMessage);
               initialMessage = null;
-              initialMessageNotification = null;
               return;
             }
 
@@ -376,41 +382,24 @@ public class FlutterFirebaseMessagingPlugin
 
             RemoteMessage remoteMessage =
                 FlutterFirebaseMessagingReceiver.notifications.get(messageId);
-            Map<String, Object> notificationMap = null;
+            Map<String, Object> remoteMessageMap;
 
-            // If we can't find a copy of the remote message in memory then check from our persisted
-            // store.
-            if (remoteMessage == null) {
-              Map<String, Object> messageMap =
+            if (remoteMessage != null) {
+              remoteMessageMap = FlutterFirebaseMessagingUtils.remoteMessageToMap(remoteMessage);
+            } else {
+              // If we can't find a copy of the remote message in memory then check from our
+              // persisted store.
+              remoteMessageMap =
                   FlutterFirebaseMessagingStore.getInstance().getFirebaseMessageMap(messageId);
-              if (messageMap != null) {
-                remoteMessage =
-                    FlutterFirebaseMessagingUtils.getRemoteMessageForArguments(messageMap);
-
-                if (messageMap.get("notification") != null) {
-                  // noinspection
-                  notificationMap =
-                      (Map<String, Object>) uncheckedCastToMap(messageMap.get("notification"));
-                }
-              }
               FlutterFirebaseMessagingStore.getInstance().removeFirebaseMessage(messageId);
             }
 
-            if (remoteMessage == null) {
+            if (remoteMessageMap == null) {
               taskCompletionSource.setResult(null);
               return;
             }
 
             consumedInitialMessages.put(messageId, true);
-
-            Map<String, Object> remoteMessageMap =
-                FlutterFirebaseMessagingUtils.remoteMessageToMap(remoteMessage);
-
-            // If no notification map is available in the remote message we override with the one we
-            // got
-            if (remoteMessage.getNotification() == null && notificationMap != null) {
-              remoteMessageMap.put("notification", notificationMap);
-            }
 
             taskCompletionSource.setResult(remoteMessageMap);
 
@@ -602,6 +591,21 @@ public class FlutterFirebaseMessagingPlugin
         FlutterFirebaseMessagingBackgroundService.setUserCallbackHandle(userCallbackHandle);
         methodCallTask = Tasks.forResult(null);
         break;
+      // Sent when Dart starts and stops listening to onMessage. Foreground messages are only sent
+      // to the engines that listen: the messages received while none does are kept until one
+      // does, and engines that never listen (the background engine) get none.
+      case "Messaging#startForegroundMessages":
+        if (!listeningToForegroundMessages) {
+          listeningToForegroundMessages = true;
+          remoteMessageDispatcher.addListener(remoteMessageListener);
+        }
+        methodCallTask = Tasks.forResult(null);
+        break;
+      case "Messaging#stopForegroundMessages":
+        listeningToForegroundMessages = false;
+        remoteMessageDispatcher.removeListener(remoteMessageListener);
+        methodCallTask = Tasks.forResult(null);
+        break;
       case "Messaging#getInitialMessage":
         methodCallTask = getInitialMessage();
         break;
@@ -774,38 +778,28 @@ public class FlutterFirebaseMessagingPlugin
     }
 
     RemoteMessage remoteMessage = FlutterFirebaseMessagingReceiver.notifications.get(messageId);
-    Map<String, Object> notificationMap = null;
+    Map<String, Object> message;
 
-    // If we can't find a copy of the remote message in memory then check from our persisted store.
-    if (remoteMessage == null) {
-      Map<String, Object> messageMap =
-          FlutterFirebaseMessagingStore.getInstance().getFirebaseMessageMap(messageId);
-      if (messageMap != null) {
-        remoteMessage = FlutterFirebaseMessagingUtils.getRemoteMessageForArguments(messageMap);
-        notificationMap =
-            FlutterFirebaseMessagingUtils.getRemoteMessageNotificationForArguments(messageMap);
-      }
-      // Note we don't remove it here as the user may still call getInitialMessage.
+    if (remoteMessage != null) {
+      message = FlutterFirebaseMessagingUtils.remoteMessageToMap(remoteMessage);
+    } else {
+      // If we can't find a copy of the remote message in memory then check from our persisted
+      // store. Note we don't remove it here as the user may still call getInitialMessage.
+      message = FlutterFirebaseMessagingStore.getInstance().getFirebaseMessageMap(messageId);
     }
 
-    if (remoteMessage == null) {
+    if (message == null) {
       return false;
     }
 
     // Store this message for later use by getInitialMessage.
-    initialMessage = remoteMessage;
-    initialMessageNotification = notificationMap;
+    initialMessage = message;
 
     FlutterFirebaseMessagingReceiver.notifications.remove(messageId);
-    Map<String, Object> message = FlutterFirebaseMessagingUtils.remoteMessageToMap(remoteMessage);
-
-    if (remoteMessage.getNotification() == null && initialMessageNotification != null) {
-      message.put("notification", initialMessageNotification);
-    }
 
     // On a terminated launch, getInitialMessage() owns this message.
     if (shouldNotifyStream) {
-      channel.invokeMethod("Messaging#onMessageOpenedApp", message);
+      invokeDartMethod("Messaging#onMessageOpenedApp", message);
     }
     mainActivity.setIntent(intent);
     return true;
@@ -840,11 +834,5 @@ public class FlutterFirebaseMessagingPlugin
     cachedThreadPool.execute(() -> taskCompletionSource.setResult(null));
 
     return taskCompletionSource.getTask();
-  }
-
-  private Map<String, Object> uncheckedCastToMap(Object obj) {
-    @SuppressWarnings("unchecked")
-    Map<String, Object> result = (Map<String, Object>) obj;
-    return result;
   }
 }

@@ -112,5 +112,18 @@ void main() {
         expect(() => firestore!.doc('bar'), throwsArgumentError);
       });
     });
+
+    group('.settings', () {
+      test('keeps ignoreUndefinedProperties', () {
+        final firestore = FirebaseFirestore.instanceFor(
+          app: Firebase.app(),
+          databaseId: 'settings-test',
+        );
+
+        firestore.settings = const Settings(ignoreUndefinedProperties: true);
+
+        expect(firestore.settings.ignoreUndefinedProperties, isTrue);
+      });
+    });
   });
 }

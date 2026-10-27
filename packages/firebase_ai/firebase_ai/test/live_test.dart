@@ -82,6 +82,30 @@ void main() {
       });
     });
 
+    test('SpeechMetadata toJson() returns correct JSON', () {
+      const metadataFull = SpeechMetadata(
+        speaker: 'Alice',
+        style: 'excitedly',
+      );
+      expect(metadataFull.toJson(), {
+        'speaker': 'Alice',
+        'style': 'excitedly',
+      });
+
+      const metadataSpeakerOnly = SpeechMetadata(speaker: 'Bob');
+      expect(metadataSpeakerOnly.toJson(), {
+        'speaker': 'Bob',
+      });
+
+      const metadataStyleOnly = SpeechMetadata(style: 'whispering');
+      expect(metadataStyleOnly.toJson(), {
+        'style': 'whispering',
+      });
+
+      const metadataEmpty = SpeechMetadata();
+      expect(metadataEmpty.toJson(), <String, Object?>{});
+    });
+
     test('ResponseModalities enum toJson() returns correct value', () {
       expect(ResponseModalities.text.toJson(), 'TEXT');
       expect(ResponseModalities.image.toJson(), 'IMAGE');
@@ -320,11 +344,30 @@ void main() {
           throwsA(isA<FirebaseAISdkException>()));
     });
 
-    test('parseServerMessage throws VertexAISdkException for unhandled format',
+    test('parseServerMessage returns an unknown message for unhandled format',
         () {
-      final jsonObject = {'unknown': {}};
-      expect(() => parseServerResponse(jsonObject),
-          throwsA(isA<FirebaseAISdkException>()));
+      for (final jsonObject in [
+        {'unknown': {}},
+        {
+          'voiceActivity': {
+            'type': 'ACTIVITY_START',
+            'audioOffset': '2.520s',
+          },
+        },
+      ]) {
+        final response = parseServerResponse(jsonObject);
+        expect(
+          response.message,
+          isNot(anyOf(
+            isA<LiveServerContent>(),
+            isA<LiveServerToolCall>(),
+            isA<LiveServerToolCallCancellation>(),
+            isA<LiveServerSetupComplete>(),
+            isA<GoingAwayNotice>(),
+            isA<SessionResumptionUpdate>(),
+          )),
+        );
+      }
     });
 
     test(

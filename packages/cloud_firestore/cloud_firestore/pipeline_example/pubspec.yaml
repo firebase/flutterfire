@@ -31,7 +31,7 @@ environment:
 dependencies:
   cloud_firestore:
     path: ..
-  firebase_core: ^4.14.0
+  firebase_core: ^5.1.0
   flutter:
     sdk: flutter
   http: ^1.0.0
@@ -97,3 +97,6 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+  config:
+    # iOS and macOS build with Swift Package Manager only (no Podfile).
+    enable-swift-package-manager: true

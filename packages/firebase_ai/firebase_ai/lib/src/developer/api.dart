@@ -192,54 +192,66 @@ Candidate _parseCandidate(Object? jsonObject) {
 
 // Developer API and Agent Platform has different _parseSafetyRating logic.
 PromptFeedback _parsePromptFeedback(Object jsonObject) {
-  return switch (jsonObject) {
-    {
-      'safetyRatings': final List<Object?> safetyRatings,
-    } =>
-      PromptFeedback(
-          switch (jsonObject) {
-            {'blockReason': final String blockReason} =>
-              BlockReason.parseValue(blockReason),
-            _ => null,
-          },
-          switch (jsonObject) {
-            {'blockReasonMessage': final String blockReasonMessage} =>
-              blockReasonMessage,
-            _ => null,
-          },
-          safetyRatings.map(_parseSafetyRating).toList()),
-    _ => throw unhandledFormat('PromptFeedback', jsonObject),
-  };
+  if (jsonObject is! Map) {
+    throw unhandledFormat('PromptFeedback', jsonObject);
+  }
+  if (jsonObject.isEmpty) {
+    return PromptFeedback(null, null, []);
+  }
+  final safetyRatingsJson = jsonObject['safetyRatings'];
+  if (safetyRatingsJson != null && safetyRatingsJson is! List<Object?>) {
+    throw unhandledFormat('PromptFeedback', jsonObject);
+  }
+  final safetyRatings = safetyRatingsJson is List<Object?>
+      ? safetyRatingsJson.map(_parseSafetyRating).toList()
+      : <SafetyRating>[];
+  return PromptFeedback(
+    switch (jsonObject) {
+      {'blockReason': final String blockReason} =>
+        BlockReason.parseValue(blockReason),
+      _ => null,
+    },
+    switch (jsonObject) {
+      {'blockReasonMessage': final String blockReasonMessage} =>
+        blockReasonMessage,
+      _ => null,
+    },
+    safetyRatings,
+  );
 }
 
 SafetyRating _parseSafetyRating(Object? jsonObject) {
-  return switch (jsonObject) {
-    {
-      'category': final Object category,
-      'probability': final Object probability,
-      'blocked': final bool? isBlocked,
-    } =>
-      SafetyRating(
-          _parseHarmCategory(category), _parseHarmProbability(probability),
-          isBlocked: isBlocked),
-    {
-      'category': final Object category,
-      'probability': final Object probability,
-    } =>
-      SafetyRating(
-          _parseHarmCategory(category), _parseHarmProbability(probability)),
-    _ => throw unhandledFormat('SafetyRating', jsonObject),
-  };
+  if (jsonObject is! Map) {
+    throw unhandledFormat('SafetyRating', jsonObject);
+  }
+  if (jsonObject.isEmpty) {
+    return SafetyRating(HarmCategory.unknown, HarmProbability.unknown);
+  }
+  final blocked = jsonObject['blocked'];
+  if (blocked != null && blocked is! bool) {
+    throw unhandledFormat('SafetyRating', jsonObject);
+  }
+  final category = jsonObject['category'];
+  final probability = jsonObject['probability'];
+  return SafetyRating(
+    category != null ? _parseHarmCategory(category) : HarmCategory.unknown,
+    probability != null
+        ? _parseHarmProbability(probability)
+        : HarmProbability.unknown,
+    isBlocked: blocked as bool?,
+  );
 }
 
 HarmProbability _parseHarmProbability(Object jsonObject) =>
     switch (jsonObject) {
-      'UNSPECIFIED' => HarmProbability.unknown,
+      'UNSPECIFIED' ||
+      'HARM_PROBABILITY_UNSPECIFIED' =>
+        HarmProbability.unknown,
       'NEGLIGIBLE' => HarmProbability.negligible,
       'LOW' => HarmProbability.low,
       'MEDIUM' => HarmProbability.medium,
       'HIGH' => HarmProbability.high,
-      _ => throw unhandledFormat('HarmProbability', jsonObject),
+      _ => HarmProbability.unknown,
     };
 HarmCategory _parseHarmCategory(Object jsonObject) => switch (jsonObject) {
       'HARM_CATEGORY_UNSPECIFIED' => HarmCategory.unknown,

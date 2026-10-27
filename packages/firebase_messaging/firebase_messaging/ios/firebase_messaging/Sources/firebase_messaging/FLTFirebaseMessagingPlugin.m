@@ -24,6 +24,12 @@ NSString *const kMessagingArgumentMessage = @"message";
 NSString *const kMessagingArgumentAdditionalData = @"additionalData";
 NSString *const kMessagingPresentationOptionsUserDefaults =
     @"flutter_firebase_messaging_presentation_options";
+NSString *const kMessagingBackgroundMessageHandlerUserDefaults =
+    @"flutter_firebase_messaging_background_message_handler";
+
+// Messages sent to Dart before it has set up its handler on the channel, e.g. a push that made iOS
+// launch the app in the background. Flutter only keeps one by default.
+static const NSInteger kFLTFirebaseMessagingChannelBufferSize = 64;
 
 @implementation FLTFirebaseMessagingPlugin {
   FlutterMethodChannel *_channel;
@@ -35,6 +41,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   // to the initialNotification request
   BOOL _initialNotificationGathered;
   FLTFirebaseMethodCallResult *_initialNotificationResult;
+  BOOL _initialNotificationResolved;
 
   NSString *_initialNotificationID;
   NSString *_notificationOpenedAppID;
@@ -42,6 +49,12 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 
   // Track if scene delegate connected (for iOS 13+ scene delegate support)
   BOOL _sceneDidConnect;
+
+  // FCM message IDs of the pushes being delivered right now, see beginDeliveringMessage:.
+  NSMutableSet *_messageIDsBeingDelivered;
+
+  // Whether Dart registered a background message handler during this run or the previous one.
+  BOOL _backgroundMessageHandlerRegistered;
 
   // Guard against calling setupNotificationHandling twice
   BOOL _notificationHandlingSetup;
@@ -71,6 +84,27 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 
 #pragma mark - FlutterPlugin
 
+// Sends a message to Dart. Messages sent before Dart has set up its handler on the channel wait in
+// a buffer that only keeps one by default, so it is enlarged with every message: Flutter drops
+// messages sent before the engine runs Dart, which is when UIScene apps register plugins, so it
+// cannot be done once at registration.
+- (void)invokeDartMethod:(NSString *)method
+               arguments:(id _Nullable)arguments
+                  result:(FlutterResult _Nullable)result {
+  [_channel resizeChannelBuffer:kFLTFirebaseMessagingChannelBufferSize];
+  [_channel invokeMethod:method arguments:arguments result:result];
+}
+
+// Sends a message to onBackgroundMessage. Dart holds a message that arrives before the handler is
+// registered, which is only worth it when the app registers one, so it is told first.
+- (void)invokeBackgroundMessageHandler:(NSDictionary *)message
+                                result:(FlutterResult _Nullable)result {
+  [self invokeDartMethod:@"Messaging#backgroundMessageHandlerExpected"
+               arguments:@(_backgroundMessageHandlerRegistered)
+                  result:nil];
+  [self invokeDartMethod:@"Messaging#onBackgroundMessage" arguments:message result:result];
+}
+
 - (instancetype)init {
   self = [super init];
   if (self) {
@@ -78,6 +112,14 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
     _sceneDidConnect = NO;
     _notificationHandlingSetup = NO;
     _applicationObserverRegistered = NO;
+    _messageIDsBeingDelivered = [NSMutableSet set];
+    // Read and reset once per run: registering the handler again sets it for the next run, so an
+    // app that stops registering one stops being treated as having one. Missing (first run of
+    // this version) counts as registered, to not drop a push before Dart has had a chance.
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    id registered = [defaults objectForKey:kMessagingBackgroundMessageHandlerUserDefaults];
+    _backgroundMessageHandlerRegistered = registered == nil || [registered boolValue];
+    [defaults setBool:NO forKey:kMessagingBackgroundMessageHandlerUserDefaults];
   }
   return self;
 }
@@ -182,6 +224,15 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   FLTFirebaseMethodCallResult *methodCallResult =
       [FLTFirebaseMethodCallResult createWithSuccess:flutterResult andErrorBlock:errorBlock];
 
+  // Before ensureAPNSTokenSetting: apps register the handler before Firebase is configured.
+  if ([@"Messaging#backgroundMessageHandlerRegistered" isEqualToString:call.method]) {
+    _backgroundMessageHandlerRegistered = YES;
+    [[NSUserDefaults standardUserDefaults] setBool:YES
+                                            forKey:kMessagingBackgroundMessageHandlerUserDefaults];
+    methodCallResult.success(nil);
+    return;
+  }
+
   [self ensureAPNSTokenSetting];
 
   if ([@"Messaging#getInitialMessage" isEqualToString:call.method]) {
@@ -264,7 +315,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   }
 
   // Send to Dart.
-  [_channel invokeMethod:@"Messaging#onTokenRefresh" arguments:fcmToken];
+  [self invokeDartMethod:@"Messaging#onTokenRefresh" arguments:fcmToken result:nil];
 
   // If the users AppDelegate implements messaging:didReceiveRegistrationToken: then call it as well
   // so we don't break other libraries.
@@ -286,7 +337,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
     return;
   }
 
-  [_channel invokeMethod:@"Messaging#onRegistered" arguments:installationId];
+  [self invokeDartMethod:@"Messaging#onRegistered" arguments:installationId result:nil];
 
   // If the users AppDelegate implements messaging:didReceiveRegistration: then call it as well
   // so we don't break other libraries.
@@ -304,7 +355,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 
 - (void)messaging:(nonnull FIRMessaging *)messaging
     didUnregister:(nonnull NSString *)installationId {
-  [_channel invokeMethod:@"Messaging#onUnregistered" arguments:installationId];
+  [self invokeDartMethod:@"Messaging#onUnregistered" arguments:installationId result:nil];
 
   // If the users AppDelegate implements messaging:didUnregister: then call it as well
   // so we don't break other libraries.
@@ -579,30 +630,43 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   if (messageID && !shouldCheckForDuplicate) {
     NSDictionary *notificationDict =
         [FLTFirebaseMessagingPlugin NSDictionaryFromUNNotification:notification];
-    [_channel invokeMethod:@"Messaging#onMessage" arguments:notificationDict];
+    [self invokeDartMethod:@"Messaging#onMessage" arguments:notificationDict result:nil];
   }
 
-  // Forward on to any other delegates amd allow them to control presentation behavior.
+  // When AppDelegate owns UNUserNotificationCenter, Flutter forwards this callback to every
+  // plugin with the same completion handler. The first call decides the banner. None suppresses
+  // every later plugin, including a local notification whose payload copied gcm.message_id.
+  // See #18699.
+  //
+  // Call the handler when:
+  //   - another delegate was replaced and must receive the callback, or
+  //   - this plugin is the notification center delegate, so nobody else will answer, or
+  //   - Flutter forwarded a remote FCM notification (aps + gcm.message_id). Always answer,
+  //     including with None, so a foreground FCM notification stays hidden unless the app
+  //     opted in via setForegroundNotificationPresentationOptions. Leave a forwarded local
+  //     notification unanswered so the plugin that posted it can present it.
+  BOOL ownsNotificationCenter = (center.delegate == self);
+  BOOL isRemoteFCMNotification = (messageID != nil && userInfo[@"aps"] != nil);
+  UNNotificationPresentationOptions presentationOptions = UNNotificationPresentationOptionNone;
+  NSDictionary *persistedOptions = [[NSUserDefaults standardUserDefaults]
+      dictionaryForKey:kMessagingPresentationOptionsUserDefaults];
+  if (persistedOptions != nil) {
+    if ([persistedOptions[@"alert"] isEqual:@(YES)]) {
+      presentationOptions |= UNNotificationPresentationOptionAlert;
+    }
+    if ([persistedOptions[@"badge"] isEqual:@(YES)]) {
+      presentationOptions |= UNNotificationPresentationOptionBadge;
+    }
+    if ([persistedOptions[@"sound"] isEqual:@(YES)]) {
+      presentationOptions |= UNNotificationPresentationOptionSound;
+    }
+  }
   if (_originalNotificationCenterDelegate != nil &&
       _originalNotificationCenterDelegateRespondsTo.willPresentNotification) {
     [_originalNotificationCenterDelegate userNotificationCenter:center
                                         willPresentNotification:notification
                                           withCompletionHandler:completionHandler];
-  } else {
-    UNNotificationPresentationOptions presentationOptions = UNNotificationPresentationOptionNone;
-    NSDictionary *persistedOptions = [[NSUserDefaults standardUserDefaults]
-        dictionaryForKey:kMessagingPresentationOptionsUserDefaults];
-    if (persistedOptions != nil) {
-      if ([persistedOptions[@"alert"] isEqual:@(YES)]) {
-        presentationOptions |= UNNotificationPresentationOptionAlert;
-      }
-      if ([persistedOptions[@"badge"] isEqual:@(YES)]) {
-        presentationOptions |= UNNotificationPresentationOptionBadge;
-      }
-      if ([persistedOptions[@"sound"] isEqual:@(YES)]) {
-        presentationOptions |= UNNotificationPresentationOptionSound;
-      }
-    }
+  } else if (ownsNotificationCenter || isRemoteFCMNotification) {
     completionHandler(presentationOptions);
   }
 
@@ -635,26 +699,45 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   }
 #endif
 
-  if (_initialNotification != nil &&
-      [_initialNotificationID isEqualToString:_notificationOpenedAppID]) {
-    _initialNotification = notificationDict;
-    [self initialNotificationCallback];
+  BOOL tappedInitialNotification =
+      _notificationOpenedAppID != nil &&
+      [_initialNotificationID isEqualToString:_notificationOpenedAppID];
+
+  BOOL initialNotificationResolved;
+  @synchronized(self) {
+    initialNotificationResolved = _initialNotificationResolved;
+  }
+
+  if (tappedInitialNotification && _initialNotification != nil) {
+    if (!initialNotificationResolved) {
+      _initialNotification = notificationDict;
+      [self initialNotificationCallback];
+    } else {
+      // Dart calls getInitialMessage() once, so a tap after it resolved null (the stored push
+      // launched the app in the background) must go through onMessageOpenedApp. See #18793.
+      _initialNotification = nil;
+      tappedInitialNotification = NO;
+    }
   }
 
   // We only want to handle FCM notifications and stop firing `onMessageOpenedApp()` when app is
   // coming from a terminated state.
-  if (_notificationOpenedAppID != nil &&
-      ![_initialNotificationID isEqualToString:_notificationOpenedAppID]) {
-    [_channel invokeMethod:@"Messaging#onMessageOpenedApp" arguments:notificationDict];
+  if (_notificationOpenedAppID != nil && !tappedInitialNotification) {
+    [self invokeDartMethod:@"Messaging#onMessageOpenedApp" arguments:notificationDict result:nil];
   }
 
-  // Forward on to any other delegates.
+  // Same ownership rule as willPresentNotification. Calling the shared handler consumes the
+  // tap. A local notification may copy gcm.message_id; aps is what APNs puts on a remote one.
+  // See #18699.
+  BOOL ownsNotificationCenter = (center.delegate == self);
+  BOOL isRemoteFCMNotification =
+      (_notificationOpenedAppID != nil && remoteNotification[@"aps"] != nil);
   if (_originalNotificationCenterDelegate != nil &&
       _originalNotificationCenterDelegateRespondsTo.didReceiveNotificationResponse) {
     [_originalNotificationCenterDelegate userNotificationCenter:center
                                  didReceiveNotificationResponse:response
                                           withCompletionHandler:completionHandler];
-  } else {
+  } else if (ownsNotificationCenter || isRemoteFCMNotification) {
     completionHandler();
   }
 }
@@ -720,19 +803,54 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
         [FLTFirebaseMessagingPlugin remoteMessageUserInfoToDict:userInfo];
 
     if ([NSApplication sharedApplication].isActive) {
-      [_channel invokeMethod:@"Messaging#onMessage" arguments:notificationDict];
+      [self invokeDartMethod:@"Messaging#onMessage" arguments:notificationDict result:nil];
     } else {
-      [_channel invokeMethod:@"Messaging#onBackgroundMessage" arguments:notificationDict];
+      [self invokeBackgroundMessageHandler:notificationDict result:nil];
     }
   }
 }
 #endif
 
 #if !TARGET_OS_OSX
+// A push reaches the method below twice in the same call from iOS: through the GoogleUtilities app
+// delegate proxy (registerAppDelegateInterceptor) and through Flutter's plugin app delegate
+// forwarding (addApplicationDelegate). Returns NO for the second one so the message is only
+// forwarded to Dart once. The ID is forgotten right after, so a later push that reuses it is
+// handled again.
+- (BOOL)beginDeliveringMessage:(NSDictionary *)userInfo {
+  id messageID = userInfo[@"gcm.message_id"];
+  @synchronized(self) {
+    if ([_messageIDsBeingDelivered containsObject:messageID]) {
+      return NO;
+    }
+    [_messageIDsBeingDelivered addObject:messageID];
+  }
+  dispatch_async(dispatch_get_main_queue(), ^{
+    @synchronized(self) {
+      [self->_messageIDsBeingDelivered removeObject:messageID];
+    }
+  });
+  return YES;
+}
+
 // Called for silent messages (i.e. data only) in the foreground & background
 - (BOOL)application:(UIApplication *)application
     didReceiveRemoteNotification:(NSDictionary *)userInfo
           fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))completionHandler {
+  if (![self isKindOfClass:[FLTFirebaseMessagingPlugin class]]) {
+    // This implementation was copied onto the app delegate (see
+    // setupNotificationHandlingWithRemoteNotification:), so `self` is the app delegate. Hand the
+    // call to where FlutterAppDelegate forwards it, so the other plugins get it too, or else to
+    // this plugin.
+    SEL selector = @selector(application:didReceiveRemoteNotification:fetchCompletionHandler:);
+    id<FlutterApplicationLifeCycleDelegate> target = [self forwardingTargetForSelector:selector];
+    if (target == nil || target == (id)self || ![target respondsToSelector:selector]) {
+      target = [FLTFirebaseMessagingPlugin sharedInstance];
+    }
+    return [target application:application
+        didReceiveRemoteNotification:userInfo
+              fetchCompletionHandler:completionHandler];
+  }
 #if __has_include(<FirebaseAuth/FirebaseAuth.h>)
   if ([FIRApp defaultApp] != nil && [[FIRAuth auth] canHandleNotification:userInfo]) {
     completionHandler(UIBackgroundFetchResultNoData);
@@ -743,6 +861,12 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
       [FLTFirebaseMessagingPlugin remoteMessageUserInfoToDict:userInfo];
   // Only handle notifications from FCM.
   if (userInfo[@"gcm.message_id"]) {
+    if (![self beginDeliveringMessage:userInfo]) {
+      // Still complete this delivery: the GoogleUtilities proxy only calls the system completion
+      // handler once every delivery it made has completed.
+      completionHandler(UIBackgroundFetchResultNoData);
+      return YES;
+    }
     // For scene delegate apps: if this notification arrives during cold launch
     // (before initial notification gathering is complete) and no notification was found
     // in connectionOptions, this is the notification that caused the launch.
@@ -785,25 +909,24 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
                        }
                      });
 
-      [_channel invokeMethod:@"Messaging#onBackgroundMessage"
-                   arguments:notificationDict
-                      result:^(id _Nullable result) {
-                        @synchronized(self) {
-                          if (completed == NO) {
-                            completed = YES;
-                            completionHandler(UIBackgroundFetchResultNewData);
-                            if (backgroundTaskId != UIBackgroundTaskInvalid) {
-                              [application endBackgroundTask:backgroundTaskId];
-                              backgroundTaskId = UIBackgroundTaskInvalid;
-                            }
-                          }
-                        }
-                      }];
+      [self invokeBackgroundMessageHandler:notificationDict
+                                    result:^(id _Nullable result) {
+                                      @synchronized(self) {
+                                        if (completed == NO) {
+                                          completed = YES;
+                                          completionHandler(UIBackgroundFetchResultNewData);
+                                          if (backgroundTaskId != UIBackgroundTaskInvalid) {
+                                            [application endBackgroundTask:backgroundTaskId];
+                                            backgroundTaskId = UIBackgroundTaskInvalid;
+                                          }
+                                        }
+                                      }
+                                    }];
     } else {
       // If "alert" (i.e. notification) is present in userInfo, this will be called by the other
       // "Messaging#onMessage" channel handler
       if (userInfo[@"aps"] != nil && userInfo[@"aps"][@"alert"] == nil) {
-        [_channel invokeMethod:@"Messaging#onMessage" arguments:notificationDict];
+        [self invokeDartMethod:@"Messaging#onMessage" arguments:notificationDict result:nil];
       }
       completionHandler(UIBackgroundFetchResultNoData);
     }
@@ -817,7 +940,11 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 #pragma mark - SceneDelegate Methods
 
 #if !TARGET_OS_OSX
-- (void)scene:(UIScene *)scene
+// FlutterSceneLifeCycleDelegate declares this as BOOL. YES means this plugin
+// consumed the connection, which skips Flutter's cold-start deep link delivery
+// and passes nil options to later plugins. Messaging only reads
+// notificationResponse, so always return NO.
+- (BOOL)scene:(UIScene *)scene
     willConnectToSession:(UISceneSession *)session
                  options:(UISceneConnectionOptions *)connectionOptions {
   // Handle launch notification if present
@@ -836,6 +963,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 
   [self setupNotificationHandlingWithRemoteNotification:remoteNotification
                                        actionIdentifier:actionIdentifier];
+  return NO;
 }
 #endif
 
@@ -969,7 +1097,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
       result.error(nil, nil, nil, error);
     } else {
       if (refreshToken) {
-        [self->_channel invokeMethod:@"Messaging#onTokenRefresh" arguments:token];
+        [self invokeDartMethod:@"Messaging#onTokenRefresh" arguments:token result:nil];
       }
 
       result.success(@{@"token" : token});
@@ -1396,6 +1524,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 
 - (nullable NSDictionary *)copyInitialNotification {
   @synchronized(self) {
+    _initialNotificationResolved = YES;
 #if TARGET_OS_OSX
     _missedApplicationDidFinishLaunchingNotification = NO;
 #endif

@@ -20,8 +20,14 @@ abstract final class ExampleModels {
   /// Multimodal text and image generation model.
   static const String flashImage = 'gemini-3.1-flash-image';
 
-  /// Text-to-speech audio model preview.
-  static const String flashTTS = 'gemini-3.1-flash-tts-preview';
+  /// Gemini 3.1 Flash text-to-speech audio model preview.
+  static const String flashTts31 = 'gemini-3.1-flash-tts-preview';
+
+  /// Gemini 3.8 Flash text-to-speech audio model preview.
+  static const String flashTts38 = 'gemini-3.8-flash-tts';
+
+  /// Gemini 3.8 Flash-Lite text-to-speech audio model preview.
+  static const String flashLiteTts38 = 'gemini-3.8-flash-lite-tts';
 
   /// Live bidirectional audio streaming model for Agent Platform.
   static const String liveAgentPlatform =

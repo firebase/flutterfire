@@ -163,9 +163,9 @@ class User {
   ///    user, an `email` and `credential` ([AuthCredential]) fields are also
   ///    provided. You have to link the credential to the existing user with
   ///    that email if you wish to continue signing in with that credential. To
-  ///    do so, sign in to `email` via one of
-  ///    the providers returned and then [User.linkWithCredential] the original
-  ///    credential to that newly signed in user.
+  ///    do so, sign in to `email` with the provider the account already uses
+  ///    and then [User.linkWithCredential] the original credential to that
+  ///    newly signed in user.
   /// - **operation-not-allowed**:
   ///  - Thrown if you have not enabled the provider in the Firebase Console. Go
   ///    to the Firebase Console for your project, in the Auth section and the
@@ -173,10 +173,6 @@ class User {
   /// - **invalid-email**:
   ///  - Thrown if the email used in a [EmailAuthProvider.credential] is
   ///    invalid.
-  /// - **invalid-email**:
-  ///  - Thrown if the password used in a [EmailAuthProvider.credential] is not
-  ///    correct or when the user associated with the email does not have a
-  ///    password.
   /// - **invalid-verification-code**:
   ///  - Thrown if the credential is a [PhoneAuthProvider.credential] and the
   ///    verification code of the credential is not valid.
@@ -634,11 +630,22 @@ class User {
     return _delegate.updateProfile(<String, String?>{'photoURL': photoURL});
   }
 
+  // Default value of the [updateProfile] arguments, so an omitted argument can
+  // be told apart from an explicit `null`.
+  static const String _unchangedProfileField = '<unchanged>';
+
   /// Updates a user's profile data.
-  Future<void> updateProfile({String? displayName, String? photoURL}) {
+  ///
+  /// Only the fields that are passed are changed. Pass `null` to remove the
+  /// display name or the photo URL.
+  Future<void> updateProfile({
+    String? displayName = _unchangedProfileField,
+    String? photoURL = _unchangedProfileField,
+  }) {
     return _delegate.updateProfile(<String, String?>{
-      'displayName': displayName,
-      'photoURL': photoURL,
+      if (!identical(displayName, _unchangedProfileField))
+        'displayName': displayName,
+      if (!identical(photoURL, _unchangedProfileField)) 'photoURL': photoURL,
     });
   }
 

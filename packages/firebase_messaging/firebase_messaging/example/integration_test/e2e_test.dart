@@ -14,6 +14,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:firebase_messaging_example/firebase_options.dart';
 
+import 'remote_notification_delivery.dart';
 import 'report_test_results.dart';
 
 /// Test helpers that use UiAutomation to mutate runtime permissions during
@@ -245,6 +246,8 @@ void main() {
           skip: defaultTargetPlatform != TargetPlatform.android,
         );
       });
+
+      remoteNotificationDeliveryTests();
 
       group('getInitialMessage', () {
         test('returns null when no initial message', () async {

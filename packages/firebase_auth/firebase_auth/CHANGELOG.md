@@ -1,3 +1,23 @@
+## 7.0.1
+
+ - **FIX**(auth): forward signed-out initial native callbacks ([#18797](https://github.com/firebase/flutterfire/issues/18797)). ([6cfdb79d](https://github.com/firebase/flutterfire/commit/6cfdb79db49e8a85cc20f389b890b81efa5951da))
+ - **FIX**(android): replace Groovy space-assignment in plugin build.gradle files ([#18837](https://github.com/firebase/flutterfire/issues/18837)). ([09e913ac](https://github.com/firebase/flutterfire/commit/09e913acd98fa25ea6ff547141e7caf421b7b02d))
+ - **FIX**(firebase_auth): stop dropping profile, provider and action code fields ([#18820](https://github.com/firebase/flutterfire/issues/18820)). ([2572d82b](https://github.com/firebase/flutterfire/commit/2572d82b760b2800dd53c454474381d3ddbe6d9f))
+ - **DOCS**(auth,functions): document all FirebaseAuthException and FirebaseFunctionsException codes ([#18713](https://github.com/firebase/flutterfire/issues/18713)). ([b4feba95](https://github.com/firebase/flutterfire/commit/b4feba95a65f650c91cb6d3863f8b7467ef099b7))
+
+## 7.0.0
+
+> Note: This release has breaking changes.
+
+ - **FIX**(apple): build on Firebase Apple SDK 13 and require macOS 11 for Swift packages ([#18783](https://github.com/firebase/flutterfire/issues/18783)). ([aca14eab](https://github.com/firebase/flutterfire/commit/aca14eab5305d80011af473bc7dd289ef71b75e8))
+ - **FIX**(android): build on Firebase BoM 35 and require minSdk 24 ([#18782](https://github.com/firebase/flutterfire/issues/18782)). ([7555707d](https://github.com/firebase/flutterfire/commit/7555707dec23382dfce1e7841c00446a21c9a406))
+ - **FIX**(firebase_auth,ios): add missing uppercase W to nonce character set ([#18775](https://github.com/firebase/flutterfire/issues/18775)). ([5967fd85](https://github.com/firebase/flutterfire/commit/5967fd85546b50dd60265047440b53ad126cdd78))
+ - **FIX**(firebase_auth): require platform interface 9.1.0 ([#18727](https://github.com/firebase/flutterfire/issues/18727)). ([add0ca41](https://github.com/firebase/flutterfire/commit/add0ca41ee3808fb044d163f44eb0fb51fde1b93))
+ - **FIX**(auth,apple): include the underlying reason in internal-error messages ([#18717](https://github.com/firebase/flutterfire/issues/18717)). ([559d4617](https://github.com/firebase/flutterfire/commit/559d4617062d306af01fc47b0a6b8797536d05d5))
+ - **FIX**(auth,windows): avoid taking the address of a temporary provider ([#18702](https://github.com/firebase/flutterfire/issues/18702)). ([4fb03ec3](https://github.com/firebase/flutterfire/commit/4fb03ec3ed341f27e8e8e8cf31c84cbe2f3c3095))
+ - **FIX**(auth,web): connect Auth emulator after reload when sessionStorage already has the origin ([#18690](https://github.com/firebase/flutterfire/issues/18690)). ([3740a2da](https://github.com/firebase/flutterfire/commit/3740a2da18d1b119fb897dd4f2c8951127f03ea6))
+ - **BREAKING** **FEAT**: bump Firebase iOS SDK to 13.0.0 ([#18771](https://github.com/firebase/flutterfire/issues/18771)). ([dbf7f754](https://github.com/firebase/flutterfire/commit/dbf7f7543a37386f7e8e314d8344be82b0483b77))
+
 ## 6.7.0
 
  - **FIX**(auth,windows): complete reauthenticateWithCredential on success ([#18653](https://github.com/firebase/flutterfire/issues/18653)). ([cdd85fdd](https://github.com/firebase/flutterfire/commit/cdd85fdd6032326b706b33a76b7e612585269d6d))

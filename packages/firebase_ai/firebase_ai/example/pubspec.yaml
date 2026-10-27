@@ -23,9 +23,11 @@ dependencies:
 
   camera: ^0.12.0+1
   cupertino_icons: ^1.0.6
-  firebase_ai: ^4.0.0
-  firebase_core: ^4.14.0
-  firebase_storage: ^13.5.0
+  firebase_ai: ^5.1.0
+  firebase_app_check: ^0.5.1
+  firebase_auth: ^7.0.1
+  firebase_core: ^5.1.0
+  firebase_storage: ^14.0.1
   flutter:
     sdk: flutter
   flutter_animate: ^4.5.2
@@ -64,3 +66,6 @@ flutter:
     - assets/images/
     - assets/documents/
     - assets/videos/
+  config:
+    # iOS and macOS build with Swift Package Manager only (no Podfile).
+    enable-swift-package-manager: true

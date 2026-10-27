@@ -59,6 +59,33 @@ class FirebaseFunctions extends FirebasePlugin {
 
   String? _origin;
 
+  /// Whether Auth, FCM, and App Check tokens may be sent over plain HTTP to a
+  /// non-loopback host.
+  ///
+  /// This mirrors `Functions.allowInsecureTokenAttachment` on the Firebase
+  /// Apple SDK. Set it before calling a function on a local emulator from a
+  /// physical device:
+  ///
+  /// ```dart
+  /// FirebaseFunctions.instance.allowInsecureTokenAttachment = true;
+  /// FirebaseFunctions.instance.useFunctionsEmulator('192.168.1.10', 5001);
+  /// ```
+  ///
+  /// Only Apple debug builds honor this value. `flutter run` is a debug build.
+  /// Profile and release builds compile the Apple SDK without the property, so
+  /// the value is ignored there. Android and web already attach these tokens,
+  /// so the value has no effect on those platforms, and setting it to `false`
+  /// does not withhold tokens on Android or web.
+  ///
+  /// Sending tokens over plain HTTP exposes them on the local network. Enable
+  /// this only for a local emulator.
+  bool get allowInsecureTokenAttachment =>
+      delegate.allowInsecureTokenAttachment;
+
+  set allowInsecureTokenAttachment(bool value) {
+    delegate.allowInsecureTokenAttachment = value;
+  }
+
   /// A reference to the Callable HTTPS trigger with the given name.
   ///
   /// Should be the name of the Callable function in Firebase

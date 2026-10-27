@@ -52,9 +52,6 @@ workspace:
   - packages/firebase_messaging/firebase_messaging/example
   - packages/firebase_messaging/firebase_messaging_platform_interface
   - packages/firebase_messaging/firebase_messaging_web
-  - packages/firebase_ml_model_downloader/firebase_ml_model_downloader
-  - packages/firebase_ml_model_downloader/firebase_ml_model_downloader/example
-  - packages/firebase_ml_model_downloader/firebase_ml_model_downloader_platform_interface
   - packages/firebase_performance/firebase_performance
   - packages/firebase_performance/firebase_performance/example
   - packages/firebase_performance/firebase_performance_platform_interface
@@ -70,6 +67,7 @@ workspace:
   - tests
 
 dev_dependencies:
+  analyzer: '>=12.0.0 <15.0.0'
   cli_util: ^0.5.0
   glob: ^2.1.2
   intl: ^0.20.2
@@ -115,6 +113,10 @@ melos:
     validate:workspace:
       run: dart scripts/validate_workspace.dart
       description: Validate that all packages are listed in the workspace.
+
+    validate:wasm-imports:
+      run: dart scripts/validate_wasm_imports.dart
+      description: Validate that published packages only depend on libraries available on Wasm.
 
     analyze-ci:
       # We are setting the concurrency to 1 because a higher concurrency can crash
@@ -207,6 +209,8 @@ melos:
       run: |
         melos run test --no-select && \
         melos run test:web --no-select && \
+        melos run test:web:wasm --no-select && \
+        melos run test:browser --no-select && \
         melos run test:e2e --no-select
       description: |
         Run all tests available.
@@ -232,6 +236,33 @@ melos:
         dirExists:
           - test
         scope: '*web*'
+
+    test:web:wasm:
+      # Same suites as test:web, compiled with dart2wasm. Interop casts that
+      # erasure lets through on JS (e.g. `List<String>.from(jsArray.toDart)`)
+      # only fail here.
+      run: |
+        melos exec -c 1 --fail-fast -- \
+          "flutter test --platform=chrome --wasm"
+      description: Run `flutter test --platform=chrome --wasm` for a specific '*web' package.
+      packageFilters:
+        dirExists:
+          - test
+        scope: '*web*'
+
+    test:browser:
+      # Browser tests of the other packages live in test/web, so that their
+      # VM-only tests (dart:io, sqlite3, ...) are not compiled for the browser.
+      run: |
+        melos exec -c 1 --fail-fast -- \
+          "flutter test --platform=chrome test/web && flutter test --platform=chrome --wasm test/web"
+      description: Run the `test/web` tests of a non-'*web*' package on Chrome, compiled to JS and to Wasm.
+      packageFilters:
+        dirExists:
+          - test/web
+        ignore:
+          - '*web*'
+          - '*example*'
 
     test:e2e:
       run: |
@@ -299,13 +330,6 @@ melos:
         flutter test integration_test/e2e_test.dart
       description: |
         Run all e2e tests for firebase_messaging.
-
-    test:e2e:firebase_ml_model_downloader:
-      run: |
-        cd packages/firebase_ml_model_downloader/firebase_ml_model_downloader/example
-        flutter test integration_test/e2e_test.dart
-      description: |
-        Run all e2e tests for firebase_ml_model_downloader.
 
     test:e2e:firebase_auth:
       run: |

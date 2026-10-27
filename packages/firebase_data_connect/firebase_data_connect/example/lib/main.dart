@@ -34,30 +34,25 @@ void main() async {
   if (appCheckEnabled) {
     await FirebaseAppCheck.instance.activate(
       // You can also use a `ReCaptchaEnterpriseProvider` provider instance as an
-      // argument for `webProvider`
+      // argument for `providerWeb`
       providerWeb: ReCaptchaV3Provider('your-site-key'),
-      // Default provider for Android is the Play Integrity provider. You can use the "AndroidProvider" enum to choose
-      // your preferred provider. Choose from:
-      // 1. Debug provider
-      // 2. Safety Net provider
-      // 3. Play Integrity provider
+      // Default provider for Android is Play Integrity. Choose providerAndroid
+      // from AndroidDebugProvider or AndroidPlayIntegrityProvider.
       providerAndroid: const AndroidDebugProvider(),
-      // Default provider for iOS/macOS is the Device Check provider. You can use the "AppleProvider" enum to choose
-      // your preferred provider. Choose from:
-      // 1. Debug provider
-      // 2. Device Check provider
-      // 3. App Attest provider
-      // 4. App Attest provider with fallback to Device Check provider (App Attest provider is only available on iOS 14.0+, macOS 14.0+)
+      // Default provider for iOS/macOS is Device Check. Choose providerApple
+      // from AppleDebugProvider, AppleDeviceCheckProvider,
+      // AppleAppAttestProvider, or
+      // AppleAppAttestWithDeviceCheckFallbackProvider. App Attest requires
+      // iOS 14.0+ and macOS 14.0+.
       providerApple: const AppleAppAttestProvider(),
     );
   }
   if (configureEmulator) {
-    MoviesConnector.instance.dataConnect
-        .useDataConnectEmulator('127.0.0.1', 9399);
-    FirebaseAuth.instance.useAuthEmulator(
-      'localhost',
-      9099,
+    MoviesConnector.instance.dataConnect.useDataConnectEmulator(
+      '127.0.0.1',
+      9399,
     );
+    FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
   }
 
   runApp(const MyApp());
@@ -90,9 +85,7 @@ class MyHomePage extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(title),
       ),
-      body: const Center(
-        child: DataConnectWidget(),
-      ),
+      body: const Center(child: DataConnectWidget()),
     );
   }
 }
@@ -134,8 +127,10 @@ class _DataConnectWidgetState extends State<DataConnectWidget> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Flex(direction: Axis.vertical, children: [
+      padding: const EdgeInsets.all(10.0),
+      child: Flex(
+        direction: Axis.vertical,
+        children: [
           Flexible(
             flex: 1,
             child: TextFormField(
@@ -147,43 +142,44 @@ class _DataConnectWidgetState extends State<DataConnectWidget> {
             ),
           ),
           Flexible(
-              flex: 1,
-              child: TextFormField(
-                decoration: const InputDecoration(
-                  border: UnderlineInputBorder(),
-                  labelText: 'Genre',
-                ),
-                controller: _genreController,
-              )),
+            flex: 1,
+            child: TextFormField(
+              decoration: const InputDecoration(
+                border: UnderlineInputBorder(),
+                labelText: 'Genre',
+              ),
+              controller: _genreController,
+            ),
+          ),
           Flexible(
-              flex: 1,
-              child: RatingBar.builder(
-                initialRating: 3,
-                minRating: 1,
-                direction: Axis.horizontal,
-                allowHalfRating: true,
-                itemCount: 5,
-                itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
-                itemBuilder: (context, _) => const Icon(
-                  Icons.star,
-                  color: Colors.amber,
-                ),
-                onRatingUpdate: (rating) {
-                  _rating = rating;
-                },
-              )),
+            flex: 1,
+            child: RatingBar.builder(
+              initialRating: 3,
+              minRating: 1,
+              direction: Axis.horizontal,
+              allowHalfRating: true,
+              itemCount: 5,
+              itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
+              itemBuilder: (context, _) =>
+                  const Icon(Icons.star, color: Colors.amber),
+              onRatingUpdate: (rating) {
+                _rating = rating;
+              },
+            ),
+          ),
           Flexible(
-              flex: 1,
-              child: YearPicker(
-                firstDate: DateTime(1990),
-                lastDate: DateTime.now(),
-                selectedDate: _releaseYearDate,
-                onChanged: (value) {
-                  setState(() {
-                    _releaseYearDate = value;
-                  });
-                },
-              )),
+            flex: 1,
+            child: YearPicker(
+              firstDate: DateTime(1990),
+              lastDate: DateTime.now(),
+              selectedDate: _releaseYearDate,
+              onChanged: (value) {
+                setState(() {
+                  _releaseYearDate = value;
+                });
+              },
+            ),
+          ),
           TextButton(
             style: ButtonStyle(
               foregroundColor: WidgetStateProperty.all<Color>(Colors.blue),
@@ -213,23 +209,19 @@ class _DataConnectWidgetState extends State<DataConnectWidget> {
             },
             child: const Text('Add Movie'),
           ),
-          const Center(
-            child: Text(
-              "Movies",
-              style: TextStyle(fontSize: 35.0),
-            ),
-          ),
+          const Center(child: Text("Movies", style: TextStyle(fontSize: 35.0))),
           Expanded(
-              child: Column(
-            children: [
-              Expanded(
-                child: RefreshIndicator(
-                  onRefresh: () => triggerReload(),
-                  child: ListView(
+            child: Column(
+              children: [
+                Expanded(
+                  child: RefreshIndicator(
+                    onRefresh: () => triggerReload(),
+                    child: ListView(
                       scrollDirection: Axis.vertical,
                       children: _movies
-                          .map((movie) => Card(
-                                  child: Padding(
+                          .map(
+                            (movie) => Card(
+                              child: Padding(
                                 padding: const EdgeInsets.all(10),
                                 child: Center(
                                   child: Text(
@@ -239,13 +231,19 @@ class _DataConnectWidgetState extends State<DataConnectWidget> {
                                     ),
                                   ),
                                 ),
-                              )))
-                          .toList()),
+                              ),
+                            ),
+                          )
+                          .toList(),
+                    ),
+                  ),
                 ),
-              )
-            ],
-          ))
-        ]));
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   void _showError(String message) {
@@ -254,9 +252,7 @@ class _DataConnectWidgetState extends State<DataConnectWidget> {
       builder: (context) {
         return AlertDialog(
           title: const Text('Something went wrong'),
-          content: SingleChildScrollView(
-            child: SelectableText(message),
-          ),
+          content: SingleChildScrollView(child: SelectableText(message)),
           actions: [
             TextButton(
               onPressed: () {

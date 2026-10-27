@@ -2,6 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:async';
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -312,12 +313,19 @@ void runTransactionTests() {
           await first.set(<String, Object>{'v': 1});
           await second.set(<String, Object>{'v': 2});
 
+          final lateGet = Completer<Object?>();
+
           await expectLater(
             firestore.runTransaction(
               (Transaction transaction) async {
                 await transaction.get(first);
                 await Future<void>.delayed(const Duration(seconds: 2));
-                await transaction.get(second);
+                try {
+                  await transaction.get(second);
+                  lateGet.complete(null);
+                } catch (e) {
+                  lateGet.complete(e);
+                }
               },
               timeout: const Duration(seconds: 1),
             ),
@@ -326,8 +334,11 @@ void runTransactionTests() {
                   .having((e) => e.code, 'code', 'deadline-exceeded'),
             ),
           );
+
+          // runTransaction completes on the timeout, before the late get runs.
+          expect(await lateGet.future, isA<FirebaseException>());
         },
-        skip: kIsWeb || defaultTargetPlatform != TargetPlatform.android,
+        skip: kIsWeb || defaultTargetPlatform == TargetPlatform.windows,
       );
 
       test('should throw with exception', () async {
@@ -363,7 +374,7 @@ void runTransactionTests() {
             fail('Transaction threw invalid exception');
           }
         },
-        skip: kIsWeb || defaultTargetPlatform == TargetPlatform.windows,
+        skip: kIsWeb,
       );
 
       group('Transaction.get()', () {
@@ -399,7 +410,7 @@ void runTransactionTests() {
               fail('Transaction threw invalid exception');
             }
           },
-          skip: kIsWeb || defaultTargetPlatform == TargetPlatform.windows,
+          skip: kIsWeb,
         );
       });
 

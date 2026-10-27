@@ -55,7 +55,7 @@ abstract class FirebaseAppCheckPlatform extends PlatformInterface {
   ///
   /// ## Platform Configuration
   ///
-  /// **Web**: Provide the reCAPTCHA v3 Site Key using `webProvider`, which can be
+  /// **Web**: Provide the reCAPTCHA v3 Site Key using `providerWeb`, which can be
   /// found in the Firebase Console.
   ///
   /// **Android**: The default provider is "play integrity". Use `providerAndroid`
@@ -80,26 +80,9 @@ abstract class FirebaseAppCheckPlatform extends PlatformInterface {
   /// first be registered in the Firebase Console under
   /// *App Check → Apps → Manage debug tokens*.
   ///
-  /// ## Migration Notice
-  ///
-  /// The `androidProvider` and `appleProvider` parameters will be deprecated
-  /// in a future release. Use `providerAndroid` and `providerApple` instead,
-  /// which support the new provider classes including `AndroidDebugProvider`
-  /// and `AppleDebugProvider` for passing debug tokens directly.
-  ///
   /// For more information, see [the Firebase Documentation](https://firebase.google.com/docs/app-check)
   Future<void> activate({
-    WebProvider? webProvider,
-    @Deprecated(
-      'Use providerAndroid instead. '
-      'This parameter will be removed in a future major release.',
-    )
-    AndroidProvider? androidProvider,
-    @Deprecated(
-      'Use providerApple instead. '
-      'This parameter will be removed in a future major release.',
-    )
-    AppleProvider? appleProvider,
+    WebProvider? providerWeb,
     AndroidAppCheckProvider? providerAndroid,
     AppleAppCheckProvider? providerApple,
     WindowsAppCheckProvider? providerWindows,

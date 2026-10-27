@@ -161,55 +161,76 @@ class MethodChannelQuery extends QueryPlatform {
     late StreamController<QuerySnapshotPlatform>
         controller; // ignore: close_sinks
 
-    StreamSubscription<dynamic>? snapshotStreamSubscription;
-    final snapshotAssembler = QuerySnapshotChunkAssembler();
+    StreamSubscription<QuerySnapshotPlatform>? subscription;
 
     controller = StreamController<QuerySnapshotPlatform>.broadcast(
-      onListen: () async {
-        final observerId =
-            await MethodChannelFirebaseFirestore.pigeonChannel.querySnapshot(
-          pigeonApp,
-          _pointer.path,
-          isCollectionGroupQuery,
-          _pigeonParameters,
-          InternalGetOptions(
-            source: Source.serverAndCache,
-            serverTimestampBehavior: serverTimestampBehavior,
-          ),
-          includeMetadataChanges,
-          listenSource,
-        );
-
-        snapshotStreamSubscription =
-            MethodChannelFirebaseFirestore.querySnapshotChannel(observerId)
-                .receiveGuardedBroadcastStream(
-          onError: convertPlatformException,
-        )
-                .listen(
-          (snapshot) {
-            try {
-              final result = snapshotAssembler.add(snapshot);
-              if (result != null) {
-                controller.add(MethodChannelQuerySnapshot(firestore, result));
-              }
-            } catch (error, stackTrace) {
-              snapshotAssembler.reset();
-              controller.addError(error, stackTrace);
-            }
-          },
-          onError: (Object error, StackTrace stackTrace) {
-            snapshotAssembler.reset();
-            controller.addError(error, stackTrace);
-          },
+      onListen: () {
+        subscription = _snapshots(
+          includeMetadataChanges: includeMetadataChanges,
+          serverTimestampBehavior: serverTimestampBehavior,
+          listenSource: listenSource,
+        ).listen(
+          controller.add,
+          onError: controller.addError,
         );
       },
       onCancel: () {
-        snapshotAssembler.reset();
-        snapshotStreamSubscription?.cancel();
+        subscription?.cancel();
+        subscription = null;
       },
     );
 
     return controller.stream;
+  }
+
+  Stream<QuerySnapshotPlatform> _snapshots({
+    required bool includeMetadataChanges,
+    required ServerTimestampBehavior serverTimestampBehavior,
+    required ListenSource listenSource,
+  }) async* {
+    final observerId =
+        await MethodChannelFirebaseFirestore.pigeonChannel.querySnapshot(
+      pigeonApp,
+      _pointer.path,
+      isCollectionGroupQuery,
+      _pigeonParameters,
+      InternalGetOptions(
+        source: Source.serverAndCache,
+        serverTimestampBehavior: serverTimestampBehavior,
+      ),
+      includeMetadataChanges,
+      listenSource,
+    );
+
+    // Keep assembly state local to this listener generation. A cancel or
+    // re-listen while Pigeon setup is pending must not reuse partial chunks.
+    final snapshotAssembler = QuerySnapshotChunkAssembler();
+    try {
+      yield* MethodChannelFirebaseFirestore.querySnapshotChannel(observerId)
+          .receiveGuardedBroadcastStream(
+            onError: convertPlatformException,
+          )
+          .transform(
+              StreamTransformer<dynamic, QuerySnapshotPlatform>.fromHandlers(
+            handleData: (snapshot, sink) {
+              try {
+                final result = snapshotAssembler.add(snapshot);
+                if (result != null) {
+                  sink.add(MethodChannelQuerySnapshot(firestore, result));
+                }
+              } catch (error, stackTrace) {
+                snapshotAssembler.reset();
+                sink.addError(error, stackTrace);
+              }
+            },
+            handleError: (error, stackTrace, sink) {
+              snapshotAssembler.reset();
+              sink.addError(error, stackTrace);
+            },
+          ));
+    } finally {
+      snapshotAssembler.reset();
+    }
   }
 
   @override
@@ -263,8 +284,15 @@ class MethodChannelQuery extends QueryPlatform {
 
   @override
   QueryPlatform whereFilter(FilterPlatformInterface filter) {
+    final existingFilters = parameters['filters'];
     return _copyWithParameters(<String, dynamic>{
-      'filters': filter.toJson(),
+      // Chained filters are combined with AND, like the native SDKs do.
+      'filters': existingFilters == null
+          ? filter.toJson()
+          : <String, Object?>{
+              'op': 'AND',
+              'queries': [existingFilters, filter.toJson()],
+            },
     });
   }
 

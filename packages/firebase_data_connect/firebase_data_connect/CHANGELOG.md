@@ -1,3 +1,18 @@
+## 0.4.1
+
+ - **FIX**(data_connect): send the current result to a new subscriber of a live query ([#18833](https://github.com/firebase/flutterfire/issues/18833)). ([094c3b80](https://github.com/firebase/flutterfire/commit/094c3b80ddfdd97ed8888548c21a335def53e9dd))
+ - **FEAT**: register flutter-fire-ai and flutter-fire-dc platform versions and fix web late registration ([#18707](https://github.com/firebase/flutterfire/issues/18707)). ([569c39e7](https://github.com/firebase/flutterfire/commit/569c39e71d32f1bef77b1cea4c0d1389374be2b5))
+
+## 0.4.0
+
+> Note: This release has breaking changes.
+
+Migration: `FirebaseDataConnect` / `FirebaseDataConnect.instanceFor` no longer take `auth` or `appCheck` arguments. Those instances are obtained from the associated `FirebaseApp` internally.
+
+ - **FIX**(android): build on Firebase BoM 35 and require minSdk 24 ([#18782](https://github.com/firebase/flutterfire/issues/18782)). ([7555707d](https://github.com/firebase/flutterfire/commit/7555707dec23382dfce1e7841c00446a21c9a406))
+ - **BREAKING** **REFACTOR**(data_connect): remove deprecated auth and appCheck arguments ([#18778](https://github.com/firebase/flutterfire/issues/18778)). ([d14c4dc6](https://github.com/firebase/flutterfire/commit/d14c4dc67b1edec7617f29bf776b933e896a8853))
+ - **BREAKING** **REFACTOR**(app_check): remove deprecated activate provider parameters ([#18779](https://github.com/firebase/flutterfire/issues/18779)). ([90bea4ed](https://github.com/firebase/flutterfire/commit/90bea4edd78eea274fe5b43778c5e036bf51be31))
+
 ## 0.3.3
 
  - **FIX**(data_connect): exclude generated protobuf sources from analysis ([#18687](https://github.com/firebase/flutterfire/issues/18687)). ([82ac5ff8](https://github.com/firebase/flutterfire/commit/82ac5ff83a186a9f9805ec45f196ded045ca20cf))

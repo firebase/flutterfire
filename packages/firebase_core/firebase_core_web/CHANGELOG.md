@@ -1,3 +1,16 @@
+## 4.1.0
+
+ - **FIX**(core,web): honour flutterfire_ignore_scripts under dart2wasm ([#18806](https://github.com/firebase/flutterfire/issues/18806)). ([41a95ba2](https://github.com/firebase/flutterfire/commit/41a95ba26cf9e9c13738292a96ee627d06e18c43))
+ - **FEAT**(core): bump Firebase JS SDK to 13.1.0 ([#18851](https://github.com/firebase/flutterfire/issues/18851)). ([93e525b4](https://github.com/firebase/flutterfire/commit/93e525b4ff47942f5e5ee7b255d02160b3596ad6))
+ - **FEAT**: register flutter-fire-ai and flutter-fire-dc platform versions and fix web late registration ([#18707](https://github.com/firebase/flutterfire/issues/18707)). ([569c39e7](https://github.com/firebase/flutterfire/commit/569c39e71d32f1bef77b1cea4c0d1389374be2b5))
+
+## 4.0.0
+
+> Note: This release has breaking changes.
+
+ - **FIX**(core,web): skip hot-restart listener cleanup in profile mode ([#18729](https://github.com/firebase/flutterfire/issues/18729)). ([20f2cbfd](https://github.com/firebase/flutterfire/commit/20f2cbfd6fc65ae6fc139d25c83ebc112789b060))
+ - **BREAKING** **FEAT**: bump Firebase JS SDK to 13.0.0 ([#18768](https://github.com/firebase/flutterfire/issues/18768)). ([88d7bc65](https://github.com/firebase/flutterfire/commit/88d7bc65513b0c61496ea1e74804695587050480))
+
 ## 3.12.0
 
  - **FIX**(auth,web): convert Auth errors that omit customData without throwing ([#18686](https://github.com/firebase/flutterfire/issues/18686)). ([5e518361](https://github.com/firebase/flutterfire/commit/5e518361ce7f94923437d8b0e41add7ca75083ef))

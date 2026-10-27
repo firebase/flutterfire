@@ -1,3 +1,13 @@
+## 6.3.2
+
+ - **FIX**(firebase_auth_web): fix Wasm string list cast and dart:io import ([#18847](https://github.com/firebase/flutterfire/issues/18847)). ([0f72c66b](https://github.com/firebase/flutterfire/commit/0f72c66bd23cd98a5b8031400390d7e203d729d6))
+ - **FIX**(firebase_auth): stop dropping profile, provider and action code fields ([#18820](https://github.com/firebase/flutterfire/issues/18820)). ([2572d82b](https://github.com/firebase/flutterfire/commit/2572d82b760b2800dd53c454474381d3ddbe6d9f))
+
+## 6.3.1
+
+ - **FIX**(auth,web): fail onWaitInitState instead of hanging when the first auth state is an error ([#18705](https://github.com/firebase/flutterfire/issues/18705)). ([05c4bac8](https://github.com/firebase/flutterfire/commit/05c4bac803b2f55b02ddc5b87ea6aa4ef654ddca))
+ - **FIX**(auth,web): connect Auth emulator after reload when sessionStorage already has the origin ([#18690](https://github.com/firebase/flutterfire/issues/18690)). ([3740a2da](https://github.com/firebase/flutterfire/commit/3740a2da18d1b119fb897dd4f2c8951127f03ea6))
+
 ## 6.3.0
 
  - **FIX**(auth,web): convert Auth errors that omit customData without throwing ([#18686](https://github.com/firebase/flutterfire/issues/18686)). ([5e518361](https://github.com/firebase/flutterfire/commit/5e518361ce7f94923437d8b0e41add7ca75083ef))

@@ -1,3 +1,16 @@
+## 0.10.1
+
+ - **FIX**(android): replace Groovy space-assignment in plugin build.gradle files ([#18837](https://github.com/firebase/flutterfire/issues/18837)). ([09e913ac](https://github.com/firebase/flutterfire/commit/09e913acd98fa25ea6ff547141e7caf421b7b02d))
+
+## 0.10.0
+
+> Note: This release has breaking changes.
+
+ - **FIX**(android): build on Firebase BoM 35 and require minSdk 24 ([#18782](https://github.com/firebase/flutterfire/issues/18782)). ([7555707d](https://github.com/firebase/flutterfire/commit/7555707dec23382dfce1e7841c00446a21c9a406))
+ - **FEAT**(in_app_messaging): add custom Flutter display for campaigns ([#18586](https://github.com/firebase/flutterfire/issues/18586)). ([efa14e08](https://github.com/firebase/flutterfire/commit/efa14e08e78a2cba06a72a47d4dccee01be0ac61))
+ - **FEAT**(in_app_messaging): expose the message lifecycle events ([#18584](https://github.com/firebase/flutterfire/issues/18584)). ([a35e3dad](https://github.com/firebase/flutterfire/commit/a35e3dad23c32bf2b26a7029a2a71dfba38eb0cf))
+ - **BREAKING** **FEAT**: bump Firebase iOS SDK to 13.0.0 ([#18771](https://github.com/firebase/flutterfire/issues/18771)). ([dbf7f754](https://github.com/firebase/flutterfire/commit/dbf7f7543a37386f7e8e314d8344be82b0483b77))
+
 ## 0.9.4
 
  - **FEAT**(core): bump Firebase iOS SDK to 12.19.0 ([#18683](https://github.com/firebase/flutterfire/issues/18683)). ([35e39637](https://github.com/firebase/flutterfire/commit/35e39637f4cbef0d70043047f80d6f6e80daf8fe))

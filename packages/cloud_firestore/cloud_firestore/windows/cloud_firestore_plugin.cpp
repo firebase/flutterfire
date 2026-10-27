@@ -1157,9 +1157,19 @@ class TransactionStreamHandler
             SendSuccessOnPlatformThread(events_state_,
                                         flutter::EncodableValue(result));
           } else {
-            SendErrorOnPlatformThread(events_state_, "transaction_error",
-                                      completed_future.error_message(),
-                                      flutter::EncodableValue());
+            // runTransaction reads this success payload. An EventChannel
+            // error never reaches the transaction future.
+            const firebase::firestore::Error errorCode =
+                static_cast<firebase::firestore::Error>(
+                    completed_future.error());
+            EncodableMap error;
+            error[EncodableValue("code")] =
+                EncodableValue(CloudFirestorePlugin::GetErrorCode(errorCode));
+            error[EncodableValue("message")] =
+                EncodableValue(completed_future.error_message());
+            result[EncodableValue("error")] = EncodableValue(error);
+            SendSuccessOnPlatformThread(events_state_,
+                                        flutter::EncodableValue(result));
           }
           EndStreamOnPlatformThread(events_state_);
         });
@@ -1257,7 +1267,13 @@ void CloudFirestorePlugin::TransactionGet(
       transaction->Get(reference, &error_code, &error_message);
 
   if (error_code != Error::kErrorOk) {
-    result(FlutterError(error_message));
+    // The one-argument FlutterError puts error_message in the code slot and
+    // sends no details, so Dart reports `unknown` with an empty message.
+    EncodableMap details;
+    details[EncodableValue("code")] =
+        EncodableValue(CloudFirestorePlugin::GetErrorCode(error_code));
+    details[EncodableValue("message")] = EncodableValue(error_message);
+    result(FlutterError("firebase_firestore", error_message, details));
   } else {
     result(ParseDocumentSnapshot(
         snapshot, DocumentSnapshot::ServerTimestampBehavior::kDefault));

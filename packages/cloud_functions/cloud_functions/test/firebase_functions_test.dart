@@ -175,5 +175,32 @@ void main() {
         expect(delegate.options.timeout.inSeconds, equals(1337));
       });
     });
+
+    group('.allowInsecureTokenAttachment', () {
+      test('defaults to false and writes through to the delegate', () {
+        final functions =
+            FirebaseFunctions.instanceFor(region: 'allow-insecure-token');
+        expect(functions.allowInsecureTokenAttachment, isFalse);
+        expect(functions.delegate.allowInsecureTokenAttachment, isFalse);
+
+        functions.allowInsecureTokenAttachment = true;
+
+        expect(functions.allowInsecureTokenAttachment, isTrue);
+        expect(functions.delegate.allowInsecureTokenAttachment, isTrue);
+      });
+
+      test('applies when set after the callable is created', () {
+        final functions = FirebaseFunctions.instanceFor(
+            region: 'allow-insecure-token-after-callable');
+        final callable = functions.httpsCallable('foo');
+
+        functions.allowInsecureTokenAttachment = true;
+
+        expect(
+          callable.delegate.functions.allowInsecureTokenAttachment,
+          isTrue,
+        );
+      });
+    });
   });
 }

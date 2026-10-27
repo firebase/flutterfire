@@ -406,6 +406,12 @@ class Pipeline {
   /// compare vectors (e.g. [DistanceMeasure.cosine]). Use [limit] to return
   /// only the first N documents.
   ///
+  /// [distanceField] is the Firestore field name added to each result. That
+  /// field holds the calculated distance from [vectorValue]. A dot in the
+  /// name separates path segments, as it does for any other Firestore field
+  /// name. Omit it to return the nearest documents without the numeric
+  /// distance.
+  ///
   /// Example:
   /// ```dart
   /// firestore.pipeline().collection('books').findNearest(
@@ -413,6 +419,7 @@ class Pipeline {
   ///   [0.1, 0.2, 0.3],
   ///   DistanceMeasure.cosine,
   ///   limit: 10,
+  ///   distanceField: 'distance',
   /// );
   /// ```
   Pipeline findNearest(
@@ -420,12 +427,14 @@ class Pipeline {
     List<double> vectorValue,
     DistanceMeasure distanceMeasure, {
     int? limit,
+    String? distanceField,
   }) {
     final stage = _FindNearestStage(
       vectorField,
       vectorValue,
       distanceMeasure,
       limit: limit,
+      distanceField: distanceField,
     );
     return Pipeline._(
       _firestore,
