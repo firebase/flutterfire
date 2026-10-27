@@ -543,6 +543,35 @@ void main() {
             fail(e.toString());
           }
         });
+
+        test(
+          'fails with missing-email or missing-password if either is empty',
+          () async {
+            await expectLater(
+              FirebaseAuth.instance.createUserWithEmailAndPassword(
+                email: '',
+                password: testPassword,
+              ),
+              throwsA(
+                isA<FirebaseAuthException>()
+                    .having((e) => e.code, 'code', 'missing-email'),
+              ),
+            );
+            await expectLater(
+              FirebaseAuth.instance.createUserWithEmailAndPassword(
+                email: generateRandomEmail(),
+                password: '',
+              ),
+              throwsA(
+                isA<FirebaseAuthException>()
+                    .having((e) => e.code, 'code', 'missing-password'),
+              ),
+            );
+          },
+          // Only the Android SDK rejects empty values itself; elsewhere the
+          // error comes from the backend and differs per method.
+          skip: kIsWeb || !Platform.isAndroid,
+        );
       });
 
       group('isSignInWithEmailLink()', () {
@@ -610,6 +639,20 @@ void main() {
               fail(e.toString());
             }
           });
+
+          test(
+            'fails with missing-email if the email is empty',
+            () async {
+              await expectLater(
+                FirebaseAuth.instance.sendPasswordResetEmail(email: ''),
+                throwsA(
+                  isA<FirebaseAuthException>()
+                      .having((e) => e.code, 'code', 'missing-email'),
+                ),
+              );
+            },
+            skip: kIsWeb || !Platform.isAndroid,
+          );
         },
         skip: !kIsWeb && Platform.isWindows,
       );
@@ -959,6 +1002,34 @@ void main() {
             fail(e.toString());
           }
         });
+
+        test(
+          'throws missing-email or missing-password if either is empty',
+          () async {
+            await expectLater(
+              FirebaseAuth.instance.signInWithEmailAndPassword(
+                email: '',
+                password: testPassword,
+              ),
+              throwsA(
+                isA<FirebaseAuthException>()
+                    .having((e) => e.code, 'code', 'missing-email'),
+              ),
+            );
+            await expectLater(
+              FirebaseAuth.instance.signInWithEmailAndPassword(
+                email: testEmail,
+                password: '',
+              ),
+              throwsA(
+                isA<FirebaseAuthException>()
+                    .having((e) => e.code, 'code', 'missing-password'),
+              ),
+            );
+          },
+          skip: kIsWeb || !Platform.isAndroid,
+        );
+
         test(
           'should not throw error when app is deleted and reinit with same app name',
           () async {
