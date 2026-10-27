@@ -233,8 +233,7 @@ internal class PipelineStageHandlers(private val parsers: ExpressionParsers) {
       if (distanceField != null) {
         options = options.withDistanceField(Expression.field(distanceField))
       }
-      pipeline.findNearest(
-          vectorField, Expression.vector(vectorArray), distanceMeasure, options)
+      pipeline.findNearest(vectorField, Expression.vector(vectorArray), distanceMeasure, options)
     } else {
       pipeline.findNearest(fieldExpr, vectorArray, distanceMeasure)
     }

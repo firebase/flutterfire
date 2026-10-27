@@ -79,7 +79,6 @@ class FlutterFirebaseFirestorePluginTest {
   private fun mapField(plugin: FlutterFirebaseFirestorePlugin, name: String): Map<*, *> {
     val field = plugin.javaClass.getDeclaredField(name)
     field.isAccessible = true
-    @Suppress("UNCHECKED_CAST")
-    return field.get(plugin) as Map<*, *>
+    @Suppress("UNCHECKED_CAST") return field.get(plugin) as Map<*, *>
   }
 }

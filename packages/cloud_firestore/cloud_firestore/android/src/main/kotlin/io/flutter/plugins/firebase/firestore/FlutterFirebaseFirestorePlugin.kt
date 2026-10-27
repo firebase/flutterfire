@@ -800,8 +800,7 @@ class FlutterFirebaseFirestorePlugin :
         }
         callback(
             Result.success(
-                InternalPipelineSnapshot(
-                    results = pipelineResults, executionTime = executionTime)))
+                InternalPipelineSnapshot(results = pipelineResults, executionTime = executionTime)))
       } catch (e: Exception) {
         ExceptionConverter.sendErrorToFlutter(callback, e)
       }
