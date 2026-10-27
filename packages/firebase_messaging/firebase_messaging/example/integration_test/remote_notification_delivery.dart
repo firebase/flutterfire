@@ -2,15 +2,19 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:ui' show PluginUtilities;
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_messaging_platform_interface/firebase_messaging_platform_interface.dart';
 // ignore: implementation_imports
 import 'package:firebase_messaging_platform_interface/src/method_channel/method_channel_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-/// iOS test helper implemented in `ios/Runner/RemoteNotificationTestChannel.swift`.
+/// Test helpers implemented in `ios/Runner/RemoteNotificationTestChannel.swift`
+/// and `android/app/src/main/kotlin/.../MainActivity.kt`.
 const _remoteNotificationsChannel = MethodChannel('tests/remote_notifications');
 
 /// Delivers a data message through the app delegate the same way iOS does when
@@ -35,6 +39,44 @@ Future<Map<String, Object?>> deliverRemoteNotification(
   return delivery!;
 }
 
+/// Hands data messages to the plugin's broadcast receiver back to back, like
+/// Google Play services does when several pushes arrive at once. Fails if the
+/// app did not count as in the foreground, where messages go to `onMessage`.
+Future<void> deliverToAndroidReceiver(List<String> messageIds) async {
+  final delivery = await _remoteNotificationsChannel
+      .invokeMapMethod<String, Object?>('deliverToReceiver', {
+    'messageIds': messageIds,
+  });
+  expect(
+    delivery!['foreground'],
+    isTrue,
+    reason: 'The app must be in the foreground with the screen unlocked.',
+  );
+}
+
+/// Entry point of the second engine started by the Android tests: listens to
+/// `onMessage` and reports what it receives to `MainActivity.kt`.
+@pragma('vm:entry-point')
+Future<void> secondEngineMain() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  const channel = MethodChannel('tests/second_engine');
+  await channel.invokeMethod<void>('ready');
+  FirebaseMessaging.onMessage.listen(
+    (message) => channel.invokeMethod<void>('onMessage', message.messageId),
+  );
+  await channel.invokeMethod<void>('listening');
+}
+
+Future<void> _waitUntil(
+  bool Function() condition, {
+  Duration timeout = const Duration(seconds: 10),
+}) async {
+  final deadline = DateTime.now().add(timeout);
+  while (!condition() && DateTime.now().isBefore(deadline)) {
+    await Future<void>.delayed(const Duration(milliseconds: 50));
+  }
+}
+
 const _uiBackgroundFetchResultNewData = 0;
 
 final List<RemoteMessage> _backgroundMessages = <RemoteMessage>[];
@@ -47,8 +89,8 @@ Future<void> _backgroundMessageHandler(RemoteMessage message) async {
 String _uniqueMessageId(String prefix) =>
     '$prefix-${DateTime.now().microsecondsSinceEpoch}';
 
-/// Pushes delivered the way iOS delivers them, run by `e2e_test.dart` and on
-/// their own by `remote_notification_delivery_test.dart`.
+/// Pushes delivered the way iOS and Android deliver them, run by
+/// `e2e_test.dart` and on their own by `remote_notification_delivery_test.dart`.
 void remoteNotificationDeliveryTests() {
   group(
     'remote notification delivery',
@@ -184,5 +226,93 @@ void remoteNotificationDeliveryTests() {
     },
     // Pushes are delivered through the iOS app delegate.
     skip: kIsWeb || defaultTargetPlatform != TargetPlatform.iOS,
+  );
+
+  group(
+    'remote notification delivery on Android',
+    () {
+      test(
+          'every message received in the foreground reaches onMessage once '
+          'and in order', () async {
+        final messageIds = [
+          for (var i = 0; i < 5; i++) _uniqueMessageId('foreground-$i'),
+        ];
+        final received = <RemoteMessage>[];
+        final subscription = FirebaseMessaging.onMessage
+            .where((message) => messageIds.contains(message.messageId))
+            .listen(received.add);
+        addTearDown(subscription.cancel);
+
+        await deliverToAndroidReceiver(messageIds);
+        await _waitUntil(() => received.length >= messageIds.length);
+        // Leave time for an unexpected duplicate to show up.
+        await Future<void>.delayed(const Duration(milliseconds: 500));
+
+        expect(received.map((message) => message.messageId), messageIds);
+        expect(
+          received.first.data,
+          containsPair('test', 'remote-notification-delivery'),
+        );
+      });
+
+      test(
+          'an engine that starts listening later only gets the messages '
+          'received after', () async {
+        final before = _uniqueMessageId('before-second-engine');
+        final after = _uniqueMessageId('after-second-engine');
+        final received = <String?>[];
+        final subscription = FirebaseMessaging.onMessage
+            .where((m) => m.messageId == before || m.messageId == after)
+            .listen((message) => received.add(message.messageId));
+        addTearDown(subscription.cancel);
+
+        await deliverToAndroidReceiver([before]);
+        await _waitUntil(() => received.isNotEmpty);
+        addTearDown(
+          () => _remoteNotificationsChannel
+              .invokeMethod<void>('stopSecondEngine'),
+        );
+        await _remoteNotificationsChannel
+            .invokeMethod<void>('startSecondEngine', {
+          'callbackHandle': PluginUtilities.getCallbackHandle(secondEngineMain)!
+              .toRawHandle(),
+        }).timeout(const Duration(seconds: 20));
+        await deliverToAndroidReceiver([after]);
+        await _waitUntil(() => received.length >= 2);
+        // Leave time for an unexpected delivery to the second engine.
+        await Future<void>.delayed(const Duration(seconds: 1));
+        final secondEngine = await _remoteNotificationsChannel
+            .invokeListMethod<String>('secondEngineMessages');
+
+        expect(received, <String>[before, after]);
+        expect(secondEngine, <String>[after]);
+      });
+
+      test(
+          'messages sent before Dart handles the channel are all kept '
+          'until it does', () async {
+        final messageIds = [
+          for (var i = 0; i < 3; i++) _uniqueMessageId('buffered-$i'),
+        ];
+        final received = <String?>[];
+        final subscription = FirebaseMessaging.onMessage
+            .where((message) => messageIds.contains(message.messageId))
+            .listen((message) => received.add(message.messageId));
+        addTearDown(subscription.cancel);
+
+        MethodChannelFirebaseMessaging.channel.setMethodCallHandler(null);
+        addTearDown(MethodChannelFirebaseMessaging.setMethodCallHandlers);
+        await deliverToAndroidReceiver(messageIds);
+        await Future<void>.delayed(const Duration(milliseconds: 500));
+        expect(received, isEmpty);
+
+        MethodChannelFirebaseMessaging.setMethodCallHandlers();
+        await _waitUntil(() => received.length >= messageIds.length);
+
+        expect(received, messageIds);
+      });
+    },
+    // Pushes are delivered through the plugin's broadcast receiver.
+    skip: kIsWeb || defaultTargetPlatform != TargetPlatform.android,
   );
 }

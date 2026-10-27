@@ -36,6 +36,8 @@ dependencies:
   firebase_database: ^13.0.1
   firebase_database_platform_interface: ^0.4.2+9
   firebase_database_web: ^0.2.9+16
+  firebase_in_app_messaging: ^0.10.1
+  firebase_in_app_messaging_platform_interface: ^0.2.7+30
   firebase_messaging: ^17.0.1
   firebase_messaging_platform_interface: ^4.11.1
   firebase_messaging_web: ^4.3.1
