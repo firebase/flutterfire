@@ -146,17 +146,18 @@ FirebaseException platformExceptionToFirebaseAuthException(
 // Check for custom error codes that are not returned in the normal errors by Firebase SDKs
 // The error code is only returned in a String on Android
 String? _getCustomCode(Map? additionalData, String? message) {
-  final listOfRecognizedCode = [
+  final recognizedCodes = {
     // This code happens when using Enumerate Email protection
-    'INVALID_LOGIN_CREDENTIALS',
-    // This code happens when using using pre-auth functions
-    'BLOCKING_FUNCTION_ERROR_RESPONSE',
-  ];
+    'INVALID_LOGIN_CREDENTIALS': 'invalid-login-credentials',
+    // Use the same error code as on Apple platforms for blocking function errors.
+    'BLOCKING_FUNCTION_ERROR_RESPONSE':
+        'blocking-cloud-function-returned-error',
+  };
 
-  for (final recognizedCode in listOfRecognizedCode) {
-    if (additionalData?['message'] == recognizedCode ||
-        (message?.contains(recognizedCode) ?? false)) {
-      return recognizedCode.toLowerCase().replaceAll('_', '-');
+  for (final entry in recognizedCodes.entries) {
+    if (additionalData?['message'] == entry.key ||
+        (message?.contains(entry.key) ?? false)) {
+      return entry.value;
     }
   }
 

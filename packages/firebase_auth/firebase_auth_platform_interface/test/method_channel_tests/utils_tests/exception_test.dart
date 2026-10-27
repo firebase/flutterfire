@@ -31,8 +31,7 @@ void main() {
       );
     });
 
-    test(
-        'should catch a [PlatformException] and throw a [FirebaseException] with the correct message',
+    test('normalizes blocking function errors and preserves the JSON message',
         () async {
       PlatformException platformException = PlatformException(
         code: 'UNKNOWN',
@@ -44,7 +43,8 @@ void main() {
         () => convertPlatformException(platformException, StackTrace.empty),
         throwsA(
           isA<FirebaseAuthException>()
-              .having((e) => e.code, 'code', 'blocking-function-error-response')
+              .having((e) => e.code, 'code',
+                  'blocking-cloud-function-returned-error')
               .having((e) => e.message, 'message',
                   '{"error":{"details":"The user is not allowed to log in","message":"","status":"PERMISSION_DENIED"}}'),
         ),
@@ -74,6 +74,34 @@ void main() {
   });
 
   group('platformExceptionToFirebaseAuthException()', () {
+    test('normalizes a blocking function error from pigeon details', () {
+      PlatformException platformException = PlatformException(
+        code: 'UNKNOWN',
+        details: {'message': 'BLOCKING_FUNCTION_ERROR_RESPONSE'},
+      );
+
+      FirebaseAuthException result = platformExceptionToFirebaseAuthException(
+        platformException,
+      ) as FirebaseAuthException;
+
+      expect(result.code, equals('blocking-cloud-function-returned-error'));
+      expect(result.message, isNull);
+    });
+
+    test('preserves the invalid login credentials error code', () {
+      PlatformException platformException = PlatformException(
+        code: 'UNKNOWN',
+        message:
+            'An internal error has occurred. [ INVALID_LOGIN_CREDENTIALS ]',
+      );
+
+      FirebaseAuthException result = platformExceptionToFirebaseAuthException(
+        platformException,
+      ) as FirebaseAuthException;
+
+      expect(result.code, equals('invalid-login-credentials'));
+    });
+
     test('handles non-Map pigeon details', () {
       PlatformException platformException = PlatformException(
         code: 'ERROR_INTERNAL_ERROR',
