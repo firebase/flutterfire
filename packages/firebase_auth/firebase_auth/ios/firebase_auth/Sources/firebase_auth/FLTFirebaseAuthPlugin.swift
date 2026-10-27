@@ -187,17 +187,36 @@ public class FLTFirebaseAuthPlugin: NSObject, FlutterPlugin, FLTFirebasePluginPr
       open url: URL,
       options: [UIApplication.OpenURLOptionsKey: Any] = [:]
     ) -> Bool {
-      guard FirebaseApp.app() != nil else { return false }
-      return Auth.auth().canHandle(url)
+      // Apps that only configure named apps have no default `Auth`, but their
+      // callback URLs must still be claimed.
+      (FirebaseApp.app() != nil && Auth.auth().canHandle(url)) || Self.isAuthCallbackURL(url)
     }
 
     public func scene(_ scene: UIScene, openURLContexts urlContexts: Set<UIOpenURLContext>) -> Bool
     {
-      guard FirebaseApp.app() != nil else { return false }
-      for urlContext in urlContexts where Auth.auth().canHandle(urlContext.url) {
-        return true
+      urlContexts.contains { urlContext in
+        (FirebaseApp.app() != nil && Auth.auth().canHandle(urlContext.url))
+          || Self.isAuthCallbackURL(urlContext.url)
       }
-      return false
+    }
+
+    /// Whether `url` is a reCAPTCHA, multi-factor or OAuth redirect back to Auth.
+    ///
+    /// Auth's own app and scene delegate interceptors see the URL first and
+    /// consume it, after which `canHandle` returns false. Claiming it here keeps
+    /// Flutter from pushing it as a deep link.
+    static func isAuthCallbackURL(_ url: URL) -> Bool {
+      guard let scheme = url.scheme?.lowercased(), url.host?.lowercased() == "firebaseauth",
+        url.path == "/link"
+      else { return false }
+      // The schemes the SDK builds its redirect URLs with.
+      return FirebaseApp.allApps?.values.contains { app in
+        let appIDScheme = "app-" + app.options.googleAppID.replacingOccurrences(of: ":", with: "-")
+        let reversedClientID = app.options.clientID.map {
+          $0.components(separatedBy: ".").reversed().joined(separator: ".")
+        }
+        return scheme == appIDScheme.lowercased() || scheme == reversedClientID?.lowercased()
+      } ?? false
     }
   #endif
 

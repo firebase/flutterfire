@@ -9,6 +9,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:firebase_auth_example/firebase_options.dart';
 
+import 'auth_callback_url_e2e_test.dart' as auth_callback_url_tests;
 import 'auth_emulator_web_e2e_test.dart' as auth_emulator_web_tests;
 import 'firebase_auth_instance_e2e_test.dart' as instance_tests;
 import 'firebase_auth_multi_factor_e2e_test.dart' as multi_factor_tests;
@@ -83,5 +84,6 @@ void main() {
     user_tests.main();
     multi_factor_tests.main();
     auth_emulator_web_tests.main();
+    auth_callback_url_tests.main();
   });
 }
