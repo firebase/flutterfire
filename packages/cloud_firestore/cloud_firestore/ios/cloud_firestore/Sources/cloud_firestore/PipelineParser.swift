@@ -227,7 +227,47 @@ private func constantExpression(from value: Any) throws -> any FirebaseFirestore
   if let typedData = value as? FlutterStandardTypedData {
     return Constant(typedData.data)
   }
+  if let bytes = constantBytes(from: value) {
+    return Constant(bytes)
+  }
   throw parseError("Unsupported constant value: \(type(of: value))")
+}
+
+private func constantBytes(from value: Any) -> Data? {
+  let elements: [Any]
+  if let array = value as? [Any] {
+    elements = array
+  } else if let array = value as? NSArray {
+    elements = array.map { $0 as Any }
+  } else {
+    return nil
+  }
+
+  var bytes = [UInt8]()
+  bytes.reserveCapacity(elements.count)
+  for element in elements {
+    guard let byte = integerByte(element) else {
+      return nil
+    }
+    bytes.append(byte)
+  }
+  return Data(bytes)
+}
+
+private func integerByte(_ element: Any) -> UInt8? {
+  if let number = element as? NSNumber {
+    if CFGetTypeID(number) == CFBooleanGetTypeID() || CFNumberIsFloatType(number) {
+      return nil
+    }
+    return UInt8(truncatingIfNeeded: number.int64Value)
+  }
+  if let intValue = element as? Int {
+    return UInt8(truncatingIfNeeded: intValue)
+  }
+  if let intValue = element as? Int64 {
+    return UInt8(truncatingIfNeeded: intValue)
+  }
+  return nil
 }
 
 private func functionExpression(
