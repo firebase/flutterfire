@@ -36,8 +36,9 @@ void main() {
         final socket = await WebSocketTransformer.upgrade(request);
         addTearDown(socket.close);
         socket.listen((message) {
-          if (!setupMessage.isCompleted)
+          if (!setupMessage.isCompleted) {
             setupMessage.complete(message as String);
+          }
         });
       });
 
