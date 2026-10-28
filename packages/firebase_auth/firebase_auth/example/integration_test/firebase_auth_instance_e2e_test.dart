@@ -570,7 +570,7 @@ void main() {
           },
           // Only the Android SDK rejects empty values itself; elsewhere the
           // error comes from the backend and differs per method.
-          skip: kIsWeb || !Platform.isAndroid,
+          skip: kIsWeb || defaultTargetPlatform != TargetPlatform.android,
         );
       });
 
@@ -651,7 +651,7 @@ void main() {
                 ),
               );
             },
-            skip: kIsWeb || !Platform.isAndroid,
+            skip: kIsWeb || defaultTargetPlatform != TargetPlatform.android,
           );
         },
         skip: !kIsWeb && Platform.isWindows,
@@ -1027,7 +1027,7 @@ void main() {
               ),
             );
           },
-          skip: kIsWeb || !Platform.isAndroid,
+          skip: kIsWeb || defaultTargetPlatform != TargetPlatform.android,
         );
 
         test(
