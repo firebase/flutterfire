@@ -17,6 +17,7 @@ import 'dart:typed_data';
 
 import 'package:firebase_ai/src/api.dart';
 import 'package:firebase_ai/src/content.dart';
+import 'package:firebase_ai/src/error.dart';
 import 'package:firebase_ai/src/speech_config.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -538,6 +539,57 @@ void main() {
       expect(result, isA<UnknownPart>());
       final unknownPart = result as UnknownPart;
       expect(unknownPart.data, {'unhandled': {}});
+    });
+
+    test('parses a code execution result that omits output', () {
+      final result = parsePart({
+        'thought': true,
+        'thoughtSignature': 'sig',
+        'codeExecutionResult': {'outcome': 'OUTCOME_OK'},
+      });
+      expect(result, isA<CodeExecutionResultPart>());
+      final part = result as CodeExecutionResultPart;
+      expect(part.outcome, Outcome.ok);
+      expect(part.output, isEmpty);
+      expect(part.isThought, true);
+      expect((part.toJson() as Map)['thoughtSignature'], 'sig');
+    });
+
+    test('parses a null code execution output as an empty string', () {
+      final result = parsePart({
+        'codeExecutionResult': {'outcome': 'OUTCOME_FAILED', 'output': null},
+      }) as CodeExecutionResultPart;
+      expect(result.outcome, Outcome.failed);
+      expect(result.output, isEmpty);
+    });
+
+    test('parses a code execution result that includes output', () {
+      final result = parsePart({
+        'codeExecutionResult': {
+          'outcome': 'OUTCOME_OK',
+          'output': 'hello world',
+        },
+      }) as CodeExecutionResultPart;
+      expect(result.outcome, Outcome.ok);
+      expect(result.output, 'hello world');
+    });
+
+    test('throws when a code execution result has no outcome', () {
+      expect(
+        () => parsePart({
+          'codeExecutionResult': {'output': 'hello world'},
+        }),
+        throwsA(isA<FirebaseAISdkException>()),
+      );
+    });
+
+    test('throws when a code execution output is not a string', () {
+      expect(
+        () => parsePart({
+          'codeExecutionResult': {'outcome': 'OUTCOME_OK', 'output': 1},
+        }),
+        throwsA(isA<FirebaseAISdkException>()),
+      );
     });
   });
 }

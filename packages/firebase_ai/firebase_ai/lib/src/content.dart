@@ -141,18 +141,19 @@ Part parsePart(Object? jsonObject) {
   }
   if (jsonObject.containsKey('codeExecutionResult')) {
     final codeExecutionResult = jsonObject['codeExecutionResult'];
-    if (codeExecutionResult is Map &&
-        codeExecutionResult.containsKey('outcome') &&
-        codeExecutionResult.containsKey('output')) {
-      return CodeExecutionResultPart._(
-        outcome: Outcome.parseValue(codeExecutionResult['outcome'] as String),
-        output: codeExecutionResult['output'] as String,
-        isThought: isThought,
-        thoughtSignature: thoughtSignature,
-      );
-    } else {
-      throw unhandledFormat('codeExecutionResult', codeExecutionResult);
+    if (codeExecutionResult is Map) {
+      final outcome = codeExecutionResult['outcome'];
+      final output = codeExecutionResult['output'];
+      if (outcome is String && output is String?) {
+        return CodeExecutionResultPart._(
+          outcome: Outcome.parseValue(outcome),
+          output: output ?? '',
+          isThought: isThought,
+          thoughtSignature: thoughtSignature,
+        );
+      }
     }
+    throw unhandledFormat('codeExecutionResult', codeExecutionResult);
   }
 
   if (jsonObject.containsKey('inlineData')) {
@@ -605,6 +606,8 @@ final class CodeExecutionResultPart extends Part {
   final Outcome outcome;
 
   /// The stdout from the code execution, or an error message if it failed.
+  ///
+  /// An empty string means the execution produced no stdout.
   final String output;
 
   @override

@@ -1356,6 +1356,65 @@ void main() {
         ),
       );
     });
+
+    test('with a code execution result that omits output', () {
+      const response = '''
+{
+  "candidates": [
+    {
+      "content": {
+        "role": "model",
+        "parts": [
+          {
+            "executableCode": {
+              "language": "PYTHON",
+              "code": "x = 1 + 1"
+            }
+          },
+          {
+            "codeExecutionResult": {
+              "outcome": "OUTCOME_OK"
+            }
+          },
+          {
+            "text": "The answer is 2."
+          }
+        ]
+      },
+      "finishReason": "STOP"
+    }
+  ]
+}
+''';
+      final decoded = jsonDecode(response) as Object;
+      final generateContentResponse =
+          AgentPlatformSerialization().parseGenerateContentResponse(decoded);
+      expect(
+        generateContentResponse,
+        matchesGenerateContentResponse(
+          GenerateContentResponse(
+            [
+              Candidate(
+                Content.model([
+                  ExecutableCodePart(
+                    language: CodeLanguage.python,
+                    code: 'x = 1 + 1',
+                  ),
+                  CodeExecutionResultPart(outcome: Outcome.ok, output: ''),
+                  const TextPart('The answer is 2.'),
+                ]),
+                null,
+                null,
+                FinishReason.stop,
+                null,
+              ),
+            ],
+            null,
+          ),
+        ),
+      );
+      expect(generateContentResponse.text, 'The answer is 2.');
+    });
   });
 
   group('parses and throws error responses', () {
