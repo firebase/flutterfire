@@ -281,8 +281,8 @@ enum PigeonParser {
 
   static func toPigeonDocumentChange(
     _ documentChange: DocumentChange,
-    serverTimestampBehavior: FirebaseFirestore
-      .ServerTimestampBehavior
+    serverTimestampBehavior: FirebaseFirestore.ServerTimestampBehavior,
+    cachedDocument: InternalDocumentSnapshot? = nil
   ) -> InternalDocumentChange {
     let maxVal = NSNotFound
     let newIndex: Int64
@@ -315,11 +315,14 @@ enum PigeonParser {
       type = .modified
     }
 
+    let document =
+      cachedDocument
+      ?? toPigeonDocumentSnapshot(
+        documentChange.document, serverTimestampBehavior: serverTimestampBehavior
+      )
     return InternalDocumentChange(
       type: type,
-      document: toPigeonDocumentSnapshot(
-        documentChange.document, serverTimestampBehavior: serverTimestampBehavior
-      ),
+      document: document,
       oldIndex: oldIndex,
       newIndex: newIndex
     )
@@ -327,11 +330,19 @@ enum PigeonParser {
 
   static func toPigeonDocumentChanges(
     _ documentChanges: [DocumentChange],
-    serverTimestampBehavior: FirebaseFirestore
-      .ServerTimestampBehavior
+    serverTimestampBehavior: FirebaseFirestore.ServerTimestampBehavior,
+    cachedDocuments: [String: InternalDocumentSnapshot] = [:]
   ) -> [InternalDocumentChange?] {
-    documentChanges.map {
-      toPigeonDocumentChange($0, serverTimestampBehavior: serverTimestampBehavior)
+    documentChanges.map { change in
+      autoreleasepool {
+        // A removed document is not in the query's document list.
+        let cachedDocument = cachedDocuments[change.document.reference.path]
+        return toPigeonDocumentChange(
+          change,
+          serverTimestampBehavior: serverTimestampBehavior,
+          cachedDocument: cachedDocument
+        )
+      }
     }
   }
 
@@ -340,14 +351,23 @@ enum PigeonParser {
     serverTimestampBehavior: FirebaseFirestore
       .ServerTimestampBehavior
   ) -> InternalQuerySnapshot {
-    let documents = querySnapshot.documents.map {
-      toPigeonDocumentSnapshot($0, serverTimestampBehavior: serverTimestampBehavior)
-        as InternalDocumentSnapshot?
+    var cachedDocuments: [String: InternalDocumentSnapshot] = [:]
+    cachedDocuments.reserveCapacity(querySnapshot.documents.count)
+    let documents: [InternalDocumentSnapshot?] = querySnapshot.documents.map { document in
+      autoreleasepool {
+        let converted = toPigeonDocumentSnapshot(
+          document, serverTimestampBehavior: serverTimestampBehavior
+        )
+        cachedDocuments[converted.path] = converted
+        return converted
+      }
     }
     return InternalQuerySnapshot(
       documents: documents,
       documentChanges: toPigeonDocumentChanges(
-        querySnapshot.documentChanges, serverTimestampBehavior: serverTimestampBehavior
+        querySnapshot.documentChanges,
+        serverTimestampBehavior: serverTimestampBehavior,
+        cachedDocuments: cachedDocuments
       ),
       metadata: toPigeonSnapshotMetadata(querySnapshot.metadata)
     )
