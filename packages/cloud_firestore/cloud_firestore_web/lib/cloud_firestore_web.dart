@@ -155,6 +155,12 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
       host: firestoreSettings.host,
       sslEnabled: firestoreSettings.sslEnabled,
       cacheSizeBytes: firestoreSettings.cacheSizeBytes,
+      webExperimentalForceLongPolling:
+          firestoreSettings.webExperimentalForceLongPolling,
+      webExperimentalAutoDetectLongPolling:
+          firestoreSettings.webExperimentalAutoDetectLongPolling,
+      webExperimentalLongPollingOptions:
+          firestoreSettings.webExperimentalLongPollingOptions,
       ignoreUndefinedProperties: firestoreSettings.ignoreUndefinedProperties,
       webPersistentTabManager: firestoreSettings.webPersistentTabManager,
     );

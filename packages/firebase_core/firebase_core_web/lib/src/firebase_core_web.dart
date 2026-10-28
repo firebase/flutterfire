@@ -86,6 +86,9 @@ class FirebaseCoreWeb extends FirebasePlatform {
 
   static void registerLibraryVersion(String libraryName, String version) {
     _libraryVersions[libraryName] = version;
+    if (globalContext.getProperty('firebase_core'.toJS) != null) {
+      _registerVersionIfNeeded(libraryName, version);
+    }
   }
 
   static void _registerAllLibraryVersions() {
@@ -116,16 +119,17 @@ class FirebaseCoreWeb extends FirebasePlatform {
   /// You must ensure the Firebase script is injected before using the service.
   List<String> get _ignoredServiceScripts {
     try {
-      JSObject? ignored = globalContext.getProperty(
+      final ignored = globalContext.getProperty(
         'flutterfire_ignore_scripts'.toJS,
       );
-
-      // Cannot be done with Dart 3.2 constraints
-      // ignore: invalid_runtime_check_with_js_interop_types
-      if (ignored is Iterable) {
-        // ignore: invalid_runtime_check_with_js_interop_types
-        return (ignored! as Iterable)
-            .map((e) => e.toString())
+      if (ignored != null && ignored.isA<JSArray>()) {
+        return (ignored as JSArray<JSAny?>).toDart
+            .map((entry) {
+              if (entry != null && entry.isA<JSString>()) {
+                return (entry as JSString).toDart;
+              }
+              return entry?.toString() ?? 'null';
+            })
             .toList(growable: false);
       }
     } catch (e) {
@@ -134,6 +138,10 @@ class FirebaseCoreWeb extends FirebasePlatform {
 
     return [];
   }
+
+  /// Services listed on `window.flutterfire_ignore_scripts`.
+  @visibleForTesting
+  List<String> get ignoredServiceScripts => _ignoredServiceScripts;
 
   final String _defaultTrustedPolicyName = 'flutterfire-';
 

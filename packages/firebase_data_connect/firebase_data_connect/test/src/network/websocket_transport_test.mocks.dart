@@ -917,10 +917,7 @@ class MockFirebaseAppCheck extends _i1.Mock implements _i7.FirebaseAppCheck {
 
   @override
   _i5.Future<void> activate({
-    _i8.WebProvider? webProvider,
     _i8.WebProvider? providerWeb,
-    _i8.AndroidProvider? androidProvider = _i8.AndroidProvider.playIntegrity,
-    _i8.AppleProvider? appleProvider = _i8.AppleProvider.deviceCheck,
     _i8.AndroidAppCheckProvider? providerAndroid =
         const _i8.AndroidPlayIntegrityProvider(),
     _i8.AppleAppCheckProvider? providerApple =
@@ -930,10 +927,7 @@ class MockFirebaseAppCheck extends _i1.Mock implements _i7.FirebaseAppCheck {
   }) =>
       (super.noSuchMethod(
             Invocation.method(#activate, [], {
-              #webProvider: webProvider,
               #providerWeb: providerWeb,
-              #androidProvider: androidProvider,
-              #appleProvider: appleProvider,
               #providerAndroid: providerAndroid,
               #providerApple: providerApple,
               #providerWindows: providerWindows,

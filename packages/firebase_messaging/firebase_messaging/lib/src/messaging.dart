@@ -32,6 +32,9 @@ class FirebaseMessaging extends FirebasePlugin {
   /// Returns an instance using the default [FirebaseApp].
   static FirebaseMessaging get instance {
     FirebaseApp defaultAppInstance = Firebase.app();
+    if (!_foregroundMessagesStateSent) {
+      _sendForegroundMessagesState();
+    }
     return FirebaseMessaging._instanceFor(app: defaultAppInstance);
   }
 
@@ -50,8 +53,61 @@ class FirebaseMessaging extends FirebasePlugin {
   ///
   /// To handle messages whilst the app is in the background or terminated,
   /// see [onBackgroundMessage].
-  static Stream<RemoteMessage> get onMessage =>
-      FirebaseMessagingPlatform.onMessage.stream;
+  static Stream<RemoteMessage> get onMessage => _onMessage.stream;
+
+  // On Android the plugin only sends foreground messages to the engines whose
+  // Dart listens to `onMessage`, and keeps them while none does, so listening
+  // and cancelling tell it. Done here rather than in the platform interface,
+  // because this package ships with the native code.
+  // ignore: close_sinks, never closed
+  static final StreamController<RemoteMessage> _onMessage =
+      StreamController<RemoteMessage>.broadcast(
+        onListen: () {
+          _onMessageSubscription = FirebaseMessagingPlatform.onMessage.stream
+              .listen(_onMessage.add, onError: _onMessage.addError);
+          _setListeningToForegroundMessages(true);
+        },
+        onCancel: () {
+          _onMessageSubscription?.cancel();
+          _onMessageSubscription = null;
+          _setListeningToForegroundMessages(false);
+        },
+      );
+  static StreamSubscription<RemoteMessage>? _onMessageSubscription;
+
+  static const MethodChannel _channel = MethodChannel(
+    'plugins.flutter.io/firebase_messaging',
+  );
+  static bool _listeningToForegroundMessages = false;
+  // False when the last state could not be sent, e.g. before the binding was
+  // initialized; retried when the app uses `FirebaseMessaging.instance`.
+  static bool _foregroundMessagesStateSent = true;
+
+  static void _setListeningToForegroundMessages(bool listening) {
+    if (kIsWeb || defaultTargetPlatform != TargetPlatform.android) {
+      return;
+    }
+    _listeningToForegroundMessages = listening;
+    _sendForegroundMessagesState();
+  }
+
+  static void _sendForegroundMessagesState() {
+    final listening = _listeningToForegroundMessages;
+    _foregroundMessagesStateSent = false;
+    unawaited(
+      _channel
+          .invokeMethod<void>(
+            listening
+                ? 'Messaging#startForegroundMessages'
+                : 'Messaging#stopForegroundMessages',
+          )
+          .then((_) {
+            if (_listeningToForegroundMessages == listening) {
+              _foregroundMessagesStateSent = true;
+            }
+          }, onError: (Object _) {}),
+    );
+  }
 
   /// Returns a [Stream] that is called when a user presses a notification message displayed
   /// via FCM.
@@ -70,6 +126,12 @@ class FirebaseMessaging extends FirebasePlugin {
   ///
   /// This provided handler must be a top-level function and cannot be
   /// anonymous otherwise an [ArgumentError] will be thrown.
+  ///
+  /// On iOS and macOS, a message received before the handler is registered
+  /// (for example when the app is launched in the background by a push) waits
+  /// for it during the first 10 seconds after the app starts using messaging,
+  /// if the app registered one in its previous run. Register it early in
+  /// `main()` all the same.
   // ignore: use_setters_to_change_properties
   static void onBackgroundMessage(BackgroundMessageHandler handler) {
     FirebaseMessagingPlatform.onBackgroundMessage = handler;
@@ -99,6 +161,7 @@ class FirebaseMessaging extends FirebasePlugin {
   /// Removes access to an FCM token previously authorized.
   ///
   /// Messages sent by the server to this token will fail.
+  @Deprecated('Use unregister() and onUnregistered instead.')
   Future<void> deleteToken() {
     return _delegate.deleteToken();
   }
@@ -113,6 +176,42 @@ class FirebaseMessaging extends FirebasePlugin {
     return _delegate.getAPNSToken();
   }
 
+  /// Registers the current app instance with Firebase Cloud Messaging.
+  ///
+  /// Once registration completes, [onRegistered] provides the Firebase
+  /// Installation ID (FID) that can be used as the direct-send target for this
+  /// app instance.
+  Future<void> register({String? vapidKey, String? serviceWorkerScriptPath}) {
+    return _delegate.register(
+      vapidKey: vapidKey,
+      serviceWorkerScriptPath: serviceWorkerScriptPath,
+    );
+  }
+
+  /// Unregisters the current app instance with Firebase Cloud Messaging.
+  ///
+  /// Once unregistration completes, [onUnregistered] provides the Firebase
+  /// Installation ID (FID) that is no longer active for direct-send messaging.
+  Future<void> unregister() {
+    return _delegate.unregister();
+  }
+
+  /// Fires when this app instance is registered with Firebase Cloud Messaging.
+  ///
+  /// The event value is the Firebase Installation ID (FID) that should be sent
+  /// to your backend for direct-send messaging.
+  Stream<String> get onRegistered {
+    return _delegate.onRegistered;
+  }
+
+  /// Fires when this app instance is unregistered from Firebase Cloud Messaging.
+  ///
+  /// The event value is the Firebase Installation ID (FID) that should be
+  /// removed from your backend.
+  Stream<String> get onUnregistered {
+    return _delegate.onUnregistered;
+  }
+
   /// Returns the default FCM token for this device.
   ///
   /// On web, a [vapidKey] is required.
@@ -120,6 +219,7 @@ class FirebaseMessaging extends FirebasePlugin {
   /// On web, a custom messaging service worker can be registered with
   /// [serviceWorkerScriptPath]. This must point to a JavaScript file in the
   /// root of the app's `web` directory.
+  @Deprecated('Use register() and onRegistered instead.')
   Future<String?> getToken({
     String? vapidKey,
     String? serviceWorkerScriptPath,
@@ -131,6 +231,7 @@ class FirebaseMessaging extends FirebasePlugin {
   }
 
   /// Fires when a new FCM token is generated.
+  @Deprecated('Use onRegistered instead.')
   Stream<String> get onTokenRefresh {
     return _delegate.onTokenRefresh;
   }

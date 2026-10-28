@@ -20,6 +20,7 @@ import 'package:meta/meta.dart';
 
 import 'api.dart';
 import 'error.dart';
+import 'speech_config.dart';
 
 /// The base structured datatype containing multi-part content of a message.
 final class Content {
@@ -60,11 +61,11 @@ final class Content {
     String name,
     Map<String, Object?> response, {
     String? id,
-  }) => Content('function', [FunctionResponse(name, response, id: id)]);
+  }) => Content('user', [FunctionResponse(name, response, id: id)]);
 
   /// Return a [Content] with multiple [FunctionResponse].
   static Content functionResponses(Iterable<FunctionResponse> responses) =>
-      Content('function', responses.toList());
+      Content('user', responses.toList());
 
   /// Return a [Content] with [TextPart] of system instruction.
   static Content system(String instructions) =>
@@ -72,7 +73,7 @@ final class Content {
 
   /// Convert the [Content] to json format.
   Map<String, Object?> toJson() => {
-    if (role case final role?) 'role': role,
+    if (role case final role?) 'role': role == 'function' ? 'user' : role,
     'parts': parts.map((p) {
       return p.toJson();
     }).toList(),
@@ -185,20 +186,32 @@ Part parsePart(Object? jsonObject) {
       text,
       isThought: isThought,
       thoughtSignature: thoughtSignature,
+      speechMetadata: switch (jsonObject['speechMetadata']) {
+        final Map<Object?, Object?> metadata => SpeechMetadata(
+          speaker: metadata['speaker'] as String?,
+          style: metadata['style'] as String?,
+        ),
+        _ => null,
+      },
     ),
+    {
+      'fileData': {
+        'fileUri': final String fileUri,
+        'mimeType': final String mimeType,
+      },
+    } ||
     {
       'file_data': {
         'file_uri': final String fileUri,
         'mime_type': final String mimeType,
       },
-    } =>
-      FileData._(
-        mimeType,
-        fileUri,
-        mediaResolution: mediaResolution,
-        isThought: isThought,
-        thoughtSignature: thoughtSignature,
-      ),
+    } => FileData._(
+      mimeType,
+      fileUri,
+      mediaResolution: mediaResolution,
+      isThought: isThought,
+      thoughtSignature: thoughtSignature,
+    ),
     _ => () {
       log('unhandled part format: $jsonObject');
       return UnknownPart(jsonObject);
@@ -243,23 +256,43 @@ final class UnknownPart extends Part {
 /// A [Part] with the text content.
 final class TextPart extends Part {
   // ignore: public_member_api_docs
-  const TextPart(this.text, {bool? isThought})
+  const TextPart(this.text, {bool? isThought, this.speechMetadata})
     : super(isThought: isThought, thoughtSignature: null);
 
   @visibleForTesting
   // ignore: public_member_api_docs
-  const TextPart.forTest(this.text, {bool? isThought, String? thoughtSignature})
-    : super(isThought: isThought, thoughtSignature: thoughtSignature);
+  const TextPart.forTest(
+    this.text, {
+    bool? isThought,
+    String? thoughtSignature,
+    this.speechMetadata,
+  }) : super(isThought: isThought, thoughtSignature: thoughtSignature);
 
-  const TextPart._(this.text, {bool? isThought, String? thoughtSignature})
-    : super(isThought: isThought, thoughtSignature: thoughtSignature);
+  const TextPart._(
+    this.text, {
+    bool? isThought,
+    String? thoughtSignature,
+    this.speechMetadata,
+  }) : super(isThought: isThought, thoughtSignature: thoughtSignature);
 
   /// The text content of the [Part]
   final String text;
+
+  /// Optional [SpeechMetadata] used to guide speech generation for this text,
+  /// such as the speaker and vocal style.
+  ///
+  /// This feature is in Public Preview.
+  final SpeechMetadata? speechMetadata;
+
   @override
   Object toJson() {
     final superJson = super.toJson() as Map<String, Object?>;
-    return <String, Object?>{...superJson, 'text': text};
+    return <String, Object?>{
+      ...superJson,
+      'text': text,
+      if (speechMetadata case final speechMetadata?)
+        'speechMetadata': speechMetadata.toJson(),
+    };
   }
 }
 

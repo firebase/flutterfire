@@ -1,0 +1,93 @@
+// Copyright 2026 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+package io.flutter.plugins.firebase.functions
+
+import com.google.firebase.functions.FirebaseFunctionsException
+import java.util.Locale
+import java.util.concurrent.ExecutionException
+import org.junit.After
+import org.junit.Assert.assertEquals
+import org.junit.Before
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.junit.runners.JUnit4
+
+@RunWith(JUnit4::class)
+class FlutterFirebaseFunctionsPluginTest {
+  private lateinit var originalLocale: Locale
+
+  @Before
+  fun setUp() {
+    originalLocale = Locale.getDefault()
+  }
+
+  @After
+  fun tearDown() {
+    Locale.setDefault(originalLocale)
+  }
+
+  @Test
+  fun mapFunctionsErrorCode_usesRootLocaleUnderTurkishDefault() {
+    Locale.setDefault(Locale("tr", "TR"))
+
+    // Canary: the JVM's Turkish locale really does map 'I' to 'ı'.
+    assertEquals(
+        "faıled-precondıtıon",
+        "FAILED_PRECONDITION".replace("_", "-").lowercase(Locale.getDefault()))
+
+    assertMappedCodes()
+  }
+
+  @Test
+  fun mapFunctionsErrorCode_usesRootLocaleUnderAzerbaijaniDefault() {
+    Locale.setDefault(Locale("az", "AZ"))
+
+    assertEquals(
+        "faıled-precondıtıon",
+        "FAILED_PRECONDITION".replace("_", "-").lowercase(Locale.getDefault()))
+
+    assertMappedCodes()
+  }
+
+  @Test
+  fun getExceptionDetails_unwrapsCallableErrors() {
+    // Tasks.await wraps the callable's FirebaseFunctionsException.
+    val exception =
+        ExecutionException(
+            TestFunctionsExceptions.create(
+                "Invalid test requested.",
+                FirebaseFunctionsException.Code.INVALID_ARGUMENT,
+                listOf(1, 2),
+                null))
+
+    assertEquals(
+        mapOf(
+            "code" to "invalid-argument",
+            "message" to "Invalid test requested.",
+            "additionalData" to listOf(1, 2)),
+        FlutterFirebaseFunctionsPlugin.getExceptionDetails(exception))
+  }
+
+  private fun assertMappedCodes() {
+    val expected =
+        mapOf(
+            "FAILED_PRECONDITION" to "failed-precondition",
+            "INVALID_ARGUMENT" to "invalid-argument",
+            "PERMISSION_DENIED" to "permission-denied",
+            "UNAUTHENTICATED" to "unauthenticated",
+            "INTERNAL" to "internal",
+            "UNAVAILABLE" to "unavailable",
+            "DEADLINE_EXCEEDED" to "deadline-exceeded",
+            "ALREADY_EXISTS" to "already-exists",
+            "UNIMPLEMENTED" to "unimplemented",
+            "UNKNOWN" to "unknown",
+            "NOT_FOUND" to "not-found",
+            "ABORTED" to "aborted",
+        )
+
+    for ((enumName, canonical) in expected) {
+      assertEquals(canonical, FlutterFirebaseFunctionsPlugin.mapFunctionsErrorCode(enumName))
+    }
+  }
+}

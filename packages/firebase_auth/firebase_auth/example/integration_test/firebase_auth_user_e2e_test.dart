@@ -313,17 +313,47 @@ void main() {
                 defaultTargetPlatform == TargetPlatform.macOS),
       );
 
-      group(
-        'reauthenticateWithCredential()',
-        () {
-          test('should reauthenticate correctly', () async {
-            // Setup
-            await FirebaseAuth.instance.createUserWithEmailAndPassword(
-              email: email,
-              password: testPassword,
-            );
-            final initialUser = FirebaseAuth.instance.currentUser;
+      group('reauthenticateWithCredential()', () {
+        test('should reauthenticate correctly', () async {
+          // Setup
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+            email: email,
+            password: testPassword,
+          );
+          final initialUser = FirebaseAuth.instance.currentUser;
 
+          // Test
+          AuthCredential credential = EmailAuthProvider.credential(
+            email: email,
+            password: testPassword,
+          );
+          await FirebaseAuth.instance.currentUser!.reauthenticateWithCredential(
+            credential,
+          );
+
+          // Assertions
+          final currentUser = FirebaseAuth.instance.currentUser;
+          expect(currentUser, isNot(equals(null)));
+          expect(initialUser, isNot(equals(null)));
+          expect(currentUser?.email, equals(email));
+          expect(currentUser?.uid, equals(initialUser?.uid));
+        });
+
+        test('should throw user-mismatch ', () async {
+          // Setup
+          String emailAlready = generateRandomEmail();
+
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+            email: email,
+            password: testPassword,
+          );
+
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+            email: emailAlready,
+            password: testPassword,
+          );
+
+          try {
             // Test
             AuthCredential credential = EmailAuthProvider.credential(
               email: email,
@@ -331,119 +361,96 @@ void main() {
             );
             await FirebaseAuth.instance.currentUser!
                 .reauthenticateWithCredential(credential);
-
+          } on FirebaseAuthException catch (e) {
             // Assertions
-            final currentUser = FirebaseAuth.instance.currentUser;
-            expect(currentUser, isNot(equals(null)));
-            expect(initialUser, isNot(equals(null)));
-            expect(currentUser?.email, equals(email));
-            expect(currentUser?.uid, equals(initialUser?.uid));
-          });
-
-          test('should throw user-mismatch ', () async {
-            // Setup
-            String emailAlready = generateRandomEmail();
-
-            await FirebaseAuth.instance.createUserWithEmailAndPassword(
-              email: email,
-              password: testPassword,
-            );
-
-            await FirebaseAuth.instance.createUserWithEmailAndPassword(
-              email: emailAlready,
-              password: testPassword,
-            );
-
-            try {
-              // Test
-              AuthCredential credential = EmailAuthProvider.credential(
-                email: email,
-                password: testPassword,
-              );
-              await FirebaseAuth.instance.currentUser!
-                  .reauthenticateWithCredential(credential);
-            } on FirebaseAuthException catch (e) {
-              // Assertions
-              expect(e.code, equals('user-mismatch'));
-              expect(
-                e.message,
+            expect(e.code, equals('user-mismatch'));
+            expect(
+              e.message,
+              anyOf(
                 equals(
                   'The supplied credentials do not correspond to the previously signed in user.',
                 ),
-              );
-              await FirebaseAuth.instance.currentUser!.delete(); //clean up
-              return;
-            } catch (e) {
-              fail('should have thrown an FirebaseAuthException');
-            }
+                // Windows C++ SDK omits the trailing period.
+                equals(
+                  'The supplied credentials do not correspond to the previously signed in user',
+                ),
+              ),
+            );
+            await FirebaseAuth.instance.currentUser!.delete(); //clean up
+            return;
+          } catch (e) {
+            fail('should have thrown an FirebaseAuthException');
+          }
 
-            fail('should have thrown an error');
-          });
+          fail('should have thrown an error');
+        });
 
-          test('should throw user-not-found or user-mismatch ', () async {
-            // Setup
-            final userCredential = await FirebaseAuth.instance
-                .createUserWithEmailAndPassword(
-                  email: email,
-                  password: testPassword,
-                );
-            final user = userCredential.user;
-
-            try {
-              // Test
-              AuthCredential credential = EmailAuthProvider.credential(
-                email: 'userdoesnotexist@foobar.com',
+        test('should throw user-not-found or user-mismatch ', () async {
+          // Setup
+          final userCredential = await FirebaseAuth.instance
+              .createUserWithEmailAndPassword(
+                email: email,
                 password: testPassword,
               );
-              await user!.reauthenticateWithCredential(credential);
-            } on FirebaseAuthException catch (e) {
-              // Platforms throw different errors. For now, leave them as is
-              // but in future we might want to edit them before sending to user.
-              if (e.code != 'user-mismatch' && e.code != 'user-not-found') {
-                fail('should have thrown a valid error code (got ${e.code}');
-              }
+          final user = userCredential.user;
 
-              return;
-            } catch (e) {
-              fail('should have thrown an FirebaseAuthException');
-            }
-
-            fail('should have thrown an error');
-          });
-
-          test('should throw wrong-password ', () async {
-            // Setup
-            await FirebaseAuth.instance.createUserWithEmailAndPassword(
-              email: email,
+          try {
+            // Test
+            AuthCredential credential = EmailAuthProvider.credential(
+              email: 'userdoesnotexist@foobar.com',
               password: testPassword,
             );
-
-            try {
-              // Test
-              AuthCredential credential = EmailAuthProvider.credential(
-                email: email,
-                password: 'WRONG_testPassword',
-              );
-              await FirebaseAuth.instance.currentUser!
-                  .reauthenticateWithCredential(credential);
-            } on FirebaseAuthException catch (e) {
-              // Assertions
-              expect(e.code, equals('wrong-password'));
-              expect(
-                e.message,
-                equals(
-                  'The password is invalid or the user does not have a password.',
-                ),
-              );
-              return;
-            } catch (e) {
-              fail('should have thrown an FirebaseAuthException');
+            await user!.reauthenticateWithCredential(credential);
+          } on FirebaseAuthException catch (e) {
+            // Platforms throw different errors. For now, leave them as is
+            // but in future we might want to edit them before sending to user.
+            if (e.code != 'user-mismatch' && e.code != 'user-not-found') {
+              fail('should have thrown a valid error code (got ${e.code}');
             }
 
-            fail('should have thrown an error');
-          });
+            return;
+          } catch (e) {
+            fail('should have thrown an FirebaseAuthException');
+          }
 
-          test('should throw wrong-password ', () async {
+          fail('should have thrown an error');
+        });
+
+        test('should throw wrong-password ', () async {
+          // Setup
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+            email: email,
+            password: testPassword,
+          );
+
+          try {
+            // Test
+            AuthCredential credential = EmailAuthProvider.credential(
+              email: email,
+              password: 'WRONG_testPassword',
+            );
+            await FirebaseAuth.instance.currentUser!
+                .reauthenticateWithCredential(credential);
+          } on FirebaseAuthException catch (e) {
+            // Assertions
+            expect(e.code, equals('wrong-password'));
+            expect(
+              e.message,
+              equals(
+                'The password is invalid or the user does not have a password.',
+              ),
+            );
+            return;
+          } catch (e) {
+            fail('should have thrown an FirebaseAuthException');
+          }
+
+          fail('should have thrown an error');
+        });
+
+        test(
+          'should throw wrong-password ',
+          () async {
             // Setup
             final email = generateRandomEmail();
             await FirebaseAuth.instance.createUserWithEmailAndPassword(
@@ -470,13 +477,15 @@ void main() {
                     ),
               ),
             );
-          });
-        },
-        skip:
-            !kIsWeb &&
-            (defaultTargetPlatform == TargetPlatform.windows ||
-                defaultTargetPlatform == TargetPlatform.macOS),
-      );
+          },
+          // Exercises signInWithEmailAndPassword, not reauthenticateWithCredential.
+          // A test-level skip overrides the group skip, so include macOS here too.
+          skip:
+              !kIsWeb &&
+              (defaultTargetPlatform == TargetPlatform.windows ||
+                  defaultTargetPlatform == TargetPlatform.macOS),
+        );
+      }, skip: !kIsWeb && defaultTargetPlatform == TargetPlatform.macOS);
 
       group('reload()', () {
         test('should not error', () async {

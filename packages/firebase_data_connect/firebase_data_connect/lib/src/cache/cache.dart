@@ -14,12 +14,12 @@
 
 import 'dart:async';
 import 'dart:developer' as developer;
-import 'dart:isolate';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_data_connect/firebase_data_connect.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:path_provider/path_provider.dart';
+import 'cache_isolate_io.dart'
+    if (dart.library.js_interop) 'cache_isolate_web.dart';
 import 'cache_provider.dart';
 import 'in_memory_cache_provider.dart'
     if (dart.library.io) 'sqlite_cache_provider.dart';

@@ -112,10 +112,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
         ),
       );
 
-      return MethodChannelQuerySnapshot(
-        FirebaseFirestorePlatform.instance,
-        data,
-      );
+      return MethodChannelQuerySnapshot(this, data);
     } catch (e, stack) {
       if (e.toString().contains('Named query has not been found')) {
         Error.throwWithStackTrace(
@@ -186,30 +183,33 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
 
   @override
   Stream<void> snapshotsInSync() {
-    StreamSubscription<dynamic>? snapshotStreamSubscription;
     late StreamController<void> controller; // ignore: close_sinks
+    StreamSubscription<dynamic>? subscription;
 
     controller = StreamController<void>.broadcast(
-      onListen: () async {
-        final observerId = await pigeonChannel.snapshotsInSyncSetup(pigeonApp);
-
-        snapshotStreamSubscription =
-            MethodChannelFirebaseFirestore.snapshotsInSyncChannel(observerId)
-                .receiveGuardedBroadcastStream(
-                  arguments: <String, dynamic>{'firestore': this},
-                  onError: convertPlatformException,
-                )
-                .listen(
-                  (event) => controller.add(null),
-                  onError: controller.addError,
-                );
+      onListen: () {
+        subscription = _snapshotsInSync().listen(
+          (_) => controller.add(null),
+          onError: controller.addError,
+        );
       },
       onCancel: () {
-        snapshotStreamSubscription?.cancel();
+        subscription?.cancel();
+        subscription = null;
       },
     );
 
     return controller.stream;
+  }
+
+  Stream<dynamic> _snapshotsInSync() async* {
+    final observerId = await pigeonChannel.snapshotsInSyncSetup(pigeonApp);
+    yield* MethodChannelFirebaseFirestore.snapshotsInSyncChannel(
+      observerId,
+    ).receiveGuardedBroadcastStream(
+      arguments: <String, dynamic>{'firestore': this},
+      onError: convertPlatformException,
+    );
   }
 
   @override

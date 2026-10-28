@@ -20,11 +20,14 @@ import 'package:firebase_data_connect/src/common/common_library.dart';
 import 'package:firebase_data_connect/src/core/ref.dart';
 import 'package:flutter/foundation.dart';
 
+import './network/hot_restart_guard_stub.dart'
+    if (dart.library.js_interop) './network/hot_restart_guard_web.dart';
 import './network/rest_library.dart';
 import './network/transport_library.dart';
 
 import 'cache/cache_data_types.dart';
 import 'cache/cache.dart';
+import 'dataconnect_version.dart';
 
 /// DataConnect class
 class FirebaseDataConnect extends FirebasePlugin {
@@ -33,14 +36,6 @@ class FirebaseDataConnect extends FirebasePlugin {
   FirebaseDataConnect({
     required this.app,
     required this.connectorConfig,
-    @Deprecated(
-      'Passing an explicit instance is deprecated, internal handling is now automatic.',
-    )
-    this.auth,
-    @Deprecated(
-      'Passing an explicit instance is deprecated, internal handling is now automatic.',
-    )
-    this.appCheck,
     CallerSDKType? sdkType,
     this.cacheSettings,
   }) : options = DataConnectOptions(
@@ -50,6 +45,7 @@ class FirebaseDataConnect extends FirebasePlugin {
          connectorConfig.serviceId,
        ),
        super(app.name, 'plugins.flutter.io/firebase_data_connect') {
+    registerWebLibraryVersion('flutter-fire-dc', packageVersion);
     _queryManager = QueryManager(this);
     if (sdkType != null) {
       _sdkType = sdkType;
@@ -210,24 +206,16 @@ class FirebaseDataConnect extends FirebasePlugin {
   /// Returns an instance using a specified [FirebaseApp].
   ///
   /// If [app] is not provided, the default Firebase app will be used.
-  /// If pass in [appCheck], request session will get protected from abusing.
+  /// Auth and App Check are attached from [app] when the instance is created.
   static FirebaseDataConnect instanceFor({
     FirebaseApp? app,
-    @Deprecated(
-      'Passing an explicit instance is deprecated, internal handling is now automatic.',
-    )
-    FirebaseAuth? auth,
-    @Deprecated(
-      'Passing an explicit instance is deprecated, internal handling is now automatic.',
-    )
-    FirebaseAppCheck? appCheck,
     CallerSDKType? sdkType,
     required ConnectorConfig connectorConfig,
     CacheSettings? cacheSettings,
   }) {
     app ??= Firebase.app();
-    auth ??= FirebaseAuth.instanceFor(app: app);
-    appCheck ??= FirebaseAppCheck.instanceFor(app: app);
+    final auth = FirebaseAuth.instanceFor(app: app);
+    final appCheck = FirebaseAppCheck.instanceFor(app: app);
 
     if (cachedInstances[app.name] != null &&
         cachedInstances[app.name]![connectorConfig.toJson()] != null) {
@@ -236,12 +224,12 @@ class FirebaseDataConnect extends FirebasePlugin {
 
     FirebaseDataConnect newInstance = FirebaseDataConnect(
       app: app,
-      auth: auth,
-      appCheck: appCheck,
       connectorConfig: connectorConfig,
       sdkType: sdkType,
       cacheSettings: cacheSettings,
     );
+    newInstance.auth = auth;
+    newInstance.appCheck = appCheck;
     if (cachedInstances[app.name] == null) {
       cachedInstances[app.name] = <String, FirebaseDataConnect>{};
     }

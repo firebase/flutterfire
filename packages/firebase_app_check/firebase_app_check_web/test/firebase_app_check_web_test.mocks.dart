@@ -104,18 +104,14 @@ class MockFirebaseAppCheckWeb extends _i1.Mock
 
   @override
   _i5.Future<void> activate({
-    _i3.WebProvider? webProvider,
-    _i3.AndroidProvider? androidProvider,
-    _i3.AppleProvider? appleProvider,
+    _i3.WebProvider? providerWeb,
     _i3.AndroidAppCheckProvider? providerAndroid,
     _i3.AppleAppCheckProvider? providerApple,
     _i3.WindowsAppCheckProvider? providerWindows,
   }) =>
       (super.noSuchMethod(
             Invocation.method(#activate, [], {
-              #webProvider: webProvider,
-              #androidProvider: androidProvider,
-              #appleProvider: appleProvider,
+              #providerWeb: providerWeb,
               #providerAndroid: providerAndroid,
               #providerApple: providerApple,
               #providerWindows: providerWindows,

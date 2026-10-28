@@ -111,7 +111,7 @@ final class TemplateChatSession {
         if (!shouldAutoExecute) {
           // Standard handling: Update history and return the response to the user.
           if (response.candidates case [final candidate, ...]) {
-            _history.add(message);
+            _history.addAll(requestHistory);
             final normalizedContent = candidate.content.role == null
                 ? Content('model', candidate.content.parts)
                 : candidate.content;
@@ -136,7 +136,7 @@ final class TemplateChatSession {
             FunctionResponse(functionCall.name, {'result': result}),
           );
         }
-        requestHistory.add(Content('function', functionResponses));
+        requestHistory.add(Content('user', functionResponses));
         turn++;
       }
       throw Exception('Max turns of $_maxTurns reached.');

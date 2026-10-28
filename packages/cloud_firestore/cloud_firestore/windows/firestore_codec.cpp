@@ -7,6 +7,7 @@
 #include <map>
 #include <memory>
 #include <optional>
+#include <stdexcept>
 #include <string>
 #include <vector>
 
@@ -205,6 +206,17 @@ cloud_firestore_windows::FirestoreCodec::ReadValueOfType(
     case DATA_TYPE_INCREMENT_INTEGER: {
       int64_t incrementValue = FirestoreCodec::ReadValue(stream).LongValue();
       return CustomEncodableValue(FieldValue::Increment(incrementValue));
+    }
+
+    case DATA_TYPE_MINIMUM_DOUBLE:
+    case DATA_TYPE_MINIMUM_INTEGER:
+    case DATA_TYPE_MAXIMUM_DOUBLE:
+    case DATA_TYPE_MAXIMUM_INTEGER: {
+      // Consume the encoded operand so the codec stays in sync.
+      FirestoreCodec::ReadValue(stream);
+      throw std::runtime_error(
+          "FieldValue.minimum() and FieldValue.maximum() are not supported on "
+          "Windows until the Firebase C++ SDK exposes them.");
     }
 
     case DATA_TYPE_DOCUMENT_ID: {

@@ -529,26 +529,33 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
     }
   }
 
+  Stream<UserPlatform?> _streamChanges(
+    Stream<_ValueWrapper<UserPlatform>> stream,
+  ) async* {
+    var isSignedOut = currentUser == null;
+    yield currentUser;
+    yield* stream.map((event) => event.value).where((user) {
+      if (user == null && isSignedOut) {
+        return false;
+      }
+      isSignedOut = user == null;
+      return true;
+    });
+  }
+
   @override
   Stream<UserPlatform?> authStateChanges() async* {
-    yield currentUser;
-    yield* _authStateChangesListeners[app.name]!.stream.map(
-      (event) => event.value,
-    );
+    yield* _streamChanges(_authStateChangesListeners[app.name]!.stream);
   }
 
   @override
   Stream<UserPlatform?> idTokenChanges() async* {
-    yield currentUser;
-    yield* _idTokenChangesListeners[app.name]!.stream.map(
-      (event) => event.value,
-    );
+    yield* _streamChanges(_idTokenChangesListeners[app.name]!.stream);
   }
 
   @override
   Stream<UserPlatform?> userChanges() async* {
-    yield currentUser;
-    yield* _userChangesListeners[app.name]!.stream.map((event) => event.value);
+    yield* _streamChanges(_userChangesListeners[app.name]!.stream);
   }
 
   @override

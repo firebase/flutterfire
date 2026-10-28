@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import 'dart:convert';
-import 'dart:typed_data';
 
 import 'package:firebase_ai/src/api.dart';
 import 'package:firebase_ai/src/content.dart';
@@ -81,6 +80,20 @@ void main() {
         },
         'language_code': 'en-US',
       });
+    });
+
+    test('SpeechMetadata toJson() returns correct JSON', () {
+      const metadataFull = SpeechMetadata(speaker: 'Alice', style: 'excitedly');
+      expect(metadataFull.toJson(), {'speaker': 'Alice', 'style': 'excitedly'});
+
+      const metadataSpeakerOnly = SpeechMetadata(speaker: 'Bob');
+      expect(metadataSpeakerOnly.toJson(), {'speaker': 'Bob'});
+
+      const metadataStyleOnly = SpeechMetadata(style: 'whispering');
+      expect(metadataStyleOnly.toJson(), {'style': 'whispering'});
+
+      const metadataEmpty = SpeechMetadata();
+      expect(metadataEmpty.toJson(), <String, Object?>{});
     });
 
     test('ResponseModalities enum toJson() returns correct value', () {
@@ -201,22 +214,6 @@ void main() {
 
       final message2 = LiveServerToolCallCancellation();
       expect(message2.functionIds, null);
-    });
-
-    test('LiveClientRealtimeInput toJson() returns correct JSON', () {
-      final part = InlineDataPart('audio/pcm', Uint8List.fromList([1, 2, 3]));
-      // ignore: deprecated_member_use_from_same_package
-      final message = LiveClientRealtimeInput(mediaChunks: [part]);
-      expect(message.toJson(), {
-        'realtime_input': {
-          'media_chunks': [
-            {'mimeType': 'audio/pcm', 'data': 'AQID'},
-          ],
-        },
-      });
-
-      final message2 = LiveClientRealtimeInput();
-      expect(message2.toJson(), {'realtime_input': {}});
     });
 
     test('LiveClientContent toJson() returns correct JSON', () {
@@ -343,13 +340,32 @@ void main() {
     });
 
     test(
-      'parseServerMessage throws VertexAISdkException for unhandled format',
+      'parseServerMessage returns an unknown message for unhandled format',
       () {
-        final jsonObject = {'unknown': {}};
-        expect(
-          () => parseServerResponse(jsonObject),
-          throwsA(isA<FirebaseAISdkException>()),
-        );
+        for (final jsonObject in [
+          {'unknown': {}},
+          {
+            'voiceActivity': {
+              'type': 'ACTIVITY_START',
+              'audioOffset': '2.520s',
+            },
+          },
+        ]) {
+          final response = parseServerResponse(jsonObject);
+          expect(
+            response.message,
+            isNot(
+              anyOf(
+                isA<LiveServerContent>(),
+                isA<LiveServerToolCall>(),
+                isA<LiveServerToolCallCancellation>(),
+                isA<LiveServerSetupComplete>(),
+                isA<GoingAwayNotice>(),
+                isA<SessionResumptionUpdate>(),
+              ),
+            ),
+          );
+        }
       },
     );
 

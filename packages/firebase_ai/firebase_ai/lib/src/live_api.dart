@@ -11,6 +11,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+import 'dart:developer';
+
 import 'api.dart';
 import 'content.dart';
 import 'error.dart';
@@ -270,6 +272,9 @@ final class LiveGenerationConfig extends BaseGenerationConfig {
 /// This class serves as a base for different types of server messages,
 /// such as content updates, tool calls, and tool call cancellations.
 /// Subclasses should implement specific message types.
+///
+/// The server can send message types this SDK does not recognize yet, so a
+/// `switch` over [LiveServerMessage] needs a default case.
 sealed class LiveServerMessage {}
 
 /// A message indicating that the live server setup is complete.
@@ -408,6 +413,13 @@ class SessionResumptionUpdate implements LiveServerMessage {
   final int? lastConsumedClientMessageIndex;
 }
 
+/// A server message this SDK does not recognize.
+///
+/// Handle it with a default case when switching over [LiveServerMessage].
+final class _UnknownLiveServerMessage implements LiveServerMessage {
+  const _UnknownLiveServerMessage();
+}
+
 /// A single response chunk received during a live content generation.
 ///
 /// It can contain generated content, function calls to be executed, or
@@ -425,7 +437,6 @@ class LiveServerResponse {
 class LiveClientRealtimeInput {
   /// Creates a [LiveClientRealtimeInput] instance.
   LiveClientRealtimeInput({
-    @Deprecated('Use audio, video, or text instead') this.mediaChunks,
     this.audio,
     this.video,
     this.text,
@@ -436,8 +447,7 @@ class LiveClientRealtimeInput {
   /// Creates a [LiveClientRealtimeInput] with audio data.
   LiveClientRealtimeInput.audio(this.audio)
     // ignore: deprecated_member_use_from_same_package
-    : mediaChunks = null,
-      video = null,
+    : video = null,
       text = null,
       activityStart = null,
       activityEnd = null;
@@ -445,8 +455,7 @@ class LiveClientRealtimeInput {
   /// Creates a [LiveClientRealtimeInput] with video data.
   LiveClientRealtimeInput.video(this.video)
     // ignore: deprecated_member_use_from_same_package
-    : mediaChunks = null,
-      audio = null,
+    : audio = null,
       text = null,
       activityStart = null,
       activityEnd = null;
@@ -454,8 +463,7 @@ class LiveClientRealtimeInput {
   /// Creates a [LiveClientRealtimeInput] with text data.
   LiveClientRealtimeInput.text(this.text)
     // ignore: deprecated_member_use_from_same_package
-    : mediaChunks = null,
-      audio = null,
+    : audio = null,
       video = null,
       activityStart = null,
       activityEnd = null;
@@ -463,8 +471,7 @@ class LiveClientRealtimeInput {
   /// Creates a [LiveClientRealtimeInput] with activity start signal.
   LiveClientRealtimeInput.activityStart()
     // ignore: deprecated_member_use_from_same_package
-    : mediaChunks = null,
-      audio = null,
+    : audio = null,
       video = null,
       text = null,
       activityStart = const {},
@@ -473,16 +480,11 @@ class LiveClientRealtimeInput {
   /// Creates a [LiveClientRealtimeInput] with activity end signal.
   LiveClientRealtimeInput.activityEnd()
     // ignore: deprecated_member_use_from_same_package
-    : mediaChunks = null,
-      audio = null,
+    : audio = null,
       video = null,
       text = null,
       activityStart = null,
       activityEnd = const {};
-
-  /// The list of media chunks.
-  @Deprecated('Use audio, video, or text instead')
-  final List<InlineDataPart>? mediaChunks;
 
   /// Audio data.
   final InlineDataPart? audio;
@@ -502,10 +504,6 @@ class LiveClientRealtimeInput {
   // ignore: public_member_api_docs
   Map<String, dynamic> toJson() => {
     'realtime_input': {
-      if (mediaChunks != null)
-        'media_chunks':
-            // ignore: deprecated_member_use_from_same_package
-            mediaChunks?.map((e) => e.toMediaChunkJson()).toList(),
       if (audio != null) 'audio': audio!.toMediaChunkJson(),
       if (video != null) 'video': video!.toMediaChunkJson(),
       if (text != null) 'text': text,
@@ -576,8 +574,8 @@ class LiveClientToolResponse {
 /// - `toolCallCancellation` messages to cancel pending function calls.
 /// - `setupComplete` messages signaling the completion of the server setup.
 ///
-/// If the JSON object does not match any of the expected formats, an
-/// [FirebaseAISdkException] is thrown.
+/// If the JSON object does not match any of the expected formats, it is
+/// returned as a [LiveServerMessage] that matches none of the public subtypes.
 ///
 /// Example:
 /// ```dart
@@ -599,7 +597,6 @@ class LiveClientToolResponse {
 ///
 /// Throws:
 /// - [FirebaseAIException]: If the JSON object contains an error message.
-/// - [FirebaseAISdkException]: If the JSON object does not match any expected format.
 ///
 /// Parameters:
 /// - [jsonObject]: The JSON object received from the live server.
@@ -683,6 +680,7 @@ LiveServerMessage _parseServerMessage(Object jsonObject) {
           sessionResumptionUpdateJson['lastConsumedClientMessageIndex'] as int?,
     );
   } else {
-    throw unhandledFormat('LiveServerMessage', json);
+    log('Ignoring unrecognized LiveServerMessage: ${json.keys}');
+    return const _UnknownLiveServerMessage();
   }
 }

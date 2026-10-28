@@ -41,7 +41,6 @@ const _columns = <({String env, String header})>[
   (env: 'APP_INSTALLATIONS_STATUS', header: 'Installations'),
   (env: 'CRASHLYTICS_STATUS', header: 'Crashlytics'),
   (env: 'MESSAGING_STATUS', header: 'Messaging'),
-  (env: 'ML_MODEL_DOWNLOADER_STATUS', header: 'ML Model'),
   (env: 'PERFORMANCE_STATUS', header: 'Performance'),
   (env: 'REMOTE_CONFIG_STATUS', header: 'Remote Config'),
 ];

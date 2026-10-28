@@ -1,5 +1,5 @@
-group 'io.flutter.plugins.firebase.storage'
-version '1.0-SNAPSHOT'
+group = 'io.flutter.plugins.firebase.storage'
+version = '1.0-SNAPSHOT'
 
 apply plugin: 'com.android.library'
 apply from: file("local-config.gradle")
@@ -52,7 +52,7 @@ if (!builtInKotlin) {
 android {
     // Conditional for compatibility with AGP <4.2.
     if (project.android.hasProperty("namespace")) {
-        namespace 'io.flutter.plugins.firebase.storage'
+        namespace = 'io.flutter.plugins.firebase.storage'
     }
 
     compileSdkVersion project.ext.compileSdk

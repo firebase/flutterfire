@@ -17,7 +17,7 @@ class DataSnapshotWeb extends DataSnapshotPlatform {
 
   @override
   DataSnapshotPlatform child(String childPath) {
-    return DataSnapshotWeb(ref, _delegate.child(childPath));
+    return DataSnapshotWeb(ref.child(childPath), _delegate.child(childPath));
   }
 
   @override

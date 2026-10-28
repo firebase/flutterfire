@@ -17,13 +17,24 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
-import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 import 'content.dart';
 import 'error.dart';
 import 'live_api.dart';
 import 'tool.dart';
+import 'web_socket_connect_web.dart'
+    if (dart.library.io) 'web_socket_connect_io.dart';
+
+/// Returns the HTTP headers (App Check, Auth, etc.) for a new WebSocket
+/// connection.
+@internal
+typedef LiveHeadersProvider = FutureOr<Map<String, String>> Function();
+
+/// Opens a WebSocket connection to [uri] with the given [headers].
+@internal
+typedef LiveWebSocketConnector =
+    WebSocketChannel Function(Uri uri, Map<String, String> headers);
 
 /// Manages asynchronous communication with Gemini model over a WebSocket
 /// connection.
@@ -32,17 +43,19 @@ class LiveSession {
   LiveSession._(
     this._ws, {
     required String uri,
-    required Map<String, String> headers,
+    required LiveHeadersProvider headersProvider,
     required String modelString,
     Content? systemInstruction,
     List<Tool>? tools,
     LiveGenerationConfig? liveGenerationConfig,
+    LiveWebSocketConnector? connector,
   }) : _uri = uri,
-       _headers = headers,
+       _headersProvider = headersProvider,
        _modelString = modelString,
        _systemInstruction = systemInstruction,
        _tools = tools,
        _liveGenerationConfig = liveGenerationConfig,
+       _connector = connector ?? connectWebSocket,
        _messageController = StreamController<LiveServerResponse>.broadcast() {
     _listenToWebSocket();
   }
@@ -50,7 +63,12 @@ class LiveSession {
   /// Internal constructor for testing.
   @visibleForTesting
   factory LiveSession.forTesting(WebSocketChannel ws) {
-    return LiveSession._(ws, uri: '', headers: {}, modelString: '');
+    return LiveSession._(
+      ws,
+      uri: '',
+      headersProvider: () => const <String, String>{},
+      modelString: '',
+    );
   }
 
   /// Establishes a connection to a live generation service.
@@ -60,39 +78,49 @@ class LiveSession {
   ///
   /// Returns a [Future] that resolves to an [LiveSession] object upon successful
   /// connection.
+  ///
+  /// [headersProvider] is invoked for every WebSocket connection, including
+  /// each [resumeSession] call, so that short-lived credentials such as App
+  /// Check (including limited-use) tokens and Firebase Auth ID tokens are
+  /// fresh on every handshake.
   @internal
   static Future<LiveSession> create({
     required String uri,
-    required Map<String, String> headers,
+    required LiveHeadersProvider headersProvider,
     required String modelString,
     Content? systemInstruction,
     List<Tool>? tools,
     SessionResumptionConfig? sessionResumption,
     LiveGenerationConfig? liveGenerationConfig,
+    @visibleForTesting LiveWebSocketConnector? connector,
   }) async {
+    final effectiveConnector = connector ?? connectWebSocket;
     final ws = await _performWebSocketSetup(
       uri: uri,
-      headers: headers,
+      headers: await headersProvider(),
       modelString: modelString,
       systemInstruction: systemInstruction,
       tools: tools,
       sessionResumption: sessionResumption,
       liveGenerationConfig: liveGenerationConfig,
+      connector: effectiveConnector,
     );
     return LiveSession._(
       ws,
       uri: uri,
-      headers: headers,
+      headersProvider: headersProvider,
       modelString: modelString,
       systemInstruction: systemInstruction,
       tools: tools,
       liveGenerationConfig: liveGenerationConfig,
+      connector: effectiveConnector,
     );
   }
 
   // Persisted values for session resumption.
   final String _uri;
-  final Map<String, String> _headers;
+  final LiveHeadersProvider _headersProvider;
+  final LiveWebSocketConnector _connector;
   final String _modelString;
   final Content? _systemInstruction;
   final List<Tool>? _tools;
@@ -106,6 +134,7 @@ class LiveSession {
     required String uri,
     required Map<String, String> headers,
     required String modelString,
+    required LiveWebSocketConnector connector,
     Content? systemInstruction,
     List<Tool>? tools,
     SessionResumptionConfig? sessionResumption,
@@ -140,9 +169,7 @@ class LiveSession {
     };
 
     final request = jsonEncode(setupJson);
-    final ws = kIsWeb
-        ? WebSocketChannel.connect(Uri.parse(uri))
-        : IOWebSocketChannel.connect(Uri.parse(uri), headers: headers);
+    final ws = connector(Uri.parse(uri), headers);
     await ws.ready;
 
     ws.sink.add(request);
@@ -221,10 +248,14 @@ class LiveSession {
         },
       );
 
+      // Re-fetch headers so App Check / Auth tokens are not reused from the
+      // initial connection: they may have expired, and limited-use App Check
+      // tokens are rejected on replay.
       _ws = await _performWebSocketSetup(
         uri: _uri,
-        headers: _headers,
+        headers: await _headersProvider(),
         modelString: _modelString,
+        connector: _connector,
         systemInstruction: _systemInstruction,
         tools: _tools,
         sessionResumption: sessionResumption,
@@ -330,52 +361,6 @@ class LiveSession {
   Future<void> sendStopActivityRealtime() async {
     _checkWsStatus();
     var clientMessage = LiveClientRealtimeInput.activityEnd();
-    var clientJson = jsonEncode(clientMessage.toJson());
-    _ws.sink.add(clientJson);
-  }
-
-  /// Sends realtime input (media chunks) to the server.
-  ///
-  /// [mediaChunks]: The list of media chunks to send.
-  @Deprecated(
-    'Use sendAudioRealtime, sendVideoRealtime, or sendTextRealtime instead',
-  )
-  Future<void> sendMediaChunks({
-    required List<InlineDataPart> mediaChunks,
-  }) async {
-    _checkWsStatus();
-    var clientMessage = LiveClientRealtimeInput(mediaChunks: mediaChunks);
-    var clientJson = jsonEncode(clientMessage.toJson());
-    _ws.sink.add(clientJson);
-  }
-
-  /// Starts streaming media chunks to the server from the provided [mediaChunkStream].
-  ///
-  /// This function asynchronously processes each [InlineDataPart] from the given
-  /// [mediaChunkStream] and sends it to the server via the WebSocket connection.
-  ///
-  /// Parameters:
-  /// - [mediaChunkStream]: The stream of [InlineDataPart] objects to send to the server.
-  @Deprecated('Use sendAudio, sendVideo, or sendText with a stream instead')
-  Future<void> sendMediaStream(Stream<InlineDataPart> mediaChunkStream) async {
-    _checkWsStatus();
-
-    try {
-      await for (final chunk in mediaChunkStream) {
-        await _sendMediaChunk(chunk);
-      }
-    } catch (e) {
-      throw FirebaseAISdkException(e.toString());
-    } finally {
-      log('Stream processing completed.');
-    }
-  }
-
-  Future<void> _sendMediaChunk(InlineDataPart chunk) async {
-    var clientMessage = LiveClientRealtimeInput(
-      // ignore: deprecated_member_use_from_same_package
-      mediaChunks: [chunk],
-    ); // Create a list with the single chunk
     var clientJson = jsonEncode(clientMessage.toJson());
     _ws.sink.add(clientJson);
   }

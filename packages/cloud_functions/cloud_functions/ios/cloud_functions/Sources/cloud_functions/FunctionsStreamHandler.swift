@@ -44,6 +44,7 @@ class FunctionsStreamHandler: NSObject, FlutterStreamHandler {
             details: nil
           )
         )
+        events(FlutterEndOfEventStream)
       }
       return
     }
@@ -53,6 +54,11 @@ class FunctionsStreamHandler: NSObject, FlutterStreamHandler {
     let parameters = arguments["parameters"]
     let timeout = arguments["timeout"] as? Double
     let limitedUseAppCheckToken = arguments["limitedUseAppCheckToken"] as? Bool ?? false
+
+    #if DEBUG
+      functions.allowInsecureTokenAttachment =
+        arguments["allowInsecureTokenAttachment"] as? Bool ?? false
+    #endif
 
     if let origin,
       let url = URL(string: origin),
@@ -81,6 +87,7 @@ class FunctionsStreamHandler: NSObject, FlutterStreamHandler {
               details: nil
             )
           )
+          events(FlutterEndOfEventStream)
         }
         return
       }
@@ -107,13 +114,8 @@ class FunctionsStreamHandler: NSObject, FlutterStreamHandler {
         }
       } catch {
         await MainActor.run {
-          events(
-            FlutterError(
-              code: "unknown",
-              message: error.localizedDescription,
-              details: ["code": "unknown", "message": error.localizedDescription]
-            )
-          )
+          events(FirebaseFunctionsPlugin.createFlutterError(from: error))
+          events(FlutterEndOfEventStream)
         }
       }
     } else {
@@ -125,6 +127,7 @@ class FunctionsStreamHandler: NSObject, FlutterStreamHandler {
             details: nil
           )
         )
+        events(FlutterEndOfEventStream)
       }
     }
   }

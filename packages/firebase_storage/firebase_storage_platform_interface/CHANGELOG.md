@@ -1,3 +1,11 @@
+## 6.0.9
+
+ - **FIX**(firebase_storage): keep task metadata on errors and let new web metadata win ([#18821](https://github.com/firebase/flutterfire/issues/18821)). ([efd7131c](https://github.com/firebase/flutterfire/commit/efd7131cafc609386c7e65881dbb9fca340c7f6f))
+
+## 6.0.8
+
+ - Update a dependency to the latest release.
+
 ## 6.0.7
 
  - **REFACTOR**(platform_interface): replace Flutter UI and foundation imports with package:meta ([#18604](https://github.com/firebase/flutterfire/issues/18604)). ([fef6d420](https://github.com/firebase/flutterfire/commit/fef6d42090ea275f07117c085bd04710d9df51bc))

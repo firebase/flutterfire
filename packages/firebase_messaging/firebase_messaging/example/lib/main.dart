@@ -28,13 +28,13 @@ import 'token_monitor.dart';
 /// 2. Run `melos bootstrap` in FlutterFire project.
 /// 3. In your terminal, root to ./packages/firebase_messaging/firebase_messaging/example directory.
 /// 4. Run `flutterfire configure` in the example/ directory to setup your app with your Firebase project.
-/// 5. Open `token_monitor.dart` and change `vapidKey` to yours.
+/// 5. Open `token_monitor.dart` and change `messagingVapidKey` to yours.
 /// 6. Run the app on an actual device for iOS, android is fine to run on an emulator.
 /// 7. Use the following script to send a message to your device: scripts/send-message.js. To run this script,
 ///    you will need nodejs installed on your computer. Then the following:
 ///     a. Download a service account key (JSON file) from your Firebase console, rename it to "google-services.json" and add to the example/scripts directory.
 ///     b. Ensure your device/emulator is running, and run the FirebaseMessaging example app using `flutter run`.
-///     c. Copy the token that is printed in the console and paste it here: https://github.com/firebase/flutterfire/blob/01b4d357e1/packages/firebase_messaging/firebase_messaging/example/lib/main.dart#L32
+///     c. Copy the FID that is printed in the console and paste it here: https://github.com/firebase/flutterfire/blob/01b4d357e1/packages/firebase_messaging/firebase_messaging/example/lib/main.dart#L32
 ///     c. From your terminal, root to example/scripts directory & run `npm install`.
 ///     d. Run `npm run send-message` in the example/scripts directory and your app will receive messages in any state; foreground, background, terminated.
 ///  Note: Flutter API documentation for receiving messages: https://firebase.google.com/docs/cloud-messaging/flutter/receive
@@ -151,10 +151,10 @@ class MessagingExampleApp extends StatelessWidget {
 int _messageCount = 0;
 
 /// The API endpoint here accepts a raw FCM payload for demonstration purposes.
-String constructFCMPayload(String? token) {
+String constructFCMPayload(String? fid) {
   _messageCount++;
   return jsonEncode({
-    'token': token,
+    'fid': fid,
     'data': {
       'via': 'FlutterFire Cloud Messaging!!!',
       'count': _messageCount.toString(),
@@ -173,7 +173,7 @@ class Application extends StatefulWidget {
 }
 
 class _Application extends State<Application> {
-  String? _token;
+  String? _fid;
   String? initialMessage;
   bool _resolved = false;
 
@@ -204,8 +204,8 @@ class _Application extends State<Application> {
   }
 
   Future<void> sendPushMessage() async {
-    if (_token == null) {
-      print('Unable to send FCM message, no token exists.');
+    if (_fid == null) {
+      print('Unable to send FCM message, no FID exists.');
       return;
     }
 
@@ -215,7 +215,7 @@ class _Application extends State<Application> {
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
-        body: constructFCMPayload(_token),
+        body: constructFCMPayload(_fid),
       );
       print('FCM request for device sent!');
     } catch (e) {
@@ -244,6 +244,26 @@ class _Application extends State<Application> {
           await FirebaseMessaging.instance.unsubscribeFromTopic('fcm_test');
           print(
             'FlutterFire Messaging Example: Unsubscribing from topic "fcm_test" successful.',
+          );
+        }
+        break;
+      case 'register':
+        {
+          print('FlutterFire Messaging Example: Registering with FCM.');
+          await FirebaseMessaging.instance.register(
+            vapidKey: messagingVapidKey,
+          );
+          print(
+            'FlutterFire Messaging Example: Registering with FCM successful.',
+          );
+        }
+        break;
+      case 'unregister':
+        {
+          print('FlutterFire Messaging Example: Unregistering from FCM.');
+          await FirebaseMessaging.instance.unregister();
+          print(
+            'FlutterFire Messaging Example: Unregistering from FCM successful.',
           );
         }
         break;
@@ -285,6 +305,14 @@ class _Application extends State<Application> {
                   child: Text('Unsubscribe to topic'),
                 ),
                 const PopupMenuItem(
+                  value: 'register',
+                  child: Text('Register with FCM'),
+                ),
+                const PopupMenuItem(
+                  value: 'unregister',
+                  child: Text('Unregister from FCM'),
+                ),
+                const PopupMenuItem(
                   value: 'get_apns_token',
                   child: Text('Get APNs token (Apple only)'),
                 ),
@@ -314,15 +342,33 @@ class _Application extends State<Application> {
               ),
             ),
             MetaCard(
-              'FCM Token',
-              TokenMonitor((token) {
-                _token = token;
-                return token == null
-                    ? const CircularProgressIndicator()
-                    : SelectableText(
-                        token,
-                        style: const TextStyle(fontSize: 12),
-                      );
+              'FCM Registration FID',
+              RegistrationMonitor((fid) {
+                _fid = fid;
+                return Column(
+                  children: [
+                    if (fid == null)
+                      const Text('No FID registered yet.')
+                    else
+                      SelectableText(fid, style: const TextStyle(fontSize: 12)),
+                    const SizedBox(height: 12),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      alignment: WrapAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () => onActionSelected('register'),
+                          child: const Text('Register with FCM'),
+                        ),
+                        ElevatedButton(
+                          onPressed: () => onActionSelected('unregister'),
+                          child: const Text('Unregister from FCM'),
+                        ),
+                      ],
+                    ),
+                  ],
+                );
               }),
             ),
             ElevatedButton(

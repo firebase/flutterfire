@@ -663,8 +663,12 @@ FlutterStandardMethodCodec *_codec;
     FIRDocumentReference *document = [firestore documentWithPath:path];
 
     FIRTransaction *transaction;
+    NSError *error = nil;
+    FIRDocumentSnapshot *snapshot = nil;
+    // Read under the lock so the update block cannot return mid-read.
     @synchronized(self->_transactions) {
       transaction = self->_transactions[transactionId];
+      snapshot = [transaction getDocument:document error:&error];
     }
 
     if (transaction == nil) {
@@ -677,9 +681,6 @@ FlutterStandardMethodCodec *_codec;
                     details:nil]);
       return;
     }
-
-    NSError *error = nil;
-    FIRDocumentSnapshot *snapshot = [transaction getDocument:document error:&error];
 
     if (error != nil) {
       completion(nil, [self convertToFlutterError:error]);

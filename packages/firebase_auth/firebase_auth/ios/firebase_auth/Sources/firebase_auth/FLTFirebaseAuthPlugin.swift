@@ -166,6 +166,7 @@ public class FLTFirebaseAuthPlugin: NSObject, FlutterPlugin, FLTFirebasePluginPr
         didReceiveRemoteNotification notification: [AnyHashable: Any],
         fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void
       ) -> Bool {
+        guard FirebaseApp.app() != nil else { return false }
         if Auth.auth().canHandleNotification(notification) {
           completionHandler(.noData)
           return true
@@ -186,15 +187,36 @@ public class FLTFirebaseAuthPlugin: NSObject, FlutterPlugin, FLTFirebasePluginPr
       open url: URL,
       options: [UIApplication.OpenURLOptionsKey: Any] = [:]
     ) -> Bool {
-      Auth.auth().canHandle(url)
+      // Apps that only configure named apps have no default `Auth`, but their
+      // callback URLs must still be claimed.
+      (FirebaseApp.app() != nil && Auth.auth().canHandle(url)) || Self.isAuthCallbackURL(url)
     }
 
     public func scene(_ scene: UIScene, openURLContexts urlContexts: Set<UIOpenURLContext>) -> Bool
     {
-      for urlContext in urlContexts where Auth.auth().canHandle(urlContext.url) {
-        return true
+      urlContexts.contains { urlContext in
+        (FirebaseApp.app() != nil && Auth.auth().canHandle(urlContext.url))
+          || Self.isAuthCallbackURL(urlContext.url)
       }
-      return false
+    }
+
+    /// Whether `url` is a reCAPTCHA, multi-factor or OAuth redirect back to Auth.
+    ///
+    /// Auth's own app and scene delegate interceptors see the URL first and
+    /// consume it, after which `canHandle` returns false. Claiming it here keeps
+    /// Flutter from pushing it as a deep link.
+    static func isAuthCallbackURL(_ url: URL) -> Bool {
+      guard let scheme = url.scheme?.lowercased(), url.host?.lowercased() == "firebaseauth",
+        url.path == "/link"
+      else { return false }
+      // The schemes the SDK builds its redirect URLs with.
+      return FirebaseApp.allApps?.values.contains { app in
+        let appIDScheme = "app-" + app.options.googleAppID.replacingOccurrences(of: ":", with: "-")
+        let reversedClientID = app.options.clientID.map {
+          $0.components(separatedBy: ".").reversed().joined(separator: ".")
+        }
+        return scheme == appIDScheme.lowercased() || scheme == reversedClientID?.lowercased()
+      } ?? false
     }
   #endif
 
@@ -211,7 +233,7 @@ public class FLTFirebaseAuthPlugin: NSObject, FlutterPlugin, FLTFirebasePluginPr
 
   func randomNonce(_ length: Int) -> String {
     precondition(length > 0)
-    let characterSet = Array("0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._")
+    let characterSet = Array("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-._")
     var result = ""
     var remainingLength = length
     while remainingLength > 0 {
@@ -281,23 +303,6 @@ public class FLTFirebaseAuthPlugin: NSObject, FlutterPlugin, FLTFirebasePluginPr
       .failure(
         FlutterError(
           code: "second-factor-required", message: nsError.description, details: output)))
-  }
-
-  func handleInternalError(
-    error: Error,
-    completion: @escaping (Result<InternalUserCredential, Error>) -> Void
-  ) {
-    let nsError = error as NSError
-    if let underlyingError = nsError.userInfo[NSUnderlyingErrorKey] as? NSError,
-      let details = underlyingError.userInfo["FIRAuthErrorUserInfoDeserializedResponseKey"]
-    {
-      completion(
-        .failure(
-          FlutterError(code: "internal-error", message: nsError.description, details: details)))
-      return
-    }
-    completion(
-      .failure(FlutterError(code: "internal-error", message: nsError.description, details: nil)))
   }
 
   func handleAppleAuthResult(
@@ -663,8 +668,6 @@ public class FLTFirebaseAuthPlugin: NSObject, FlutterPlugin, FLTFirebasePluginPr
       let nsError = error as NSError
       if nsError.code == AuthErrorCode.secondFactorRequired.rawValue {
         handleMultiFactorError(app: app, error: error, completion: completion)
-      } else if nsError.code == AuthErrorCode.internalError.rawValue {
-        handleInternalError(error: error, completion: completion)
       } else {
         completion(.failure(AuthErrors.convertToFlutterError(error)))
       }
@@ -876,7 +879,7 @@ public class FLTFirebaseAuthPlugin: NSObject, FlutterPlugin, FLTFirebasePluginPr
             as? [String: Any]
           if let firebaseDictionary, firebaseDictionary["message"] != nil {
             if firebaseDictionary["code"] is NSNumber {
-              self.handleInternalError(error: error, completion: completion)
+              completion(.failure(AuthErrors.convertToFlutterError(error)))
             } else {
               completion(
                 .failure(
@@ -887,8 +890,6 @@ public class FLTFirebaseAuthPlugin: NSObject, FlutterPlugin, FLTFirebasePluginPr
             }
           } else if nsError.code == AuthErrorCode.secondFactorRequired.rawValue {
             self.handleMultiFactorError(app: app, error: error, completion: completion)
-          } else if nsError.code == AuthErrorCode.internalError.rawValue {
-            self.handleInternalError(error: error, completion: completion)
           } else {
             completion(.failure(AuthErrors.convertToFlutterError(error)))
           }
@@ -1034,15 +1035,7 @@ public class FLTFirebaseAuthPlugin: NSObject, FlutterPlugin, FLTFirebasePluginPr
     getFIRAuthFromPigeon(app).sendSignInLink(toEmail: email, actionCodeSettings: settings) {
       error in
       if let error {
-        if (error as NSError).code == AuthErrorCode.internalError.rawValue {
-          self.handleInternalError(error: error) { result in
-            if case .failure(let internalError) = result {
-              completion(.failure(internalError))
-            }
-          }
-        } else {
-          completion(.failure(AuthErrors.convertToFlutterError(error)))
-        }
+        completion(.failure(AuthErrors.convertToFlutterError(error)))
       } else {
         completion(.success(()))
       }

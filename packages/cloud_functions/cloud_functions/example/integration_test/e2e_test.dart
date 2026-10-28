@@ -408,6 +408,29 @@ void main() {
         await expectLater(stream, emits(isA<StreamResponse>()));
       });
 
+      test('sends data when called using a url', () async {
+        final localhostMapped = kIsWeb || !Platform.isAndroid
+            ? 'localhost'
+            : '10.0.2.2';
+
+        HttpsCallable
+        callable = FirebaseFunctions.instance.httpsCallableFromUrl(
+          'http://$localhostMapped:5001/flutterfire-e2e-tests/us-central1/$kTestFunctionDefaultRegion',
+        );
+
+        final stream = callable.stream('foo').where((event) => event is Chunk);
+        await expectLater(
+          stream,
+          emits(
+            isA<Chunk>().having(
+              (e) => e.partialData,
+              'partialData',
+              equals('string'),
+            ),
+          ),
+        );
+      });
+
       test('concurrent streams on the same callable do not collide', () async {
         // Regression test for https://github.com/firebase/flutterfire/issues/18036
         final stream1 = callable
@@ -424,6 +447,24 @@ void main() {
         final results = await Future.wait([stream1, stream2]);
         expect(results[0], equals('string'));
         expect(results[1], equals('number'));
+      });
+
+      test('emits a [FirebaseFunctionsException] on error', () async {
+        await expectLater(
+          callable.stream({}),
+          emitsInOrder(<Object>[
+            emitsError(
+              isA<FirebaseFunctionsException>()
+                  .having((e) => e.code, 'code', 'invalid-argument')
+                  .having(
+                    (e) => e.message,
+                    'message',
+                    contains('Invalid test requested.'),
+                  ),
+            ),
+            emitsDone,
+          ]),
+        );
       });
 
       test('should emit a [Result] as last value', () async {

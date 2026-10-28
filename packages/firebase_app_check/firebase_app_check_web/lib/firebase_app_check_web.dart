@@ -78,7 +78,7 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
           } else {
             return;
           }
-          await instance.activate(webProvider: provider);
+          await instance.activate(providerWeb: provider);
         }
       },
     );
@@ -124,32 +124,22 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
 
   @override
   Future<void> activate({
-    WebProvider? webProvider,
-    @Deprecated(
-      'Use providerAndroid instead. '
-      'This parameter will be removed in a future major release.',
-    )
-    AndroidProvider? androidProvider,
-    @Deprecated(
-      'Use providerApple instead. '
-      'This parameter will be removed in a future major release.',
-    )
-    AppleProvider? appleProvider,
+    WebProvider? providerWeb,
     AndroidAppCheckProvider? providerAndroid,
     AppleAppCheckProvider? providerApple,
     WindowsAppCheckProvider? providerWindows,
   }) async {
     // save the recaptcha type and site key for future startups
-    if (webProvider != null) {
+    if (providerWeb != null) {
       final String recaptchaType;
-      if (webProvider is WebDebugProvider) {
+      if (providerWeb is WebDebugProvider) {
         recaptchaType = recaptchaTypeDebug;
-      } else if (webProvider is ReCaptchaV3Provider) {
+      } else if (providerWeb is ReCaptchaV3Provider) {
         recaptchaType = recaptchaTypeV3;
-      } else if (webProvider is ReCaptchaEnterpriseProvider) {
+      } else if (providerWeb is ReCaptchaEnterpriseProvider) {
         recaptchaType = recaptchaTypeEnterprise;
       } else {
-        throw Exception('Invalid web provider: $webProvider');
+        throw Exception('Invalid web provider: $providerWeb');
       }
       web.window.localStorage.setItem(
         _sessionKeyRecaptchaType(app.name),
@@ -157,9 +147,9 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
       );
       web.window.localStorage.setItem(
         _sessionKeyRecaptchaSiteKey(app.name),
-        webProvider is WebDebugProvider
-            ? webProvider.debugToken ?? ''
-            : webProvider.siteKey,
+        providerWeb is WebDebugProvider
+            ? providerWeb.debugToken ?? ''
+            : providerWeb.siteKey,
       );
     }
 
@@ -167,7 +157,7 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
     return convertWebExceptions<Future<void>>(() async {
       _webAppCheck ??= app_check_interop.getAppCheckInstance(
         core_interop.app(app.name),
-        webProvider,
+        providerWeb,
       );
       _initialiseStreamController();
     });

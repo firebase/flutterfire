@@ -1,3 +1,11 @@
+## 6.1.1
+
+ - Update a dependency to the latest release.
+
+## 6.1.0
+
+ - **FEAT**(cloud_functions): expose allowInsecureTokenAttachment for Apple debug builds ([#18734](https://github.com/firebase/flutterfire/issues/18734)). ([8f954613](https://github.com/firebase/flutterfire/commit/8f95461306aed516911664e1e529ca89406b31aa))
+
 ## 6.0.7
 
  - Update a dependency to the latest release.

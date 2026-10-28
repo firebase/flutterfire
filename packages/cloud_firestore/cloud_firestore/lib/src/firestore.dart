@@ -175,7 +175,7 @@ class FirebaseFirestore extends FirebasePlugin {
       name,
       options: options,
     );
-    return _JsonQuerySnapshot(FirebaseFirestore.instance, snapshotDelegate);
+    return _JsonQuerySnapshot(this, snapshotDelegate);
   }
 
   /// Gets a [Query] for the specified collection group.
@@ -281,6 +281,7 @@ class FirebaseFirestore extends FirebasePlugin {
       webExperimentalLongPollingOptions:
           settings.webExperimentalLongPollingOptions,
       webPersistentTabManager: settings.webPersistentTabManager,
+      ignoreUndefinedProperties: settings.ignoreUndefinedProperties,
     );
   }
 
@@ -365,6 +366,10 @@ class FirebaseFirestore extends FirebasePlugin {
   /// https://firebase.google.com/docs/reference/firestore/indexes
   ///
   /// This API is in preview mode and is subject to change.
+  @Deprecated(
+    'Use persistentCacheIndexManager()?.enableIndexAutoCreation() instead. '
+    'Manual index configuration is deprecated in the native Firebase SDKs.',
+  )
   @experimental
   Future<void> setIndexConfigurationFromJSON(String json) async {
     return _delegate.setIndexConfiguration(json);

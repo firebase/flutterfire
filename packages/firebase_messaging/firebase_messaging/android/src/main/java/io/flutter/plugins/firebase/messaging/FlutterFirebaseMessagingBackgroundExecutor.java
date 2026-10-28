@@ -42,6 +42,12 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
   private final AtomicBoolean isCallbackDispatcherReady = new AtomicBoolean(false);
 
   /**
+   * The engine is created only after Flutter finishes loading, so later service starts must not
+   * post another start.
+   */
+  private final AtomicBoolean isBackgroundIsolateStarted = new AtomicBoolean(false);
+
+  /**
    * The {@link MethodChannel} that connects the Android side of this plugin with the background
    * Dart isolate that was created by this plugin.
    */
@@ -120,8 +126,8 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
    * own -- so they reach this background engine without any plugin plumbing.
    */
   public void startBackgroundIsolate(long callbackHandle) {
-    if (backgroundFlutterEngine != null) {
-      Log.e(TAG, "Background isolate already started.");
+    if (!isBackgroundIsolateStarted.compareAndSet(false, true)) {
+      Log.i(TAG, "Background isolate already started.");
       return;
     }
 

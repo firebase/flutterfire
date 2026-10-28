@@ -279,8 +279,8 @@ class User extends UserInfo<auth_interop.UserJsImpl> {
 
   /// Returns a JSON-serializable representation of this object.
   Map<String, dynamic> toJson() {
-    final result = jsObject.toJSON();
-    return (result as JSAny).dartify()! as Map<String, dynamic>;
+    return (jsObject.toJSON().dartify() as Map?)?.cast<String, dynamic>() ??
+        <String, dynamic>{};
   }
 
   @override
@@ -341,6 +341,23 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   /// Currently signed-in [User].
   User? get currentUser => User.getInstance(jsObject.currentUser);
 
+  /// Origin this Auth instance is connected to, or `null` when using production.
+  ///
+  /// Matches the string passed to [useAuthEmulator], e.g. `http://localhost:9099`.
+  String? get emulatorOrigin {
+    final config = jsObject.emulatorConfig;
+    if (config == null) {
+      return null;
+    }
+    final protocol = config.protocol.toDart;
+    final host = config.host.toDart;
+    final port = config.port;
+    if (port == null) {
+      return '$protocol://$host';
+    }
+    return '$protocol://$host:${port.toDartInt}';
+  }
+
   // Returns the current tenantId for the instance.
   String? get tenantId {
     return jsObject.tenantId?.toDart;
@@ -377,21 +394,31 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   /// To preserve behavior on web and mobile we store the initial user
   /// in `_initUser` and add it manually to the `_changeController`.
   Future<void> onWaitInitState() async {
-    final completer = Completer();
+    final completer = Completer<void>();
     final nextWrapper = (auth_interop.UserJsImpl? user) {
       _initUser = User.getInstance(user);
-      completer.complete();
+      if (!completer.isCompleted) {
+        completer.complete();
+      }
     };
 
-    final errorWrapper = (JSAny e) => _changeController!.addError(e);
+    final errorWrapper = (JSAny e) {
+      if (!completer.isCompleted) {
+        completer.completeError(e);
+      }
+      _changeController?.addError(e);
+    };
 
     final unsubscribe = jsObject.onAuthStateChanged(
       nextWrapper.toJS,
       errorWrapper.toJS,
     );
 
-    await completer.future;
-    unsubscribe.callAsFunction();
+    try {
+      await completer.future;
+    } finally {
+      unsubscribe.callAsFunction();
+    }
   }
 
   JSFunction? _onAuthUnsubscribe;
@@ -579,7 +606,7 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   Future<List<String>> fetchSignInMethodsForEmail(String email) => auth_interop
       .fetchSignInMethodsForEmail(jsObject, email.toJS)
       .toDart
-      .then((value) => List<String>.from(value.toDart));
+      .then((value) => value.toDart.map((e) => e.toDart).toList());
 
   /// Checks if an incoming link is a sign-in with email link.
   bool isSignInWithEmailLink(String emailLink) =>
