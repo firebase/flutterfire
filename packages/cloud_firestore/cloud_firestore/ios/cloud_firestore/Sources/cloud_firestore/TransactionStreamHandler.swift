@@ -25,6 +25,8 @@ final class TransactionStreamHandler: NSObject, FlutterStreamHandler {
   private let started: (Transaction) -> Void
   private let ended: () -> Void
   private let semaphore = DispatchSemaphore(value: 0)
+  // Written on the platform thread and read on Firestore's transaction thread.
+  private let stateLock = NSLock()
   private var resultType: InternalTransactionResult = .success
   private var commands: [InternalTransactionCommand?] = []
 
@@ -52,8 +54,7 @@ final class TransactionStreamHandler: NSObject, FlutterStreamHandler {
 
     firestore.runTransaction(
       with: options,
-      block: { [weak self] transaction, errorPointer in
-        guard let self else { return nil }
+      block: { transaction, errorPointer in
         self.started(transaction)
 
         DispatchQueue.main.async {
@@ -91,11 +92,12 @@ final class TransactionStreamHandler: NSObject, FlutterStreamHandler {
           return nil
         }
 
-        if self.resultType == .failure {
+        let (resultType, commands) = self.transactionState()
+        if resultType == .failure {
           return nil
         }
 
-        for command in self.commands {
+        for command in commands {
           guard let command else { continue }
           let reference = self.firestore.document(command.path)
           switch command.type {
@@ -124,7 +126,7 @@ final class TransactionStreamHandler: NSObject, FlutterStreamHandler {
         }
         return nil
       },
-      completion: { [weak self] _, error in
+      completion: { _, error in
         if let error {
           let (code, message) = FirebaseFirestoreUtils.errorCodeAndMessage(from: error)
           DispatchQueue.main.async {
@@ -138,7 +140,7 @@ final class TransactionStreamHandler: NSObject, FlutterStreamHandler {
         DispatchQueue.main.async {
           events(FlutterEndOfEventStream)
         }
-        self?.ended()
+        self.ended()
       }
     )
 
@@ -154,8 +156,16 @@ final class TransactionStreamHandler: NSObject, FlutterStreamHandler {
     _ resultType: InternalTransactionResult,
     commands: [InternalTransactionCommand?]?
   ) {
+    stateLock.lock()
     self.resultType = resultType
     self.commands = commands ?? []
+    stateLock.unlock()
     semaphore.signal()
+  }
+
+  private func transactionState() -> (InternalTransactionResult, [InternalTransactionCommand?]) {
+    stateLock.lock()
+    defer { stateLock.unlock() }
+    return (resultType, commands)
   }
 }
