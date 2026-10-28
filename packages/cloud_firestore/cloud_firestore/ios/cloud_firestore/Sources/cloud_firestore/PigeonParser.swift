@@ -335,7 +335,6 @@ enum PigeonParser {
   ) -> [InternalDocumentChange?] {
     documentChanges.map { change in
       autoreleasepool {
-        // A removed document is not in the query's document list.
         let cachedDocument = cachedDocuments[change.document.reference.path]
         return toPigeonDocumentChange(
           change,
