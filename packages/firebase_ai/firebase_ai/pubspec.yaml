@@ -18,7 +18,7 @@ platforms:
 
 environment:
   sdk: '^3.10.0'
-  flutter: ">=3.16.0"
+  flutter: '>=3.38.0'
 
 dependencies:
   firebase_app_check: ^0.5.1
