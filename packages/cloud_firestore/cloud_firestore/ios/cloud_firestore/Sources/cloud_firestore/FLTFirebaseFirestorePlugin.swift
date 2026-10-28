@@ -840,21 +840,23 @@ public class FLTFirebaseFirestorePlugin: NSObject, FlutterPlugin, FLTFirebasePlu
       var pigeonResults: [InternalPipelineResult?] = []
       if let results = (snapshot as AnyObject).value(forKey: "results") as? [Any] {
         for result in results {
-          let object = result as AnyObject
-          let ref = object.value(forKey: "reference") as AnyObject?
-          let path =
-            (ref?.value(forKey: "path") as? String)
-            ?? (object.value(forKey: "documentID") as? String)
-          let data = object.value(forKey: "data") as? [String: Any]
-          let mappedData = PigeonParser.toPigeonMap(data)
-          pigeonResults.append(
-            InternalPipelineResult(
-              documentPath: path,
-              createTime: timestampToMs(object.value(forKey: "create_time")),
-              updateTime: timestampToMs(object.value(forKey: "update_time")),
-              data: mappedData
+          autoreleasepool {
+            let object = result as AnyObject
+            let ref = object.value(forKey: "reference") as AnyObject?
+            let path =
+              (ref?.value(forKey: "path") as? String)
+              ?? (object.value(forKey: "documentID") as? String)
+            let data = object.value(forKey: "data") as? [String: Any]
+            let mappedData = PigeonParser.toPigeonMap(data)
+            pigeonResults.append(
+              InternalPipelineResult(
+                documentPath: path,
+                createTime: timestampToMs(object.value(forKey: "create_time")),
+                updateTime: timestampToMs(object.value(forKey: "update_time")),
+                data: mappedData
+              )
             )
-          )
+          }
         }
       }
 
