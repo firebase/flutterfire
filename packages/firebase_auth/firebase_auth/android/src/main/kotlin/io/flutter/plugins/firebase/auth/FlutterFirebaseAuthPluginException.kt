@@ -102,10 +102,6 @@ object FlutterFirebaseAuthPluginException {
     return FlutterError(code, message, additionalData)
   }
 
-  /**
-   * The Android SDK rejects an empty email or password with an [IllegalArgumentException] before it
-   * sends a request, so name the missing field with the SDK's own error codes.
-   */
   fun emptyEmailOrPassword(
       nativeException: IllegalArgumentException,
       email: String,
