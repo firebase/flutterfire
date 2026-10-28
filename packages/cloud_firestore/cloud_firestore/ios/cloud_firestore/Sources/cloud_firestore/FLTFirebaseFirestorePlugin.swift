@@ -839,6 +839,7 @@ public class FLTFirebaseFirestorePlugin: NSObject, FlutterPlugin, FLTFirebasePlu
 
       var pigeonResults: [InternalPipelineResult?] = []
       if let results = (snapshot as AnyObject).value(forKey: "results") as? [Any] {
+        pigeonResults.reserveCapacity(results.count)
         for result in results {
           autoreleasepool {
             let object = result as AnyObject
