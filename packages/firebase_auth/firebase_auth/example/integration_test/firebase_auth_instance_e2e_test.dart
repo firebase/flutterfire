@@ -514,6 +514,38 @@ void main() {
           }
         });
 
+        test(
+          'normalizes the error when a blocking function rejects registration',
+          () async {
+            // Matches rejectBlockedAuthUser in the Functions emulator fixtures.
+            await expectLater(
+              FirebaseAuth.instance.createUserWithEmailAndPassword(
+                email: 'blocked-by-function@example.com',
+                password: testPassword,
+              ),
+              throwsA(
+                isA<FirebaseAuthException>()
+                    .having(
+                      (e) => e.code,
+                      'code',
+                      'blocking-cloud-function-returned-error',
+                    )
+                    .having(
+                      (e) => e.message,
+                      'message',
+                      contains(
+                        'Registration blocked by the e2e test function.',
+                      ),
+                    ),
+              ),
+            );
+            expect(FirebaseAuth.instance.currentUser, isNull);
+          },
+          // This regression covers the shared Android and Apple error code.
+          skip: kIsWeb ||
+              (!Platform.isAndroid && !Platform.isIOS && !Platform.isMacOS),
+        );
+
         test('fails if creating a user with an invalid email', () async {
           await ensureSignedIn(testEmail);
           try {

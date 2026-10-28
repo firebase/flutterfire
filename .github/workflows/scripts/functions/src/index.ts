@@ -1,6 +1,17 @@
 import * as assert from 'assert';
 import * as functions from 'firebase-functions';
 import * as functionsv2 from 'firebase-functions/v2';
+import { beforeUserCreated } from 'firebase-functions/v2/identity';
+
+// Only reject the dedicated Auth e2e address so other tests are unaffected.
+export const rejectBlockedAuthUser = beforeUserCreated((event) => {
+  if (event.data?.email === 'blocked-by-function@example.com') {
+    throw new functionsv2.https.HttpsError(
+      'permission-denied',
+      'Registration blocked by the e2e test function.',
+    );
+  }
+});
 
 
 // For example app.
