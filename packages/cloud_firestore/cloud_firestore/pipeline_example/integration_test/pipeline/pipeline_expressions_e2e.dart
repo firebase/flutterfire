@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart'
@@ -1246,5 +1248,26 @@ void runPipelineExpressionsTests() {
         expect(data['parent_of_const'], isNotNull);
       },
     );
+
+    test('addFields Constant List<int> is bytes', () async {
+      final bytes = <int>[72, 101, 108, 108, 111, 255];
+      final snapshot = await expressionsDocScore50(
+        Constant(bytes).as('c_bytes'),
+      );
+      expectResultCount(snapshot, 1);
+      expect(
+        snapshot.result.first.data()!['c_bytes'],
+        Blob(Uint8List.fromList(bytes)),
+      );
+
+      final viaHelper = await expressionsDocScore50(
+        Expression.constantBytes(bytes).as('c_bytes'),
+      );
+      expectResultCount(viaHelper, 1);
+      expect(
+        viaHelper.result.first.data()!['c_bytes'],
+        Blob(Uint8List.fromList(bytes)),
+      );
+    });
   });
 }

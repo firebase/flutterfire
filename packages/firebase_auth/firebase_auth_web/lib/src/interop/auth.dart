@@ -268,8 +268,8 @@ class User extends UserInfo<auth_interop.UserJsImpl> {
 
   /// Returns a JSON-serializable representation of this object.
   Map<String, dynamic> toJson() {
-    final result = jsObject.toJSON();
-    return (result as JSAny).dartify()! as Map<String, dynamic>;
+    return (jsObject.toJSON().dartify() as Map?)?.cast<String, dynamic>() ??
+        <String, dynamic>{};
   }
 
   @override
