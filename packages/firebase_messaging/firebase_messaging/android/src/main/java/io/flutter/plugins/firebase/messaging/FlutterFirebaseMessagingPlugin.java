@@ -57,6 +57,10 @@ public class FlutterFirebaseMessagingPlugin
 
   private static final String TAG = "FLTFireMsgPlugin";
 
+  // Messages sent to Dart before it has set up its handler on the channel, e.g. the token or a
+  // message received while the engine starts. Flutter only keeps one by default.
+  private static final int CHANNEL_BUFFER_SIZE = 64;
+
   /** Mirrors the de-duplication window the Messaging SDK keeps in FcmLifecycleCallbacks. */
   private static final int RECENTLY_LOGGED_MESSAGE_IDS_MAX_SIZE = 10;
 
@@ -66,9 +70,10 @@ public class FlutterFirebaseMessagingPlugin
   private MethodChannel channel;
   private Activity mainActivity;
 
-  private final LiveData<RemoteMessage> liveDataRemoteMessage =
-      FlutterFirebaseRemoteMessageLiveData.getInstance();
-  private Observer<RemoteMessage> remoteMessageObserver;
+  private final FlutterFirebaseRemoteMessageDispatcher remoteMessageDispatcher =
+      FlutterFirebaseRemoteMessageDispatcher.getInstance();
+  private FlutterFirebaseRemoteMessageDispatcher.Listener remoteMessageListener;
+  private boolean listeningToForegroundMessages = false;
   private final LiveData<String> liveDataToken = FlutterFirebaseTokenLiveData.getInstance();
   private Observer<String> tokenObserver;
   private final LiveData<String> liveDataRegistered =
@@ -84,24 +89,32 @@ public class FlutterFirebaseMessagingPlugin
 
   FlutterFirebasePermissionManager permissionManager;
 
+  // Sends a message to Dart. Messages sent before Dart has set up its handler on the channel wait
+  // in a buffer that only keeps one by default, so it is enlarged with every message rather than
+  // once at registration: engines created with `new FlutterEngine(...)` register plugins before
+  // they run Dart, and Flutter drops messages until then, and a hot restart resets the buffers.
+  private void invokeDartMethod(String method, Object arguments) {
+    channel.resizeChannelBuffer(CHANNEL_BUFFER_SIZE);
+    channel.invokeMethod(method, arguments);
+  }
+
   private void initInstance(BinaryMessenger messenger) {
     String channelName = "plugins.flutter.io/firebase_messaging";
     channel = new MethodChannel(messenger, channelName);
     channel.setMethodCallHandler(this);
     permissionManager = new FlutterFirebasePermissionManager();
 
-    remoteMessageObserver =
+    remoteMessageListener =
         remoteMessage -> {
           Map<String, Object> content =
               FlutterFirebaseMessagingUtils.remoteMessageToMap(remoteMessage);
-          channel.invokeMethod("Messaging#onMessage", content);
+          invokeDartMethod("Messaging#onMessage", content);
         };
-    tokenObserver = token -> channel.invokeMethod("Messaging#onTokenRefresh", token);
-    registeredObserver = fid -> channel.invokeMethod("Messaging#onRegistered", fid);
-    unregisteredObserver = fid -> channel.invokeMethod("Messaging#onUnregistered", fid);
+    tokenObserver = token -> invokeDartMethod("Messaging#onTokenRefresh", token);
+    registeredObserver = fid -> invokeDartMethod("Messaging#onRegistered", fid);
+    unregisteredObserver = fid -> invokeDartMethod("Messaging#onUnregistered", fid);
     // We remove these observers in the onDetachedFromEngine method. Using "observeForever()"
     // allows us to use without a LifecycleOwner.
-    liveDataRemoteMessage.observeForever(remoteMessageObserver);
     liveDataToken.observeForever(tokenObserver);
     liveDataRegistered.observeForever(registeredObserver);
     liveDataUnregistered.observeForever(unregisteredObserver);
@@ -118,7 +131,8 @@ public class FlutterFirebaseMessagingPlugin
   @Override
   public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
     liveDataToken.removeObserver(tokenObserver);
-    liveDataRemoteMessage.removeObserver(remoteMessageObserver);
+    remoteMessageDispatcher.removeListener(remoteMessageListener);
+    listeningToForegroundMessages = false;
     liveDataRegistered.removeObserver(registeredObserver);
     liveDataUnregistered.removeObserver(unregisteredObserver);
   }
@@ -577,6 +591,21 @@ public class FlutterFirebaseMessagingPlugin
         FlutterFirebaseMessagingBackgroundService.setUserCallbackHandle(userCallbackHandle);
         methodCallTask = Tasks.forResult(null);
         break;
+      // Sent when Dart starts and stops listening to onMessage. Foreground messages are only sent
+      // to the engines that listen: the messages received while none does are kept until one
+      // does, and engines that never listen (the background engine) get none.
+      case "Messaging#startForegroundMessages":
+        if (!listeningToForegroundMessages) {
+          listeningToForegroundMessages = true;
+          remoteMessageDispatcher.addListener(remoteMessageListener);
+        }
+        methodCallTask = Tasks.forResult(null);
+        break;
+      case "Messaging#stopForegroundMessages":
+        listeningToForegroundMessages = false;
+        remoteMessageDispatcher.removeListener(remoteMessageListener);
+        methodCallTask = Tasks.forResult(null);
+        break;
       case "Messaging#getInitialMessage":
         methodCallTask = getInitialMessage();
         break;
@@ -770,7 +799,7 @@ public class FlutterFirebaseMessagingPlugin
 
     // On a terminated launch, getInitialMessage() owns this message.
     if (shouldNotifyStream) {
-      channel.invokeMethod("Messaging#onMessageOpenedApp", message);
+      invokeDartMethod("Messaging#onMessageOpenedApp", message);
     }
     mainActivity.setIntent(intent);
     return true;

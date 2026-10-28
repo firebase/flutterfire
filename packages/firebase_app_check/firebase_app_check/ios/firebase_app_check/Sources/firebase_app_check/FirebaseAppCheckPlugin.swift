@@ -256,17 +256,19 @@ public class FirebaseAppCheckPlugin: NSObject, FlutterPlugin,
   private func createFlutterError(_ error: Error) -> FlutterError {
     let nsError = error as NSError
     var code = "unknown"
-    switch nsError.code {
-    case 0:  // FIRAppCheckErrorCodeServerUnreachable
-      code = "server-unreachable"
-    case 1:  // FIRAppCheckErrorCodeInvalidConfiguration
-      code = "invalid-configuration"
-    case 2:  // FIRAppCheckErrorCodeKeychain
-      code = "code-keychain"
-    case 3:  // FIRAppCheckErrorCodeUnsupported
-      code = "code-unsupported"
-    default:
-      code = "unknown"
+    if nsError.domain == AppCheckErrorDomain {
+      switch AppCheckErrorCode.Code(rawValue: nsError.code) {
+      case .serverUnreachable:
+        code = "server-unreachable"
+      case .invalidConfiguration:
+        code = "invalid-configuration"
+      case .keychain:
+        code = "code-keychain"
+      case .unsupported:
+        code = "code-unsupported"
+      default:
+        code = "unknown"
+      }
     }
     return FlutterError(
       code: code,

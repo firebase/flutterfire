@@ -95,6 +95,7 @@ void updateLibraryVersionPureSwiftPlugins() {
     'firebase_crashlytics',
     'firebase_core',
     'firebase_ai',
+    'cloud_firestore',
   ];
 
   for (final package in packages) {
