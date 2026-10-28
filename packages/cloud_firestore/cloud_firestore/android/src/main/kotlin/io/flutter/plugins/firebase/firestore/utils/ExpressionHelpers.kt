@@ -15,7 +15,6 @@ import com.google.firebase.firestore.pipeline.BooleanExpression
 import com.google.firebase.firestore.pipeline.Expression
 import java.util.Date
 
-/** Helper utilities for parsing expressions and handling common patterns. */
 internal object ExpressionHelpers {
   @Suppress("UNCHECKED_CAST")
   fun parseAndExpression(

@@ -9,7 +9,6 @@ package io.flutter.plugins.firebase.firestore.streamhandler
 import io.flutter.plugins.firebase.firestore.InternalTransactionCommand
 import io.flutter.plugins.firebase.firestore.InternalTransactionResult
 
-/** Callback when a transaction result has been computed. */
 fun interface OnTransactionResultListener {
   fun receiveTransactionResponse(
       resultType: InternalTransactionResult,

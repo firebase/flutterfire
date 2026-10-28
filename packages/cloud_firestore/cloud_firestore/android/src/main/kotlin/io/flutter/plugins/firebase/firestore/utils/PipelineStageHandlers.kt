@@ -16,7 +16,6 @@ import com.google.firebase.firestore.pipeline.SampleStage
 import com.google.firebase.firestore.pipeline.SearchStage
 import com.google.firebase.firestore.pipeline.UnnestOptions
 
-/** Handles parsing and applying pipeline stages to Pipeline instances. */
 internal class PipelineStageHandlers(private val parsers: ExpressionParsers) {
   @Suppress("UNCHECKED_CAST")
   fun applyStage(

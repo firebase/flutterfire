@@ -39,10 +39,6 @@ object PipelineParser {
     return executeOptions
   }
 
-  /**
-   * Builds a Pipeline from a list of stage maps without executing it. Used when a stage (e.g.
-   * union) requires another pipeline as an argument.
-   */
   @Suppress("UNCHECKED_CAST")
   fun buildPipeline(firestore: FirebaseFirestore, stages: List<Map<String, Any>>): Pipeline {
     require(stages.isNotEmpty()) { "Pipeline must have at least one stage (source)." }

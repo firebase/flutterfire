@@ -248,7 +248,7 @@ open class FlutterFirebaseFirestoreMessageCodec : StandardMessageCodec() {
       }
       DATA_TYPE_MINIMUM_INTEGER -> {
         val integerMinimumValue = readValue(buffer) as Number
-        FieldValue.minimum(integerMinimumValue.toLong())
+        FieldValue.minimum(integerMinimumValue.toInt().toLong())
       }
       DATA_TYPE_MINIMUM_DOUBLE -> {
         val doubleMinimumValue = readValue(buffer) as Number
@@ -256,7 +256,7 @@ open class FlutterFirebaseFirestoreMessageCodec : StandardMessageCodec() {
       }
       DATA_TYPE_MAXIMUM_INTEGER -> {
         val integerMaximumValue = readValue(buffer) as Number
-        FieldValue.maximum(integerMaximumValue.toLong())
+        FieldValue.maximum(integerMaximumValue.toInt().toLong())
       }
       DATA_TYPE_MAXIMUM_DOUBLE -> {
         val doubleMaximumValue = readValue(buffer) as Number

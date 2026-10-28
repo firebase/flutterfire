@@ -142,25 +142,11 @@ class FlutterFirebaseFirestorePlugin :
     return taskCompletionSource.task
   }
 
-  /**
-   * Registers a unique event channel based on a channel prefix.
-   *
-   * Once registered, the plugin will take care of removing the stream handler and cleaning up, if
-   * the engine is detached.
-   *
-   * This function generates a random ID.
-   */
   private fun registerEventChannel(prefix: String, handler: StreamHandler): String {
     val identifier = UUID.randomUUID().toString().lowercase(Locale.US)
     return registerEventChannel(prefix, identifier, handler)
   }
 
-  /**
-   * Registers a unique event channel based on a channel prefix.
-   *
-   * Once registered, the plugin will take care of removing the stream handler and cleaning up, if
-   * the engine is detached.
-   */
   private fun registerEventChannel(
       prefix: String,
       identifier: String,

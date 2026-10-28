@@ -7,6 +7,7 @@ package io.flutter.plugins.firebase.firestore
 import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.common.EventChannel
 import java.nio.ByteBuffer
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
@@ -38,6 +39,19 @@ class FlutterFirebaseFirestorePluginTest {
 
   @Test
   fun cancelClearsEventChannelAndHandler() {
+    val prefixes =
+        listOf(
+            "plugins.flutter.io/firebase_firestore/query",
+            "plugins.flutter.io/firebase_firestore/document",
+            "plugins.flutter.io/firebase_firestore/loadBundle",
+            "plugins.flutter.io/firebase_firestore/snapshotsInSync")
+    for (prefix in prefixes) {
+      assertCancelClearsChannel(prefix, "cancelled-by-dart")
+      assertCancelClearsChannel(prefix, null)
+    }
+  }
+
+  private fun assertCancelClearsChannel(prefix: String, cancelArguments: Any?) {
     val messenger = RecordingMessenger()
     val plugin = FlutterFirebaseFirestorePlugin()
     val initInstance =
@@ -52,24 +66,31 @@ class FlutterFirebaseFirestorePluginTest {
             String::class.java,
             EventChannel.StreamHandler::class.java)
     register.isAccessible = true
+    var cancelledWith: Any? = Any()
+    var innerCancelCount = 0
     val identifier =
         register.invoke(
             plugin,
-            "plugins.flutter.io/firebase_firestore/query",
+            prefix,
             "listener-1",
             object : EventChannel.StreamHandler {
               override fun onListen(arguments: Any?, events: EventChannel.EventSink) {}
 
-              override fun onCancel(arguments: Any?) {}
+              override fun onCancel(arguments: Any?) {
+                innerCancelCount += 1
+                cancelledWith = arguments
+              }
             }) as String
 
-    val channelName = "plugins.flutter.io/firebase_firestore/query/$identifier"
+    val channelName = "$prefix/$identifier"
     assertTrue(messenger.handlers.containsKey(channelName))
 
     val handlers = mapField(plugin, "streamHandlers")
     val wrapping = handlers[identifier] as EventChannel.StreamHandler
-    wrapping.onCancel("cancelled-by-dart")
+    wrapping.onCancel(cancelArguments)
 
+    assertEquals(1, innerCancelCount)
+    assertEquals(cancelArguments, cancelledWith)
     assertTrue(mapField(plugin, "eventChannels").isEmpty())
     assertTrue(mapField(plugin, "streamHandlers").isEmpty())
     assertFalse(messenger.handlers.containsKey(channelName))

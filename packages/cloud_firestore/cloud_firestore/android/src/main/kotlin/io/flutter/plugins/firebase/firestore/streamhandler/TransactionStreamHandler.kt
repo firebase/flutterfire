@@ -35,8 +35,7 @@ class TransactionStreamHandler(
     private val maxAttempts: Long
 ) : OnTransactionResultListener, StreamHandler {
   private val semaphore = Semaphore(0)
-  private var resultType: InternalTransactionResult? = null
-  private var commands: List<InternalTransactionCommand?>? = null
+  private val attemptState = TransactionAttemptState()
   private val mainLooper = Handler(Looper.getMainLooper())
 
   override fun onListen(arguments: Any?, events: EventSink) {
@@ -44,6 +43,9 @@ class TransactionStreamHandler(
         .runTransaction(
             TransactionOptions.Builder().setMaxAttempts(maxAttempts.toInt()).build(),
             Transaction.Function { transaction ->
+              // A retry must not see the previous attempt. Cancelling this attempt before Dart
+              // answers would otherwise commit those commands.
+              attemptState.beginAttempt()
               onTransactionStartedListener(transaction)
 
               val attemptMap = hashMapOf<String, Any>("appName" to firestore.app.name)
@@ -63,12 +65,11 @@ class TransactionStreamHandler(
                     FirebaseFirestoreException("interrupted", Code.DEADLINE_EXCEEDED))
               }
 
-              val resolvedCommands = commands
-              if (resolvedCommands.isNullOrEmpty()) {
-                return@Function FlutterFirebaseFirestoreTransactionResult.complete()
-              }
-
-              if (resultType == InternalTransactionResult.FAILURE) {
+              // Only an explicit SUCCESS with a command list may commit. A Dart failure, a
+              // cancel, or a retry that has not heard back yet aborts. Throw outside
+              // FirebaseFirestoreException so the SDK does not retry or commit (#18666).
+              val resolvedCommands = attemptState.outcome()
+              if (resolvedCommands.isEmpty()) {
                 return@Function FlutterFirebaseFirestoreTransactionResult.complete()
               }
 
@@ -121,16 +122,12 @@ class TransactionStreamHandler(
               FlutterFirebaseFirestoreTransactionResult.complete()
             })
         .addOnCompleteListener { task ->
-          val map = HashMap<String, Any?>()
           val taskException = task.exception
-          val resultException = if (taskException == null) task.result?.exception else null
-          val exception = taskException ?: resultException
-          if (exception != null) {
-            map["appName"] = firestore.app.name
-            map["error"] = ExceptionConverter.createDetails(exception)
-          } else if (task.result != null) {
-            map["complete"] = true
-          }
+          val map =
+              transactionTaskEvent(
+                  firestore.app.name,
+                  taskException,
+                  if (taskException == null) task.result else null)
 
           mainLooper.post {
             events.success(map)
@@ -141,19 +138,71 @@ class TransactionStreamHandler(
 
   override fun onCancel(arguments: Any?) {
     semaphore.release()
-    // FlutterFirebaseFirestorePlugin passes null when disposing all listeners and clears the
-    // listener maps itself. A non-null value identifies Dart's EventChannel cancellation.
-    if (arguments != null) {
-      onTransactionCancelledListener(transactionId)
-    }
+    notifyTransactionCancelled(arguments, transactionId, onTransactionCancelledListener)
   }
 
   override fun receiveTransactionResponse(
       resultType: InternalTransactionResult,
       commands: List<InternalTransactionCommand?>?
   ) {
+    attemptState.receive(resultType, commands)
+    semaphore.release()
+  }
+}
+
+internal class TransactionAttemptState {
+  private var resultType: InternalTransactionResult? = null
+  private var commands: List<InternalTransactionCommand?>? = null
+
+  fun beginAttempt() {
+    resultType = null
+    commands = null
+  }
+
+  fun receive(resultType: InternalTransactionResult, commands: List<InternalTransactionCommand?>?) {
     this.resultType = resultType
     this.commands = commands
-    semaphore.release()
+  }
+
+  fun outcome(): List<InternalTransactionCommand?> {
+    return commandsForTransactionAttempt(resultType, commands)
+  }
+}
+
+internal fun commandsForTransactionAttempt(
+    resultType: InternalTransactionResult?,
+    commands: List<InternalTransactionCommand?>?
+): List<InternalTransactionCommand?> {
+  if (resultType != InternalTransactionResult.SUCCESS || commands == null) {
+    throw RuntimeException(FirebaseFirestoreException("transaction aborted", Code.ABORTED))
+  }
+  return commands
+}
+
+internal fun transactionTaskEvent(
+    appName: String,
+    taskException: Exception?,
+    result: FlutterFirebaseFirestoreTransactionResult?
+): HashMap<String, Any?> {
+  val map = HashMap<String, Any?>()
+  val exception = taskException ?: result?.exception
+  if (exception != null) {
+    map["appName"] = appName
+    map["error"] = ExceptionConverter.createDetails(exception)
+  } else if (result != null) {
+    map["complete"] = true
+  }
+  return map
+}
+
+internal fun notifyTransactionCancelled(
+    arguments: Any?,
+    transactionId: String,
+    onTransactionCancelled: (String) -> Unit
+) {
+  // FlutterFirebaseFirestorePlugin passes null when disposing all listeners and clears the
+  // listener maps itself. A non-null value identifies Dart's EventChannel cancellation.
+  if (arguments != null) {
+    onTransactionCancelled(transactionId)
   }
 }

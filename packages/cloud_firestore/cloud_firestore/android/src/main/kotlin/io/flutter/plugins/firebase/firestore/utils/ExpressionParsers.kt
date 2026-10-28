@@ -17,11 +17,6 @@ import com.google.firebase.firestore.pipeline.Expression
 import com.google.firebase.firestore.pipeline.FindNearestStage
 import com.google.firebase.firestore.pipeline.Selectable
 
-/**
- * Parses Dart pipeline expression maps into Android [Expression] / [BooleanExpression] types.
- * [parseBooleanExpression]'s default delegates to [parseExpression] when the name is a value
- * expression that yields a boolean (e.g. aliased comparisons).
- */
 internal class ExpressionParsers(private val firestore: FirebaseFirestore) {
   private fun interface BinaryExpressionOp<R> {
     fun apply(left: Expression, right: Expression): R
