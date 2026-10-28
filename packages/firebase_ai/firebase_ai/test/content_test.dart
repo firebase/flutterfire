@@ -552,7 +552,12 @@ void main() {
       expect(part.outcome, Outcome.ok);
       expect(part.output, isEmpty);
       expect(part.isThought, true);
-      expect((part.toJson() as Map)['thoughtSignature'], 'sig');
+      final json = part.toJson() as Map;
+      expect(json['thoughtSignature'], 'sig');
+      expect(
+        json['codeExecutionResult'],
+        {'outcome': 'OUTCOME_OK', 'output': ''},
+      );
     });
 
     test('parses a null code execution output as an empty string', () {
