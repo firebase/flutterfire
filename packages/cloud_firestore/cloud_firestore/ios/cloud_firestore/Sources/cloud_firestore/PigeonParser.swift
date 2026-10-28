@@ -350,15 +350,17 @@ enum PigeonParser {
     serverTimestampBehavior: FirebaseFirestore
       .ServerTimestampBehavior
   ) -> InternalQuerySnapshot {
+    var documents: [InternalDocumentSnapshot?] = []
+    documents.reserveCapacity(querySnapshot.documents.count)
     var cachedDocuments: [String: InternalDocumentSnapshot] = [:]
     cachedDocuments.reserveCapacity(querySnapshot.documents.count)
-    let documents: [InternalDocumentSnapshot?] = querySnapshot.documents.map { document in
+    for document in querySnapshot.documents {
       autoreleasepool {
         let converted = toPigeonDocumentSnapshot(
           document, serverTimestampBehavior: serverTimestampBehavior
         )
         cachedDocuments[converted.path] = converted
-        return converted
+        documents.append(converted)
       }
     }
     return InternalQuerySnapshot(
