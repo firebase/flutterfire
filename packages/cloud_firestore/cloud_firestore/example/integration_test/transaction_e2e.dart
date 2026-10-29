@@ -300,7 +300,7 @@ void runTransactionTests() {
             ),
           );
         },
-        skip: kIsWeb || defaultTargetPlatform == TargetPlatform.windows,
+        skip: kIsWeb,
       );
 
       test(
@@ -338,7 +338,7 @@ void runTransactionTests() {
           // runTransaction completes on the timeout, before the late get runs.
           expect(await lateGet.future, isA<FirebaseException>());
         },
-        skip: kIsWeb || defaultTargetPlatform == TargetPlatform.windows,
+        skip: kIsWeb,
       );
 
       test('should throw with exception', () async {
