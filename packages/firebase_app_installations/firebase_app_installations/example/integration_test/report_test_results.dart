@@ -26,8 +26,9 @@ void reportTestResultsToDriver(IntegrationTestWidgetsFlutterBinding binding) {
       for (final entry in binding.results.entries)
         if (entry.value is Failure) entry.key,
     ];
-    bool didFail(String name) => failures
-        .any((failure) => name == failure || name.endsWith(' $failure'));
+    bool didFail(String name) => failures.any(
+      (failure) => name == failure || name.endsWith(' $failure'),
+    );
 
     binding.reportData ??= <String, dynamic>{};
     binding.reportData!['testResults'] = <String, String>{

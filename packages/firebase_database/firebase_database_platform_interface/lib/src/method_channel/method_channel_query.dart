@@ -52,19 +52,20 @@ class MethodChannelQuery extends QueryPlatform {
     // Create the EventChannel on native using Pigeon.
     final channelName = await _api.queryObserve(
       _pigeonApp,
-      QueryRequest(
-        path: path,
-        modifiers: modifierList,
-      ),
+      QueryRequest(path: path, modifiers: modifierList),
     );
 
-    yield* EventChannel(channelName).receiveGuardedBroadcastStream(
-      arguments: <String, Object?>{'eventType': eventTypeToString(eventType)},
-      onError: convertPlatformException,
-    ).map(
-      (event) =>
-          MethodChannelDatabaseEvent(ref, Map<String, dynamic>.from(event)),
-    );
+    yield* EventChannel(channelName)
+        .receiveGuardedBroadcastStream(
+          arguments: <String, Object?>{
+            'eventType': eventTypeToString(eventType),
+          },
+          onError: convertPlatformException,
+        )
+        .map(
+          (event) =>
+              MethodChannelDatabaseEvent(ref, Map<String, dynamic>.from(event)),
+        );
   }
 
   /// Gets the most up-to-date result for this query.
@@ -73,22 +74,16 @@ class MethodChannelQuery extends QueryPlatform {
     try {
       final result = await _api.queryGet(
         _pigeonApp,
-        QueryRequest(
-          path: path,
-          modifiers: modifiers.toList(),
-        ),
+        QueryRequest(path: path, modifiers: modifiers.toList()),
       );
       final snapshotData = result['snapshot'];
       if (snapshotData == null) {
-        return MethodChannelDataSnapshot(
-          ref,
-          <String, dynamic>{
-            'key': ref.key,
-            'value': null,
-            'priority': null,
-            'childKeys': [],
-          },
-        );
+        return MethodChannelDataSnapshot(ref, <String, dynamic>{
+          'key': ref.key,
+          'value': null,
+          'priority': null,
+          'childKeys': [],
+        });
       }
       return MethodChannelDataSnapshot(
         ref,
@@ -117,11 +112,7 @@ class MethodChannelQuery extends QueryPlatform {
     try {
       await _api.queryKeepSynced(
         _pigeonApp,
-        QueryRequest(
-          path: path,
-          modifiers: modifiers.toList(),
-          value: value,
-        ),
+        QueryRequest(path: path, modifiers: modifiers.toList(), value: value),
       );
     } catch (e, s) {
       convertPlatformException(e, s);

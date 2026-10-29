@@ -44,7 +44,8 @@ class InAppMessagingCampaignMetadata {
   final bool isTestMessage;
 
   @override
-  String toString() => 'InAppMessagingCampaignMetadata('
+  String toString() =>
+      'InAppMessagingCampaignMetadata('
       'campaignId: $campaignId, '
       'campaignName: $campaignName, '
       'isTestMessage: $isTestMessage)';
@@ -79,7 +80,8 @@ class InAppMessagingClickEvent {
   final InAppMessagingAction action;
 
   @override
-  String toString() => 'InAppMessagingClickEvent('
+  String toString() =>
+      'InAppMessagingClickEvent('
       'campaignMetadata: $campaignMetadata, action: $action)';
 }
 
@@ -110,7 +112,8 @@ class InAppMessagingDismissEvent {
   final InAppMessagingDismissType dismissType;
 
   @override
-  String toString() => 'InAppMessagingDismissEvent('
+  String toString() =>
+      'InAppMessagingDismissEvent('
       'campaignMetadata: $campaignMetadata, dismissType: $dismissType)';
 }
 
@@ -132,6 +135,7 @@ class InAppMessagingDisplayErrorEvent {
   final String? errorMessage;
 
   @override
-  String toString() => 'InAppMessagingDisplayErrorEvent('
+  String toString() =>
+      'InAppMessagingDisplayErrorEvent('
       'campaignMetadata: $campaignMetadata, errorMessage: $errorMessage)';
 }

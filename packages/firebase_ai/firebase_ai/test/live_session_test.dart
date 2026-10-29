@@ -141,25 +141,26 @@ void main() {
         onDone: () => done = true,
       );
 
-      fakeWs.emit(jsonEncode({
-        'voiceActivity': {
-          'type': 'ACTIVITY_START',
-          'audioOffset': '2.520s',
-        },
-      }));
+      fakeWs.emit(
+        jsonEncode({
+          'voiceActivity': {'type': 'ACTIVITY_START', 'audioOffset': '2.520s'},
+        }),
+      );
       fakeWs.emit('{"setupComplete": {}}');
 
       await completer.future.timeout(const Duration(seconds: 5));
       expect(
         messages[0],
-        isNot(anyOf(
-          isA<LiveServerContent>(),
-          isA<LiveServerToolCall>(),
-          isA<LiveServerToolCallCancellation>(),
-          isA<LiveServerSetupComplete>(),
-          isA<GoingAwayNotice>(),
-          isA<SessionResumptionUpdate>(),
-        )),
+        isNot(
+          anyOf(
+            isA<LiveServerContent>(),
+            isA<LiveServerToolCall>(),
+            isA<LiveServerToolCallCancellation>(),
+            isA<LiveServerSetupComplete>(),
+            isA<GoingAwayNotice>(),
+            isA<SessionResumptionUpdate>(),
+          ),
+        ),
       );
       expect(messages[1], isA<LiveServerSetupComplete>());
       expect(errors, isEmpty);
@@ -200,8 +201,9 @@ void main() {
       fakeWs.emit('{"unknown": {}}');
       fakeWs.emit('{"setupComplete": {}}');
 
-      final message =
-          await completer.future.timeout(const Duration(seconds: 5));
+      final message = await completer.future.timeout(
+        const Duration(seconds: 5),
+      );
       expect(message, isA<LiveServerSetupComplete>());
       expect(errors, isEmpty);
       expect(done, isFalse);
@@ -210,116 +212,119 @@ void main() {
       fakeWs.close();
     });
 
-    test('sendStartActivityRealtime sends correct activity_start message',
-        () async {
-      final fakeWs = FakeWebSocketChannel();
-      final session = LiveSession.forTesting(fakeWs);
+    test(
+      'sendStartActivityRealtime sends correct activity_start message',
+      () async {
+        final fakeWs = FakeWebSocketChannel();
+        final session = LiveSession.forTesting(fakeWs);
 
-      await session.sendStartActivityRealtime();
+        await session.sendStartActivityRealtime();
 
-      expect(fakeWs.sentMessages.length, 1);
-      final jsonPayload = json.decode(fakeWs.sentMessages.first as String);
-      expect(jsonPayload, {
-        'realtime_input': {
-          'activity_start': {},
-        },
-      });
-    });
+        expect(fakeWs.sentMessages.length, 1);
+        final jsonPayload = json.decode(fakeWs.sentMessages.first as String);
+        expect(jsonPayload, {
+          'realtime_input': {'activity_start': {}},
+        });
+      },
+    );
 
-    test('sendStopActivityRealtime sends correct activity_end message',
-        () async {
-      final fakeWs = FakeWebSocketChannel();
-      final session = LiveSession.forTesting(fakeWs);
+    test(
+      'sendStopActivityRealtime sends correct activity_end message',
+      () async {
+        final fakeWs = FakeWebSocketChannel();
+        final session = LiveSession.forTesting(fakeWs);
 
-      await session.sendStopActivityRealtime();
+        await session.sendStopActivityRealtime();
 
-      expect(fakeWs.sentMessages.length, 1);
-      final jsonPayload = json.decode(fakeWs.sentMessages.first as String);
-      expect(jsonPayload, {
-        'realtime_input': {
-          'activity_end': {},
-        },
-      });
-    });
+        expect(fakeWs.sentMessages.length, 1);
+        final jsonPayload = json.decode(fakeWs.sentMessages.first as String);
+        expect(jsonPayload, {
+          'realtime_input': {'activity_end': {}},
+        });
+      },
+    );
   });
 
   group('LiveSession connection headers', () {
-    test('create fetches headers from the provider for the first connection',
-        () async {
-      final connections = <Map<String, String>>[];
-      final channels = <FakeWebSocketChannel>[];
-      var providerCalls = 0;
+    test(
+      'create fetches headers from the provider for the first connection',
+      () async {
+        final connections = <Map<String, String>>[];
+        final channels = <FakeWebSocketChannel>[];
+        var providerCalls = 0;
 
-      final session = await LiveSession.create(
-        uri: 'wss://example.com/ws',
-        headersProvider: () async {
-          providerCalls++;
-          return {'X-Firebase-AppCheck': 'token-$providerCalls'};
-        },
-        modelString: 'projects/p/models/m',
-        connector: (uri, headers) {
-          connections.add(Map.of(headers));
-          final channel = FakeWebSocketChannel();
-          channels.add(channel);
-          return channel;
-        },
-      );
+        final session = await LiveSession.create(
+          uri: 'wss://example.com/ws',
+          headersProvider: () async {
+            providerCalls++;
+            return {'X-Firebase-AppCheck': 'token-$providerCalls'};
+          },
+          modelString: 'projects/p/models/m',
+          connector: (uri, headers) {
+            connections.add(Map.of(headers));
+            final channel = FakeWebSocketChannel();
+            channels.add(channel);
+            return channel;
+          },
+        );
 
-      expect(providerCalls, 1);
-      expect(connections, [
-        {'X-Firebase-AppCheck': 'token-1'},
-      ]);
-      expect(channels.single.sentMessages, hasLength(1));
+        expect(providerCalls, 1);
+        expect(connections, [
+          {'X-Firebase-AppCheck': 'token-1'},
+        ]);
+        expect(channels.single.sentMessages, hasLength(1));
 
-      await session.close();
-    });
+        await session.close();
+      },
+    );
 
-    test('resumeSession re-fetches headers instead of reusing stale tokens',
-        () async {
-      final connections = <Map<String, String>>[];
-      final channels = <FakeWebSocketChannel>[];
-      var providerCalls = 0;
+    test(
+      'resumeSession re-fetches headers instead of reusing stale tokens',
+      () async {
+        final connections = <Map<String, String>>[];
+        final channels = <FakeWebSocketChannel>[];
+        var providerCalls = 0;
 
-      final session = await LiveSession.create(
-        uri: 'wss://example.com/ws',
-        // Simulates limited-use App Check tokens / refreshed Auth ID tokens:
-        // every call returns a distinct value.
-        headersProvider: () async {
-          providerCalls++;
-          return {
-            'X-Firebase-AppCheck': 'app-check-$providerCalls',
-            'Authorization': 'Firebase id-token-$providerCalls',
-          };
-        },
-        modelString: 'projects/p/models/m',
-        connector: (uri, headers) {
-          connections.add(Map.of(headers));
-          final channel = FakeWebSocketChannel();
-          channels.add(channel);
-          return channel;
-        },
-      );
+        final session = await LiveSession.create(
+          uri: 'wss://example.com/ws',
+          // Simulates limited-use App Check tokens / refreshed Auth ID tokens:
+          // every call returns a distinct value.
+          headersProvider: () async {
+            providerCalls++;
+            return {
+              'X-Firebase-AppCheck': 'app-check-$providerCalls',
+              'Authorization': 'Firebase id-token-$providerCalls',
+            };
+          },
+          modelString: 'projects/p/models/m',
+          connector: (uri, headers) {
+            connections.add(Map.of(headers));
+            final channel = FakeWebSocketChannel();
+            channels.add(channel);
+            return channel;
+          },
+        );
 
-      await session.resumeSession(
-        sessionResumption: SessionResumptionConfig.resume('resume-handle'),
-      );
+        await session.resumeSession(
+          sessionResumption: SessionResumptionConfig.resume('resume-handle'),
+        );
 
-      expect(providerCalls, 2);
-      expect(connections, hasLength(2));
-      expect(connections[0]['X-Firebase-AppCheck'], 'app-check-1');
-      expect(connections[1]['X-Firebase-AppCheck'], 'app-check-2');
-      expect(connections[1]['Authorization'], 'Firebase id-token-2');
+        expect(providerCalls, 2);
+        expect(connections, hasLength(2));
+        expect(connections[0]['X-Firebase-AppCheck'], 'app-check-1');
+        expect(connections[1]['X-Firebase-AppCheck'], 'app-check-2');
+        expect(connections[1]['Authorization'], 'Firebase id-token-2');
 
-      // The resumed connection still sends the setup message with the handle.
-      final resumedSetup =
-          json.decode(channels[1].sentMessages.single as String) as Map;
-      expect(
-        (resumedSetup['setup'] as Map)['session_resumption'],
-        {'handle': 'resume-handle'},
-      );
+        // The resumed connection still sends the setup message with the handle.
+        final resumedSetup =
+            json.decode(channels[1].sentMessages.single as String) as Map;
+        expect((resumedSetup['setup'] as Map)['session_resumption'], {
+          'handle': 'resume-handle',
+        });
 
-      await session.close();
-    });
+        await session.close();
+      },
+    );
 
     test('resumeSession surfaces header provider failures', () async {
       var providerCalls = 0;

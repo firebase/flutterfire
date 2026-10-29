@@ -34,8 +34,9 @@ void runVectorValueTests() {
     }
 
     test('sets a $VectorValue & returns one', () async {
-      DocumentReference<Map<String, dynamic>> doc =
-          await initializeTest('vector-value');
+      DocumentReference<Map<String, dynamic>> doc = await initializeTest(
+        'vector-value',
+      );
 
       await doc.set({
         'foo': const VectorValue([10.0, -10.0]),
@@ -49,8 +50,9 @@ void runVectorValueTests() {
     });
 
     test('updates a $VectorValue & returns', () async {
-      DocumentReference<Map<String, dynamic>> doc =
-          await initializeTest('vector-value-update');
+      DocumentReference<Map<String, dynamic>> doc = await initializeTest(
+        'vector-value-update',
+      );
 
       await doc.set({
         'foo': const VectorValue([10.0, -10.0]),
@@ -68,13 +70,12 @@ void runVectorValueTests() {
     });
 
     test('handles empty vector', () async {
-      DocumentReference<Map<String, dynamic>> doc =
-          await initializeTest('vector-value-empty');
+      DocumentReference<Map<String, dynamic>> doc = await initializeTest(
+        'vector-value-empty',
+      );
 
       try {
-        await doc.set({
-          'foo': const VectorValue([]),
-        });
+        await doc.set({'foo': const VectorValue([])});
         fail('Should have thrown an exception');
       } catch (e) {
         expect(e, isA<FirebaseException>());
@@ -86,8 +87,9 @@ void runVectorValueTests() {
     });
 
     test('handles single dimension vector', () async {
-      DocumentReference<Map<String, dynamic>> doc =
-          await initializeTest('vector-value-single');
+      DocumentReference<Map<String, dynamic>> doc = await initializeTest(
+        'vector-value-single',
+      );
 
       await doc.set({
         'foo': const VectorValue([42.0]),
@@ -102,12 +104,11 @@ void runVectorValueTests() {
 
     test('handles maximum dimensions vector', () async {
       List<double> maxDimensions = List.filled(2048, 1);
-      DocumentReference<Map<String, dynamic>> doc =
-          await initializeTest('vector-value-max-dimensions');
+      DocumentReference<Map<String, dynamic>> doc = await initializeTest(
+        'vector-value-max-dimensions',
+      );
 
-      await doc.set({
-        'foo': VectorValue(maxDimensions),
-      });
+      await doc.set({'foo': VectorValue(maxDimensions)});
 
       DocumentSnapshot<Map<String, dynamic>> snapshot = await doc.get();
 
@@ -118,13 +119,12 @@ void runVectorValueTests() {
 
     test('handles maximum dimensions + 1 vector', () async {
       List<double> maxPlusOneDimensions = List.filled(2049, 1);
-      DocumentReference<Map<String, dynamic>> doc =
-          await initializeTest('vector-value-max-plus-one');
+      DocumentReference<Map<String, dynamic>> doc = await initializeTest(
+        'vector-value-max-plus-one',
+      );
 
       try {
-        await doc.set({
-          'foo': VectorValue(maxPlusOneDimensions),
-        });
+        await doc.set({'foo': VectorValue(maxPlusOneDimensions)});
 
         fail('Should have thrown an exception');
       } catch (e) {
@@ -137,8 +137,9 @@ void runVectorValueTests() {
     });
 
     test('handles very large values in vector', () async {
-      DocumentReference<Map<String, dynamic>> doc =
-          await initializeTest('vector-value-large-values');
+      DocumentReference<Map<String, dynamic>> doc = await initializeTest(
+        'vector-value-large-values',
+      );
 
       await doc.set({
         'foo': const VectorValue([1e10, -1e10]),
@@ -152,8 +153,9 @@ void runVectorValueTests() {
     });
 
     test('handles floats in vector', () async {
-      DocumentReference<Map<String, dynamic>> doc =
-          await initializeTest('vector-value-floats');
+      DocumentReference<Map<String, dynamic>> doc = await initializeTest(
+        'vector-value-floats',
+      );
 
       await doc.set({
         'foo': const VectorValue([3.14, 2.718]),
@@ -167,8 +169,9 @@ void runVectorValueTests() {
     });
 
     test('handles negative values in vector', () async {
-      DocumentReference<Map<String, dynamic>> doc =
-          await initializeTest('vector-value-negative');
+      DocumentReference<Map<String, dynamic>> doc = await initializeTest(
+        'vector-value-negative',
+      );
 
       await doc.set({
         'foo': const VectorValue([-42.0, -100.0]),

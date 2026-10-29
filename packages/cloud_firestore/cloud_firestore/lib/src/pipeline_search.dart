@@ -4,10 +4,7 @@
 
 part of '../cloud_firestore.dart';
 
-enum _SearchQueryType {
-  string,
-  expression,
-}
+enum _SearchQueryType { string, expression }
 
 /// Specifies how a pipeline search stage is performed.
 ///
@@ -31,14 +28,14 @@ final class SearchStage implements PipelineSerializable {
     int? limit,
     int? offset,
     int? retrievalDepth,
-  })  : _queryType = queryType,
-        _query = query,
-        _sort = sort,
-        _addFields = addFields,
-        _languageCode = languageCode,
-        _limit = limit,
-        _offset = offset,
-        _retrievalDepth = retrievalDepth;
+  }) : _queryType = queryType,
+       _query = query,
+       _sort = sort,
+       _addFields = addFields,
+       _languageCode = languageCode,
+       _limit = limit,
+       _offset = offset,
+       _retrievalDepth = retrievalDepth;
 
   /// Creates a search stage from a raw query string.
   SearchStage.withQuery(
@@ -50,15 +47,15 @@ final class SearchStage implements PipelineSerializable {
     int? offset,
     int? retrievalDepth,
   }) : this._(
-          queryType: _SearchQueryType.string,
-          query: query,
-          sort: sort,
-          addFields: addFields,
-          languageCode: languageCode,
-          limit: limit,
-          offset: offset,
-          retrievalDepth: retrievalDepth,
-        );
+         queryType: _SearchQueryType.string,
+         query: query,
+         sort: sort,
+         addFields: addFields,
+         languageCode: languageCode,
+         limit: limit,
+         offset: offset,
+         retrievalDepth: retrievalDepth,
+       );
 
   /// Creates a search stage from a search query expression.
   SearchStage.withQueryExpression(
@@ -70,15 +67,15 @@ final class SearchStage implements PipelineSerializable {
     int? offset,
     int? retrievalDepth,
   }) : this._(
-          queryType: _SearchQueryType.expression,
-          query: query,
-          sort: sort,
-          addFields: addFields,
-          languageCode: languageCode,
-          limit: limit,
-          offset: offset,
-          retrievalDepth: retrievalDepth,
-        );
+         queryType: _SearchQueryType.expression,
+         query: query,
+         sort: sort,
+         addFields: addFields,
+         languageCode: languageCode,
+         limit: limit,
+         offset: offset,
+         retrievalDepth: retrievalDepth,
+       );
 
   @override
   Map<String, dynamic> toMap() {

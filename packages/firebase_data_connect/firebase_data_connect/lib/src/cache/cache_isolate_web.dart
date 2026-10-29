@@ -20,8 +20,9 @@
 
 class Isolate {
   static Future<Isolate> spawn<T>(
-          void Function(T message) entryPoint, T message) =>
-      throw UnsupportedError(_unsupported);
+    void Function(T message) entryPoint,
+    T message,
+  ) => throw UnsupportedError(_unsupported);
 }
 
 abstract class SendPort {

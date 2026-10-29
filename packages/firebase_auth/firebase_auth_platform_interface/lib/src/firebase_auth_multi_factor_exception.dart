@@ -21,13 +21,13 @@ class FirebaseAuthMultiFactorExceptionPlatform extends FirebaseAuthException
     String? tenantId,
     required this.resolver,
   }) : super(
-          message: message,
-          code: code,
-          email: email,
-          credential: credential,
-          phoneNumber: phoneNumber,
-          tenantId: tenantId,
-        );
+         message: message,
+         code: code,
+         email: email,
+         credential: credential,
+         phoneNumber: phoneNumber,
+         tenantId: tenantId,
+       );
 
   final MultiFactorResolverPlatform resolver;
 }

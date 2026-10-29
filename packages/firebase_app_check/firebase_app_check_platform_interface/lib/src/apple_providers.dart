@@ -52,7 +52,7 @@ class AppleAppAttestProvider extends AppleAppCheckProvider {
 class AppleAppAttestWithDeviceCheckFallbackProvider
     extends AppleAppCheckProvider {
   const AppleAppAttestWithDeviceCheckFallbackProvider()
-      : super('appAttestWithDeviceCheckFallback');
+    : super('appAttestWithDeviceCheckFallback');
 }
 
 /// reCAPTCHA provider for Apple platforms.

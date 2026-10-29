@@ -37,16 +37,18 @@ AuthProvider convertToOAuthProvider(AuthProvider authProvider) {
   if (authProvider is GoogleAuthProvider) {
     final oAuthProvider = OAuthProvider(authProvider.providerId);
     oAuthProvider.setScopes(authProvider.scopes);
-    oAuthProvider
-        .setCustomParameters(authProvider.parameters.cast<String, String>());
+    oAuthProvider.setCustomParameters(
+      authProvider.parameters.cast<String, String>(),
+    );
     return oAuthProvider;
   }
 
   if (authProvider is YahooAuthProvider) {
     final oAuthProvider = OAuthProvider(authProvider.providerId);
     oAuthProvider.setScopes(authProvider.scopes);
-    oAuthProvider
-        .setCustomParameters(authProvider.parameters.cast<String, String>());
+    oAuthProvider.setCustomParameters(
+      authProvider.parameters.cast<String, String>(),
+    );
     return oAuthProvider;
   }
 

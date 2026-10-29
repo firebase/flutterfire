@@ -22,9 +22,7 @@ class FirebasePerformanceWeb extends FirebasePerformancePlatform {
 
   /// Stub initializer to allow the [registerWith] to create an instance without
   /// registering the web delegates or listeners.
-  FirebasePerformanceWeb._()
-      : _webPerformance = null,
-        super(appInstance: null);
+  FirebasePerformanceWeb._() : _webPerformance = null, super(appInstance: null);
 
   /// Instance of Performance from the web plugin.
   performance_interop.Performance? _webPerformance;

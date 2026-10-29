@@ -28,7 +28,9 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   Future<void> signInWithGoogle() async {
     await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: '${Random().nextInt(100000)}@mail.com', password: 'password');
+      email: '${Random().nextInt(100000)}@mail.com',
+      password: 'password',
+    );
   }
 
   void logIn() async {
@@ -37,9 +39,8 @@ class _LoginState extends State<Login> {
 
     navigator.push(
       MaterialPageRoute(
-          builder: (context) => const MyHomePage(
-                title: "Data Connect Home Page",
-              )),
+        builder: (context) => const MyHomePage(title: "Data Connect Home Page"),
+      ),
     );
   }
 
@@ -55,15 +56,10 @@ class _LoginState extends State<Login> {
           height: 150.0,
           width: 190.0,
           padding: const EdgeInsets.only(top: 40),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(200),
-          ),
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(200)),
           child: Padding(
             padding: const EdgeInsets.all(10),
-            child: TextButton(
-              onPressed: logIn,
-              child: const Text("Log in"),
-            ),
+            child: TextButton(onPressed: logIn, child: const Text("Log in")),
           ),
         ),
       ),

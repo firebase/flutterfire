@@ -51,8 +51,10 @@ Future<void> saveAsBytes(Uint8List bytes, String suggestedName) async {
 
   // Create an <a> tag with the appropriate download attributes and click it
   // May be overridden with XFileTestOverrides
-  final web.HTMLAnchorElement element =
-      _createAnchorElement(path, suggestedName);
+  final web.HTMLAnchorElement element = _createAnchorElement(
+    path,
+    suggestedName,
+  );
 
   // Clear the children in our container so we can add an element to click
   do {

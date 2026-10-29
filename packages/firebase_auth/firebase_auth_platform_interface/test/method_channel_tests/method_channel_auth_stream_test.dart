@@ -39,11 +39,12 @@ void main() {
     'signInAnonymously': InternalUserCredential(user: user),
     'signOut': null,
   };
-  BasicMessageChannel<Object?> hostChannel(String method) =>
-      BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.$method',
-        FirebaseAuthHostApi.pigeonChannelCodec,
-      );
+  BasicMessageChannel<Object?> hostChannel(
+    String method,
+  ) => BasicMessageChannel<Object?>(
+    'dev.flutter.pigeon.firebase_auth_platform_interface.FirebaseAuthHostApi.$method',
+    FirebaseAuthHostApi.pigeonChannelCodec,
+  );
 
   setUpAll(() async {
     app = await Firebase.initializeApp();
@@ -53,9 +54,9 @@ void main() {
     for (final entry in hostResponses.entries) {
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockDecodedMessageHandler<Object?>(
-        hostChannel(entry.key),
-        (_) async => <Object?>[entry.value],
-      );
+            hostChannel(entry.key),
+            (_) async => <Object?>[entry.value],
+          );
     }
     final listeners = <Future<void>>[];
     for (final channel in [_authChannel, _tokenChannel]) {
@@ -63,14 +64,15 @@ void main() {
       listeners.add(listening.future);
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMethodCallHandler(MethodChannel(channel), (call) async {
-        if (call.method == 'listen') {
-          listening.complete();
-        }
-        return null;
-      });
+            if (call.method == 'listen') {
+              listening.complete();
+            }
+            return null;
+          });
     }
-    auth = MethodChannelFirebaseAuth.instance.delegateFor(app: app)
-        as MethodChannelFirebaseAuth;
+    auth =
+        MethodChannelFirebaseAuth.instance.delegateFor(app: app)
+            as MethodChannelFirebaseAuth;
     await Future.wait(listeners);
   });
 
@@ -104,12 +106,13 @@ void main() {
   ]) {
     group(streamName, () {
       Stream<UserPlatform?> stream() => switch (streamName) {
-            'authStateChanges' => auth.authStateChanges(),
-            'idTokenChanges' => auth.idTokenChanges(),
-            _ => auth.userChanges(),
-          };
-      final channel =
-          streamName == 'authStateChanges' ? _authChannel : _tokenChannel;
+        'authStateChanges' => auth.authStateChanges(),
+        'idTokenChanges' => auth.idTokenChanges(),
+        _ => auth.userChanges(),
+      };
+      final channel = streamName == 'authStateChanges'
+          ? _authChannel
+          : _tokenChannel;
 
       test('does not repeat null when already signed out', () async {
         final events = await listen(stream());
@@ -187,22 +190,24 @@ void main() {
     [_authChannel, _tokenChannel],
     [_tokenChannel, _authChannel],
   ]) {
-    test('all streams emit sign-out with ${channels.first} arriving first',
-        () async {
-      auth.setInitialValues(currentUser: user);
-      final events = await Future.wait([
-        listen(auth.authStateChanges()),
-        listen(auth.idTokenChanges()),
-        listen(auth.userChanges()),
-      ]);
-      for (final channel in channels) {
-        await injectEventChannelResponse(channel, {'user': null});
-      }
-      await pumpEventQueue();
-      for (final streamEvents in events) {
-        expect(streamEvents.map((event) => event?.uid), ['test-user', null]);
-      }
-    });
+    test(
+      'all streams emit sign-out with ${channels.first} arriving first',
+      () async {
+        auth.setInitialValues(currentUser: user);
+        final events = await Future.wait([
+          listen(auth.authStateChanges()),
+          listen(auth.idTokenChanges()),
+          listen(auth.userChanges()),
+        ]);
+        for (final channel in channels) {
+          await injectEventChannelResponse(channel, {'user': null});
+        }
+        await pumpEventQueue();
+        for (final streamEvents in events) {
+          expect(streamEvents.map((event) => event?.uid), ['test-user', null]);
+        }
+      },
+    );
   }
 
   test('all streams emit sign-out after the signOut method returns', () async {

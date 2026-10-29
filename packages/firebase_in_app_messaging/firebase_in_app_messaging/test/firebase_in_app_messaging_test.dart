@@ -28,24 +28,20 @@ void main() {
 
       fiam = FirebaseInAppMessaging.instance;
       when(
-        mockFiam.delegateFor(
-          app: anyNamed('app'),
-        ),
-      ).thenAnswer(
-        (_) => mockFiam,
-      );
-      when(mockFiam.triggerEvent('someEvent')).thenAnswer(
-        (_) => Future<void>.value(),
-      );
-      when(mockFiam.setMessagesSuppressed(any)).thenAnswer(
-        (_) => Future<void>.value(),
-      );
-      when(mockFiam.setAutomaticDataCollectionEnabled(any)).thenAnswer(
-        (_) => Future<void>.value(),
-      );
-      when(mockFiam.setCustomDisplayEnabled(any)).thenAnswer(
-        (_) => Future<void>.value(),
-      );
+        mockFiam.delegateFor(app: anyNamed('app')),
+      ).thenAnswer((_) => mockFiam);
+      when(
+        mockFiam.triggerEvent('someEvent'),
+      ).thenAnswer((_) => Future<void>.value());
+      when(
+        mockFiam.setMessagesSuppressed(any),
+      ).thenAnswer((_) => Future<void>.value());
+      when(
+        mockFiam.setAutomaticDataCollectionEnabled(any),
+      ).thenAnswer((_) => Future<void>.value());
+      when(
+        mockFiam.setCustomDisplayEnabled(any),
+      ).thenAnswer((_) => Future<void>.value());
     });
 
     test('triggerEvent', () async {
@@ -189,8 +185,7 @@ class MockFirebaseInAppMessaging extends Mock
     with
         // ignore: prefer_mixin
         MockPlatformInterfaceMixin
-    implements
-        TestFirebaseInAppMessagingPlatform {
+    implements TestFirebaseInAppMessagingPlatform {
   @override
   FirebaseInAppMessagingPlatform delegateFor({FirebaseApp? app}) {
     return super.noSuchMethod(

@@ -81,8 +81,8 @@ class NestedCirclesPainter extends CustomPainter {
 
     // Configure the paint properties (same for both circles)
     final Paint paint = Paint()
-      ..color =
-          color.withValues(alpha: 0.7) // Make circles slightly transparent
+      ..color = color
+          .withValues(alpha: 0.7) // Make circles slightly transparent
       ..strokeWidth = strokeWidth
       ..style = PaintingStyle.stroke; // Draw the outline
 

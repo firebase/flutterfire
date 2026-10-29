@@ -2,11 +2,9 @@ part of 'movies.dart';
 
 class ListTimestampsVariablesBuilder {
   final FirebaseDataConnect _dataConnect;
-  ListTimestampsVariablesBuilder(
-    this._dataConnect,
-  );
-  Deserializer<ListTimestampsData> dataDeserializer =
-      (dynamic json) => ListTimestampsData.fromJson(jsonDecode(json));
+  ListTimestampsVariablesBuilder(this._dataConnect);
+  Deserializer<ListTimestampsData> dataDeserializer = (dynamic json) =>
+      ListTimestampsData.fromJson(jsonDecode(json));
 
   Future<QueryResult<ListTimestampsData, void>> execute() {
     return ref().execute();
@@ -14,7 +12,11 @@ class ListTimestampsVariablesBuilder {
 
   QueryRef<ListTimestampsData, void> ref() {
     return _dataConnect.query(
-        "ListTimestamps", dataDeserializer, emptySerializer, null);
+      "ListTimestamps",
+      dataDeserializer,
+      emptySerializer,
+      null,
+    );
   }
 }
 
@@ -23,10 +25,10 @@ class ListTimestampsTimestampHolders {
   final Timestamp timestamp;
   final DateTime? date;
   ListTimestampsTimestampHolders.fromJson(dynamic json)
-      : timestamp = Timestamp.fromJson(json['timestamp']),
-        date = json['date'] == null
-            ? null
-            : nativeFromJson<DateTime>(json['date']);
+    : timestamp = Timestamp.fromJson(json['timestamp']),
+      date = json['date'] == null
+          ? null
+          : nativeFromJson<DateTime>(json['date']);
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) {
@@ -53,19 +55,16 @@ class ListTimestampsTimestampHolders {
     return json;
   }
 
-  ListTimestampsTimestampHolders({
-    required this.timestamp,
-    this.date,
-  });
+  ListTimestampsTimestampHolders({required this.timestamp, this.date});
 }
 
 @immutable
 class ListTimestampsData {
   final List<ListTimestampsTimestampHolders> timestampHolders;
   ListTimestampsData.fromJson(dynamic json)
-      : timestampHolders = (json['timestampHolders'] as List<dynamic>)
-            .map((e) => ListTimestampsTimestampHolders.fromJson(e))
-            .toList();
+    : timestampHolders = (json['timestampHolders'] as List<dynamic>)
+          .map((e) => ListTimestampsTimestampHolders.fromJson(e))
+          .toList();
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) {
@@ -88,7 +87,5 @@ class ListTimestampsData {
     return json;
   }
 
-  ListTimestampsData({
-    required this.timestampHolders,
-  });
+  ListTimestampsData({required this.timestampHolders});
 }

@@ -26,11 +26,15 @@ dynamic _convertNested(Object? value) {
 /// Method Channel delegate for [HttpsCallablePlatform].
 class MethodChannelHttpsCallable extends HttpsCallablePlatform {
   /// Creates a new [MethodChannelHttpsCallable] instance.
-  MethodChannelHttpsCallable(FirebaseFunctionsPlatform functions,
-      String? origin, String? name, HttpsCallableOptions options, Uri? uri)
-      : _baseEventChannelId =
-            name ?? uri?.pathSegments.join('_').replaceAll('.', '_') ?? '',
-        super(functions, origin, name, options, uri);
+  MethodChannelHttpsCallable(
+    FirebaseFunctionsPlatform functions,
+    String? origin,
+    String? name,
+    HttpsCallableOptions options,
+    Uri? uri,
+  ) : _baseEventChannelId =
+          name ?? uri?.pathSegments.join('_').replaceAll('.', '_') ?? '',
+      super(functions, origin, name, options, uri);
 
   static int _streamIdCounter = 0;
   final String _baseEventChannelId;
@@ -40,16 +44,17 @@ class MethodChannelHttpsCallable extends HttpsCallablePlatform {
     try {
       Object? result = await MethodChannelFirebaseFunctions.pigeonChannel
           .call(<String, dynamic>{
-        'appName': functions.app!.name,
-        'functionName': name,
-        'functionUri': uri?.toString(),
-        'origin': origin,
-        'region': functions.region,
-        'timeout': options.timeout.inMilliseconds,
-        'parameters': parameters,
-        'limitedUseAppCheckToken': options.limitedUseAppCheckToken,
-        'allowInsecureTokenAttachment': functions.allowInsecureTokenAttachment,
-      });
+            'appName': functions.app!.name,
+            'functionName': name,
+            'functionUri': uri?.toString(),
+            'origin': origin,
+            'region': functions.region,
+            'timeout': options.timeout.inMilliseconds,
+            'parameters': parameters,
+            'limitedUseAppCheckToken': options.limitedUseAppCheckToken,
+            'allowInsecureTokenAttachment':
+                functions.allowInsecureTokenAttachment,
+          });
 
       return _convertNested(result);
     } catch (e, s) {
@@ -62,15 +67,16 @@ class MethodChannelHttpsCallable extends HttpsCallablePlatform {
     // Each stream() call gets a unique channel ID to prevent collisions
     // when invoking the same function concurrently. See #18036.
     final eventChannelId = '${_baseEventChannelId}_${_streamIdCounter++}';
-    final channel =
-        EventChannel('plugins.flutter.io/firebase_functions/$eventChannelId');
+    final channel = EventChannel(
+      'plugins.flutter.io/firebase_functions/$eventChannelId',
+    );
     try {
       await MethodChannelFirebaseFunctions.pigeonChannel
           .registerEventChannel(<String, Object>{
-        'eventChannelId': eventChannelId,
-        'appName': functions.app!.name,
-        'region': functions.region,
-      });
+            'eventChannelId': eventChannelId,
+            'appName': functions.app!.name,
+            'region': functions.region,
+          });
       final eventData = {
         'functionName': name,
         'functionUri': uri?.toString(),

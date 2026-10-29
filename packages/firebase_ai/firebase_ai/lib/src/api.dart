@@ -36,8 +36,11 @@ final class CountTokensResponse {
 /// Response from the model; supports multiple candidates.
 final class GenerateContentResponse {
   // ignore: public_member_api_docs
-  GenerateContentResponse(this.candidates, this.promptFeedback,
-      {this.usageMetadata});
+  GenerateContentResponse(
+    this.candidates,
+    this.promptFeedback, {
+    this.usageMetadata,
+  });
 
   /// Candidate responses from the model.
   final List<Candidate> candidates;
@@ -62,23 +65,22 @@ final class GenerateContentResponse {
   String? get text {
     return switch (candidates) {
       [] => switch (promptFeedback) {
-          PromptFeedback(
-            :final blockReason,
-            :final blockReasonMessage,
-          ) =>
-            // TODO: Add a specific subtype for this exception?
-            throw FirebaseAIException('Response was blocked'
-                '${blockReason != null ? ' due to $blockReason' : ''}'
-                '${blockReasonMessage != null ? ': $blockReasonMessage' : ''}'),
-          _ => null,
-        },
+        PromptFeedback(:final blockReason, :final blockReasonMessage) =>
+          // TODO: Add a specific subtype for this exception?
+          throw FirebaseAIException(
+            'Response was blocked'
+            '${blockReason != null ? ' due to $blockReason' : ''}'
+            '${blockReasonMessage != null ? ': $blockReasonMessage' : ''}',
+          ),
+        _ => null,
+      },
       [
         Candidate(
           finishReason: (FinishReason.recitation || FinishReason.safety) &&
               final finishReason,
           :final finishMessage,
         ),
-        ...
+        ...,
       ] =>
         throw FirebaseAIException(
           // ignore: prefer_interpolation_to_compose_strings
@@ -91,10 +93,10 @@ final class GenerateContentResponse {
       [
         Candidate(
           content: Content(
-            parts: [TextPart(isThought: final isThought, :final text)]
-          )
+            parts: [TextPart(isThought: final isThought, :final text)],
+          ),
         ),
-        ...
+        ...,
       ]
           when isThought != true =>
         text,
@@ -115,9 +117,9 @@ final class GenerateContentResponse {
   /// candidate has no [FunctionCall] parts. There is no error thrown if the
   /// prompt or response were blocked.
   Iterable<FunctionCall> get functionCalls =>
-      candidates.firstOrNull?.content.parts
-          .whereType<FunctionCall>()
-          .where((p) => p.isThought != true) ??
+      candidates.firstOrNull?.content.parts.whereType<FunctionCall>().where(
+        (p) => p.isThought != true,
+      ) ??
       const [];
 
   /// The inline data parts of the first candidate in [candidates], if any.
@@ -126,9 +128,9 @@ final class GenerateContentResponse {
   /// candidate has no [InlineDataPart] parts. There is no error thrown if the
   /// prompt or response were blocked.
   Iterable<InlineDataPart> get inlineDataParts =>
-      candidates.firstOrNull?.content.parts
-          .whereType<InlineDataPart>()
-          .where((p) => p.isThought != true) ??
+      candidates.firstOrNull?.content.parts.whereType<InlineDataPart>().where(
+        (p) => p.isThought != true,
+      ) ??
       const [];
 
   /// The thought summary of the first candidate in [candidates], if any.
@@ -225,9 +227,15 @@ final class UsageMetadata {
 /// Response candidate generated from a [GenerativeModel].
 final class Candidate {
   // ignore: public_member_api_docs
-  Candidate(this.content, this.safetyRatings, this.citationMetadata,
-      this.finishReason, this.finishMessage,
-      {this.groundingMetadata, this.urlContextMetadata});
+  Candidate(
+    this.content,
+    this.safetyRatings,
+    this.citationMetadata,
+    this.finishReason,
+    this.finishMessage, {
+    this.groundingMetadata,
+    this.urlContextMetadata,
+  });
 
   /// Generated content returned from the model.
   final Content content;
@@ -277,7 +285,8 @@ final class Candidate {
         suffix = '';
       }
       throw FirebaseAIException(
-          'Candidate was blocked due to $finishReason$suffix');
+        'Candidate was blocked due to $finishReason$suffix',
+      );
     }
     return switch (content.parts) {
       // Special case for a single TextPart to avoid iterable chain.
@@ -293,11 +302,12 @@ final class Candidate {
 /// the exact location of text or data that grounding information refers to.
 final class Segment {
   // ignore: public_member_api_docs
-  Segment(
-      {required this.partIndex,
-      required this.startIndex,
-      required this.endIndex,
-      required this.text});
+  Segment({
+    required this.partIndex,
+    required this.startIndex,
+    required this.endIndex,
+    required this.text,
+  });
 
   /// The zero-based index of the [Part] object within the `parts` array of its
   /// parent [Content] object.
@@ -377,8 +387,10 @@ final class GroundingChunk {
 /// is supported by the retrieved grounding chunks.
 final class GroundingSupport {
   // ignore: public_member_api_docs
-  GroundingSupport(
-      {required this.segment, required this.groundingChunkIndices});
+  GroundingSupport({
+    required this.segment,
+    required this.groundingChunkIndices,
+  });
 
   /// Specifies the segment of the model's response content that this
   /// grounding support pertains to.
@@ -420,11 +432,12 @@ final class SearchEntryPoint {
 /// section within the Service Specific Terms).
 final class GroundingMetadata {
   // ignore: public_member_api_docs
-  GroundingMetadata(
-      {this.searchEntryPoint,
-      required this.groundingChunks,
-      required this.groundingSupports,
-      required this.webSearchQueries});
+  GroundingMetadata({
+    this.searchEntryPoint,
+    required this.groundingChunks,
+    required this.groundingSupports,
+    required this.webSearchQueries,
+  });
 
   /// Google Search entry point for web searches.
   ///
@@ -488,8 +501,9 @@ enum UrlRetrievalStatus {
       'URL_RETRIEVAL_STATUS_ERROR' => UrlRetrievalStatus.error,
       'URL_RETRIEVAL_STATUS_PAYWALL' => UrlRetrievalStatus.paywall,
       'URL_RETRIEVAL_STATUS_UNSAFE' => UrlRetrievalStatus.unsafe,
-      _ => UrlRetrievalStatus
-          .unspecified, // Default to unspecified for unknown values.
+      _ =>
+        UrlRetrievalStatus
+            .unspecified, // Default to unspecified for unknown values.
     };
   }
 }
@@ -531,11 +545,14 @@ final class UrlContextMetadata {
 /// classification is included here.
 final class SafetyRating {
   // ignore: public_member_api_docs
-  SafetyRating(this.category, this.probability,
-      {this.probabilityScore,
-      this.isBlocked,
-      this.severity,
-      this.severityScore});
+  SafetyRating(
+    this.category,
+    this.probability, {
+    this.probabilityScore,
+    this.isBlocked,
+    this.severity,
+    this.severityScore,
+  });
 
   /// The category for this rating.
   final HarmCategory category;
@@ -963,10 +980,10 @@ final class SafetySetting {
 
   /// Convert to json format.
   Object toJson() => {
-        'category': category.toJson(),
-        'threshold': threshold.toJson(),
-        if (method case final method?) 'method': method.toJson(),
-      };
+    'category': category.toJson(),
+    'threshold': threshold.toJson(),
+    if (method case final method?) 'method': method.toJson(),
+  };
 }
 
 /// Probability of harm which causes content to be blocked.
@@ -1002,7 +1019,9 @@ enum HarmBlockThreshold {
       'BLOCK_NONE' => HarmBlockThreshold.none,
       'OFF' => HarmBlockThreshold.off,
       _ => throw FormatException(
-          'Unhandled HarmBlockThreshold format', jsonObject),
+        'Unhandled HarmBlockThreshold format',
+        jsonObject,
+      ),
     };
   }
 
@@ -1090,12 +1109,12 @@ enum MediaResolution {
 
   /// Parse a media resolution from a JSON value.
   static MediaResolution parseValue(String value) => switch (value) {
-        'MEDIA_RESOLUTION_LOW' => MediaResolution.low,
-        'MEDIA_RESOLUTION_MEDIUM' => MediaResolution.medium,
-        'MEDIA_RESOLUTION_HIGH' => MediaResolution.high,
-        'MEDIA_RESOLUTION_ULTRA_HIGH' => MediaResolution.ultraHigh,
-        _ => MediaResolution.unspecified,
-      };
+    'MEDIA_RESOLUTION_LOW' => MediaResolution.low,
+    'MEDIA_RESOLUTION_MEDIUM' => MediaResolution.medium,
+    'MEDIA_RESOLUTION_HIGH' => MediaResolution.high,
+    'MEDIA_RESOLUTION_ULTRA_HIGH' => MediaResolution.ultraHigh,
+    _ => MediaResolution.unspecified,
+  };
 
   // ignore: public_member_api_docs
   String toJson() => _jsonString;
@@ -1128,25 +1147,34 @@ enum ThinkingLevel {
 /// Config for thinking features.
 class ThinkingConfig {
   // Private constructor
-  ThinkingConfig._(
-      {this.thinkingBudget, this.thinkingLevel, this.includeThoughts});
+  ThinkingConfig._({
+    this.thinkingBudget,
+    this.thinkingLevel,
+    this.includeThoughts,
+  });
 
   /// Initializes [ThinkingConfig] with [thinkingBudget].
   ///
   /// Used for Gemini models 2.5 and earlier.
-  factory ThinkingConfig.withThinkingBudget(int? thinkingBudget,
-          {bool? includeThoughts}) =>
-      ThinkingConfig._(
-          thinkingBudget: thinkingBudget, includeThoughts: includeThoughts);
+  factory ThinkingConfig.withThinkingBudget(
+    int? thinkingBudget, {
+    bool? includeThoughts,
+  }) => ThinkingConfig._(
+    thinkingBudget: thinkingBudget,
+    includeThoughts: includeThoughts,
+  );
 
   /// Initializes [ThinkingConfig] with [thinkingLevel].
   ///
   /// Used for Gemini models 3.0 and newer.
   /// See https://ai.google.dev/gemini-api/docs/thinking#thinking-levels
-  factory ThinkingConfig.withThinkingLevel(ThinkingLevel? thinkingLevel,
-          {bool? includeThoughts}) =>
-      ThinkingConfig._(
-          thinkingLevel: thinkingLevel, includeThoughts: includeThoughts);
+  factory ThinkingConfig.withThinkingLevel(
+    ThinkingLevel? thinkingLevel, {
+    bool? includeThoughts,
+  }) => ThinkingConfig._(
+    thinkingLevel: thinkingLevel,
+    includeThoughts: includeThoughts,
+  );
 
   /// The number of thoughts tokens that the model should generate.
   ///
@@ -1170,13 +1198,13 @@ class ThinkingConfig {
 
   // ignore: public_member_api_docs
   Map<String, Object?> toJson() => {
-        if (thinkingBudget case final thinkingBudget?)
-          'thinkingBudget': thinkingBudget,
-        if (thinkingLevel case final thinkingLevel?)
-          'thinkingLevel': thinkingLevel.toJson(),
-        if (includeThoughts case final includeThoughts?)
-          'includeThoughts': includeThoughts,
-      };
+    if (thinkingBudget case final thinkingBudget?)
+      'thinkingBudget': thinkingBudget,
+    if (thinkingLevel case final thinkingLevel?)
+      'thinkingLevel': thinkingLevel.toJson(),
+    if (includeThoughts case final includeThoughts?)
+      'includeThoughts': includeThoughts,
+  };
 }
 
 /// Configuration options for model generation and outputs.
@@ -1193,17 +1221,20 @@ abstract class BaseGenerationConfig {
     this.responseModalities,
     this.mediaResolution,
     this.speechConfig,
-  }) : assert(mediaResolution != MediaResolution.ultraHigh,
-            'MediaResolution.ultraHigh is only supported on individual media parts.');
+  }) : assert(
+         mediaResolution != MediaResolution.ultraHigh,
+         'MediaResolution.ultraHigh is only supported on individual media parts.',
+       );
 
   /// Number of generated responses to return.
   ///
   /// This value must be between [1, 8], inclusive. If unset, this will default
   /// to 1.
   @Deprecated(
-      'Not supported in Gemini 3.x and later models. The model will ignore '
-      'this parameter if it is included in a request. Make parallel requests '
-      'instead.')
+    'Not supported in Gemini 3.x and later models. The model will ignore '
+    'this parameter if it is included in a request. Make parallel requests '
+    'instead.',
+  )
   final int? candidateCount;
 
   /// The maximum number of tokens to include in a candidate.
@@ -1219,9 +1250,10 @@ abstract class BaseGenerationConfig {
   /// Values can range from `[0.0, infinity]`, inclusive. A value temperature
   /// must be greater than 0.0.
   @Deprecated(
-      'Not supported in Gemini 3.x and later models. The model will ignore '
-      'this parameter if it is included in a request. Omit this parameter and '
-      'let the model manage sampling automatically.')
+    'Not supported in Gemini 3.x and later models. The model will ignore '
+    'this parameter if it is included in a request. Omit this parameter and '
+    'let the model manage sampling automatically.',
+  )
   final double? temperature;
 
   /// The maximum cumulative probability of tokens to consider when sampling.
@@ -1234,9 +1266,10 @@ abstract class BaseGenerationConfig {
   ///
   /// Note: The default value varies by model.
   @Deprecated(
-      'Not supported in Gemini 3.x and later models. The model will ignore '
-      'this parameter if it is included in a request. Omit this parameter and '
-      'let the model manage sampling automatically.')
+    'Not supported in Gemini 3.x and later models. The model will ignore '
+    'this parameter if it is included in a request. Omit this parameter and '
+    'let the model manage sampling automatically.',
+  )
   final double? topP;
 
   /// The maximum number of tokens to consider when sampling.
@@ -1246,9 +1279,10 @@ abstract class BaseGenerationConfig {
   ///
   /// Note: The default value varies by model.
   @Deprecated(
-      'Not supported in Gemini 3.x and later models. The model will ignore '
-      'this parameter if it is included in a request. Omit this parameter and '
-      'let the model manage sampling automatically.')
+    'Not supported in Gemini 3.x and later models. The model will ignore '
+    'this parameter if it is included in a request. Omit this parameter and '
+    'let the model manage sampling automatically.',
+  )
   final int? topK;
 
   /// The penalty for repeating the same words or phrases already generated in
@@ -1268,8 +1302,9 @@ abstract class BaseGenerationConfig {
   /// [documentation](https://firebase.google.com/docs/vertex-ai/model-parameters?platform=flutter#configure-model-parameters-gemini)
   /// for more details.
   @Deprecated(
-      'Not supported in Gemini 3.x and later models. Requests that include '
-      'this parameter will fail with a 400 error. Omit this parameter.')
+    'Not supported in Gemini 3.x and later models. Requests that include '
+    'this parameter will fail with a 400 error. Omit this parameter.',
+  )
   final double? presencePenalty;
 
   /// The penalty for repeating words or phrases, with the penalty increasing
@@ -1288,8 +1323,9 @@ abstract class BaseGenerationConfig {
   /// [documentation](https://firebase.google.com/docs/vertex-ai/model-parameters?platform=flutter#configure-model-parameters-gemini)
   /// for more details.
   @Deprecated(
-      'Not supported in Gemini 3.x and later models. Requests that include '
-      'this parameter will fail with a 400 error. Omit this parameter.')
+    'Not supported in Gemini 3.x and later models. Requests that include '
+    'this parameter will fail with a 400 error. Omit this parameter.',
+  )
   final double? frequencyPenalty;
 
   /// The list of desired response modalities.
@@ -1308,25 +1344,26 @@ abstract class BaseGenerationConfig {
 
   // ignore: public_member_api_docs
   Map<String, Object?> toJson() => {
-        if (candidateCount case final candidateCount?)
-          'candidateCount': candidateCount,
-        if (maxOutputTokens case final maxOutputTokens?)
-          'maxOutputTokens': maxOutputTokens,
-        if (temperature case final temperature?) 'temperature': temperature,
-        if (topP case final topP?) 'topP': topP,
-        if (topK case final topK?) 'topK': topK,
-        if (presencePenalty case final presencePenalty?)
-          'presencePenalty': presencePenalty,
-        if (frequencyPenalty case final frequencyPenalty?)
-          'frequencyPenalty': frequencyPenalty,
-        if (responseModalities case final responseModalities?)
-          'responseModalities':
-              responseModalities.map((modality) => modality.toJson()).toList(),
-        if (mediaResolution case final mediaResolution?)
-          'mediaResolution': mediaResolution.toJson(),
-        if (speechConfig case final speechConfig?)
-          'speechConfig': speechConfig.toJson(),
-      };
+    if (candidateCount case final candidateCount?)
+      'candidateCount': candidateCount,
+    if (maxOutputTokens case final maxOutputTokens?)
+      'maxOutputTokens': maxOutputTokens,
+    if (temperature case final temperature?) 'temperature': temperature,
+    if (topP case final topP?) 'topP': topP,
+    if (topK case final topK?) 'topK': topK,
+    if (presencePenalty case final presencePenalty?)
+      'presencePenalty': presencePenalty,
+    if (frequencyPenalty case final frequencyPenalty?)
+      'frequencyPenalty': frequencyPenalty,
+    if (responseModalities case final responseModalities?)
+      'responseModalities': responseModalities
+          .map((modality) => modality.toJson())
+          .toList(),
+    if (mediaResolution case final mediaResolution?)
+      'mediaResolution': mediaResolution.toJson(),
+    if (speechConfig case final speechConfig?)
+      'speechConfig': speechConfig.toJson(),
+  };
 }
 
 /// Configuration options for model generation and outputs.
@@ -1349,8 +1386,10 @@ final class GenerationConfig extends BaseGenerationConfig {
     this.responseJsonSchema,
     this.thinkingConfig,
     this.imageConfig,
-  }) : assert(responseSchema == null || responseJsonSchema == null,
-            'responseSchema and responseJsonSchema cannot both be set.');
+  }) : assert(
+         responseSchema == null || responseJsonSchema == null,
+         'responseSchema and responseJsonSchema cannot both be set.',
+       );
 
   /// The set of character sequences (up to 5) that will stop output generation.
   ///
@@ -1402,21 +1441,20 @@ final class GenerationConfig extends BaseGenerationConfig {
 
   @override
   Map<String, Object?> toJson() => {
-        ...super.toJson(),
-        if (stopSequences case final stopSequences?
-            when stopSequences.isNotEmpty)
-          'stopSequences': stopSequences,
-        if (responseMimeType case final responseMimeType?)
-          'responseMimeType': responseMimeType,
-        if (responseSchema case final responseSchema?)
-          'responseSchema': responseSchema.toJson(),
-        if (responseJsonSchema case final responseJsonSchema?)
-          'responseJsonSchema': responseJsonSchema,
-        if (thinkingConfig case final thinkingConfig?)
-          'thinkingConfig': thinkingConfig.toJson(),
-        if (imageConfig case final imageConfig?)
-          'imageConfig': imageConfig.toJson(),
-      };
+    ...super.toJson(),
+    if (stopSequences case final stopSequences? when stopSequences.isNotEmpty)
+      'stopSequences': stopSequences,
+    if (responseMimeType case final responseMimeType?)
+      'responseMimeType': responseMimeType,
+    if (responseSchema case final responseSchema?)
+      'responseSchema': responseSchema.toJson(),
+    if (responseJsonSchema case final responseJsonSchema?)
+      'responseJsonSchema': responseJsonSchema,
+    if (thinkingConfig case final thinkingConfig?)
+      'thinkingConfig': thinkingConfig.toJson(),
+    if (imageConfig case final imageConfig?)
+      'imageConfig': imageConfig.toJson(),
+  };
 }
 
 /// Type of task for which the embedding will be used.
@@ -1497,22 +1535,28 @@ final class AgentPlatformSerialization implements SerializationStrategy {
     final candidates = switch (jsonObject) {
       {'candidates': final List<Object?> candidates} =>
         candidates.map(_parseCandidate).toList(),
-      _ => <Candidate>[]
+      _ => <Candidate>[],
     };
     final promptFeedback = switch (jsonObject) {
-      {'promptFeedback': final promptFeedback?} =>
-        _parsePromptFeedback(promptFeedback),
+      {'promptFeedback': final promptFeedback?} => _parsePromptFeedback(
+        promptFeedback,
+      ),
       _ => null,
     };
     final usageMetadata = switch (jsonObject) {
-      {'usageMetadata': final usageMetadata?} =>
-        parseUsageMetadata(usageMetadata),
-      {'totalTokens': final int totalTokens} =>
-        UsageMetadata._(totalTokenCount: totalTokens),
+      {'usageMetadata': final usageMetadata?} => parseUsageMetadata(
+        usageMetadata,
+      ),
+      {'totalTokens': final int totalTokens} => UsageMetadata._(
+        totalTokenCount: totalTokens,
+      ),
       _ => null,
     };
-    return GenerateContentResponse(candidates, promptFeedback,
-        usageMetadata: usageMetadata);
+    return GenerateContentResponse(
+      candidates,
+      promptFeedback,
+      usageMetadata: usageMetadata,
+    );
   }
 
   /// Parse the json to [CountTokensResponse]
@@ -1580,38 +1624,40 @@ Candidate _parseCandidate(Object? jsonObject) {
   }
 
   return Candidate(
-      jsonObject.containsKey('content')
-          ? parseContent(jsonObject['content'] as Object)
-          : Content(null, []),
-      switch (jsonObject) {
-        {'safetyRatings': final List<Object?> safetyRatings} =>
-          safetyRatings.map(_parseSafetyRating).toList(),
-        _ => null
-      },
-      switch (jsonObject) {
-        {'citationMetadata': final Object citationMetadata} =>
-          parseCitationMetadata(citationMetadata),
-        _ => null
-      },
-      switch (jsonObject) {
-        {'finishReason': final Object finishReason} =>
-          FinishReason.parseValue(finishReason),
-        _ => null
-      },
-      switch (jsonObject) {
-        {'finishMessage': final String finishMessage} => finishMessage,
-        _ => null
-      },
-      groundingMetadata: switch (jsonObject) {
-        {'groundingMetadata': final Object groundingMetadata} =>
-          parseGroundingMetadata(groundingMetadata),
-        _ => null
-      },
-      urlContextMetadata: switch (jsonObject) {
-        {'urlContextMetadata': final Object urlContextMetadata} =>
-          parseUrlContextMetadata(urlContextMetadata),
-        _ => null
-      });
+    jsonObject.containsKey('content')
+        ? parseContent(jsonObject['content'] as Object)
+        : Content(null, []),
+    switch (jsonObject) {
+      {'safetyRatings': final List<Object?> safetyRatings} =>
+        safetyRatings.map(_parseSafetyRating).toList(),
+      _ => null,
+    },
+    switch (jsonObject) {
+      {'citationMetadata': final Object citationMetadata} =>
+        parseCitationMetadata(citationMetadata),
+      _ => null,
+    },
+    switch (jsonObject) {
+      {'finishReason': final Object finishReason} => FinishReason.parseValue(
+        finishReason,
+      ),
+      _ => null,
+    },
+    switch (jsonObject) {
+      {'finishMessage': final String finishMessage} => finishMessage,
+      _ => null,
+    },
+    groundingMetadata: switch (jsonObject) {
+      {'groundingMetadata': final Object groundingMetadata} =>
+        parseGroundingMetadata(groundingMetadata),
+      _ => null,
+    },
+    urlContextMetadata: switch (jsonObject) {
+      {'urlContextMetadata': final Object urlContextMetadata} =>
+        parseUrlContextMetadata(urlContextMetadata),
+      _ => null,
+    },
+  );
 }
 
 PromptFeedback _parsePromptFeedback(Object jsonObject) {
@@ -1630,8 +1676,9 @@ PromptFeedback _parsePromptFeedback(Object jsonObject) {
       : <SafetyRating>[];
   return PromptFeedback(
     switch (jsonObject) {
-      {'blockReason': final String blockReason} =>
-        BlockReason.parseValue(blockReason),
+      {'blockReason': final String blockReason} => BlockReason.parseValue(
+        blockReason,
+      ),
       _ => null,
     },
     switch (jsonObject) {
@@ -1684,8 +1731,8 @@ UsageMetadata parseUsageMetadata(Object jsonObject) {
   };
   final toolUsePromptTokensDetails = switch (jsonObject) {
     {
-      'toolUsePromptTokensDetails': final List<Object?>
-          toolUsePromptTokensDetails
+      'toolUsePromptTokensDetails':
+          final List<Object?> toolUsePromptTokensDetails,
     } =>
       toolUsePromptTokensDetails.map(_parseModalityTokenCount).toList(),
     _ => null,
@@ -1734,14 +1781,16 @@ SafetyRating _parseSafetyRating(Object? jsonObject) {
   if (jsonObject.isEmpty) {
     return SafetyRating(HarmCategory.unknown, HarmProbability.unknown);
   }
-  return SafetyRating(HarmCategory._parseValue(jsonObject['category']),
-      HarmProbability._parseValue(jsonObject['probability']),
-      probabilityScore: jsonObject['probabilityScore'] as double?,
-      isBlocked: jsonObject['blocked'] as bool?,
-      severity: jsonObject['severity'] != null
-          ? HarmSeverity._parseValue(jsonObject['severity'])
-          : null,
-      severityScore: jsonObject['severityScore'] as double?);
+  return SafetyRating(
+    HarmCategory._parseValue(jsonObject['category']),
+    HarmProbability._parseValue(jsonObject['probability']),
+    probabilityScore: jsonObject['probabilityScore'] as double?,
+    isBlocked: jsonObject['blocked'] as bool?,
+    severity: jsonObject['severity'] != null
+        ? HarmSeverity._parseValue(jsonObject['severity'])
+        : null,
+    severityScore: jsonObject['severityScore'] as double?,
+  );
 }
 
 /// Parses a [CitationMetadata] from a JSON object.
@@ -1753,8 +1802,9 @@ CitationMetadata parseCitationMetadata(Object? jsonObject) {
     {'citationSources': final List<Object?> citationSources} =>
       CitationMetadata(citationSources.map(_parseCitationSource).toList()),
     // Vertex SDK format uses `citations`
-    {'citations': final List<Object?> citationSources} =>
-      CitationMetadata(citationSources.map(_parseCitationSource).toList()),
+    {'citations': final List<Object?> citationSources} => CitationMetadata(
+      citationSources.map(_parseCitationSource).toList(),
+    ),
     _ => throw unhandledFormat('CitationMetadata', jsonObject),
   };
 }
@@ -1788,7 +1838,8 @@ GroundingMetadata parseGroundingMetadata(Object? jsonObject) {
       _parseSearchEntryPoint(searchEntryPoint),
     _ => null,
   };
-  final groundingChunks = switch (jsonObject) {
+  final groundingChunks =
+      switch (jsonObject) {
         {'groundingChunks': final List<Object?> groundingChunks} =>
           groundingChunks.map(_parseGroundingChunk).toList(),
         _ => null,
@@ -1796,7 +1847,8 @@ GroundingMetadata parseGroundingMetadata(Object? jsonObject) {
       [];
   // Filters out null elements, which are returned from _parseGroundingSupport when
   // segment is null.
-  final groundingSupports = switch (jsonObject) {
+  final groundingSupports =
+      switch (jsonObject) {
         {'groundingSupports': final List<Object?> groundingSupports} =>
           groundingSupports
               .map(_parseGroundingSupport)
@@ -1805,7 +1857,8 @@ GroundingMetadata parseGroundingMetadata(Object? jsonObject) {
         _ => null,
       } ??
       [];
-  final webSearchQueries = switch (jsonObject) {
+  final webSearchQueries =
+      switch (jsonObject) {
         {'webSearchQueries': final List<Object?> webSearchQueries} =>
           webSearchQueries.whereType<String>().toList(),
         _ => null,
@@ -1813,10 +1866,11 @@ GroundingMetadata parseGroundingMetadata(Object? jsonObject) {
       [];
 
   return GroundingMetadata(
-      searchEntryPoint: searchEntryPoint,
-      groundingChunks: groundingChunks,
-      groundingSupports: groundingSupports,
-      webSearchQueries: webSearchQueries);
+    searchEntryPoint: searchEntryPoint,
+    groundingChunks: groundingChunks,
+    groundingSupports: groundingSupports,
+    webSearchQueries: webSearchQueries,
+  );
 }
 
 Segment _parseSegment(Object? jsonObject) {
@@ -1825,10 +1879,11 @@ Segment _parseSegment(Object? jsonObject) {
   }
 
   return Segment(
-      partIndex: (jsonObject['partIndex'] as int?) ?? 0,
-      startIndex: (jsonObject['startIndex'] as int?) ?? 0,
-      endIndex: (jsonObject['endIndex'] as int?) ?? 0,
-      text: (jsonObject['text'] as String?) ?? '');
+    partIndex: (jsonObject['partIndex'] as int?) ?? 0,
+    startIndex: (jsonObject['startIndex'] as int?) ?? 0,
+    endIndex: (jsonObject['endIndex'] as int?) ?? 0,
+    text: (jsonObject['text'] as String?) ?? '',
+  );
 }
 
 WebGroundingChunk _parseWebGroundingChunk(Object? jsonObject) {
@@ -1884,9 +1939,10 @@ GroundingSupport? _parseGroundingSupport(Object? jsonObject) {
   }
 
   return GroundingSupport(
-      segment: segment,
-      groundingChunkIndices:
-          (jsonObject['groundingChunkIndices'] as List?)?.cast<int>() ?? []);
+    segment: segment,
+    groundingChunkIndices:
+        (jsonObject['groundingChunkIndices'] as List?)?.cast<int>() ?? [],
+  );
 }
 
 SearchEntryPoint _parseSearchEntryPoint(Object? jsonObject) {
@@ -1899,9 +1955,7 @@ SearchEntryPoint _parseSearchEntryPoint(Object? jsonObject) {
     throw unhandledFormat('SearchEntryPoint', jsonObject);
   }
 
-  return SearchEntryPoint(
-    renderedContent: renderedContent,
-  );
+  return SearchEntryPoint(renderedContent: renderedContent);
 }
 
 UrlMetadata _parseUrlMetadata(Object? jsonObject) {
@@ -1911,8 +1965,9 @@ UrlMetadata _parseUrlMetadata(Object? jsonObject) {
   final uriString = jsonObject['retrievedUrl'] as String?;
   return UrlMetadata(
     retrievedUrl: uriString != null ? Uri.parse(uriString) : null,
-    urlRetrievalStatus:
-        UrlRetrievalStatus._parseValue(jsonObject['urlRetrievalStatus']),
+    urlRetrievalStatus: UrlRetrievalStatus._parseValue(
+      jsonObject['urlRetrievalStatus'],
+    ),
   );
 }
 
@@ -1951,8 +2006,9 @@ enum CodeLanguage {
     return switch (jsonObject) {
       'LANGUAGE_UNSPECIFIED' => CodeLanguage.unspecified,
       'PYTHON' => CodeLanguage.python,
-      _ => CodeLanguage
-          .unspecified, // If backend has new change, return unspecified.
+      _ =>
+        CodeLanguage
+            .unspecified, // If backend has new change, return unspecified.
     };
   }
 }

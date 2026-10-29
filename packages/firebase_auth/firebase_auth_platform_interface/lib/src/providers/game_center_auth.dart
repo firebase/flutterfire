@@ -57,10 +57,7 @@ class GameCenterAuthProvider extends AuthProvider {
 /// [GameCenterAuthProvider.credential].
 class GameCenterAuthCredential extends OAuthCredential {
   GameCenterAuthCredential._()
-      : super(
-          providerId: _kProviderId,
-          signInMethod: _kProviderId,
-        );
+    : super(providerId: _kProviderId, signInMethod: _kProviderId);
 
   factory GameCenterAuthCredential._credential() {
     return GameCenterAuthCredential._();

@@ -9,23 +9,23 @@ class AddPersonVariablesBuilder {
     return this;
   }
 
-  AddPersonVariablesBuilder(
-    this._dataConnect,
-  );
-  Deserializer<AddPersonData> dataDeserializer =
-      (dynamic json) => AddPersonData.fromJson(jsonDecode(json));
-  Serializer<AddPersonVariables> varsSerializer =
-      (AddPersonVariables vars) => jsonEncode(vars.toJson());
+  AddPersonVariablesBuilder(this._dataConnect);
+  Deserializer<AddPersonData> dataDeserializer = (dynamic json) =>
+      AddPersonData.fromJson(jsonDecode(json));
+  Serializer<AddPersonVariables> varsSerializer = (AddPersonVariables vars) =>
+      jsonEncode(vars.toJson());
   Future<OperationResult<AddPersonData, AddPersonVariables>> execute() {
     return ref().execute();
   }
 
   MutationRef<AddPersonData, AddPersonVariables> ref() {
-    AddPersonVariables vars = AddPersonVariables(
-      name: _name,
-    );
+    AddPersonVariables vars = AddPersonVariables(name: _name);
     return _dataConnect.mutation(
-        "addPerson", dataDeserializer, varsSerializer, vars);
+      "addPerson",
+      dataDeserializer,
+      varsSerializer,
+      vars,
+    );
   }
 }
 
@@ -33,7 +33,7 @@ class AddPersonVariablesBuilder {
 class AddPersonPersonInsert {
   final String id;
   AddPersonPersonInsert.fromJson(dynamic json)
-      : id = nativeFromJson<String>(json['id']);
+    : id = nativeFromJson<String>(json['id']);
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) {
@@ -56,16 +56,14 @@ class AddPersonPersonInsert {
     return json;
   }
 
-  AddPersonPersonInsert({
-    required this.id,
-  });
+  AddPersonPersonInsert({required this.id});
 }
 
 @immutable
 class AddPersonData {
   final AddPersonPersonInsert person_insert;
   AddPersonData.fromJson(dynamic json)
-      : person_insert = AddPersonPersonInsert.fromJson(json['person_insert']);
+    : person_insert = AddPersonPersonInsert.fromJson(json['person_insert']);
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) {
@@ -88,20 +86,20 @@ class AddPersonData {
     return json;
   }
 
-  AddPersonData({
-    required this.person_insert,
-  });
+  AddPersonData({required this.person_insert});
 }
 
 @immutable
 class AddPersonVariables {
   late final Optional<String> name;
   @Deprecated(
-      'fromJson is deprecated for Variable classes as they are no longer required for deserialization.')
+    'fromJson is deprecated for Variable classes as they are no longer required for deserialization.',
+  )
   AddPersonVariables.fromJson(Map<String, dynamic> json) {
     name = Optional.optional(nativeFromJson, nativeToJson);
-    name.value =
-        json['name'] == null ? null : nativeFromJson<String>(json['name']);
+    name.value = json['name'] == null
+        ? null
+        : nativeFromJson<String>(json['name']);
   }
   @override
   bool operator ==(Object other) {
@@ -127,7 +125,5 @@ class AddPersonVariables {
     return json;
   }
 
-  AddPersonVariables({
-    required this.name,
-  });
+  AddPersonVariables({required this.name});
 }
