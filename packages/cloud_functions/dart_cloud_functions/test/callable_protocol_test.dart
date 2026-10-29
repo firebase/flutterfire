@@ -103,6 +103,15 @@ void main() {
         containsPair('Authorization', 'Bearer id-token'),
       );
     });
+
+    test('sends the App Check token as X-Firebase-AppCheck', () {
+      expect(
+        callableRequestHeaders(
+          const CallableContext(appCheckToken: 'app-check-token'),
+        ),
+        containsPair('X-Firebase-AppCheck', 'app-check-token'),
+      );
+    });
   });
 
   group('checkTokenTransport', () {
@@ -124,6 +133,16 @@ void main() {
     test('refuses tokens over HTTP to any other host', () {
       expect(
         () => check('http://192.168.1.20:5001/listFruit'),
+        _throwsFunctionsException('unauthenticated'),
+      );
+    });
+
+    test('refuses an App Check token over HTTP to any other host', () {
+      expect(
+        () => check(
+          'http://192.168.1.20:5001/listFruit',
+          const CallableContext(appCheckToken: 'app-check-token'),
+        ),
         _throwsFunctionsException('unauthenticated'),
       );
     });

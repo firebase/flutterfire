@@ -23,6 +23,12 @@ Matcher _throwsCode(String code) {
   );
 }
 
+/// A token provider that always returns [context].
+CallableContextProvider _fixedContext([
+  CallableContext context = const CallableContext(),
+]) =>
+    ({required limitedUseAppCheckToken}) async => context;
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   setupFirebaseCoreMocks();
@@ -44,7 +50,7 @@ void main() {
     return DartFirebaseFunctions.withHttpClient(
       MockClient(handler),
       app: app,
-      contextProvider: contextProvider ?? () async => const CallableContext(),
+      contextProvider: contextProvider ?? _fixedContext(),
     )..useFunctionsEmulator(
         'localhost',
         5001,
@@ -157,8 +163,8 @@ void main() {
           sent = request;
           return http.Response('{"result":null}', 200);
         },
-        contextProvider: () async =>
-            const CallableContext(authToken: 'id-token'),
+        contextProvider:
+            _fixedContext(const CallableContext(authToken: 'id-token')),
       );
 
       await functions.httpsCallable('listFruit').call();
@@ -186,7 +192,7 @@ void main() {
           sentTokens.add(request.headers['Authorization']);
           return http.Response('{"result":null}', 200);
         },
-        contextProvider: () async {
+        contextProvider: ({required limitedUseAppCheckToken}) async {
           tokens.moveNext();
           return CallableContext(authToken: tokens.current);
         },
@@ -206,7 +212,8 @@ void main() {
           requests++;
           return http.Response('{"result":null}', 200);
         },
-        contextProvider: () async => throw FirebaseException(
+        contextProvider: ({required limitedUseAppCheckToken}) async =>
+            throw FirebaseException(
           plugin: 'firebase_auth',
           code: 'network-request-failed',
           message: 'A network error has occurred.',
@@ -235,8 +242,8 @@ void main() {
           requests++;
           return http.Response('{"result":null}', 200);
         },
-        contextProvider: () async =>
-            const CallableContext(authToken: 'id-token'),
+        contextProvider:
+            _fixedContext(const CallableContext(authToken: 'id-token')),
       );
 
       await expectLater(
@@ -258,8 +265,8 @@ void main() {
             sent = request;
             return http.Response('{"result":null}', 200);
           },
-          contextProvider: () async =>
-              const CallableContext(authToken: 'id-token'),
+          contextProvider:
+              _fixedContext(const CallableContext(authToken: 'id-token')),
         )..allowInsecureTokenAttachment = true;
 
         await functions
@@ -269,6 +276,48 @@ void main() {
         expect(sent.headers['Authorization'], 'Bearer id-token');
       },
     );
+  });
+
+  group('App Check token', () {
+    test('is sent as X-Firebase-AppCheck', () async {
+      late http.Request sent;
+      final functions = emulatorFunctions(
+        (request) async {
+          sent = request;
+          return http.Response('{"result":null}', 200);
+        },
+        contextProvider: _fixedContext(
+          const CallableContext(appCheckToken: 'app-check-token'),
+        ),
+      );
+
+      await functions.httpsCallable('listFruit').call();
+
+      expect(sent.headers['X-Firebase-AppCheck'], 'app-check-token');
+    });
+
+    test('is requested as limited-use only when the option is set', () async {
+      final requested = <bool>[];
+      final functions = emulatorFunctions(
+        (_) async => http.Response('{"result":null}', 200),
+        contextProvider: ({required limitedUseAppCheckToken}) async {
+          requested.add(limitedUseAppCheckToken);
+          return const CallableContext();
+        },
+      );
+
+      await functions.httpsCallable('listFruit').call();
+      await functions
+          .httpsCallable(
+            'listFruit',
+            options: const DartHttpsCallableOptions(
+              limitedUseAppCheckToken: true,
+            ),
+          )
+          .call();
+
+      expect(requested, [false, true]);
+    });
   });
 
   group('useFunctionsEmulator()', () {

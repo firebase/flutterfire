@@ -215,7 +215,8 @@ class _MyAppState extends State<MyApp> {
                 FloatingActionButton.extended(
                   onPressed: () async {
                     // Both implementations attach the signed-in user's ID
-                    // token; only native attaches App Check and FCM tokens.
+                    // token, plus an App Check token once App Check is set
+                    // up; only native attaches the FCM token.
                     await callingFunction(
                       'testEchoContext, called by name',
                       (sender) => sender.callByName(

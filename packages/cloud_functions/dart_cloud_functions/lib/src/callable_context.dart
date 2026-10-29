@@ -11,18 +11,25 @@ import 'package:flutter/foundation.dart';
 @immutable
 class CallableContext {
   /// Creates a context with the given tokens.
-  const CallableContext({this.authToken});
+  const CallableContext({this.authToken, this.appCheckToken});
 
   /// The signed-in user's Firebase ID token, or `null` when nobody is signed
   /// in.
   final String? authToken;
 
+  /// The App Check token, or `null` when the app doesn't use App Check or no
+  /// token could be fetched.
+  final String? appCheckToken;
+
   /// Whether the request would carry any credentials.
-  bool get hasTokens => authToken != null;
+  bool get hasTokens => authToken != null || appCheckToken != null;
 }
 
 /// Returns the tokens for the next callable request.
 ///
 /// Called once per request, so a sign-in or sign-out between two calls takes
-/// effect on the next one.
-typedef CallableContextProvider = Future<CallableContext> Function();
+/// effect on the next one. [limitedUseAppCheckToken] asks for a limited-use
+/// App Check token instead of the standard one.
+typedef CallableContextProvider = Future<CallableContext> Function({
+  required bool limitedUseAppCheckToken,
+});

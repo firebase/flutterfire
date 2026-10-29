@@ -155,10 +155,15 @@ class DartHttpsCallableOptions {
   /// Creates options for a callable.
   const DartHttpsCallableOptions({
     this.timeout = const Duration(seconds: 60),
+    this.limitedUseAppCheckToken = false,
   });
 
   /// How long a call may take before it fails with `deadline-exceeded`.
   final Duration timeout;
+
+  /// Whether to send a limited-use App Check token instead of the standard
+  /// one, for functions that use App Check replay protection.
+  final bool limitedUseAppCheckToken;
 }
 
 /// The value a callable function returned.
@@ -248,7 +253,9 @@ class DartHttpsCallable {
   /// failure fails the call.
   Future<CallableContext> _fetchContext() async {
     try {
-      return await _functions._contextProvider();
+      return await _functions._contextProvider(
+        limitedUseAppCheckToken: options.limitedUseAppCheckToken,
+      );
     } catch (error, stackTrace) {
       Error.throwWithStackTrace(callableContextException(error), stackTrace);
     }

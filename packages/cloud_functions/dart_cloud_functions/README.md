@@ -41,8 +41,14 @@ try {
 - `DartFirebaseFunctions.instanceFor(app: ..., region: ...)` selects another
   app or region. Instances are cached per app and region.
 - Calls carry the ID token of the user signed in to Firebase Auth, as
-  `Authorization: Bearer <token>`, like `cloud_functions`. This is why the
-  package depends on `firebase_auth`.
+  `Authorization: Bearer <token>`, like `cloud_functions`.
+- Once the app has set up App Check (`FirebaseAppCheck.instance.activate()`),
+  calls also carry an App Check token as `X-Firebase-AppCheck`.
+  `DartHttpsCallableOptions(limitedUseAppCheckToken: true)` sends a
+  limited-use token instead, for functions that use replay protection. If no
+  App Check token can be fetched, the call goes out without one, as in
+  `cloud_functions`. These tokens are why the package depends on
+  `firebase_auth` and `firebase_app_check`.
 - Tokens are only sent over HTTPS or to the local machine (`localhost`,
   `127.0.0.1`, `::1`, or `10.0.2.2` from the Android emulator). A call that
   would send them over plain HTTP anywhere else fails with `unauthenticated`,
@@ -72,6 +78,6 @@ cases of the native e2e suite against this package.
 
 ## Not yet supported
 
-- App Check and FCM tokens: requests are sent without them.
+- FCM tokens: requests are sent without them.
 - Streaming (`stream()`).
 - 64-bit integer encoding, custom domains, and web.

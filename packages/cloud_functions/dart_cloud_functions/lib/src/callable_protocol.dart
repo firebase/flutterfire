@@ -18,6 +18,8 @@ Map<String, String> callableRequestHeaders(CallableContext context) {
     'Content-Type': 'application/json',
     if (context.authToken case final authToken?)
       'Authorization': 'Bearer $authToken',
+    if (context.appCheckToken case final appCheckToken?)
+      'X-Firebase-AppCheck': appCheckToken,
   };
 }
 
