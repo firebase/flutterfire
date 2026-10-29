@@ -108,16 +108,21 @@ class _HomePageState extends State<HomePage> {
                   return 'Listening cancelled';
                 }
                 setState(() {
-                  subscription = remoteConfig.onConfigUpdated.listen((
-                    event,
-                  ) async {
-                    // Make new values available to the app.
-                    await remoteConfig.activate();
+                  subscription = remoteConfig.onConfigUpdated.listen(
+                    (event) async {
+                      // Make new values available to the app.
+                      await remoteConfig.activate();
 
-                    setState(() {
-                      update = event;
-                    });
-                  });
+                      setState(() {
+                        update = event;
+                      });
+                    },
+                    // Realtime connection errors. The stream stays open and
+                    // the SDK retries, so this can be called more than once.
+                    onError: (Object error) {
+                      print('Realtime update error: $error');
+                    },
+                  );
                 });
 
                 return 'Listening, waiting for update...';
