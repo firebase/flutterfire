@@ -40,8 +40,10 @@ class GoogleAuthProvider extends AuthProvider {
 
   /// Create a new [GoogleAuthCredential] from a provided [accessToken].
   static OAuthCredential credential({String? idToken, String? accessToken}) {
-    assert(accessToken != null || idToken != null,
-        'At least one of ID token and access token is required');
+    assert(
+      accessToken != null || idToken != null,
+      'At least one of ID token and access token is required',
+    );
     return GoogleAuthCredential._credential(
       idToken: idToken,
       accessToken: accessToken,
@@ -90,14 +92,13 @@ class GoogleAuthProvider extends AuthProvider {
 /// The auth credential returned from calling
 /// [GoogleAuthProvider.credential].
 class GoogleAuthCredential extends OAuthCredential {
-  GoogleAuthCredential._({
-    String? accessToken,
-    String? idToken,
-  }) : super(
-            providerId: _kProviderId,
-            signInMethod: _kProviderId,
-            accessToken: accessToken,
-            idToken: idToken);
+  GoogleAuthCredential._({String? accessToken, String? idToken})
+    : super(
+        providerId: _kProviderId,
+        signInMethod: _kProviderId,
+        accessToken: accessToken,
+        idToken: idToken,
+      );
 
   factory GoogleAuthCredential._credential({
     String? idToken,

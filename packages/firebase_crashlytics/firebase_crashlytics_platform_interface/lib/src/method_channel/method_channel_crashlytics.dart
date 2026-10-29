@@ -18,7 +18,7 @@ import '../platform_interface/platform_interface_crashlytics.dart';
 class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
   /// Create an instance of [MethodChannelFirebaseCrashlytics].
   MethodChannelFirebaseCrashlytics({required FirebaseApp app})
-      : super(appInstance: app);
+    : super(appInstance: app);
 
   static final pigeon.FirebaseCrashlyticsHostApi pigeonChannel =
       pigeon.FirebaseCrashlyticsHostApi();
@@ -42,7 +42,8 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
   Future<bool> checkForUnsentReports() async {
     if (isCrashlyticsCollectionEnabled) {
       throw StateError(
-          "Crashlytics#setCrashlyticsCollectionEnabled has been set to 'true', all reports are automatically sent.");
+        "Crashlytics#setCrashlyticsCollectionEnabled has been set to 'true', all reports are automatically sent.",
+      );
     }
 
     try {
@@ -136,8 +137,8 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
   @override
   Future<void> setCrashlyticsCollectionEnabled(bool enabled) async {
     try {
-      _isCrashlyticsCollectionEnabled =
-          await pigeonChannel.setCrashlyticsCollectionEnabled(enabled);
+      _isCrashlyticsCollectionEnabled = await pigeonChannel
+          .setCrashlyticsCollectionEnabled(enabled);
     } catch (e, s) {
       convertPlatformException(e, s);
     }

@@ -29,7 +29,7 @@ class DataConnectPath {
   final List<DataConnectPathSegment> components;
 
   DataConnectPath([List<DataConnectPathSegment>? components])
-      : components = components ?? [];
+    : components = components ?? [];
 
   DataConnectPath appending(DataConnectPathSegment segment) {
     return DataConnectPath([...components, segment]);
@@ -98,11 +98,14 @@ class ExtensionResponse {
 
   factory ExtensionResponse.fromJson(Map<String, dynamic> json) {
     return ExtensionResponse(
-      maxAge:
-          json['ttl'] != null ? Duration(seconds: json['ttl'] as int) : null,
-      dataConnect: (json['dataConnect'] as List?)
-              ?.map((e) =>
-                  PathMetadataResponse.fromJson(e as Map<String, dynamic>))
+      maxAge: json['ttl'] != null
+          ? Duration(seconds: json['ttl'] as int)
+          : null,
+      dataConnect:
+          (json['dataConnect'] as List?)
+              ?.map(
+                (e) => PathMetadataResponse.fromJson(e as Map<String, dynamic>),
+              )
               .toList() ??
           [],
     );
@@ -113,15 +116,18 @@ class ExtensionResponse {
     for (final pmr in dataConnect) {
       if (pmr.entityId != null) {
         final pm = PathMetadata(
-            path: DataConnectPath(pmr.path), entityId: pmr.entityId);
+          path: DataConnectPath(pmr.path),
+          entityId: pmr.entityId,
+        );
         result[pm.path] = pm;
       }
 
       if (pmr.entityIds != null) {
         for (var i = 0; i < pmr.entityIds!.length; i++) {
           final entityId = pmr.entityIds![i];
-          final indexPath = DataConnectPath(pmr.path)
-              .appending(DataConnectListIndexPathSegment(i));
+          final indexPath = DataConnectPath(
+            pmr.path,
+          ).appending(DataConnectListIndexPathSegment(i));
           final pm = PathMetadata(path: indexPath, entityId: entityId);
           result[pm.path] = pm;
         }
@@ -140,10 +146,7 @@ class CacheSettings {
   final Duration maxAge;
 
   // Internal const constructor
-  const CacheSettings._internal({
-    required this.storage,
-    required this.maxAge,
-  });
+  const CacheSettings._internal({required this.storage, required this.maxAge});
 
   // Factory constructor to handle the logic
   factory CacheSettings({
@@ -189,25 +192,26 @@ class ResultTree {
     return DateTime.now().difference(cachedAt) > ttl;
   }
 
-  ResultTree(
-      {required this.data,
-      required this.ttl,
-      required this.cachedAt,
-      required this.lastAccessed});
+  ResultTree({
+    required this.data,
+    required this.ttl,
+    required this.cachedAt,
+    required this.lastAccessed,
+  });
 
   factory ResultTree.fromJson(Map<String, dynamic> json) => ResultTree(
-        data: Map<String, dynamic>.from(json['data'] as Map),
-        ttl: Duration(microseconds: json['ttl'] as int),
-        cachedAt: DateTime.parse(json['cachedAt'] as String),
-        lastAccessed: DateTime.parse(json['lastAccessed'] as String),
-      );
+    data: Map<String, dynamic>.from(json['data'] as Map),
+    ttl: Duration(microseconds: json['ttl'] as int),
+    cachedAt: DateTime.parse(json['cachedAt'] as String),
+    lastAccessed: DateTime.parse(json['lastAccessed'] as String),
+  );
 
   Map<String, dynamic> toJson() => {
-        'data': data,
-        'ttl': ttl.inMicroseconds,
-        'cachedAt': cachedAt.toIso8601String(),
-        'lastAccessed': lastAccessed.toIso8601String(),
-      };
+    'data': data,
+    'ttl': ttl.inMicroseconds,
+    'cachedAt': cachedAt.toIso8601String(),
+    'lastAccessed': lastAccessed.toIso8601String(),
+  };
 
   factory ResultTree.fromRawJson(String source) =>
       ResultTree.fromJson(json.decode(source) as Map<String, dynamic>);
@@ -258,17 +262,17 @@ class EntityDataObject {
   String toRawJson() => json.encode(toJson());
 
   Map<String, dynamic> toJson() => {
-        kGlobalIDKey: guid,
-        '_serverValues': _serverValues,
-        'referencedFrom': referencedFrom.toList(),
-      };
+    kGlobalIDKey: guid,
+    '_serverValues': _serverValues,
+    'referencedFrom': referencedFrom.toList(),
+  };
 
   factory EntityDataObject.fromJson(Map<String, dynamic> json) {
-    EntityDataObject edo = EntityDataObject(
-      guid: json[kGlobalIDKey] as String,
-    );
+    EntityDataObject edo = EntityDataObject(guid: json[kGlobalIDKey] as String);
     edo.setServerValues(
-        Map<String, dynamic>.from(json['_serverValues'] as Map), null);
+      Map<String, dynamic>.from(json['_serverValues'] as Map),
+      null,
+    );
 
     List<dynamic>? rf = json['referencedFrom'];
     if (rf != null) {
@@ -296,14 +300,17 @@ class EntityNode {
   final Map<String, List<EntityNode>>? nestedObjectLists;
   static const String listsKey = 'lists';
 
-  EntityNode(
-      {this.entity,
-      this.scalarValues,
-      this.nestedObjects,
-      this.nestedObjectLists});
+  EntityNode({
+    this.entity,
+    this.scalarValues,
+    this.nestedObjects,
+    this.nestedObjectLists,
+  });
 
   factory EntityNode.fromJson(
-      Map<String, dynamic> json, CacheProvider cacheProvider) {
+    Map<String, dynamic> json,
+    CacheProvider cacheProvider,
+  ) {
     EntityDataObject? entity;
     if (json[kGlobalIDKey] != null) {
       entity = cacheProvider.getEntityData(json[kGlobalIDKey]);
@@ -341,10 +348,11 @@ class EntityNode {
       });
     }
     return EntityNode(
-        entity: entity,
-        scalarValues: scalars,
-        nestedObjects: objects,
-        nestedObjectLists: objLists);
+      entity: entity,
+      scalarValues: scalars,
+      nestedObjects: objects,
+      nestedObjectLists: objLists,
+    );
   }
 
   Map<String, dynamic> toJson({EncodingMode mode = EncodingMode.hydrated}) {

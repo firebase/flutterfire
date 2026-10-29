@@ -10,6 +10,6 @@ LoadBundleTaskState convertToTaskState(String state) {
     'running' => LoadBundleTaskState.running,
     'success' => LoadBundleTaskState.success,
     'error' => LoadBundleTaskState.error,
-    _ => throw UnsupportedError('Unknown LoadBundleTaskState value: $state.')
+    _ => throw UnsupportedError('Unknown LoadBundleTaskState value: $state.'),
   };
 }

@@ -70,49 +70,52 @@ void main() {
       });
 
       test(
-          "will immediately return if name length is longer than 'TracePlatform.maxAttributeKeyLength' ",
-          () async {
-        String longName =
-            'thisisaverylongnamethatislongerthanthe40charactersallowedbyTracePlatformmaxAttributeKeyLengthwaywaylongertogetover100charlimit';
-        const String attributeValue = 'foo';
-        trace.putAttribute(longName, attributeValue);
-        expect(log, <Matcher>[]);
-        expect(trace.getAttribute(longName), isNull);
-      });
+        "will immediately return if name length is longer than 'TracePlatform.maxAttributeKeyLength' ",
+        () async {
+          String longName =
+              'thisisaverylongnamethatislongerthanthe40charactersallowedbyTracePlatformmaxAttributeKeyLengthwaywaylongertogetover100charlimit';
+          const String attributeValue = 'foo';
+          trace.putAttribute(longName, attributeValue);
+          expect(log, <Matcher>[]);
+          expect(trace.getAttribute(longName), isNull);
+        },
+      );
 
       test(
-          "will immediately return if value length is longer than 'TracePlatform.maxAttributeValueLength' ",
-          () async {
-        String attributeName = 'foo';
-        String longValue =
-            'thisisaverylongnamethatislongerthanthe40charactersallowedbyTracePlatformmaxAttributeKeyLengthwaywaylongertogetover100charlimit';
-        trace.putAttribute(attributeName, longValue);
-        expect(log, <Matcher>[]);
-        expect(trace.getAttribute(attributeName), isNull);
-      });
+        "will immediately return if value length is longer than 'TracePlatform.maxAttributeValueLength' ",
+        () async {
+          String attributeName = 'foo';
+          String longValue =
+              'thisisaverylongnamethatislongerthanthe40charactersallowedbyTracePlatformmaxAttributeKeyLengthwaywaylongertogetover100charlimit';
+          trace.putAttribute(attributeName, longValue);
+          expect(log, <Matcher>[]);
+          expect(trace.getAttribute(attributeName), isNull);
+        },
+      );
 
       test(
-          "will immediately return if attribute map has more properties than 'TracePlatform.maxCustomAttributes' allows",
-          () async {
-        String attributeName1 = 'foo';
-        String attributeName2 = 'bar';
-        String attributeName3 = 'baz';
-        String attributeName4 = 'too';
-        String attributeName5 = 'yoo';
-        String attributeName6 = 'who';
-        String attributeValue = 'bar';
-        trace.putAttribute(attributeName1, attributeValue);
-        trace.putAttribute(attributeName2, attributeValue);
-        trace.putAttribute(attributeName3, attributeValue);
-        trace.putAttribute(attributeName4, attributeValue);
-        trace.putAttribute(attributeName5, attributeValue);
-        trace.putAttribute(attributeName6, attributeValue);
+        "will immediately return if attribute map has more properties than 'TracePlatform.maxCustomAttributes' allows",
+        () async {
+          String attributeName1 = 'foo';
+          String attributeName2 = 'bar';
+          String attributeName3 = 'baz';
+          String attributeName4 = 'too';
+          String attributeName5 = 'yoo';
+          String attributeName6 = 'who';
+          String attributeValue = 'bar';
+          trace.putAttribute(attributeName1, attributeValue);
+          trace.putAttribute(attributeName2, attributeValue);
+          trace.putAttribute(attributeName3, attributeValue);
+          trace.putAttribute(attributeName4, attributeValue);
+          trace.putAttribute(attributeName5, attributeValue);
+          trace.putAttribute(attributeName6, attributeValue);
 
-        expect(log, <Matcher>[]);
+          expect(log, <Matcher>[]);
 
-        expect(trace.getAttribute(attributeName5), attributeValue);
-        expect(trace.getAttribute(attributeName6), isNull);
-      });
+          expect(trace.getAttribute(attributeName5), attributeValue);
+          expect(trace.getAttribute(attributeName6), isNull);
+        },
+      );
     });
 
     group('removeAttribute', () {

@@ -20,8 +20,9 @@ void main() {
       TestFirebaseFunctionsPlatform firebaseFunctionsPlatform =
           TestFirebaseFunctionsPlatform(app);
 
-      httpsCallablePlatform =
-          TestHttpsCallablePlatform(firebaseFunctionsPlatform);
+      httpsCallablePlatform = TestHttpsCallablePlatform(
+        firebaseFunctionsPlatform,
+      );
 
       handleMethodCall((call) async {
         switch (call.method) {
@@ -51,7 +52,7 @@ void main() {
 
 class TestHttpsCallablePlatform extends HttpsCallablePlatform {
   TestHttpsCallablePlatform(FirebaseFunctionsPlatform functions)
-      : super(functions, null, 'function_name', HttpsCallableOptions(), null);
+    : super(functions, null, 'function_name', HttpsCallableOptions(), null);
 }
 
 class TestFirebaseFunctionsPlatform extends FirebaseFunctionsPlatform {

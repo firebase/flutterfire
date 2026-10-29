@@ -15,8 +15,9 @@ import 'package:firebase_app_check_example/firebase_options.dart';
 
 import 'report_test_results.dart';
 
-const androidDebugToken =
-    String.fromEnvironment('APP_CHECK_ANDROID_DEBUG_TOKEN');
+const androidDebugToken = String.fromEnvironment(
+  'APP_CHECK_ANDROID_DEBUG_TOKEN',
+);
 
 const appleDebugToken = String.fromEnvironment('APP_CHECK_APPLE_DEBUG_TOKEN');
 
@@ -24,222 +25,189 @@ void main() {
   final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
   reportTestResultsToDriver(binding);
 
-  group(
-    'firebase_app_check',
-    () {
-      setUpAll(() async {
-        // The native SDK may already have configured [DEFAULT] from a bundled
-        // GoogleService-Info.plist (the plugin registrant does this before any
-        // Dart runs). Dart's Firebase.apps cannot see that app until the first
-        // platform-channel call, so the only reliable guard is catching the
-        // duplicate-app error and keeping the natively configured instance.
-        try {
-          await Firebase.initializeApp(
-            options: DefaultFirebaseOptions.currentPlatform,
-          );
-        } on FirebaseException catch (e) {
-          if (e.code != 'duplicate-app') {
-            rethrow;
+  group('firebase_app_check', () {
+    setUpAll(() async {
+      // The native SDK may already have configured [DEFAULT] from a bundled
+      // GoogleService-Info.plist (the plugin registrant does this before any
+      // Dart runs). Dart's Firebase.apps cannot see that app until the first
+      // platform-channel call, so the only reliable guard is catching the
+      // duplicate-app error and keeping the natively configured instance.
+      try {
+        await Firebase.initializeApp(
+          options: DefaultFirebaseOptions.currentPlatform,
+        );
+      } on FirebaseException catch (e) {
+        if (e.code != 'duplicate-app') {
+          rethrow;
+        }
+      }
+    });
+
+    test('activate', () async {
+      await expectLater(
+        FirebaseAppCheck.instance.activate(
+          providerWeb: ReCaptchaV3Provider(
+            '6Lemcn0dAAAAABLkf6aiiHvpGD6x-zF3nOSDU2M8',
+          ),
+        ),
+        completes,
+      );
+    });
+
+    test('getToken', () async {
+      try {
+        await FirebaseAppCheck.instance.getToken(true);
+      } catch (exception) {
+        // Needs a debug token pasted in the Firebase console to work so we catch the exception.
+        expect(exception, isA<FirebaseException>());
+      }
+    });
+
+    test('getTokenResult', () async {
+      try {
+        final result = await FirebaseAppCheck.instance.getTokenResult(true);
+        if (result != null) {
+          expect(result.token, isNotEmpty);
+          if (!kIsWeb) {
+            expect(result.expirationTime, isNotNull);
+            expect(result.expirationTime!.isAfter(DateTime.now()), isTrue);
           }
         }
-      });
+      } catch (exception) {
+        // Needs a debug token pasted in the Firebase console to work so we catch the exception.
+        expect(exception, isA<FirebaseException>());
+      }
+    });
 
-      test(
-        'activate',
-        () async {
-          await expectLater(
-            FirebaseAppCheck.instance.activate(
-              providerWeb: ReCaptchaV3Provider(
-                '6Lemcn0dAAAAABLkf6aiiHvpGD6x-zF3nOSDU2M8',
-              ),
-            ),
-            completes,
-          );
-        },
+    test('setTokenAutoRefreshEnabled', () async {
+      await expectLater(
+        FirebaseAppCheck.instance.setTokenAutoRefreshEnabled(true),
+        completes,
       );
+    });
 
-      test(
-        'getToken',
-        () async {
-          try {
-            await FirebaseAppCheck.instance.getToken(true);
-          } catch (exception) {
-            // Needs a debug token pasted in the Firebase console to work so we catch the exception.
-            expect(exception, isA<FirebaseException>());
-          }
-        },
+    test('onTokenChange', () async {
+      final stream = FirebaseAppCheck.instance.onTokenChange;
+      expect(stream, isA<Stream<String?>>());
+    });
+
+    test('getLimitedUseToken', () async {
+      final String token;
+      try {
+        token = await FirebaseAppCheck.instance.getLimitedUseToken();
+      } catch (exception) {
+        // Needs a debug token pasted in the Firebase console to work so we catch the exception.
+        expect(exception, isA<FirebaseException>());
+        return;
+      }
+      if (kIsWeb) return;
+      // Limited-use tokens have a fixed 5 minute TTL, while standard tokens
+      // default to 1 hour. A longer TTL means a standard token was returned.
+      expect(_tokenTtl(token), lessThanOrEqualTo(const Duration(minutes: 5)));
+    });
+
+    test('debugToken on Android', () async {
+      await expectLater(
+        FirebaseAppCheck.instance.activate(
+          providerAndroid: const AndroidDebugProvider(),
+        ),
+        completes,
       );
+    }, skip: defaultTargetPlatform != TargetPlatform.android);
 
-      test(
-        'getTokenResult',
-        () async {
-          try {
-            final result = await FirebaseAppCheck.instance.getTokenResult(true);
-            if (result != null) {
-              expect(result.token, isNotEmpty);
-              if (!kIsWeb) {
-                expect(result.expirationTime, isNotNull);
-                expect(result.expirationTime!.isAfter(DateTime.now()), isTrue);
-              }
-            }
-          } catch (exception) {
-            // Needs a debug token pasted in the Firebase console to work so we catch the exception.
-            expect(exception, isA<FirebaseException>());
-          }
-        },
+    test('debugToken on iOS', () async {
+      await expectLater(
+        FirebaseAppCheck.instance.activate(
+          providerApple: const AppleDebugProvider(),
+        ),
+        completes,
       );
+    }, skip: defaultTargetPlatform != TargetPlatform.iOS);
 
-      test(
-        'setTokenAutoRefreshEnabled',
-        () async {
-          await expectLater(
-            FirebaseAppCheck.instance.setTokenAutoRefreshEnabled(true),
-            completes,
-          );
-        },
-      );
+    test(
+      'appAttestWithDeviceCheckFallback falls back rather than erroring',
+      () async {
+        await FirebaseAppCheck.instance.activate(
+          providerApple: const AppleAppAttestWithDeviceCheckFallbackProvider(),
+        );
 
-      test('onTokenChange', () async {
-        final stream = FirebaseAppCheck.instance.onTokenChange;
-        expect(stream, isA<Stream<String?>>());
-      });
-
-      test(
-        'getLimitedUseToken',
-        () async {
-          final String token;
-          try {
-            token = await FirebaseAppCheck.instance.getLimitedUseToken();
-          } catch (exception) {
-            // Needs a debug token pasted in the Firebase console to work so we catch the exception.
-            expect(exception, isA<FirebaseException>());
-            return;
-          }
-          if (kIsWeb) return;
-          // Limited-use tokens have a fixed 5 minute TTL, while standard tokens
-          // default to 1 hour. A longer TTL means a standard token was returned.
+        // On devices without App Attest support — most Macs, and every
+        // simulator — the provider has to fall back to DeviceCheck. It used
+        // to pick App Attest purely on OS version and fail with "The
+        // attestation provider AppAttestProvider is not supported on current
+        // platform and OS version", so App Attest must not be the provider
+        // named in any error. Fetching a token can still fail beyond that
+        // (simulators do not support DeviceCheck either, and there is no
+        // debug token configured), which is fine here.
+        try {
+          await FirebaseAppCheck.instance.getToken(true);
+        } on FirebaseException catch (e) {
           expect(
-            _tokenTtl(token),
-            lessThanOrEqualTo(const Duration(minutes: 5)),
+            '${e.message}',
+            isNot(contains('AppAttestProvider')),
+            reason: 'the DeviceCheck fallback did not engage',
           );
-        },
-      );
+        }
+      },
+      skip:
+          defaultTargetPlatform != TargetPlatform.macOS &&
+              defaultTargetPlatform != TargetPlatform.iOS
+          ? 'Apple platforms only.'
+          : null,
+    );
 
-      test(
-        'debugToken on Android',
-        () async {
-          await expectLater(
-            FirebaseAppCheck.instance.activate(
-              providerAndroid: const AndroidDebugProvider(),
-            ),
-            completes,
-          );
-        },
-        skip: defaultTargetPlatform != TargetPlatform.android,
-      );
+    test(
+      'uses Apple debug token when both Android and Apple debug tokens are configured',
+      () async {
+        await FirebaseAppCheck.instance.activate(
+          providerAndroid: const AndroidDebugProvider(
+            debugToken: androidDebugToken,
+          ),
+          providerApple: const AppleDebugProvider(debugToken: appleDebugToken),
+        );
 
-      test(
-        'debugToken on iOS',
-        () async {
-          await expectLater(
-            FirebaseAppCheck.instance.activate(
-              providerApple: const AppleDebugProvider(),
-            ),
-            completes,
-          );
-        },
-        skip: defaultTargetPlatform != TargetPlatform.iOS,
-      );
-
-      test(
-        'appAttestWithDeviceCheckFallback falls back rather than erroring',
-        () async {
-          await FirebaseAppCheck.instance.activate(
-            providerApple:
-                const AppleAppAttestWithDeviceCheckFallbackProvider(),
-          );
-
-          // On devices without App Attest support — most Macs, and every
-          // simulator — the provider has to fall back to DeviceCheck. It used
-          // to pick App Attest purely on OS version and fail with "The
-          // attestation provider AppAttestProvider is not supported on current
-          // platform and OS version", so App Attest must not be the provider
-          // named in any error. Fetching a token can still fail beyond that
-          // (simulators do not support DeviceCheck either, and there is no
-          // debug token configured), which is fine here.
-          try {
-            await FirebaseAppCheck.instance.getToken(true);
-          } on FirebaseException catch (e) {
-            expect(
-              '${e.message}',
-              isNot(contains('AppAttestProvider')),
-              reason: 'the DeviceCheck fallback did not engage',
-            );
-          }
-        },
-        skip: defaultTargetPlatform != TargetPlatform.macOS &&
-                defaultTargetPlatform != TargetPlatform.iOS
-            ? 'Apple platforms only.'
-            : null,
-      );
-
-      test(
-        'uses Apple debug token when both Android and Apple debug tokens are configured',
-        () async {
-          await FirebaseAppCheck.instance.activate(
-            providerAndroid: const AndroidDebugProvider(
-              debugToken: androidDebugToken,
-            ),
-            providerApple: const AppleDebugProvider(
-              debugToken: appleDebugToken,
-            ),
-          );
-
-          await expectLater(
-            FirebaseAppCheck.instance.getToken(true),
-            completes,
-          );
-        },
-        skip: defaultTargetPlatform != TargetPlatform.iOS ||
-                androidDebugToken.isEmpty ||
-                appleDebugToken.isEmpty
-            ? 'Requires iOS plus APP_CHECK_ANDROID_DEBUG_TOKEN and '
+        await expectLater(FirebaseAppCheck.instance.getToken(true), completes);
+      },
+      skip:
+          defaultTargetPlatform != TargetPlatform.iOS ||
+              androidDebugToken.isEmpty ||
+              appleDebugToken.isEmpty
+          ? 'Requires iOS plus APP_CHECK_ANDROID_DEBUG_TOKEN and '
                 'APP_CHECK_APPLE_DEBUG_TOKEN dart-defines.'
-            : null,
-      );
+          : null,
+    );
 
-      test(
-        'uses Android debug token when both Android and Apple debug tokens are configured',
-        () async {
-          await FirebaseAppCheck.instance.activate(
-            providerAndroid: const AndroidDebugProvider(
-              debugToken: androidDebugToken,
-            ),
-            providerApple: const AppleDebugProvider(
-              debugToken: appleDebugToken,
-            ),
-          );
+    test(
+      'uses Android debug token when both Android and Apple debug tokens are configured',
+      () async {
+        await FirebaseAppCheck.instance.activate(
+          providerAndroid: const AndroidDebugProvider(
+            debugToken: androidDebugToken,
+          ),
+          providerApple: const AppleDebugProvider(debugToken: appleDebugToken),
+        );
 
-          await expectLater(
-            FirebaseAppCheck.instance.getToken(true),
-            completes,
-          );
-        },
-        skip: defaultTargetPlatform != TargetPlatform.android ||
-                androidDebugToken.isEmpty ||
-                appleDebugToken.isEmpty
-            ? 'Requires Android plus APP_CHECK_ANDROID_DEBUG_TOKEN and '
+        await expectLater(FirebaseAppCheck.instance.getToken(true), completes);
+      },
+      skip:
+          defaultTargetPlatform != TargetPlatform.android ||
+              androidDebugToken.isEmpty ||
+              appleDebugToken.isEmpty
+          ? 'Requires Android plus APP_CHECK_ANDROID_DEBUG_TOKEN and '
                 'APP_CHECK_APPLE_DEBUG_TOKEN dart-defines.'
-            : null,
-      );
-    },
-  );
+          : null,
+    );
+  });
 }
 
 /// The lifetime (`exp` - `iat`) of an App Check token, read from its JWT claims.
 Duration _tokenTtl(String token) {
-  final claims = jsonDecode(
-    utf8.decode(base64Url.decode(base64Url.normalize(token.split('.')[1]))),
-  ) as Map<String, dynamic>;
+  final claims =
+      jsonDecode(
+            utf8.decode(
+              base64Url.decode(base64Url.normalize(token.split('.')[1])),
+            ),
+          )
+          as Map<String, dynamic>;
   return Duration(seconds: (claims['exp'] as int) - (claims['iat'] as int));
 }

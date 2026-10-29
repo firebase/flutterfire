@@ -17,11 +17,9 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 /// [CollectionReferencePlatform] to a subcollection.
 abstract class DocumentReferencePlatform extends PlatformInterface {
   /// Create instance of [DocumentReferencePlatform]
-  DocumentReferencePlatform(
-    this.firestore,
-    String path,
-  )   : _pointer = Pointer(path),
-        super(token: _token);
+  DocumentReferencePlatform(this.firestore, String path)
+    : _pointer = Pointer(path),
+      super(token: _token);
 
   static final Object _token = Object();
 
@@ -65,8 +63,9 @@ abstract class DocumentReferencePlatform extends PlatformInterface {
   /// Reads the document referenced by this [DocumentReferencePlatform].
   ///
   /// If no document exists, the read will return null.
-  Future<DocumentSnapshotPlatform> get(
-      [GetOptions options = const GetOptions()]) async {
+  Future<DocumentSnapshotPlatform> get([
+    GetOptions options = const GetOptions(),
+  ]) async {
     throw UnimplementedError('get() is not implemented');
   }
 

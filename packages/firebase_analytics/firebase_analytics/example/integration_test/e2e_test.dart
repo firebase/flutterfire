@@ -38,28 +38,24 @@ void main() {
     });
 
     // getSessionId has to be first, else Android returns null
-    test(
-      'getSessionId',
-      () async {
-        if (kIsWeb) {
-          await expectLater(
-            FirebaseAnalytics.instance.getSessionId(),
-            throwsA(isA<UnimplementedError>()),
-          );
-        } else {
-          await expectLater(
-            FirebaseAnalytics.instance.setConsent(
-              analyticsStorageConsentGranted: true,
-            ),
-            completes,
-          );
+    test('getSessionId', () async {
+      if (kIsWeb) {
+        await expectLater(
+          FirebaseAnalytics.instance.getSessionId(),
+          throwsA(isA<UnimplementedError>()),
+        );
+      } else {
+        await expectLater(
+          FirebaseAnalytics.instance.setConsent(
+            analyticsStorageConsentGranted: true,
+          ),
+          completes,
+        );
 
-          final result = await FirebaseAnalytics.instance.getSessionId();
-          expect(result, isA<int?>());
-        }
-      },
-      skip: skipTestsOnCI && defaultTargetPlatform == TargetPlatform.iOS,
-    );
+        final result = await FirebaseAnalytics.instance.getSessionId();
+        expect(result, isA<int?>());
+      }
+    }, skip: skipTestsOnCI && defaultTargetPlatform == TargetPlatform.iOS);
 
     test('isSupported', () async {
       final result = await FirebaseAnalytics.instance.isSupported();
@@ -101,10 +97,7 @@ void main() {
       await expectLater(
         FirebaseAnalytics.instance.logEvent(
           name: 'testing-parameters',
-          parameters: {
-            'foo': 'bar',
-            'baz': 500,
-          },
+          parameters: {'foo': 'bar', 'baz': 500},
         ),
         completes,
       );
@@ -137,10 +130,7 @@ void main() {
         FirebaseAnalytics.instance.logEvent(
           name: 'testing-items-and-parameters',
           items: [analyticsEventItem],
-          parameters: {
-            'foo': 'bar',
-            'baz': 500,
-          },
+          parameters: {'foo': 'bar', 'baz': 500},
         ),
         completes,
       );
@@ -181,24 +171,23 @@ void main() {
       );
     });
 
-    test(
-      'setSessionTimeoutDuration',
-      () async {
-        if (kIsWeb) {
-          await expectLater(
-            FirebaseAnalytics.instance
-                .setSessionTimeoutDuration(const Duration(milliseconds: 5000)),
-            throwsA(isA<UnimplementedError>()),
-          );
-        } else {
-          await expectLater(
-            FirebaseAnalytics.instance
-                .setSessionTimeoutDuration(const Duration(milliseconds: 5000)),
-            completes,
-          );
-        }
-      },
-    );
+    test('setSessionTimeoutDuration', () async {
+      if (kIsWeb) {
+        await expectLater(
+          FirebaseAnalytics.instance.setSessionTimeoutDuration(
+            const Duration(milliseconds: 5000),
+          ),
+          throwsA(isA<UnimplementedError>()),
+        );
+      } else {
+        await expectLater(
+          FirebaseAnalytics.instance.setSessionTimeoutDuration(
+            const Duration(milliseconds: 5000),
+          ),
+          completes,
+        );
+      }
+    });
 
     test('setAnalyticsCollectionEnabled', () async {
       await expectLater(
@@ -207,26 +196,22 @@ void main() {
       );
     });
 
-    test(
-      'logInAppPurchase',
-      () async {
-        await expectLater(
-          FirebaseAnalytics.instance.logInAppPurchase(
-            currency: 'USD',
-            freeTrial: false,
-            price: 4.99,
-            priceIsDiscounted: false,
-            productID: 'com.example.product',
-            productName: 'Example Product',
-            quantity: 1,
-            subscription: true,
-            value: 4.99,
-          ),
-          completes,
-        );
-      },
-      skip: defaultTargetPlatform != TargetPlatform.iOS,
-    );
+    test('logInAppPurchase', () async {
+      await expectLater(
+        FirebaseAnalytics.instance.logInAppPurchase(
+          currency: 'USD',
+          freeTrial: false,
+          price: 4.99,
+          priceIsDiscounted: false,
+          productID: 'com.example.product',
+          productName: 'Example Product',
+          quantity: 1,
+          subscription: true,
+          value: 4.99,
+        ),
+        completes,
+      );
+    }, skip: defaultTargetPlatform != TargetPlatform.iOS);
 
     test('setUserId', () async {
       await expectLater(
@@ -252,94 +237,87 @@ void main() {
       );
     });
 
-    test(
-      'resetAnalyticsData',
-      () async {
-        if (kIsWeb) {
-          await expectLater(
-            FirebaseAnalytics.instance.resetAnalyticsData(),
-            throwsA(isA<UnimplementedError>()),
-          );
-        } else {
-          await expectLater(
-            FirebaseAnalytics.instance.resetAnalyticsData(),
-            completes,
-          );
-        }
-      },
-    );
-
-    test(
-      'setConsent',
-      () async {
+    test('resetAnalyticsData', () async {
+      if (kIsWeb) {
         await expectLater(
-          FirebaseAnalytics.instance.setConsent(
-            analyticsStorageConsentGranted: true,
-            adStorageConsentGranted: true,
-            adPersonalizationSignalsConsentGranted: true,
-            adUserDataConsentGranted: true,
-            functionalityStorageConsentGranted: true,
-            personalizationStorageConsentGranted: true,
-            securityStorageConsentGranted: true,
-          ),
+          FirebaseAnalytics.instance.resetAnalyticsData(),
+          throwsA(isA<UnimplementedError>()),
+        );
+      } else {
+        await expectLater(
+          FirebaseAnalytics.instance.resetAnalyticsData(),
           completes,
         );
-      },
-    );
+      }
+    });
 
-    test(
-      'setDefaultEventParameters',
-      () async {
-        if (kIsWeb) {
-          await expectLater(
-            FirebaseAnalytics.instance
-                .setDefaultEventParameters({'default': 'parameters'}),
-            throwsA(isA<UnimplementedError>()),
-          );
-          // reset a single default parameter
-          await expectLater(
-            FirebaseAnalytics.instance
-                .setDefaultEventParameters({'default': null}),
-            throwsA(isA<UnimplementedError>()),
-          );
-          // reset all default parameters
-          await expectLater(
-            FirebaseAnalytics.instance.setDefaultEventParameters(null),
-            throwsA(isA<UnimplementedError>()),
-          );
-        } else {
-          await expectLater(
-            FirebaseAnalytics.instance
-                .setDefaultEventParameters({'default': 'parameters'}),
-            completes,
-          );
-          // reset a single default parameter
-          await expectLater(
-            FirebaseAnalytics.instance
-                .setDefaultEventParameters({'default': null}),
-            completes,
-          );
-          // reset all default parameters
-          await expectLater(
-            FirebaseAnalytics.instance.setDefaultEventParameters(null),
-            completes,
-          );
+    test('setConsent', () async {
+      await expectLater(
+        FirebaseAnalytics.instance.setConsent(
+          analyticsStorageConsentGranted: true,
+          adStorageConsentGranted: true,
+          adPersonalizationSignalsConsentGranted: true,
+          adUserDataConsentGranted: true,
+          functionalityStorageConsentGranted: true,
+          personalizationStorageConsentGranted: true,
+          securityStorageConsentGranted: true,
+        ),
+        completes,
+      );
+    });
 
-          // test custom event assert exception
-          await expectLater(
-            FirebaseAnalytics.instance.setDefaultEventParameters(
-              {
-                'foo': 'bar',
-                'baz': 500,
-                // Lists are not supported
-                'items': ['some', 'items'],
-              },
-            ),
-            throwsA(isA<AssertionError>()),
-          );
-        }
-      },
-    );
+    test('setDefaultEventParameters', () async {
+      if (kIsWeb) {
+        await expectLater(
+          FirebaseAnalytics.instance.setDefaultEventParameters({
+            'default': 'parameters',
+          }),
+          throwsA(isA<UnimplementedError>()),
+        );
+        // reset a single default parameter
+        await expectLater(
+          FirebaseAnalytics.instance.setDefaultEventParameters({
+            'default': null,
+          }),
+          throwsA(isA<UnimplementedError>()),
+        );
+        // reset all default parameters
+        await expectLater(
+          FirebaseAnalytics.instance.setDefaultEventParameters(null),
+          throwsA(isA<UnimplementedError>()),
+        );
+      } else {
+        await expectLater(
+          FirebaseAnalytics.instance.setDefaultEventParameters({
+            'default': 'parameters',
+          }),
+          completes,
+        );
+        // reset a single default parameter
+        await expectLater(
+          FirebaseAnalytics.instance.setDefaultEventParameters({
+            'default': null,
+          }),
+          completes,
+        );
+        // reset all default parameters
+        await expectLater(
+          FirebaseAnalytics.instance.setDefaultEventParameters(null),
+          completes,
+        );
+
+        // test custom event assert exception
+        await expectLater(
+          FirebaseAnalytics.instance.setDefaultEventParameters({
+            'foo': 'bar',
+            'baz': 500,
+            // Lists are not supported
+            'items': ['some', 'items'],
+          }),
+          throwsA(isA<AssertionError>()),
+        );
+      }
+    });
 
     test('appInstanceId', () async {
       if (kIsWeb) {
@@ -372,27 +350,23 @@ void main() {
       }
     });
 
-    test(
-      'initiateOnDeviceConversionMeasurement',
-      () async {
-        await expectLater(
-          FirebaseAnalytics.instance
-              .initiateOnDeviceConversionMeasurementWithEmailAddress(
-            'test@mail.com',
-          ),
-          completes,
-        );
+    test('initiateOnDeviceConversionMeasurement', () async {
+      await expectLater(
+        FirebaseAnalytics.instance
+            .initiateOnDeviceConversionMeasurementWithEmailAddress(
+              'test@mail.com',
+            ),
+        completes,
+      );
 
-        await expectLater(
-          FirebaseAnalytics.instance
-              .initiateOnDeviceConversionMeasurementWithPhoneNumber(
-            '+15555555555',
-          ),
-          completes,
-        );
-      },
-      skip: kIsWeb || defaultTargetPlatform != TargetPlatform.iOS,
-    );
+      await expectLater(
+        FirebaseAnalytics.instance
+            .initiateOnDeviceConversionMeasurementWithPhoneNumber(
+              '+15555555555',
+            ),
+        completes,
+      );
+    }, skip: kIsWeb || defaultTargetPlatform != TargetPlatform.iOS);
 
     group('logTransaction', () {
       test(
@@ -409,7 +383,8 @@ void main() {
             ),
           );
         },
-        skip: kIsWeb ||
+        skip:
+            kIsWeb ||
             (defaultTargetPlatform != TargetPlatform.iOS &&
                 defaultTargetPlatform != TargetPlatform.macOS),
       );
@@ -428,7 +403,8 @@ void main() {
             ),
           );
         },
-        skip: kIsWeb ||
+        skip:
+            kIsWeb ||
             (defaultTargetPlatform != TargetPlatform.iOS &&
                 defaultTargetPlatform != TargetPlatform.macOS),
       );

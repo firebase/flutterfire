@@ -23,10 +23,7 @@ class _PipelineSampleSize extends PipelineSample {
   const _PipelineSampleSize(this.size);
 
   @override
-  Map<String, dynamic> toMap() => {
-        'type': 'size',
-        'value': size,
-      };
+  Map<String, dynamic> toMap() => {'type': 'size', 'value': size};
 }
 
 /// Sample stage with a percentage
@@ -36,8 +33,5 @@ class _PipelineSamplePercentage extends PipelineSample {
   const _PipelineSamplePercentage(this.percentage);
 
   @override
-  Map<String, dynamic> toMap() => {
-        'type': 'percentage',
-        'value': percentage,
-      };
+  Map<String, dynamic> toMap() => {'type': 'percentage', 'value': percentage};
 }

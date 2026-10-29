@@ -20,19 +20,21 @@ void main() {
     });
 
     group('setSettings()', () {
-      test('throws if migrateCurrentUser is set without a userAccessGroup',
-          () async {
-        await expectLater(
-          () => auth.setSettings(migrateCurrentUser: true),
-          throwsA(
-            isA<ArgumentError>().having(
-              (e) => e.message,
-              'message',
-              contains('userAccessGroup'),
+      test(
+        'throws if migrateCurrentUser is set without a userAccessGroup',
+        () async {
+          await expectLater(
+            () => auth.setSettings(migrateCurrentUser: true),
+            throwsA(
+              isA<ArgumentError>().having(
+                (e) => e.message,
+                'message',
+                contains('userAccessGroup'),
+              ),
             ),
-          ),
-        );
-      });
+          );
+        },
+      );
 
       test('throws if only one of phoneNumber & smsCode is set', () async {
         await expectLater(

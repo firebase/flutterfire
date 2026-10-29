@@ -25,15 +25,12 @@ void setupDatabaseTests() {
       expect(snapshot.value, 0);
     });
 
-    test(
-      'root reference path returns as "/"',
-      () async {
-        final rootRef = database.ref();
-        expect(rootRef.path, '/');
-        expect(rootRef.key, isNull);
-        expect(rootRef.parent, isNull);
-      },
-    );
+    test('root reference path returns as "/"', () async {
+      final rootRef = database.ref();
+      expect(rootRef.path, '/');
+      expect(rootRef.key, isNull);
+      expect(rootRef.parent, isNull);
+    });
 
     test(
       'returns a reference to the root of the database if no path specified',
@@ -80,12 +77,15 @@ void setupDatabaseTests() {
       expect(() => database.refFromURL('foo'), throwsArgumentError);
     });
 
-    test('throws [ArgumentError] if database url does not match instance url',
-        () async {
-      expect(
-        () => database.refFromURL('https://some-other-database.firebaseio.com'),
-        throwsArgumentError,
-      );
-    });
+    test(
+      'throws [ArgumentError] if database url does not match instance url',
+      () async {
+        expect(
+          () =>
+              database.refFromURL('https://some-other-database.firebaseio.com'),
+          throwsArgumentError,
+        );
+      },
+    );
   });
 }

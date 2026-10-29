@@ -33,8 +33,8 @@ typedef LiveHeadersProvider = FutureOr<Map<String, String>> Function();
 
 /// Opens a WebSocket connection to [uri] with the given [headers].
 @internal
-typedef LiveWebSocketConnector = WebSocketChannel Function(
-    Uri uri, Map<String, String> headers);
+typedef LiveWebSocketConnector =
+    WebSocketChannel Function(Uri uri, Map<String, String> headers);
 
 /// Manages asynchronous communication with Gemini model over a WebSocket
 /// connection.
@@ -49,14 +49,14 @@ class LiveSession {
     List<Tool>? tools,
     LiveGenerationConfig? liveGenerationConfig,
     LiveWebSocketConnector? connector,
-  })  : _uri = uri,
-        _headersProvider = headersProvider,
-        _modelString = modelString,
-        _systemInstruction = systemInstruction,
-        _tools = tools,
-        _liveGenerationConfig = liveGenerationConfig,
-        _connector = connector ?? connectWebSocket,
-        _messageController = StreamController<LiveServerResponse>.broadcast() {
+  }) : _uri = uri,
+       _headersProvider = headersProvider,
+       _modelString = modelString,
+       _systemInstruction = systemInstruction,
+       _tools = tools,
+       _liveGenerationConfig = liveGenerationConfig,
+       _connector = connector ?? connectWebSocket,
+       _messageController = StreamController<LiveServerResponse>.broadcast() {
     _listenToWebSocket();
   }
 
@@ -151,11 +151,13 @@ class LiveSession {
         if (liveGenerationConfig != null) ...{
           'generation_config': liveGenerationConfig.toJson(),
           if (liveGenerationConfig.inputAudioTranscription != null)
-            'input_audio_transcription':
-                liveGenerationConfig.inputAudioTranscription!.toJson(),
+            'input_audio_transcription': liveGenerationConfig
+                .inputAudioTranscription!
+                .toJson(),
           if (liveGenerationConfig.outputAudioTranscription != null)
-            'output_audio_transcription':
-                liveGenerationConfig.outputAudioTranscription!.toJson(),
+            'output_audio_transcription': liveGenerationConfig
+                .outputAudioTranscription!
+                .toJson(),
           if (liveGenerationConfig.contextWindowCompression
               case final contextWindowCompression?)
             'contextWindowCompression': contextWindowCompression.toJson(),
@@ -163,7 +165,7 @@ class LiveSession {
               case final realtimeInputConfig?)
             'realtime_input_config': realtimeInputConfig.toJson(),
         },
-      }
+      },
     };
 
     final request = jsonEncode(setupJson);
@@ -178,8 +180,9 @@ class LiveSession {
     _wsSubscription = _ws.stream.listen(
       (message) {
         try {
-          final String jsonString =
-              message is String ? message : utf8.decode(message as List<int>);
+          final String jsonString = message is String
+              ? message
+              : utf8.decode(message as List<int>);
           var response = json.decode(jsonString);
 
           if (!_messageController.isClosed) {
@@ -189,8 +192,10 @@ class LiveSession {
           if (!_messageController.isClosed && _messageController.hasListener) {
             _messageController.addError(e);
           } else {
-            log('live_session: Dropped parse error because no listeners',
-                error: e);
+            log(
+              'live_session: Dropped parse error because no listeners',
+              error: e,
+            );
           }
         }
       },
@@ -198,8 +203,10 @@ class LiveSession {
         if (!_messageController.isClosed && _messageController.hasListener) {
           _messageController.addError(error);
         } else {
-          log('live_session: Dropped stream error because no listeners',
-              error: error);
+          log(
+            'live_session: Dropped stream error because no listeners',
+            error: error,
+          );
         }
       },
       onDone: () {
@@ -218,18 +225,28 @@ class LiveSession {
   ///
   /// [sessionResumption] (optional): The configuration for session resumption,
   /// such as the handle to the previous session state to restore.
-  Future<void> resumeSession(
-      {SessionResumptionConfig? sessionResumption}) async {
+  Future<void> resumeSession({
+    SessionResumptionConfig? sessionResumption,
+  }) async {
     try {
-      await _wsSubscription.cancel().timeout(const Duration(seconds: 2),
-          onTimeout: () {
-        log('live_session.resumeSession: WebSocket subscription cancel timed out.',
-            error: TimeoutException('Cancel timed out'));
-      });
-      await _ws.sink.close().timeout(const Duration(seconds: 2), onTimeout: () {
-        log('live_session.resumeSession: WebSocket close timed out.',
-            error: TimeoutException('Close timed out'));
-      });
+      await _wsSubscription.cancel().timeout(
+        const Duration(seconds: 2),
+        onTimeout: () {
+          log(
+            'live_session.resumeSession: WebSocket subscription cancel timed out.',
+            error: TimeoutException('Cancel timed out'),
+          );
+        },
+      );
+      await _ws.sink.close().timeout(
+        const Duration(seconds: 2),
+        onTimeout: () {
+          log(
+            'live_session.resumeSession: WebSocket close timed out.',
+            error: TimeoutException('Close timed out'),
+          );
+        },
+      );
 
       // Re-fetch headers so App Check / Auth tokens are not reused from the
       // initial connection: they may have expired, and limited-use App Check
@@ -256,10 +273,7 @@ class LiveSession {
   ///
   /// [input] (optional): The content to send.
   /// [turnComplete] (optional): Indicates if the turn is complete. Defaults to false.
-  Future<void> send({
-    Content? input,
-    bool turnComplete = false,
-  }) async {
+  Future<void> send({Content? input, bool turnComplete = false}) async {
     _checkWsStatus();
     var clientMessage = input != null
         ? LiveClientContent(turns: [input], turnComplete: turnComplete)
@@ -272,9 +286,11 @@ class LiveSession {
   ///
   /// [functionResponses] (optional): The list of function responses.
   Future<void> sendToolResponse(
-      List<FunctionResponse>? functionResponses) async {
-    final toolResponse =
-        LiveClientToolResponse(functionResponses: functionResponses);
+    List<FunctionResponse>? functionResponses,
+  ) async {
+    final toolResponse = LiveClientToolResponse(
+      functionResponses: functionResponses,
+    );
     _checkWsStatus();
     var clientJson = jsonEncode(toolResponse.toJson());
     _ws.sink.add(clientJson);
@@ -365,18 +381,27 @@ class LiveSession {
   /// Closes the WebSocket connection.
   Future<void> close() async {
     try {
-      await _wsSubscription.cancel().timeout(const Duration(seconds: 1),
-          onTimeout: () {
-        log('live_session.close: cancel timed out',
-            error: TimeoutException('Cancel timed out'));
-      });
+      await _wsSubscription.cancel().timeout(
+        const Duration(seconds: 1),
+        onTimeout: () {
+          log(
+            'live_session.close: cancel timed out',
+            error: TimeoutException('Cancel timed out'),
+          );
+        },
+      );
       if (!_messageController.isClosed) {
         await _messageController.close();
       }
-      await _ws.sink.close().timeout(const Duration(seconds: 1), onTimeout: () {
-        log('live_session.close: sink close timed out',
-            error: TimeoutException('Sink close timed out'));
-      });
+      await _ws.sink.close().timeout(
+        const Duration(seconds: 1),
+        onTimeout: () {
+          log(
+            'live_session.close: sink close timed out',
+            error: TimeoutException('Sink close timed out'),
+          );
+        },
+      );
     } catch (e) {
       log('live_session.close: error during close', error: e);
     }

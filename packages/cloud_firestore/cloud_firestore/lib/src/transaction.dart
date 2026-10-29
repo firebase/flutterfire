@@ -24,11 +24,14 @@ class Transaction {
   Future<DocumentSnapshot<T>> get<T extends Object?>(
     DocumentReference<T> documentReference,
   ) async {
-    DocumentSnapshotPlatform documentSnapshotPlatform =
-        await _delegate.get(documentReference.path);
+    DocumentSnapshotPlatform documentSnapshotPlatform = await _delegate.get(
+      documentReference.path,
+    );
 
-    final snapshot =
-        _JsonDocumentSnapshot(_firestore, documentSnapshotPlatform);
+    final snapshot = _JsonDocumentSnapshot(
+      _firestore,
+      documentSnapshotPlatform,
+    );
 
     if (snapshot is DocumentSnapshot<T>) {
       return snapshot as DocumentSnapshot<T>;
@@ -51,10 +54,7 @@ class Transaction {
       'the document provided is from a different Firestore instance',
     );
 
-    return Transaction._(
-      _firestore,
-      _delegate.delete(documentReference.path),
-    );
+    return Transaction._(_firestore, _delegate.delete(documentReference.path));
   }
 
   /// Updates fields in the document referred to by [documentReference].

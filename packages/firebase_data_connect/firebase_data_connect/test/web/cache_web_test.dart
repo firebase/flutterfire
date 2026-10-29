@@ -57,22 +57,27 @@ void main() {
       final cache = Cache(CacheSettings(storage: storage), dataConnect);
       addTearDown(cache.dispose);
 
-      final jsonData = jsonDecode('''
+      final jsonData =
+          jsonDecode('''
         {"data": {"items": [
           {"desc": "itemDesc1", "name": "itemOne", "price": 4},
           {"desc": "itemDesc2", "name": "itemTwo", "price": 7}
         ]}}
-      ''') as Map<String, dynamic>;
+      ''')
+              as Map<String, dynamic>;
       await cache.update(
         'itemsSimple',
-        ServerResponse(jsonData, extensions: {
-          'dataConnect': [
-            {
-              'path': ['items'],
-              'entityIds': ['123', '345'],
-            }
-          ]
-        }),
+        ServerResponse(
+          jsonData,
+          extensions: {
+            'dataConnect': [
+              {
+                'path': ['items'],
+                'entityIds': ['123', '345'],
+              },
+            ],
+          },
+        ),
       );
 
       expect(await cache.resultTree('itemsSimple', true), jsonData['data']);
