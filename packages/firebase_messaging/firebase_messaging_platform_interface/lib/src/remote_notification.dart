@@ -28,21 +28,23 @@ class RemoteNotification {
   /// Constructs a [RemoteNotification] from a raw Map.
   factory RemoteNotification.fromMap(Map<String, dynamic> map) {
     return RemoteNotification(
-      title: map['title'],
+      title: map['title']?.toString(),
       titleLocArgs: _toList(map['titleLocArgs']),
-      titleLocKey: map['titleLocKey'],
-      body: map['body'],
+      titleLocKey: map['titleLocKey']?.toString(),
+      body: map['body']?.toString(),
       bodyLocArgs: _toList(map['bodyLocArgs']),
-      bodyLocKey: map['bodyLocKey'],
-      android: map['android'] != null
+      bodyLocKey: map['bodyLocKey']?.toString(),
+      android: map['android'] is Map
           ? AndroidNotification.fromMap(
-              Map<String, dynamic>.from(map['android']))
+              Map<String, dynamic>.from(map['android'] as Map))
           : null,
-      apple: map['apple'] != null
-          ? AppleNotification.fromMap(Map<String, dynamic>.from(map['apple']))
+      apple: map['apple'] is Map
+          ? AppleNotification.fromMap(
+              Map<String, dynamic>.from(map['apple'] as Map))
           : null,
-      web: map['web'] != null
-          ? WebNotification.fromMap(Map<String, dynamic>.from(map['web']))
+      web: map['web'] is Map
+          ? WebNotification.fromMap(
+              Map<String, dynamic>.from(map['web'] as Map))
           : null,
     );
   }
@@ -113,18 +115,19 @@ class AndroidNotification {
   /// Constructs an [AndroidNotification] from a raw Map.
   factory AndroidNotification.fromMap(Map<String, dynamic> map) {
     return AndroidNotification(
-      channelId: map['channelId'],
-      clickAction: map['clickAction'],
-      color: map['color'],
-      count: map['count'],
-      imageUrl: map['imageUrl'],
-      link: map['link'],
-      priority: convertToAndroidNotificationPriority(map['priority']),
-      smallIcon: map['smallIcon'],
-      sound: map['sound'],
-      ticker: map['ticker'],
-      tag: map['tag'],
-      visibility: convertToAndroidNotificationVisibility(map['visibility']),
+      channelId: map['channelId']?.toString(),
+      clickAction: map['clickAction']?.toString(),
+      color: map['color']?.toString(),
+      count: _asInt(map['count']),
+      imageUrl: map['imageUrl']?.toString(),
+      link: map['link']?.toString(),
+      priority: convertToAndroidNotificationPriority(_asInt(map['priority'])),
+      smallIcon: map['smallIcon']?.toString(),
+      sound: map['sound']?.toString(),
+      ticker: map['ticker']?.toString(),
+      tag: map['tag']?.toString(),
+      visibility:
+          convertToAndroidNotificationVisibility(_asInt(map['visibility'])),
     );
   }
 
@@ -207,15 +210,15 @@ class AppleNotification {
   /// Constructs an [AppleNotification] from a raw Map.
   factory AppleNotification.fromMap(Map<String, dynamic> map) {
     return AppleNotification(
-      badge: map['badge'],
-      subtitle: map['subtitle'],
+      badge: map['badge']?.toString(),
+      subtitle: map['subtitle']?.toString(),
       subtitleLocArgs: _toList(map['subtitleLocArgs']),
-      subtitleLocKey: map['subtitleLocKey'],
-      imageUrl: map['imageUrl'],
-      sound: map['sound'] == null
-          ? null
-          : AppleNotificationSound.fromMap(
-              Map<String, dynamic>.from(map['sound'])),
+      subtitleLocKey: map['subtitleLocKey']?.toString(),
+      imageUrl: map['imageUrl']?.toString(),
+      sound: map['sound'] is Map
+          ? AppleNotificationSound.fromMap(
+              Map<String, dynamic>.from(map['sound'] as Map))
+          : null,
     );
   }
 
@@ -264,9 +267,9 @@ class AppleNotificationSound {
   /// Constructs an [AppleNotificationSound] from a raw Map.
   factory AppleNotificationSound.fromMap(Map<String, dynamic> map) {
     return AppleNotificationSound(
-      critical: map['critical'] ?? false,
-      name: map['name'],
-      volume: map['volume'] ?? 0,
+      critical: _asBool(map['critical']),
+      name: map['name']?.toString(),
+      volume: _asNum(map['volume']) ?? 0,
     );
   }
 
@@ -296,8 +299,30 @@ List<String> _toList(dynamic value) {
   if (value == null) {
     return <String>[];
   }
+  if (value is Iterable) {
+    return value.map((Object? e) => e?.toString() ?? '').toList();
+  }
+  return <String>[value.toString()];
+}
 
-  return List<String>.from(value);
+bool _asBool(Object? value) {
+  if (value is bool) return value;
+  if (value is num) return value != 0;
+  if (value is String) return value == 'true' || value == '1';
+  return false;
+}
+
+int? _asInt(Object? value) {
+  if (value is int) return value;
+  if (value is num) return value.toInt();
+  if (value is String) return int.tryParse(value);
+  return null;
+}
+
+num? _asNum(Object? value) {
+  if (value is num) return value;
+  if (value is String) return num.tryParse(value);
+  return null;
 }
 
 /// Web specific properties of a [RemoteNotification].
@@ -311,9 +336,9 @@ class WebNotification {
   /// Constructs a [WebNotification] from a raw Map.
   factory WebNotification.fromMap(Map<String, dynamic> map) {
     return WebNotification(
-      analyticsLabel: map['analyticsLabel'],
-      image: map['image'],
-      link: map['link'],
+      analyticsLabel: map['analyticsLabel']?.toString(),
+      image: map['image']?.toString(),
+      link: map['link']?.toString(),
     );
   }
 

@@ -224,5 +224,50 @@ void main() {
       expect(map['threadId'], remoteMessage.threadId);
       expect(map['ttl'], remoteMessage.ttl);
     });
+
+    test(
+        '"RemoteMessage.fromMap" coerces numeric string fields, round-trips sentTime, and tolerates invalid sentTime',
+        () {
+      final message = RemoteMessage.fromMap(<String, dynamic>{
+        'senderId': 12345,
+        'category': 99,
+        'actionIdentifier': 42,
+        'collapseKey': 1,
+        'from': 777,
+        'messageId': 888,
+        'messageType': 2,
+        'threadId': 7,
+        'sentTime': '5000',
+        'ttl': '3600',
+      });
+
+      expect(message.senderId, '12345');
+      expect(message.category, '99');
+      expect(message.actionIdentifier, '42');
+      expect(message.collapseKey, '1');
+      expect(message.from, '777');
+      expect(message.messageId, '888');
+      expect(message.messageType, '2');
+      expect(message.threadId, '7');
+      expect(
+        message.sentTime,
+        DateTime.fromMillisecondsSinceEpoch(5000),
+      );
+      expect(
+        RemoteMessage.fromMap(message.toMap()).sentTime,
+        DateTime.fromMillisecondsSinceEpoch(5000),
+      );
+      expect(message.ttl, 3600);
+
+      final invalidSentTimeMessage = RemoteMessage.fromMap(<String, dynamic>{
+        'sentTime': 'not-a-timestamp',
+      });
+      expect(invalidSentTimeMessage.sentTime, isNull);
+
+      final outOfRangeSentTimeMessage = RemoteMessage.fromMap(<String, dynamic>{
+        'sentTime': 8640000000000001,
+      });
+      expect(outOfRangeSentTimeMessage.sentTime, isNull);
+    });
   });
 }
