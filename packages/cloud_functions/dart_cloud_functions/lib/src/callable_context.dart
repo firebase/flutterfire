@@ -17,8 +17,10 @@ class CallableContext {
   /// in.
   final String? authToken;
 
-  /// The App Check token, or `null` when the app doesn't use App Check or no
-  /// token could be fetched.
+  /// The App Check token, or `null` when the app doesn't use App Check.
+  ///
+  /// When fetching a token fails, this is the placeholder token the native
+  /// SDKs send in that case.
   final String? appCheckToken;
 
   /// Whether the request would carry any credentials.

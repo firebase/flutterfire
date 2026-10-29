@@ -47,26 +47,36 @@ Future<String?> _appCheckToken(
 }) async {
   final appCheck = app.getService<FirebaseAppCheck>();
   if (appCheck == null) return null;
-  return appCheckTokenOrNull(
+  return appCheckTokenOrPlaceholder(
     () => limitedUse ? appCheck.getLimitedUseToken() : appCheck.getToken(),
   );
 }
 
-/// Returns the App Check token from [getToken], or `null` if fetching it
-/// fails.
+/// The token the App Check SDKs give other Firebase SDKs when they can't get a
+/// real one: base64 for `{"error":"UNKNOWN_ERROR"}`.
 ///
-/// An App Check failure never fails the call, as in the native SDKs and
-/// `firebase_data_connect`: the request goes out without the token, and a
-/// function that enforces App Check rejects it.
+/// The same value as `DefaultAppCheckTokenResult.DUMMY_TOKEN` on Android and
+/// `kPlaceholderTokenValue` in the Apple SDK's AppCheckCore.
 @visibleForTesting
-Future<String?> appCheckTokenOrNull(Future<String?> Function() getToken) async {
+const placeholderAppCheckToken = 'eyJlcnJvciI6IlVOS05PV05fRVJST1IifQ==';
+
+/// Returns the App Check token from [getToken], or [placeholderAppCheckToken]
+/// if fetching it fails.
+///
+/// As in the native SDKs, an App Check failure never fails the call: the
+/// request carries the placeholder, which a function that enforces App Check
+/// rejects as invalid.
+@visibleForTesting
+Future<String?> appCheckTokenOrPlaceholder(
+  Future<String?> Function() getToken,
+) async {
   try {
     return await getToken();
   } catch (error) {
     developer.log(
-      'Sending the call without an App Check token: $error',
+      'Error getting App Check token, sending a placeholder instead: $error',
       name: 'dart_cloud_functions',
     );
-    return null;
+    return placeholderAppCheckToken;
   }
 }

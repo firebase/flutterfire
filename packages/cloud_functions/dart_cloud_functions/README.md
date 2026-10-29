@@ -45,10 +45,11 @@ try {
 - Once the app has set up App Check (`FirebaseAppCheck.instance.activate()`),
   calls also carry an App Check token as `X-Firebase-AppCheck`.
   `DartHttpsCallableOptions(limitedUseAppCheckToken: true)` sends a
-  limited-use token instead, for functions that use replay protection. If no
-  App Check token can be fetched, the call goes out without one, as in
-  `cloud_functions`. These tokens are why the package depends on
-  `firebase_auth` and `firebase_app_check`.
+  limited-use token instead, for functions that use replay protection. If
+  fetching an App Check token fails, the call carries the same placeholder
+  token as `cloud_functions`, which functions that enforce App Check reject.
+  These tokens are why the package depends on `firebase_auth` and
+  `firebase_app_check`.
 - Tokens are only sent over HTTPS or to the local machine (`localhost`,
   `127.0.0.1`, `::1`, or `10.0.2.2` from the Android emulator). A call that
   would send them over plain HTTP anywhere else fails with `unauthenticated`,
