@@ -9,25 +9,54 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  group('appCheckTokenOrPlaceholder', () {
+  group('idTokenOrNullOnWeb', () {
+    Future<String?> failingGetToken() async => throw FirebaseException(
+          plugin: 'firebase_auth',
+          code: 'network-request-failed',
+        );
+
+    test('returns the token', () async {
+      expect(await idTokenOrNullOnWeb(() async => 'id-token'), 'id-token');
+    });
+
+    test('rethrows a failure on Android and Apple', () async {
+      await expectLater(
+        idTokenOrNullOnWeb(failingGetToken, onWeb: false),
+        throwsA(isA<FirebaseException>()),
+      );
+    });
+
+    test('returns null on web when fetching fails', () async {
+      expect(await idTokenOrNullOnWeb(failingGetToken, onWeb: true), isNull);
+    });
+  });
+
+  group('appCheckTokenOrFallback', () {
+    Future<String?> failingGetToken() async => throw FirebaseException(
+          plugin: 'firebase_app_check',
+          code: 'unknown',
+          message: 'Too many attempts.',
+        );
+
     test('returns the token', () async {
       final token =
-          await appCheckTokenOrPlaceholder(() async => 'app-check-token');
+          await appCheckTokenOrFallback(() async => 'app-check-token');
 
       expect(token, 'app-check-token');
     });
 
-    test('returns the placeholder instead of throwing when fetching fails',
+    test('returns the placeholder on Android and Apple when fetching fails',
         () async {
-      final token = await appCheckTokenOrPlaceholder(
-        () async => throw FirebaseException(
-          plugin: 'firebase_app_check',
-          code: 'unknown',
-          message: 'Too many attempts.',
-        ),
-      );
+      final token =
+          await appCheckTokenOrFallback(failingGetToken, onWeb: false);
 
       expect(token, placeholderAppCheckToken);
+    });
+
+    test('returns null on web when fetching fails', () async {
+      final token = await appCheckTokenOrFallback(failingGetToken, onWeb: true);
+
+      expect(token, isNull);
     });
   });
 

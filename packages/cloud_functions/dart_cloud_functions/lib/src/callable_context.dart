@@ -15,12 +15,14 @@ class CallableContext {
 
   /// The signed-in user's Firebase ID token, or `null` when nobody is signed
   /// in.
+  ///
+  /// On web, it's also `null` when fetching the token fails, as in the JS SDK.
   final String? authToken;
 
   /// The App Check token, or `null` when the app doesn't use App Check.
   ///
   /// When fetching a token fails, this is the placeholder token the native
-  /// SDKs send in that case.
+  /// SDKs send in that case. On web, it's `null` instead, as in the JS SDK.
   final String? appCheckToken;
 
   /// Whether the request would carry any credentials.

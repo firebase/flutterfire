@@ -22,6 +22,10 @@ import 'package:flutter/foundation.dart';
 /// service is registered when the app sets up App Check, so apps that don't
 /// use it never ask for a token. Both tokens are fetched at the same time, as
 /// in the native SDKs.
+///
+/// When fetching a token fails, each platform follows the SDK that
+/// `cloud_functions` uses there: the native SDKs on Android and Apple, and the
+/// JS SDK on web. See [idTokenOrNullOnWeb] and [appCheckTokenOrFallback].
 CallableContextProvider firebaseCallableContext(FirebaseApp app) {
   return ({required limitedUseAppCheckToken}) async {
     // Start both fetches before awaiting either, so they run at the same time.
@@ -38,8 +42,9 @@ CallableContextProvider firebaseCallableContext(FirebaseApp app) {
   };
 }
 
-Future<String?> _idToken(FirebaseApp app) async =>
-    FirebaseAuth.instanceFor(app: app).currentUser?.getIdToken();
+Future<String?> _idToken(FirebaseApp app) => idTokenOrNullOnWeb(
+      () async => FirebaseAuth.instanceFor(app: app).currentUser?.getIdToken(),
+    );
 
 Future<String?> _appCheckToken(
   FirebaseApp app, {
@@ -47,9 +52,31 @@ Future<String?> _appCheckToken(
 }) async {
   final appCheck = app.getService<FirebaseAppCheck>();
   if (appCheck == null) return null;
-  return appCheckTokenOrPlaceholder(
+  return appCheckTokenOrFallback(
     () => limitedUse ? appCheck.getLimitedUseToken() : appCheck.getToken(),
   );
+}
+
+/// Returns the ID token from [getToken].
+///
+/// If fetching it fails, the call fails on Android and Apple, as in the native
+/// SDKs. On web ([onWeb]), the error is logged and the call goes out without
+/// the token, as in the JS SDK.
+@visibleForTesting
+Future<String?> idTokenOrNullOnWeb(
+  Future<String?> Function() getToken, {
+  bool onWeb = kIsWeb,
+}) async {
+  try {
+    return await getToken();
+  } catch (error) {
+    if (!onWeb) rethrow;
+    developer.log(
+      'Error getting the Auth ID token, sending the call without it: $error',
+      name: 'dart_cloud_functions',
+    );
+    return null;
+  }
 }
 
 /// The token the App Check SDKs give other Firebase SDKs when they can't get a
@@ -60,23 +87,26 @@ Future<String?> _appCheckToken(
 @visibleForTesting
 const placeholderAppCheckToken = 'eyJlcnJvciI6IlVOS05PV05fRVJST1IifQ==';
 
-/// Returns the App Check token from [getToken], or [placeholderAppCheckToken]
-/// if fetching it fails.
+/// Returns the App Check token from [getToken], or a fallback if fetching it
+/// fails.
 ///
-/// As in the native SDKs, an App Check failure never fails the call: the
-/// request carries the placeholder, which a function that enforces App Check
-/// rejects as invalid.
+/// An App Check failure never fails the call. On Android and Apple, the
+/// request carries [placeholderAppCheckToken], as in the native SDKs. On web
+/// ([onWeb]), it goes out without the header, as in the JS SDK. Either way, a
+/// function that enforces App Check rejects it.
 @visibleForTesting
-Future<String?> appCheckTokenOrPlaceholder(
-  Future<String?> Function() getToken,
-) async {
+Future<String?> appCheckTokenOrFallback(
+  Future<String?> Function() getToken, {
+  bool onWeb = kIsWeb,
+}) async {
   try {
     return await getToken();
   } catch (error) {
+    final sending = onWeb ? 'without one' : 'with a placeholder';
     developer.log(
-      'Error getting App Check token, sending a placeholder instead: $error',
+      'Error getting App Check token, sending the call $sending: $error',
       name: 'dart_cloud_functions',
     );
-    return placeholderAppCheckToken;
+    return onWeb ? null : placeholderAppCheckToken;
   }
 }

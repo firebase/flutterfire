@@ -339,9 +339,21 @@ void main() {
       return sentUrl;
     }
 
-    test('maps localhost to 10.0.2.2 on Android', () async {
-      expect((await sentUrlOn(TargetPlatform.android)).host, '10.0.2.2');
-    });
+    test(
+      'maps localhost to 10.0.2.2 on Android',
+      () async {
+        expect((await sentUrlOn(TargetPlatform.android)).host, '10.0.2.2');
+      },
+      testOn: 'vm',
+    );
+
+    test(
+      'keeps localhost on web, even in an Android browser',
+      () async {
+        expect((await sentUrlOn(TargetPlatform.android)).host, 'localhost');
+      },
+      testOn: 'browser',
+    );
 
     test('keeps localhost on other platforms', () async {
       expect((await sentUrlOn(TargetPlatform.macOS)).host, 'localhost');
