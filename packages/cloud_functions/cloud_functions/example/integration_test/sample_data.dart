@@ -18,8 +18,4 @@ Map<String, dynamic> deepMap = <String, dynamic>{
   'map': map,
 };
 
-List<dynamic> deepList = [
-  ...list,
-  list,
-  map,
-];
+List<dynamic> deepList = [...list, list, map];

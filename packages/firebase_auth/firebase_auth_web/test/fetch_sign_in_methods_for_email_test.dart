@@ -22,12 +22,12 @@ void main() {
       final firebaseAuth = JSObject();
       firebaseAuth['fetchSignInMethodsForEmail'] =
           (JSAny auth, JSString email) {
-        receivedAuth = auth;
-        receivedEmail = email.toDart;
-        return Future<JSArray<JSString>>.value(
-          <JSString>['password'.toJS, 'emailLink'.toJS].toJS,
-        ).toJS;
-      }.toJS;
+            receivedAuth = auth;
+            receivedEmail = email.toDart;
+            return Future<JSArray<JSString>>.value(
+              <JSString>['password'.toJS, 'emailLink'.toJS].toJS,
+            ).toJS;
+          }.toJS;
       globalContext['firebase_auth'] = firebaseAuth;
 
       final auth = auth_interop.Auth.getInstance(

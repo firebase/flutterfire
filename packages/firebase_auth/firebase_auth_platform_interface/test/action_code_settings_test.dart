@@ -18,13 +18,14 @@ void main() {
 
   group('$ActionCodeSettings', () {
     ActionCodeSettings actionCodeSettings = ActionCodeSettings(
-        androidPackageName: kMockPackageName,
-        androidMinimumVersion: kMockMinimumVersion,
-        androidInstallApp: kMockInstallApp,
-        linkDomain: kMockLinkDomain,
-        handleCodeInApp: kMockHandleCodeInApp,
-        iOSBundleId: kMockBundleId,
-        url: kMockUrl);
+      androidPackageName: kMockPackageName,
+      androidMinimumVersion: kMockMinimumVersion,
+      androidInstallApp: kMockInstallApp,
+      linkDomain: kMockLinkDomain,
+      handleCodeInApp: kMockHandleCodeInApp,
+      iOSBundleId: kMockBundleId,
+      url: kMockUrl,
+    );
 
     group('Constructor', () {
       test('returns an instance of [ActionCodeInfo]', () {
@@ -32,10 +33,14 @@ void main() {
         expect(actionCodeSettings.url, equals(kMockUrl));
         expect(actionCodeSettings.linkDomain, equals(kMockLinkDomain));
         expect(
-            actionCodeSettings.handleCodeInApp, equals(kMockHandleCodeInApp));
+          actionCodeSettings.handleCodeInApp,
+          equals(kMockHandleCodeInApp),
+        );
         expect(actionCodeSettings.androidPackageName, equals(kMockPackageName));
-        expect(actionCodeSettings.androidMinimumVersion,
-            equals(kMockMinimumVersion));
+        expect(
+          actionCodeSettings.androidMinimumVersion,
+          equals(kMockMinimumVersion),
+        );
         expect(actionCodeSettings.androidInstallApp, equals(kMockInstallApp));
         expect(actionCodeSettings.iOSBundleId, equals(kMockBundleId));
       });
@@ -52,14 +57,18 @@ void main() {
           expect(result['android']['packageName'], equals(kMockPackageName));
           expect(result['android']['installApp'], equals(kMockInstallApp));
           expect(
-              result['android']['minimumVersion'], equals(kMockMinimumVersion));
+            result['android']['minimumVersion'],
+            equals(kMockMinimumVersion),
+          );
           expect(result['iOS']['bundleId'], equals(kMockBundleId));
         });
       });
 
       test('toString', () {
-        expect(actionCodeSettings.toString(),
-            equals('$ActionCodeSettings(${actionCodeSettings.asMap})'));
+        expect(
+          actionCodeSettings.toString(),
+          equals('$ActionCodeSettings(${actionCodeSettings.asMap})'),
+        );
       });
     });
   });

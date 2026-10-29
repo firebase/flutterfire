@@ -35,21 +35,31 @@ void main() {
       FirebaseApp app = await Firebase.initializeApp();
 
       TestCloudFunctionsHostApi.setUp(
-          _TestCloudFunctionsHostApi((arguments) async {
-        lastCallArguments = arguments;
-        if (mockExceptionThrown) {
-          throw Exception();
-        } else if (mockPlatformExceptionThrown) {
-          throw PlatformException(
-              code: 'UNKNOWN', message: kPlatformExceptionMessage);
-        }
-        return kParameters;
-      }, (arguments) {
-        onRegisterEventChannel?.call(arguments['eventChannelId']! as String);
-      }));
+        _TestCloudFunctionsHostApi(
+          (arguments) async {
+            lastCallArguments = arguments;
+            if (mockExceptionThrown) {
+              throw Exception();
+            } else if (mockPlatformExceptionThrown) {
+              throw PlatformException(
+                code: 'UNKNOWN',
+                message: kPlatformExceptionMessage,
+              );
+            }
+            return kParameters;
+          },
+          (arguments) {
+            onRegisterEventChannel?.call(
+              arguments['eventChannelId']! as String,
+            );
+          },
+        ),
+      );
 
-      functions =
-          MethodChannelFirebaseFunctions(app: app, region: 'us-central1');
+      functions = MethodChannelFirebaseFunctions(
+        app: app,
+        region: 'us-central1',
+      );
       httpsCallable = MethodChannelHttpsCallable(
         functions!,
         kOrigin,
@@ -134,11 +144,12 @@ void main() {
       });
 
       test(
-          'catch a [PlatformException] error and throws a [FirebaseStorageException] error',
-          () async {
-        mockPlatformExceptionThrown = true;
-        await testExceptionHandling('PLATFORM', httpsCallable!.call);
-      });
+        'catch a [PlatformException] error and throws a [FirebaseStorageException] error',
+        () async {
+          mockPlatformExceptionThrown = true;
+          await testExceptionHandling('PLATFORM', httpsCallable!.call);
+        },
+      );
     });
 
     group('stream', () {
@@ -148,8 +159,9 @@ void main() {
         Object? listenedArguments;
         final messenger =
             TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
-        messenger.setMockMethodCallHandler(const MethodChannel(channelName),
-            (call) async {
+        messenger.setMockMethodCallHandler(const MethodChannel(channelName), (
+          call,
+        ) async {
           if (call.method == 'listen') {
             listenedArguments = call.arguments;
           }
@@ -157,7 +169,9 @@ void main() {
         });
         addTearDown(() {
           messenger.setMockMethodCallHandler(
-              const MethodChannel(channelName), null);
+            const MethodChannel(channelName),
+            null,
+          );
         });
 
         final subscription = httpsCallable!.stream(null).listen((_) {});
@@ -182,7 +196,8 @@ void main() {
         ) {
           onRegisterEventChannel = (eventChannelId) {
             final channel = EventChannel(
-                'plugins.flutter.io/firebase_functions/$eventChannelId');
+              'plugins.flutter.io/firebase_functions/$eventChannelId',
+            );
             messenger.setMockStreamHandler(
               channel,
               MockStreamHandler.inline(
@@ -215,8 +230,11 @@ void main() {
               emitsError(
                 isA<FirebaseFunctionsException>()
                     .having((e) => e.code, 'code', 'unauthenticated')
-                    .having((e) => e.message, 'message',
-                        'The function must be called while authenticated.')
+                    .having(
+                      (e) => e.message,
+                      'message',
+                      'The function must be called while authenticated.',
+                    )
                     .having((e) => e.details, 'details', {'foo': 'bar'}),
               ),
               emitsDone,
@@ -224,48 +242,55 @@ void main() {
           );
         });
 
-        test('without details are emitted as [FirebaseFunctionsException]',
-            () async {
-          mockNativeStream((events) {
-            events.error(code: 'firebase_functions', message: 'Bad arguments');
-            events.endOfStream();
-          });
+        test(
+          'without details are emitted as [FirebaseFunctionsException]',
+          () async {
+            mockNativeStream((events) {
+              events.error(
+                code: 'firebase_functions',
+                message: 'Bad arguments',
+              );
+              events.endOfStream();
+            });
 
-          await expectLater(
-            httpsCallable!.stream(null),
-            emitsInOrder(<Object>[
-              emitsError(
-                isA<FirebaseFunctionsException>()
-                    .having((e) => e.code, 'code', 'unknown')
-                    .having((e) => e.message, 'message', 'Bad arguments'),
-              ),
-              emitsDone,
-            ]),
-          );
-        });
-
-        test('without a message are emitted as [FirebaseFunctionsException]',
-            () async {
-          mockNativeStream((events) {
-            events.error(
-              code: 'firebase_functions',
-              details: <Object?, Object?>{'code': 'unknown'},
+            await expectLater(
+              httpsCallable!.stream(null),
+              emitsInOrder(<Object>[
+                emitsError(
+                  isA<FirebaseFunctionsException>()
+                      .having((e) => e.code, 'code', 'unknown')
+                      .having((e) => e.message, 'message', 'Bad arguments'),
+                ),
+                emitsDone,
+              ]),
             );
-            events.endOfStream();
-          });
+          },
+        );
 
-          await expectLater(
-            httpsCallable!.stream(null),
-            emitsInOrder(<Object>[
-              emitsError(
-                isA<FirebaseFunctionsException>()
-                    .having((e) => e.code, 'code', 'unknown')
-                    .having((e) => e.message, 'message', isEmpty),
-              ),
-              emitsDone,
-            ]),
-          );
-        });
+        test(
+          'without a message are emitted as [FirebaseFunctionsException]',
+          () async {
+            mockNativeStream((events) {
+              events.error(
+                code: 'firebase_functions',
+                details: <Object?, Object?>{'code': 'unknown'},
+              );
+              events.endOfStream();
+            });
+
+            await expectLater(
+              httpsCallable!.stream(null),
+              emitsInOrder(<Object>[
+                emitsError(
+                  isA<FirebaseFunctionsException>()
+                      .having((e) => e.code, 'code', 'unknown')
+                      .having((e) => e.message, 'message', isEmpty),
+                ),
+                emitsDone,
+              ]),
+            );
+          },
+        );
       });
     });
   });
@@ -273,11 +298,13 @@ void main() {
 
 class _TestCloudFunctionsHostApi implements TestCloudFunctionsHostApi {
   _TestCloudFunctionsHostApi(
-      this.callHandler, this.registerEventChannelHandler);
+    this.callHandler,
+    this.registerEventChannelHandler,
+  );
 
   final Future<Object?> Function(Map<String, Object?> arguments) callHandler;
   final void Function(Map<String, Object> arguments)
-      registerEventChannelHandler;
+  registerEventChannelHandler;
 
   @override
   Future<Object?> call(Map<String, Object?> arguments) =>

@@ -290,8 +290,9 @@ abstract class TestFirebaseFirestoreHostApi {
     BinaryMessenger? binaryMessenger,
     String messageChannelSuffix = '',
   }) {
-    messageChannelSuffix =
-        messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+    messageChannelSuffix = messageChannelSuffix.isNotEmpty
+        ? '.$messageChannelSuffix'
+        : '';
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
         'dev.flutter.pigeon.cloud_firestore_platform_interface.FirebaseFirestoreHostApi.loadBundle$messageChannelSuffix',
@@ -303,23 +304,27 @@ abstract class TestFirebaseFirestoreHostApi {
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final FirestorePigeonFirebaseApp arg_app =
-              args[0]! as FirestorePigeonFirebaseApp;
-          final Uint8List arg_bundle = args[1]! as Uint8List;
-          try {
-            final String output = await api.loadBundle(arg_app, arg_bundle);
-            return <Object?>[output];
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-              error: PlatformException(code: 'error', message: e.toString()),
-            );
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final FirestorePigeonFirebaseApp arg_app =
+                  args[0]! as FirestorePigeonFirebaseApp;
+              final Uint8List arg_bundle = args[1]! as Uint8List;
+              try {
+                final String output = await api.loadBundle(arg_app, arg_bundle);
+                return <Object?>[output];
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
@@ -333,25 +338,33 @@ abstract class TestFirebaseFirestoreHostApi {
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final FirestorePigeonFirebaseApp arg_app =
-              args[0]! as FirestorePigeonFirebaseApp;
-          final String arg_name = args[1]! as String;
-          final InternalGetOptions arg_options = args[2]! as InternalGetOptions;
-          try {
-            final InternalQuerySnapshot output =
-                await api.namedQueryGet(arg_app, arg_name, arg_options);
-            return <Object?>[output];
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-              error: PlatformException(code: 'error', message: e.toString()),
-            );
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final FirestorePigeonFirebaseApp arg_app =
+                  args[0]! as FirestorePigeonFirebaseApp;
+              final String arg_name = args[1]! as String;
+              final InternalGetOptions arg_options =
+                  args[2]! as InternalGetOptions;
+              try {
+                final InternalQuerySnapshot output = await api.namedQueryGet(
+                  arg_app,
+                  arg_name,
+                  arg_options,
+                );
+                return <Object?>[output];
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
@@ -365,22 +378,26 @@ abstract class TestFirebaseFirestoreHostApi {
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final FirestorePigeonFirebaseApp arg_app =
-              args[0]! as FirestorePigeonFirebaseApp;
-          try {
-            await api.clearPersistence(arg_app);
-            return wrapResponse(empty: true);
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-              error: PlatformException(code: 'error', message: e.toString()),
-            );
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final FirestorePigeonFirebaseApp arg_app =
+                  args[0]! as FirestorePigeonFirebaseApp;
+              try {
+                await api.clearPersistence(arg_app);
+                return wrapResponse(empty: true);
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
@@ -394,22 +411,26 @@ abstract class TestFirebaseFirestoreHostApi {
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final FirestorePigeonFirebaseApp arg_app =
-              args[0]! as FirestorePigeonFirebaseApp;
-          try {
-            await api.disableNetwork(arg_app);
-            return wrapResponse(empty: true);
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-              error: PlatformException(code: 'error', message: e.toString()),
-            );
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final FirestorePigeonFirebaseApp arg_app =
+                  args[0]! as FirestorePigeonFirebaseApp;
+              try {
+                await api.disableNetwork(arg_app);
+                return wrapResponse(empty: true);
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
@@ -423,22 +444,26 @@ abstract class TestFirebaseFirestoreHostApi {
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final FirestorePigeonFirebaseApp arg_app =
-              args[0]! as FirestorePigeonFirebaseApp;
-          try {
-            await api.enableNetwork(arg_app);
-            return wrapResponse(empty: true);
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-              error: PlatformException(code: 'error', message: e.toString()),
-            );
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final FirestorePigeonFirebaseApp arg_app =
+                  args[0]! as FirestorePigeonFirebaseApp;
+              try {
+                await api.enableNetwork(arg_app);
+                return wrapResponse(empty: true);
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
@@ -452,22 +477,26 @@ abstract class TestFirebaseFirestoreHostApi {
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final FirestorePigeonFirebaseApp arg_app =
-              args[0]! as FirestorePigeonFirebaseApp;
-          try {
-            await api.terminate(arg_app);
-            return wrapResponse(empty: true);
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-              error: PlatformException(code: 'error', message: e.toString()),
-            );
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final FirestorePigeonFirebaseApp arg_app =
+                  args[0]! as FirestorePigeonFirebaseApp;
+              try {
+                await api.terminate(arg_app);
+                return wrapResponse(empty: true);
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
@@ -481,22 +510,26 @@ abstract class TestFirebaseFirestoreHostApi {
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final FirestorePigeonFirebaseApp arg_app =
-              args[0]! as FirestorePigeonFirebaseApp;
-          try {
-            await api.waitForPendingWrites(arg_app);
-            return wrapResponse(empty: true);
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-              error: PlatformException(code: 'error', message: e.toString()),
-            );
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final FirestorePigeonFirebaseApp arg_app =
+                  args[0]! as FirestorePigeonFirebaseApp;
+              try {
+                await api.waitForPendingWrites(arg_app);
+                return wrapResponse(empty: true);
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
@@ -510,23 +543,30 @@ abstract class TestFirebaseFirestoreHostApi {
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final FirestorePigeonFirebaseApp arg_app =
-              args[0]! as FirestorePigeonFirebaseApp;
-          final String arg_indexConfiguration = args[1]! as String;
-          try {
-            await api.setIndexConfiguration(arg_app, arg_indexConfiguration);
-            return wrapResponse(empty: true);
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-              error: PlatformException(code: 'error', message: e.toString()),
-            );
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final FirestorePigeonFirebaseApp arg_app =
+                  args[0]! as FirestorePigeonFirebaseApp;
+              final String arg_indexConfiguration = args[1]! as String;
+              try {
+                await api.setIndexConfiguration(
+                  arg_app,
+                  arg_indexConfiguration,
+                );
+                return wrapResponse(empty: true);
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
@@ -540,21 +580,25 @@ abstract class TestFirebaseFirestoreHostApi {
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final bool arg_loggingEnabled = args[0]! as bool;
-          try {
-            await api.setLoggingEnabled(arg_loggingEnabled);
-            return wrapResponse(empty: true);
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-              error: PlatformException(code: 'error', message: e.toString()),
-            );
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final bool arg_loggingEnabled = args[0]! as bool;
+              try {
+                await api.setLoggingEnabled(arg_loggingEnabled);
+                return wrapResponse(empty: true);
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
@@ -568,22 +612,26 @@ abstract class TestFirebaseFirestoreHostApi {
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final FirestorePigeonFirebaseApp arg_app =
-              args[0]! as FirestorePigeonFirebaseApp;
-          try {
-            final String output = await api.snapshotsInSyncSetup(arg_app);
-            return <Object?>[output];
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-              error: PlatformException(code: 'error', message: e.toString()),
-            );
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final FirestorePigeonFirebaseApp arg_app =
+                  args[0]! as FirestorePigeonFirebaseApp;
+              try {
+                final String output = await api.snapshotsInSyncSetup(arg_app);
+                return <Object?>[output];
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
@@ -597,28 +645,32 @@ abstract class TestFirebaseFirestoreHostApi {
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final FirestorePigeonFirebaseApp arg_app =
-              args[0]! as FirestorePigeonFirebaseApp;
-          final int arg_timeout = args[1]! as int;
-          final int arg_maxAttempts = args[2]! as int;
-          try {
-            final String output = await api.transactionCreate(
-              arg_app,
-              arg_timeout,
-              arg_maxAttempts,
-            );
-            return <Object?>[output];
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-              error: PlatformException(code: 'error', message: e.toString()),
-            );
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final FirestorePigeonFirebaseApp arg_app =
+                  args[0]! as FirestorePigeonFirebaseApp;
+              final int arg_timeout = args[1]! as int;
+              final int arg_maxAttempts = args[2]! as int;
+              try {
+                final String output = await api.transactionCreate(
+                  arg_app,
+                  arg_timeout,
+                  arg_maxAttempts,
+                );
+                return <Object?>[output];
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
@@ -632,29 +684,34 @@ abstract class TestFirebaseFirestoreHostApi {
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final String arg_transactionId = args[0]! as String;
-          final InternalTransactionResult arg_resultType =
-              args[1]! as InternalTransactionResult;
-          final List<InternalTransactionCommand?>? arg_commands =
-              (args[2] as List<Object?>?)?.cast<InternalTransactionCommand?>();
-          try {
-            await api.transactionStoreResult(
-              arg_transactionId,
-              arg_resultType,
-              arg_commands,
-            );
-            return wrapResponse(empty: true);
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-              error: PlatformException(code: 'error', message: e.toString()),
-            );
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final String arg_transactionId = args[0]! as String;
+              final InternalTransactionResult arg_resultType =
+                  args[1]! as InternalTransactionResult;
+              final List<InternalTransactionCommand?>? arg_commands =
+                  (args[2] as List<Object?>?)
+                      ?.cast<InternalTransactionCommand?>();
+              try {
+                await api.transactionStoreResult(
+                  arg_transactionId,
+                  arg_resultType,
+                  arg_commands,
+                );
+                return wrapResponse(empty: true);
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
@@ -668,25 +725,29 @@ abstract class TestFirebaseFirestoreHostApi {
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final FirestorePigeonFirebaseApp arg_app =
-              args[0]! as FirestorePigeonFirebaseApp;
-          final String arg_transactionId = args[1]! as String;
-          final String arg_path = args[2]! as String;
-          try {
-            final InternalDocumentSnapshot output =
-                await api.transactionGet(arg_app, arg_transactionId, arg_path);
-            return <Object?>[output];
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-              error: PlatformException(code: 'error', message: e.toString()),
-            );
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final FirestorePigeonFirebaseApp arg_app =
+                  args[0]! as FirestorePigeonFirebaseApp;
+              final String arg_transactionId = args[1]! as String;
+              final String arg_path = args[2]! as String;
+              try {
+                final InternalDocumentSnapshot output = await api
+                    .transactionGet(arg_app, arg_transactionId, arg_path);
+                return <Object?>[output];
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
@@ -700,24 +761,28 @@ abstract class TestFirebaseFirestoreHostApi {
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final FirestorePigeonFirebaseApp arg_app =
-              args[0]! as FirestorePigeonFirebaseApp;
-          final DocumentReferenceRequest arg_request =
-              args[1]! as DocumentReferenceRequest;
-          try {
-            await api.documentReferenceSet(arg_app, arg_request);
-            return wrapResponse(empty: true);
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-              error: PlatformException(code: 'error', message: e.toString()),
-            );
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final FirestorePigeonFirebaseApp arg_app =
+                  args[0]! as FirestorePigeonFirebaseApp;
+              final DocumentReferenceRequest arg_request =
+                  args[1]! as DocumentReferenceRequest;
+              try {
+                await api.documentReferenceSet(arg_app, arg_request);
+                return wrapResponse(empty: true);
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
@@ -731,24 +796,28 @@ abstract class TestFirebaseFirestoreHostApi {
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final FirestorePigeonFirebaseApp arg_app =
-              args[0]! as FirestorePigeonFirebaseApp;
-          final DocumentReferenceRequest arg_request =
-              args[1]! as DocumentReferenceRequest;
-          try {
-            await api.documentReferenceUpdate(arg_app, arg_request);
-            return wrapResponse(empty: true);
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-              error: PlatformException(code: 'error', message: e.toString()),
-            );
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final FirestorePigeonFirebaseApp arg_app =
+                  args[0]! as FirestorePigeonFirebaseApp;
+              final DocumentReferenceRequest arg_request =
+                  args[1]! as DocumentReferenceRequest;
+              try {
+                await api.documentReferenceUpdate(arg_app, arg_request);
+                return wrapResponse(empty: true);
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
@@ -762,25 +831,29 @@ abstract class TestFirebaseFirestoreHostApi {
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final FirestorePigeonFirebaseApp arg_app =
-              args[0]! as FirestorePigeonFirebaseApp;
-          final DocumentReferenceRequest arg_request =
-              args[1]! as DocumentReferenceRequest;
-          try {
-            final InternalDocumentSnapshot output =
-                await api.documentReferenceGet(arg_app, arg_request);
-            return <Object?>[output];
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-              error: PlatformException(code: 'error', message: e.toString()),
-            );
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final FirestorePigeonFirebaseApp arg_app =
+                  args[0]! as FirestorePigeonFirebaseApp;
+              final DocumentReferenceRequest arg_request =
+                  args[1]! as DocumentReferenceRequest;
+              try {
+                final InternalDocumentSnapshot output = await api
+                    .documentReferenceGet(arg_app, arg_request);
+                return <Object?>[output];
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
@@ -794,24 +867,28 @@ abstract class TestFirebaseFirestoreHostApi {
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final FirestorePigeonFirebaseApp arg_app =
-              args[0]! as FirestorePigeonFirebaseApp;
-          final DocumentReferenceRequest arg_request =
-              args[1]! as DocumentReferenceRequest;
-          try {
-            await api.documentReferenceDelete(arg_app, arg_request);
-            return wrapResponse(empty: true);
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-              error: PlatformException(code: 'error', message: e.toString()),
-            );
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final FirestorePigeonFirebaseApp arg_app =
+                  args[0]! as FirestorePigeonFirebaseApp;
+              final DocumentReferenceRequest arg_request =
+                  args[1]! as DocumentReferenceRequest;
+              try {
+                await api.documentReferenceDelete(arg_app, arg_request);
+                return wrapResponse(empty: true);
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
@@ -825,33 +902,38 @@ abstract class TestFirebaseFirestoreHostApi {
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final FirestorePigeonFirebaseApp arg_app =
-              args[0]! as FirestorePigeonFirebaseApp;
-          final String arg_path = args[1]! as String;
-          final bool arg_isCollectionGroup = args[2]! as bool;
-          final InternalQueryParameters arg_parameters =
-              args[3]! as InternalQueryParameters;
-          final InternalGetOptions arg_options = args[4]! as InternalGetOptions;
-          try {
-            final InternalQuerySnapshot output = await api.queryGet(
-              arg_app,
-              arg_path,
-              arg_isCollectionGroup,
-              arg_parameters,
-              arg_options,
-            );
-            return <Object?>[output];
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-              error: PlatformException(code: 'error', message: e.toString()),
-            );
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final FirestorePigeonFirebaseApp arg_app =
+                  args[0]! as FirestorePigeonFirebaseApp;
+              final String arg_path = args[1]! as String;
+              final bool arg_isCollectionGroup = args[2]! as bool;
+              final InternalQueryParameters arg_parameters =
+                  args[3]! as InternalQueryParameters;
+              final InternalGetOptions arg_options =
+                  args[4]! as InternalGetOptions;
+              try {
+                final InternalQuerySnapshot output = await api.queryGet(
+                  arg_app,
+                  arg_path,
+                  arg_isCollectionGroup,
+                  arg_parameters,
+                  arg_options,
+                );
+                return <Object?>[output];
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
@@ -865,37 +947,41 @@ abstract class TestFirebaseFirestoreHostApi {
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final FirestorePigeonFirebaseApp arg_app =
-              args[0]! as FirestorePigeonFirebaseApp;
-          final String arg_path = args[1]! as String;
-          final InternalQueryParameters arg_parameters =
-              args[2]! as InternalQueryParameters;
-          final AggregateSource arg_source = args[3]! as AggregateSource;
-          final List<AggregateQuery?> arg_queries =
-              (args[4]! as List<Object?>).cast<AggregateQuery?>();
-          final bool arg_isCollectionGroup = args[5]! as bool;
-          try {
-            final List<AggregateQueryResponse?> output =
-                await api.aggregateQuery(
-              arg_app,
-              arg_path,
-              arg_parameters,
-              arg_source,
-              arg_queries,
-              arg_isCollectionGroup,
-            );
-            return <Object?>[output];
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-              error: PlatformException(code: 'error', message: e.toString()),
-            );
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final FirestorePigeonFirebaseApp arg_app =
+                  args[0]! as FirestorePigeonFirebaseApp;
+              final String arg_path = args[1]! as String;
+              final InternalQueryParameters arg_parameters =
+                  args[2]! as InternalQueryParameters;
+              final AggregateSource arg_source = args[3]! as AggregateSource;
+              final List<AggregateQuery?> arg_queries =
+                  (args[4]! as List<Object?>).cast<AggregateQuery?>();
+              final bool arg_isCollectionGroup = args[5]! as bool;
+              try {
+                final List<AggregateQueryResponse?> output = await api
+                    .aggregateQuery(
+                      arg_app,
+                      arg_path,
+                      arg_parameters,
+                      arg_source,
+                      arg_queries,
+                      arg_isCollectionGroup,
+                    );
+                return <Object?>[output];
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
@@ -909,24 +995,29 @@ abstract class TestFirebaseFirestoreHostApi {
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final FirestorePigeonFirebaseApp arg_app =
-              args[0]! as FirestorePigeonFirebaseApp;
-          final List<InternalTransactionCommand?> arg_writes =
-              (args[1]! as List<Object?>).cast<InternalTransactionCommand?>();
-          try {
-            await api.writeBatchCommit(arg_app, arg_writes);
-            return wrapResponse(empty: true);
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-              error: PlatformException(code: 'error', message: e.toString()),
-            );
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final FirestorePigeonFirebaseApp arg_app =
+                  args[0]! as FirestorePigeonFirebaseApp;
+              final List<InternalTransactionCommand?> arg_writes =
+                  (args[1]! as List<Object?>)
+                      .cast<InternalTransactionCommand?>();
+              try {
+                await api.writeBatchCommit(arg_app, arg_writes);
+                return wrapResponse(empty: true);
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
@@ -940,37 +1031,42 @@ abstract class TestFirebaseFirestoreHostApi {
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final FirestorePigeonFirebaseApp arg_app =
-              args[0]! as FirestorePigeonFirebaseApp;
-          final String arg_path = args[1]! as String;
-          final bool arg_isCollectionGroup = args[2]! as bool;
-          final InternalQueryParameters arg_parameters =
-              args[3]! as InternalQueryParameters;
-          final InternalGetOptions arg_options = args[4]! as InternalGetOptions;
-          final bool arg_includeMetadataChanges = args[5]! as bool;
-          final ListenSource arg_source = args[6]! as ListenSource;
-          try {
-            final String output = await api.querySnapshot(
-              arg_app,
-              arg_path,
-              arg_isCollectionGroup,
-              arg_parameters,
-              arg_options,
-              arg_includeMetadataChanges,
-              arg_source,
-            );
-            return <Object?>[output];
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-              error: PlatformException(code: 'error', message: e.toString()),
-            );
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final FirestorePigeonFirebaseApp arg_app =
+                  args[0]! as FirestorePigeonFirebaseApp;
+              final String arg_path = args[1]! as String;
+              final bool arg_isCollectionGroup = args[2]! as bool;
+              final InternalQueryParameters arg_parameters =
+                  args[3]! as InternalQueryParameters;
+              final InternalGetOptions arg_options =
+                  args[4]! as InternalGetOptions;
+              final bool arg_includeMetadataChanges = args[5]! as bool;
+              final ListenSource arg_source = args[6]! as ListenSource;
+              try {
+                final String output = await api.querySnapshot(
+                  arg_app,
+                  arg_path,
+                  arg_isCollectionGroup,
+                  arg_parameters,
+                  arg_options,
+                  arg_includeMetadataChanges,
+                  arg_source,
+                );
+                return <Object?>[output];
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
@@ -984,31 +1080,35 @@ abstract class TestFirebaseFirestoreHostApi {
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final FirestorePigeonFirebaseApp arg_app =
-              args[0]! as FirestorePigeonFirebaseApp;
-          final DocumentReferenceRequest arg_parameters =
-              args[1]! as DocumentReferenceRequest;
-          final bool arg_includeMetadataChanges = args[2]! as bool;
-          final ListenSource arg_source = args[3]! as ListenSource;
-          try {
-            final String output = await api.documentReferenceSnapshot(
-              arg_app,
-              arg_parameters,
-              arg_includeMetadataChanges,
-              arg_source,
-            );
-            return <Object?>[output];
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-              error: PlatformException(code: 'error', message: e.toString()),
-            );
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final FirestorePigeonFirebaseApp arg_app =
+                  args[0]! as FirestorePigeonFirebaseApp;
+              final DocumentReferenceRequest arg_parameters =
+                  args[1]! as DocumentReferenceRequest;
+              final bool arg_includeMetadataChanges = args[2]! as bool;
+              final ListenSource arg_source = args[3]! as ListenSource;
+              try {
+                final String output = await api.documentReferenceSnapshot(
+                  arg_app,
+                  arg_parameters,
+                  arg_includeMetadataChanges,
+                  arg_source,
+                );
+                return <Object?>[output];
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
@@ -1022,24 +1122,31 @@ abstract class TestFirebaseFirestoreHostApi {
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final FirestorePigeonFirebaseApp arg_app =
-              args[0]! as FirestorePigeonFirebaseApp;
-          final PersistenceCacheIndexManagerRequest arg_request =
-              args[1]! as PersistenceCacheIndexManagerRequest;
-          try {
-            await api.persistenceCacheIndexManagerRequest(arg_app, arg_request);
-            return wrapResponse(empty: true);
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-              error: PlatformException(code: 'error', message: e.toString()),
-            );
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final FirestorePigeonFirebaseApp arg_app =
+                  args[0]! as FirestorePigeonFirebaseApp;
+              final PersistenceCacheIndexManagerRequest arg_request =
+                  args[1]! as PersistenceCacheIndexManagerRequest;
+              try {
+                await api.persistenceCacheIndexManagerRequest(
+                  arg_app,
+                  arg_request,
+                );
+                return wrapResponse(empty: true);
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
     {
@@ -1053,27 +1160,31 @@ abstract class TestFirebaseFirestoreHostApi {
             .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger
-            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel,
-                (Object? message) async {
-          final List<Object?> args = message! as List<Object?>;
-          final FirestorePigeonFirebaseApp arg_app =
-              args[0]! as FirestorePigeonFirebaseApp;
-          final List<Map<String?, Object?>?> arg_stages =
-              (args[1]! as List<Object?>).cast<Map<String?, Object?>?>();
-          final Map<String?, Object?>? arg_options =
-              (args[2] as Map<Object?, Object?>?)?.cast<String?, Object?>();
-          try {
-            final InternalPipelineSnapshot output =
-                await api.executePipeline(arg_app, arg_stages, arg_options);
-            return <Object?>[output];
-          } on PlatformException catch (e) {
-            return wrapResponse(error: e);
-          } catch (e) {
-            return wrapResponse(
-              error: PlatformException(code: 'error', message: e.toString()),
-            );
-          }
-        });
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final FirestorePigeonFirebaseApp arg_app =
+                  args[0]! as FirestorePigeonFirebaseApp;
+              final List<Map<String?, Object?>?> arg_stages =
+                  (args[1]! as List<Object?>).cast<Map<String?, Object?>?>();
+              final Map<String?, Object?>? arg_options =
+                  (args[2] as Map<Object?, Object?>?)?.cast<String?, Object?>();
+              try {
+                final InternalPipelineSnapshot output = await api
+                    .executePipeline(arg_app, arg_stages, arg_options);
+                return <Object?>[output];
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
       }
     }
   }

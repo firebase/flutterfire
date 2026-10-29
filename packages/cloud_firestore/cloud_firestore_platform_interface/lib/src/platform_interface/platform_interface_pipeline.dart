@@ -14,8 +14,8 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 abstract class PipelinePlatform extends PlatformInterface {
   /// Create a [PipelinePlatform] instance
   PipelinePlatform(this.firestore, List<Map<String, dynamic>>? stages)
-      : _stages = stages ?? [],
-        super(token: _token);
+    : _stages = stages ?? [],
+      super(token: _token);
 
   static final Object _token = Object();
 
@@ -48,7 +48,5 @@ abstract class PipelinePlatform extends PlatformInterface {
   PipelinePlatform addStage(Map<String, dynamic> serializedStage);
 
   /// Executes the pipeline and returns a snapshot of the results
-  Future<PipelineSnapshotPlatform> execute({
-    Map<String, dynamic>? options,
-  });
+  Future<PipelineSnapshotPlatform> execute({Map<String, dynamic>? options});
 }

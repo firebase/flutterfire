@@ -13,9 +13,7 @@ import 'firebase_options.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(MyApp());
 }
 
@@ -33,8 +31,10 @@ class _MetricHttpClient extends BaseClient {
   Future<StreamedResponse> send(BaseRequest request) async {
     // Custom network monitoring is not supported for web.
     // https://firebase.google.com/docs/perf-mon/custom-network-traces?platform=android
-    final HttpMetric metric = FirebasePerformance.instance
-        .newHttpMetric(request.url.toString(), HttpMethod.Get);
+    final HttpMetric metric = FirebasePerformance.instance.newHttpMetric(
+      request.url.toString(),
+      HttpMethod.Get,
+    );
 
     metric.requestPayloadSize = request.contentLength;
     await metric.start();
@@ -85,8 +85,9 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> _togglePerformanceCollection() async {
     // No-op for web.
-    await _performance
-        .setPerformanceCollectionEnabled(!_isPerformanceCollectionEnabled);
+    await _performance.setPerformanceCollectionEnabled(
+      !_isPerformanceCollectionEnabled,
+    );
 
     // Always true for web.
     final bool isEnabled = await _performance.isPerformanceCollectionEnabled();
@@ -155,10 +156,7 @@ class _MyAppState extends State<MyApp> {
 
     final _MetricHttpClient metricHttpClient = _MetricHttpClient(Client());
 
-    final Request request = Request(
-      'SEND',
-      Uri.parse('https://www.bbc.co.uk'),
-    );
+    final Request request = Request('SEND', Uri.parse('https://www.bbc.co.uk'));
 
     unawaited(metricHttpClient.send(request));
 
@@ -177,9 +175,7 @@ class _MyAppState extends State<MyApp> {
     const textStyle = TextStyle(color: Colors.lightGreenAccent, fontSize: 25);
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Firebase Performance Example'),
-        ),
+        appBar: AppBar(title: const Text('Firebase Performance Example')),
         body: Center(
           child: Column(
             children: <Widget>[
@@ -192,18 +188,12 @@ class _MyAppState extends State<MyApp> {
                 onPressed: _testTrace1,
                 child: const Text('Run Trace One'),
               ),
-              Text(
-                _trace1HasRan ? 'Trace Ran!' : '',
-                style: textStyle,
-              ),
+              Text(_trace1HasRan ? 'Trace Ran!' : '', style: textStyle),
               ElevatedButton(
                 onPressed: _testTrace2,
                 child: const Text('Run Trace Two'),
               ),
-              Text(
-                _trace2HasRan ? 'Trace Ran!' : '',
-                style: textStyle,
-              ),
+              Text(_trace2HasRan ? 'Trace Ran!' : '', style: textStyle),
               ElevatedButton(
                 onPressed: _testCustomHttpMetric,
                 child: const Text('Run Custom HttpMetric'),

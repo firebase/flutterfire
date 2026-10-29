@@ -19,7 +19,6 @@ import 'package:pigeon/pigeon.dart';
     copyrightHeader: 'pigeons/copyright.txt',
   ),
 )
-
 /// How an in-app message was dismissed.
 enum FiamDismissType {
   /// The message was swiped away. Only reported on iOS, for banner messages.
@@ -149,7 +148,9 @@ abstract class FirebaseInAppMessagingHostApi {
 @FlutterApi()
 abstract class FirebaseInAppMessagingFlutterApi {
   void onMessageClicked(
-      FiamCampaignMetadata campaignMetadata, FiamAction action);
+    FiamCampaignMetadata campaignMetadata,
+    FiamAction action,
+  );
 
   void onMessageImpression(FiamCampaignMetadata campaignMetadata);
 

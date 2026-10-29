@@ -5,8 +5,8 @@ resolution: workspace
 homepage: https://github.com/firebase/flutterfire/tree/main/packages/firebase_database/firebase_database_web
 
 environment:
-  sdk: '^3.6.0'
-  flutter: '>=3.22.0'
+  sdk: '^3.10.0'
+  flutter: '>=3.38.0'
 
 dependencies:
   collection: ^1.18.0

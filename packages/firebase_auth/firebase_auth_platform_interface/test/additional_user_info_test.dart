@@ -10,7 +10,7 @@ void main() {
   const bool kMockIsNewUser = true;
   const String kMockDisplayName = 'test-name';
   final Map<String, dynamic> kMockProfile = <String, dynamic>{
-    'displayName': kMockDisplayName
+    'displayName': kMockDisplayName,
   };
   const String kMockProviderId = 'password';
   const String kMockUsername = 'username';
@@ -32,8 +32,10 @@ void main() {
         expect(additionalUserInfo.isNewUser, equals(kMockIsNewUser));
         expect(additionalUserInfo.username, equals(kMockUsername));
         expect(additionalUserInfo.profile, equals(kMockProfile));
-        expect(additionalUserInfo.authorizationCode,
-            equals(kMockAuthorizationCode));
+        expect(
+          additionalUserInfo.authorizationCode,
+          equals(kMockAuthorizationCode),
+        );
       });
     });
 
@@ -42,9 +44,11 @@ void main() {
         final result = additionalUserInfo.toString();
         expect(result, isA<String>());
         expect(
-            result,
-            equals(
-                '$AdditionalUserInfo(isNewUser: $kMockIsNewUser, profile: $kMockProfile, providerId: $kMockProviderId, username: $kMockUsername, authorizationCode: $kMockAuthorizationCode)'));
+          result,
+          equals(
+            '$AdditionalUserInfo(isNewUser: $kMockIsNewUser, profile: $kMockProfile, providerId: $kMockProviderId, username: $kMockUsername, authorizationCode: $kMockAuthorizationCode)',
+          ),
+        );
       });
     });
   });

@@ -19,9 +19,9 @@ void main() {
     calls.clear();
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(channel, (call) async {
-      calls.add(call.method);
-      return null;
-    });
+          calls.add(call.method);
+          return null;
+        });
   });
 
   tearDown(() {
@@ -30,32 +30,35 @@ void main() {
         .setMockMethodCallHandler(channel, null);
   });
 
-  test('tells the Android plugin when the app starts and stops listening',
-      () async {
-    debugDefaultTargetPlatformOverride = TargetPlatform.android;
+  test(
+    'tells the Android plugin when the app starts and stops listening',
+    () async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
 
-    final first = FirebaseMessaging.onMessage.listen((_) {});
-    final second = FirebaseMessaging.onMessage.listen((_) {});
-    await pumpEventQueue();
-    expect(calls, <String>['Messaging#startForegroundMessages']);
+      final first = FirebaseMessaging.onMessage.listen((_) {});
+      final second = FirebaseMessaging.onMessage.listen((_) {});
+      await pumpEventQueue();
+      expect(calls, <String>['Messaging#startForegroundMessages']);
 
-    await first.cancel();
-    await pumpEventQueue();
-    expect(calls, <String>['Messaging#startForegroundMessages']);
+      await first.cancel();
+      await pumpEventQueue();
+      expect(calls, <String>['Messaging#startForegroundMessages']);
 
-    await second.cancel();
-    await pumpEventQueue();
-    expect(calls, <String>[
-      'Messaging#startForegroundMessages',
-      'Messaging#stopForegroundMessages',
-    ]);
-  });
+      await second.cancel();
+      await pumpEventQueue();
+      expect(calls, <String>[
+        'Messaging#startForegroundMessages',
+        'Messaging#stopForegroundMessages',
+      ]);
+    },
+  );
 
   test('delivers the messages of the platform stream', () async {
     debugDefaultTargetPlatformOverride = TargetPlatform.android;
     final received = <String?>[];
-    final subscription = FirebaseMessaging.onMessage
-        .listen((message) => received.add(message.messageId));
+    final subscription = FirebaseMessaging.onMessage.listen(
+      (message) => received.add(message.messageId),
+    );
     addTearDown(subscription.cancel);
 
     FirebaseMessagingPlatform.onMessage.add(

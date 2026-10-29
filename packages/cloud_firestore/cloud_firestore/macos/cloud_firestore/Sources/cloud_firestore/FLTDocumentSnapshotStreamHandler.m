@@ -1,1 +1,0 @@
-../../../../ios/cloud_firestore/Sources/cloud_firestore/FLTDocumentSnapshotStreamHandler.m

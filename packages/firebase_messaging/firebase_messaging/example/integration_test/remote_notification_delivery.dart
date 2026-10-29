@@ -27,15 +27,15 @@ Future<Map<String, Object?>> deliverRemoteNotification(
 }) async {
   final delivery = await _remoteNotificationsChannel
       .invokeMapMethod<String, Object?>('deliver', {
-    'inBackground': inBackground,
-    'userInfo': {
-      'aps': {'content-available': 1},
-      'gcm.message_id': messageId,
-      'google.c.a.e': '1',
-      'from': 'e2e',
-      'test': 'remote-notification-delivery',
-    },
-  });
+        'inBackground': inBackground,
+        'userInfo': {
+          'aps': {'content-available': 1},
+          'gcm.message_id': messageId,
+          'google.c.a.e': '1',
+          'from': 'e2e',
+          'test': 'remote-notification-delivery',
+        },
+      });
   return delivery!;
 }
 
@@ -45,8 +45,8 @@ Future<Map<String, Object?>> deliverRemoteNotification(
 Future<void> deliverToAndroidReceiver(List<String> messageIds) async {
   final delivery = await _remoteNotificationsChannel
       .invokeMapMethod<String, Object?>('deliverToReceiver', {
-    'messageIds': messageIds,
-  });
+        'messageIds': messageIds,
+      });
   expect(
     delivery!['foreground'],
     isTrue,
@@ -117,8 +117,7 @@ void remoteNotificationDeliveryTests() {
         expect(delivery['completionCount'], 1);
       });
 
-      test(
-          'a data message in the background runs onBackgroundMessage once '
+      test('a data message in the background runs onBackgroundMessage once '
           'before the push completes', () async {
         FirebaseMessaging.onBackgroundMessage(_backgroundMessageHandler);
         final messageId = _uniqueMessageId('background');
@@ -136,8 +135,7 @@ void remoteNotificationDeliveryTests() {
         expect(delivery['fetchResult'], _uiBackgroundFetchResultNewData);
       });
 
-      test(
-          'a background message that arrives before onBackgroundMessage is '
+      test('a background message that arrives before onBackgroundMessage is '
           'set runs it once it is', () async {
         // As when iOS launches the app in the background for a push: the
         // message reaches Dart before `main()` has registered the handler.
@@ -171,8 +169,7 @@ void remoteNotificationDeliveryTests() {
         expect(result['fetchResult'], _uiBackgroundFetchResultNewData);
       });
 
-      test(
-          'messages sent before Dart handles the channel are all kept '
+      test('messages sent before Dart handles the channel are all kept '
           'until it does', () async {
         // As when pushes arrive before the app starts using messaging: Flutter
         // keeps a single message by default.
@@ -231,8 +228,7 @@ void remoteNotificationDeliveryTests() {
   group(
     'remote notification delivery on Android',
     () {
-      test(
-          'every message received in the foreground reaches onMessage once '
+      test('every message received in the foreground reaches onMessage once '
           'and in order', () async {
         final messageIds = [
           for (var i = 0; i < 5; i++) _uniqueMessageId('foreground-$i'),
@@ -255,8 +251,7 @@ void remoteNotificationDeliveryTests() {
         );
       });
 
-      test(
-          'an engine that starts listening later only gets the messages '
+      test('an engine that starts listening later only gets the messages '
           'received after', () async {
         final before = _uniqueMessageId('before-second-engine');
         final after = _uniqueMessageId('after-second-engine');
@@ -269,14 +264,17 @@ void remoteNotificationDeliveryTests() {
         await deliverToAndroidReceiver([before]);
         await _waitUntil(() => received.isNotEmpty);
         addTearDown(
-          () => _remoteNotificationsChannel
-              .invokeMethod<void>('stopSecondEngine'),
+          () => _remoteNotificationsChannel.invokeMethod<void>(
+            'stopSecondEngine',
+          ),
         );
         await _remoteNotificationsChannel
             .invokeMethod<void>('startSecondEngine', {
-          'callbackHandle': PluginUtilities.getCallbackHandle(secondEngineMain)!
-              .toRawHandle(),
-        }).timeout(const Duration(seconds: 20));
+              'callbackHandle': PluginUtilities.getCallbackHandle(
+                secondEngineMain,
+              )!.toRawHandle(),
+            })
+            .timeout(const Duration(seconds: 20));
         await deliverToAndroidReceiver([after]);
         await _waitUntil(() => received.length >= 2);
         // Leave time for an unexpected delivery to the second engine.
@@ -288,8 +286,7 @@ void remoteNotificationDeliveryTests() {
         expect(secondEngine, <String>[after]);
       });
 
-      test(
-          'messages sent before Dart handles the channel are all kept '
+      test('messages sent before Dart handles the channel are all kept '
           'until it does', () async {
         final messageIds = [
           for (var i = 0; i < 3; i++) _uniqueMessageId('buffered-$i'),

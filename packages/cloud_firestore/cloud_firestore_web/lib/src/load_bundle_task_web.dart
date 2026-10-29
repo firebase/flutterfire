@@ -12,17 +12,19 @@ class LoadBundleTaskWeb extends LoadBundleTaskPlatform {
   LoadBundleTaskWeb(LoadBundleTask task) : super() {
     stream = task.stream
         .asBroadcastStream(
-            onListen: (sub) => sub.resume(), onCancel: (sub) => sub.pause())
+          onListen: (sub) => sub.resume(),
+          onCancel: (sub) => sub.pause(),
+        )
         .map((snapshot) {
-      Map<String, dynamic> data = {
-        'bytesLoaded': snapshot.bytesLoaded,
-        'documentsLoaded': snapshot.documentsLoaded,
-        'totalBytes': snapshot.totalBytes,
-        'totalDocuments': snapshot.totalDocuments
-      };
+          Map<String, dynamic> data = {
+            'bytesLoaded': snapshot.bytesLoaded,
+            'documentsLoaded': snapshot.documentsLoaded,
+            'totalBytes': snapshot.totalBytes,
+            'totalDocuments': snapshot.totalDocuments,
+          };
 
-      return LoadBundleTaskSnapshotPlatform(snapshot.taskState, data);
-    });
+          return LoadBundleTaskSnapshotPlatform(snapshot.taskState, data);
+        });
   }
 
   @override

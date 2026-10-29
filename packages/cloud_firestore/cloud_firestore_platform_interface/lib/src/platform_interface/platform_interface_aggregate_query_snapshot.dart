@@ -12,10 +12,10 @@ class AggregateQuerySnapshotPlatform extends PlatformInterface {
     required int? count,
     required List<AggregateQueryResponse> sum,
     required List<AggregateQueryResponse> average,
-  })  : _count = count,
-        _sum = sum,
-        _average = average,
-        super(token: _token);
+  }) : _count = count,
+       _sum = sum,
+       _average = average,
+       super(token: _token);
 
   static final Object _token = Object();
 

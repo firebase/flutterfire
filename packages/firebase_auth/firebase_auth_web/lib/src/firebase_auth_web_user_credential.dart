@@ -19,18 +19,18 @@ class UserCredentialWeb extends UserCredentialPlatform {
     auth_interop.UserCredential? webUserCredential,
     auth_interop.Auth? webAuth,
   ) : super(
-          auth: auth,
-          additionalUserInfo: convertWebAdditionalUserInfo(
-            webUserCredential?.additionalUserInfo,
-          ),
-          credential: convertWebOAuthCredential(webUserCredential),
-          user: webUserCredential == null
-              ? null
-              : UserWeb(
-                  auth,
-                  MultiFactorWeb(auth, multiFactor(webUserCredential.user!)),
-                  webUserCredential.user!,
-                  webAuth,
-                ),
-        );
+        auth: auth,
+        additionalUserInfo: convertWebAdditionalUserInfo(
+          webUserCredential?.additionalUserInfo,
+        ),
+        credential: convertWebOAuthCredential(webUserCredential),
+        user: webUserCredential == null
+            ? null
+            : UserWeb(
+                auth,
+                MultiFactorWeb(auth, multiFactor(webUserCredential.user!)),
+                webUserCredential.user!,
+                webAuth,
+              ),
+      );
 }

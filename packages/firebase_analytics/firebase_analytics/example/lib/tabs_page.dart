@@ -64,10 +64,7 @@ class _TabsPageState extends State<TabsPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        bottom: TabBar(
-          controller: _controller,
-          tabs: tabs,
-        ),
+        bottom: TabBar(controller: _controller, tabs: tabs),
       ),
       body: TabBarView(
         controller: _controller,

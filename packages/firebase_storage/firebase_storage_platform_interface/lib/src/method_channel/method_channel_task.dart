@@ -20,20 +20,17 @@ import 'utils/exception.dart';
 /// Other implementations for specific tasks should extend this class.
 abstract class MethodChannelTask extends TaskPlatform {
   /// Creates a new [MethodChannelTask] with a given task.
-  MethodChannelTask(
-    this._handle,
-    this.storage,
-    String path,
-    this._initialTask,
-  ) : super() {
+  MethodChannelTask(this._handle, this.storage, String path, this._initialTask)
+    : super() {
     Stream<TaskSnapshotPlatform> mapNativeStream() async* {
       final observerId = await _initialTask;
       // Raw metadata of the last native snapshot, reused by the error snapshot.
       Object? lastMetadata;
 
       final nativePlatformStream =
-          MethodChannelFirebaseStorage.storageTaskChannel(observerId)
-              .receiveBroadcastStream();
+          MethodChannelFirebaseStorage.storageTaskChannel(
+            observerId,
+          ).receiveBroadcastStream();
       try {
         await for (final events in nativePlatformStream) {
           final taskState = TaskState.values[events['taskState']];
@@ -79,9 +76,10 @@ abstract class MethodChannelTask extends TaskPlatform {
           if (taskState == TaskState.canceled) {
             _didComplete = true;
             MethodChannelTaskSnapshot snapshot = MethodChannelTaskSnapshot(
-                storage,
-                taskState,
-                Map<String, dynamic>.from(events['snapshot']));
+              storage,
+              taskState,
+              Map<String, dynamic>.from(events['snapshot']),
+            );
             _snapshot = snapshot;
             break;
           }
@@ -94,8 +92,11 @@ abstract class MethodChannelTask extends TaskPlatform {
               snapshot.state != TaskState.canceled) {
             final snapshotData = Map<String, dynamic>.from(events['snapshot']);
             lastMetadata = snapshotData['metadata'];
-            MethodChannelTaskSnapshot snapshot =
-                MethodChannelTaskSnapshot(storage, taskState, snapshotData);
+            MethodChannelTaskSnapshot snapshot = MethodChannelTaskSnapshot(
+              storage,
+              taskState,
+              snapshotData,
+            );
             _snapshot = snapshot;
 
             yield snapshot;
@@ -115,7 +116,9 @@ abstract class MethodChannelTask extends TaskPlatform {
     }
 
     _stream = mapNativeStream().asBroadcastStream(
-        onListen: (sub) => sub.resume(), onCancel: (sub) => sub.cancel());
+      onListen: (sub) => sub.resume(),
+      onCancel: (sub) => sub.cancel(),
+    );
 
     // Keep reference to whether the initial "start" task has completed.
     _snapshot = MethodChannelTaskSnapshot(storage, TaskState.running, {
@@ -129,7 +132,8 @@ abstract class MethodChannelTask extends TaskPlatform {
 
   ///  FirebaseApp pigeon instance
   static InternalStorageFirebaseApp pigeonFirebaseApp(
-      FirebaseStoragePlatform storage) {
+    FirebaseStoragePlatform storage,
+  ) {
     return InternalStorageFirebaseApp(
       appName: storage.app.name,
       bucket: storage.bucket,
@@ -200,15 +204,19 @@ abstract class MethodChannelTask extends TaskPlatform {
   @override
   Future<bool> pause() async {
     try {
-      Map<String, dynamic>? data = (await MethodChannelFirebaseStorage
-              .pigeonChannel
-              .taskPause(MethodChannelTask.pigeonFirebaseApp(storage), _handle))
-          .cast<String, dynamic>();
+      Map<String, dynamic>? data =
+          (await MethodChannelFirebaseStorage.pigeonChannel.taskPause(
+            MethodChannelTask.pigeonFirebaseApp(storage),
+            _handle,
+          )).cast<String, dynamic>();
 
       final success = data['status'] ?? false;
       if (success) {
-        _snapshot = MethodChannelTaskSnapshot(storage, TaskState.paused,
-            Map<String, dynamic>.from(data['snapshot']));
+        _snapshot = MethodChannelTaskSnapshot(
+          storage,
+          TaskState.paused,
+          Map<String, dynamic>.from(data['snapshot']),
+        );
       }
       return success;
     } catch (e, stack) {
@@ -221,13 +229,17 @@ abstract class MethodChannelTask extends TaskPlatform {
     try {
       Map<String, dynamic>? data =
           (await MethodChannelFirebaseStorage.pigeonChannel.taskResume(
-                  MethodChannelTask.pigeonFirebaseApp(storage), _handle))
-              .cast<String, dynamic>();
+            MethodChannelTask.pigeonFirebaseApp(storage),
+            _handle,
+          )).cast<String, dynamic>();
 
       final success = data['status'] ?? false;
       if (success) {
-        _snapshot = MethodChannelTaskSnapshot(storage, TaskState.running,
-            Map<String, dynamic>.from(data['snapshot']));
+        _snapshot = MethodChannelTaskSnapshot(
+          storage,
+          TaskState.running,
+          Map<String, dynamic>.from(data['snapshot']),
+        );
       }
       return success;
     } catch (e, stack) {
@@ -240,13 +252,17 @@ abstract class MethodChannelTask extends TaskPlatform {
     try {
       Map<String, dynamic>? data =
           (await MethodChannelFirebaseStorage.pigeonChannel.taskCancel(
-                  MethodChannelTask.pigeonFirebaseApp(storage), _handle))
-              .cast<String, dynamic>();
+            MethodChannelTask.pigeonFirebaseApp(storage),
+            _handle,
+          )).cast<String, dynamic>();
 
       final success = data['status'] ?? false;
       if (success) {
-        _snapshot = MethodChannelTaskSnapshot(storage, TaskState.canceled,
-            Map<String, dynamic>.from(data['snapshot']));
+        _snapshot = MethodChannelTaskSnapshot(
+          storage,
+          TaskState.canceled,
+          Map<String, dynamic>.from(data['snapshot']),
+        );
       }
       return success;
     } catch (e, stack) {
@@ -258,13 +274,26 @@ abstract class MethodChannelTask extends TaskPlatform {
 /// Implementation for [putFile] tasks.
 class MethodChannelPutFileTask extends MethodChannelTask {
   // ignore: public_member_api_docs
-  MethodChannelPutFileTask(int handle, FirebaseStoragePlatform storage,
-      String path, File file, SettableMetadata? metadata)
-      : super(handle, storage, path,
-            _getTask(handle, storage, path, file, metadata));
+  MethodChannelPutFileTask(
+    int handle,
+    FirebaseStoragePlatform storage,
+    String path,
+    File file,
+    SettableMetadata? metadata,
+  ) : super(
+        handle,
+        storage,
+        path,
+        _getTask(handle, storage, path, file, metadata),
+      );
 
-  static Future<String> _getTask(int handle, FirebaseStoragePlatform storage,
-      String path, File file, SettableMetadata? metadata) {
+  static Future<String> _getTask(
+    int handle,
+    FirebaseStoragePlatform storage,
+    String path,
+    File file,
+    SettableMetadata? metadata,
+  ) {
     InternalSettableMetadata? pigeonSettableMetadata;
     if (defaultTargetPlatform == TargetPlatform.windows) {
       // TODO(russellwheatley): sending null to windows throws exception so we pass empty metadata
@@ -278,7 +307,10 @@ class MethodChannelPutFileTask extends MethodChannelTask {
     return MethodChannelFirebaseStorage.pigeonChannel.referencePutFile(
       MethodChannelTask.pigeonFirebaseApp(storage),
       MethodChannelFirebaseStorage.getPigeonReference(
-          storage.bucket, path, 'putFile'),
+        storage.bucket,
+        path,
+        'putFile',
+      ),
       file.path,
       pigeonSettableMetadata,
       handle,
@@ -290,26 +322,34 @@ class MethodChannelPutFileTask extends MethodChannelTask {
 class MethodChannelPutStringTask extends MethodChannelTask {
   // ignore: public_member_api_docs
   MethodChannelPutStringTask(
-      int handle,
-      FirebaseStoragePlatform storage,
-      String path,
-      String data,
-      PutStringFormat format,
-      SettableMetadata? metadata)
-      : super(handle, storage, path,
-            _getTask(handle, storage, path, data, format, metadata));
+    int handle,
+    FirebaseStoragePlatform storage,
+    String path,
+    String data,
+    PutStringFormat format,
+    SettableMetadata? metadata,
+  ) : super(
+        handle,
+        storage,
+        path,
+        _getTask(handle, storage, path, data, format, metadata),
+      );
 
   static Future<String> _getTask(
-      int handle,
-      FirebaseStoragePlatform storage,
-      String path,
-      String data,
-      PutStringFormat format,
-      SettableMetadata? metadata) {
+    int handle,
+    FirebaseStoragePlatform storage,
+    String path,
+    String data,
+    PutStringFormat format,
+    SettableMetadata? metadata,
+  ) {
     return MethodChannelFirebaseStorage.pigeonChannel.referencePutString(
       MethodChannelTask.pigeonFirebaseApp(storage),
       MethodChannelFirebaseStorage.getPigeonReference(
-          storage.bucket, path, 'putString'),
+        storage.bucket,
+        path,
+        'putString',
+      ),
       data,
       format.index,
       MethodChannelFirebaseStorage.getPigeonSettableMetaData(metadata),
@@ -321,17 +361,33 @@ class MethodChannelPutStringTask extends MethodChannelTask {
 /// Implementation for [put] tasks.
 class MethodChannelPutTask extends MethodChannelTask {
   // ignore: public_member_api_docs
-  MethodChannelPutTask(int handle, FirebaseStoragePlatform storage, String path,
-      Uint8List data, SettableMetadata? metadata)
-      : super(handle, storage, path,
-            _getTask(handle, storage, path, data, metadata));
+  MethodChannelPutTask(
+    int handle,
+    FirebaseStoragePlatform storage,
+    String path,
+    Uint8List data,
+    SettableMetadata? metadata,
+  ) : super(
+        handle,
+        storage,
+        path,
+        _getTask(handle, storage, path, data, metadata),
+      );
 
-  static Future<String> _getTask(int handle, FirebaseStoragePlatform storage,
-      String path, Uint8List data, SettableMetadata? metadata) {
+  static Future<String> _getTask(
+    int handle,
+    FirebaseStoragePlatform storage,
+    String path,
+    Uint8List data,
+    SettableMetadata? metadata,
+  ) {
     return MethodChannelFirebaseStorage.pigeonChannel.referencePutData(
       MethodChannelTask.pigeonFirebaseApp(storage),
       MethodChannelFirebaseStorage.getPigeonReference(
-          storage.bucket, path, 'putData'),
+        storage.bucket,
+        path,
+        'putData',
+      ),
       data,
       MethodChannelFirebaseStorage.getPigeonSettableMetaData(metadata),
       handle,
@@ -343,15 +399,25 @@ class MethodChannelPutTask extends MethodChannelTask {
 class MethodChannelDownloadTask extends MethodChannelTask {
   // ignore: public_member_api_docs
   MethodChannelDownloadTask(
-      int handle, FirebaseStoragePlatform storage, String path, File file)
-      : super(handle, storage, path, _getTask(handle, storage, path, file));
+    int handle,
+    FirebaseStoragePlatform storage,
+    String path,
+    File file,
+  ) : super(handle, storage, path, _getTask(handle, storage, path, file));
 
   static Future<String> _getTask(
-      int handle, FirebaseStoragePlatform storage, String path, File file) {
+    int handle,
+    FirebaseStoragePlatform storage,
+    String path,
+    File file,
+  ) {
     return MethodChannelFirebaseStorage.pigeonChannel.referenceDownloadFile(
       MethodChannelTask.pigeonFirebaseApp(storage),
       MethodChannelFirebaseStorage.getPigeonReference(
-          storage.bucket, path, 'writeToFile'),
+        storage.bucket,
+        path,
+        'writeToFile',
+      ),
       file.path,
       handle,
     );

@@ -6,14 +6,11 @@ part of '../firebase_database_web.dart';
 
 /// Web implementation for firebase [DataSnapshotPlatform]
 class DatabaseEventWeb extends DatabaseEventPlatform {
-  DatabaseEventWeb(
-    this._ref,
-    DatabaseEventType eventType,
-    this._event,
-  ) : super(<String, dynamic>{
-          'previousChildKey': _event.prevChildKey,
-          'eventType': eventTypeToString(eventType),
-        });
+  DatabaseEventWeb(this._ref, DatabaseEventType eventType, this._event)
+    : super(<String, dynamic>{
+        'previousChildKey': _event.prevChildKey,
+        'eventType': eventTypeToString(eventType),
+      });
 
   final DatabaseReferencePlatform _ref;
 
