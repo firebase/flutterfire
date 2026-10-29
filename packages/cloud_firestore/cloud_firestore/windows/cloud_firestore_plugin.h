@@ -192,6 +192,7 @@ class CloudFirestorePlugin : public flutter::Plugin,
   static std::map<std::string,
                   std::shared_ptr<firebase::firestore::Transaction>>
       transactions_;
+  static std::mutex transactions_mutex_;
   static std::map<std::string, std::unique_ptr<firebase::firestore::Firestore>>
       firestoreInstances_;
 };
