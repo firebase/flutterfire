@@ -6,6 +6,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:dart_cloud_functions/dart_cloud_functions.dart';
+import 'package:dart_cloud_functions/src/callable_context.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/test.dart';
 import 'package:flutter/foundation.dart';
@@ -34,12 +35,17 @@ void main() {
 
   // Flutter tests run as Android by default, so only the
   // useFunctionsEmulator() tests turn on the Android host mapping.
+  // Without a contextProvider, calls carry no tokens.
   DartFirebaseFunctions emulatorFunctions(
     MockClientHandler handler, {
     bool automaticHostMapping = false,
+    CallableContextProvider? contextProvider,
   }) {
-    return DartFirebaseFunctions.withHttpClient(MockClient(handler), app: app)
-      ..useFunctionsEmulator(
+    return DartFirebaseFunctions.withHttpClient(
+      MockClient(handler),
+      app: app,
+      contextProvider: contextProvider ?? () async => const CallableContext(),
+    )..useFunctionsEmulator(
         'localhost',
         5001,
         automaticHostMapping: automaticHostMapping,
@@ -140,6 +146,86 @@ void main() {
         functions.httpsCallable('listFruit').call(),
         _throwsCode('unavailable'),
       );
+    });
+  });
+
+  group('Auth token', () {
+    test('is sent as a Bearer token', () async {
+      late http.Request sent;
+      final functions = emulatorFunctions(
+        (request) async {
+          sent = request;
+          return http.Response('{"result":null}', 200);
+        },
+        contextProvider: () async =>
+            const CallableContext(authToken: 'id-token'),
+      );
+
+      await functions.httpsCallable('listFruit').call();
+
+      expect(sent.headers['Authorization'], 'Bearer id-token');
+    });
+
+    test('is left out when nobody is signed in', () async {
+      late http.Request sent;
+      final functions = emulatorFunctions((request) async {
+        sent = request;
+        return http.Response('{"result":null}', 200);
+      });
+
+      await functions.httpsCallable('listFruit').call();
+
+      expect(sent.headers, isNot(contains('Authorization')));
+    });
+
+    test('is fetched again for every call', () async {
+      final tokens = ['first', 'second'].iterator;
+      final sentTokens = <String?>[];
+      final functions = emulatorFunctions(
+        (request) async {
+          sentTokens.add(request.headers['Authorization']);
+          return http.Response('{"result":null}', 200);
+        },
+        contextProvider: () async {
+          tokens.moveNext();
+          return CallableContext(authToken: tokens.current);
+        },
+      );
+
+      final callable = functions.httpsCallable('listFruit');
+      await callable.call();
+      await callable.call();
+
+      expect(sentTokens, ['Bearer first', 'Bearer second']);
+    });
+
+    test('fails the call with unknown when it cannot be fetched', () async {
+      var requests = 0;
+      final functions = emulatorFunctions(
+        (_) async {
+          requests++;
+          return http.Response('{"result":null}', 200);
+        },
+        contextProvider: () async => throw FirebaseException(
+          plugin: 'firebase_auth',
+          code: 'network-request-failed',
+          message: 'A network error has occurred.',
+        ),
+      );
+
+      await expectLater(
+        functions.httpsCallable('listFruit').call(),
+        throwsA(
+          isA<DartFirebaseFunctionsException>()
+              .having((e) => e.code, 'code', 'unknown')
+              .having(
+                (e) => e.message,
+                'message',
+                'A network error has occurred.',
+              ),
+        ),
+      );
+      expect(requests, 0);
     });
   });
 

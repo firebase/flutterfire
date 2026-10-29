@@ -40,6 +40,9 @@ try {
 
 - `DartFirebaseFunctions.instanceFor(app: ..., region: ...)` selects another
   app or region. Instances are cached per app and region.
+- Calls carry the ID token of the user signed in to Firebase Auth, as
+  `Authorization: Bearer <token>`, like `cloud_functions`. This is why the
+  package depends on `firebase_auth`.
 - `httpsCallableFromUrl()` and `httpsCallableFromUri()` call a function by URL,
   such as a 2nd gen function's `*.run.app` URL.
 - `DartHttpsCallableOptions(timeout: ...)` sets the call timeout (60 seconds by
@@ -63,6 +66,6 @@ cases of the native e2e suite against this package.
 
 ## Not yet supported
 
-- Auth, App Check and FCM tokens: requests are sent without them.
+- App Check and FCM tokens: requests are sent without them.
 - Streaming (`stream()`).
 - 64-bit integer encoding, custom domains, and web.

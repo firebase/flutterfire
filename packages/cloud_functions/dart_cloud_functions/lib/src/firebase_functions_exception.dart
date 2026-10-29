@@ -22,4 +22,3 @@ class DartFirebaseFunctionsException extends FirebaseException {
   /// Extra data the function attached to its error, if any.
   final Object? details;
 }
-

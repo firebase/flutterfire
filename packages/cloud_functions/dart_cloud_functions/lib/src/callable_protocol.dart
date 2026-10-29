@@ -4,13 +4,22 @@
 
 import 'dart:convert';
 
+import 'package:dart_cloud_functions/src/callable_context.dart';
 import 'package:dart_cloud_functions/src/firebase_functions_exception.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:http/http.dart' as http;
 
-/// Headers sent with every callable request.
-const Map<String, String> callableRequestHeaders = {
-  'Content-Type': 'application/json',
-};
+/// The headers of a callable request that carries [context]'s tokens.
+///
+/// The ID token uses the `Bearer` scheme, which callable functions require
+/// (`firebase_ai` sends `Firebase` instead).
+Map<String, String> callableRequestHeaders(CallableContext context) {
+  return {
+    'Content-Type': 'application/json',
+    if (context.authToken case final authToken?)
+      'Authorization': 'Bearer $authToken',
+  };
+}
 
 /// Resolves the URL of a callable function.
 ///
@@ -81,6 +90,19 @@ DartFirebaseFunctionsException callableNetworkException(
     code: 'unavailable',
     message: error.message,
   );
+}
+
+/// The exception for a call whose tokens could not be fetched, such as when
+/// Firebase Auth fails to refresh an expired ID token.
+///
+/// Like the native plugins, it uses the code `unknown` and keeps the message
+/// of the original [error].
+DartFirebaseFunctionsException callableContextException(Object error) {
+  final message = switch (error) {
+    FirebaseException(:final message?) => message,
+    _ => error.toString(),
+  };
+  return DartFirebaseFunctionsException(code: 'unknown', message: message);
 }
 
 Object? _tryDecodeJson(List<int> bodyBytes) {

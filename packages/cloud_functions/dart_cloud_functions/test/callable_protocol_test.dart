@@ -5,6 +5,7 @@
 import 'dart:convert';
 
 import 'package:dart_cloud_functions/dart_cloud_functions.dart';
+import 'package:dart_cloud_functions/src/callable_context.dart';
 import 'package:dart_cloud_functions/src/callable_protocol.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -84,6 +85,22 @@ void main() {
       expect(
         () => callableEndpoint(projectId: 'my-project', region: 'us-central1'),
         throwsArgumentError,
+      );
+    });
+  });
+
+  group('callableRequestHeaders', () {
+    test('sends JSON without tokens', () {
+      expect(
+        callableRequestHeaders(const CallableContext()),
+        {'Content-Type': 'application/json'},
+      );
+    });
+
+    test('sends the ID token with the Bearer scheme', () {
+      expect(
+        callableRequestHeaders(const CallableContext(authToken: 'id-token')),
+        containsPair('Authorization', 'Bearer id-token'),
       );
     });
   });
@@ -174,6 +191,15 @@ void main() {
         () => _decode(400, '{"error":{"status":"NOT_A_STATUS"}}'),
         _throwsFunctionsException('internal'),
       );
+    });
+  });
+
+  group('callableContextException', () {
+    test('describes errors other than FirebaseException', () {
+      final exception = callableContextException(StateError('No token.'));
+
+      expect(exception.code, 'unknown');
+      expect(exception.message, 'Bad state: No token.');
     });
   });
 }

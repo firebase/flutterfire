@@ -5,7 +5,9 @@
 import 'dart:async';
 import 'dart:developer' as developer;
 
+import 'package:dart_cloud_functions/src/callable_context.dart';
 import 'package:dart_cloud_functions/src/callable_protocol.dart';
+import 'package:dart_cloud_functions/src/firebase_callable_context.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
@@ -21,16 +23,28 @@ import 'package:http/http.dart' as http;
 /// print(result.data);
 /// ```
 class DartFirebaseFunctions {
-  DartFirebaseFunctions._(this.app, this.region, this._httpClient);
+  DartFirebaseFunctions._(
+    this.app,
+    this.region, {
+    required CallableContextProvider contextProvider,
+    http.Client? httpClient,
+  })  : _contextProvider = contextProvider,
+        _httpClient = httpClient;
 
-  /// Creates an instance that isn't cached and sends requests with
-  /// [httpClient].
+  /// Creates an instance that isn't cached, sends requests with [httpClient]
+  /// and gets their tokens from [contextProvider].
   @visibleForTesting
   DartFirebaseFunctions.withHttpClient(
     http.Client httpClient, {
     required FirebaseApp app,
+    required CallableContextProvider contextProvider,
     String region = _defaultRegion,
-  }) : this._(app, region, httpClient);
+  }) : this._(
+          app,
+          region,
+          contextProvider: contextProvider,
+          httpClient: httpClient,
+        );
 
   static const _defaultRegion = 'us-central1';
   static final Map<String, DartFirebaseFunctions> _instances = {};
@@ -39,6 +53,9 @@ class DartFirebaseFunctions {
   static DartFirebaseFunctions get instance => instanceFor();
 
   /// The instance for [app] (the default app when omitted) and [region].
+  ///
+  /// Calls carry the ID token of the user signed in to Firebase Auth for
+  /// [app], if any.
   static DartFirebaseFunctions instanceFor({
     FirebaseApp? app,
     String region = _defaultRegion,
@@ -46,7 +63,11 @@ class DartFirebaseFunctions {
     final resolvedApp = app ?? Firebase.app();
     return _instances.putIfAbsent(
       '${resolvedApp.name}/$region',
-      () => DartFirebaseFunctions._(resolvedApp, region, null),
+      () => DartFirebaseFunctions._(
+        resolvedApp,
+        region,
+        contextProvider: firebaseCallableContext(resolvedApp),
+      ),
     );
   }
 
@@ -56,6 +77,7 @@ class DartFirebaseFunctions {
   /// The region the functions are deployed to, such as `us-central1`.
   final String region;
 
+  final CallableContextProvider _contextProvider;
   final http.Client? _httpClient;
   String? _emulatorOrigin;
 
@@ -168,6 +190,7 @@ class DartHttpsCallable {
       uri: uri,
       origin: _functions._emulatorOrigin,
     );
+    final context = await _fetchContext();
     developer.log('POST $endpoint', name: 'dart_cloud_functions');
 
     final client = _functions._httpClient ?? http.Client();
@@ -175,7 +198,7 @@ class DartHttpsCallable {
       final response = await client
           .post(
             endpoint,
-            headers: callableRequestHeaders,
+            headers: callableRequestHeaders(context),
             body: encodeCallableRequest(data),
           )
           .timeout(options.timeout);
@@ -191,5 +214,16 @@ class DartHttpsCallable {
       if (_functions._httpClient == null) client.close();
     }
   }
-}
 
+  /// Gets the tokens for one request.
+  ///
+  /// As in the native SDKs, this happens before the timeout starts, and a
+  /// failure fails the call.
+  Future<CallableContext> _fetchContext() async {
+    try {
+      return await _functions._contextProvider();
+    } catch (error, stackTrace) {
+      Error.throwWithStackTrace(callableContextException(error), stackTrace);
+    }
+  }
+}
