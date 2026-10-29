@@ -6,6 +6,7 @@ import 'dart:async';
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_firestore.dart';
+import 'package:cloud_firestore_platform_interface/src/method_channel/query_snapshot_chunk_assembler.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/test.dart';
 import 'package:flutter/services.dart';
@@ -336,6 +337,59 @@ void main() {
       await secondSubscription.cancel();
     });
 
+    test('query re-listen while the first pigeon call is still pending attaches only '
+        'the second listener', () async {
+      const firstObserverId = 'observer-id-1';
+      const secondObserverId = 'observer-id-2';
+
+      final firstObserver = Completer<String>();
+      final secondObserver = Completer<String>();
+      hostApi.queuedSnapshotObserverIds
+        ..add(firstObserver)
+        ..add(secondObserver);
+
+      final relistenChannels = <String, List<String>>{
+        'plugins.flutter.io/firebase_firestore/query/$firstObserverId':
+            <String>[],
+        'plugins.flutter.io/firebase_firestore/query/$secondObserverId':
+            <String>[],
+      };
+      relistenChannels.forEach((channel, calls) {
+        messenger.setMockMessageHandler(channel, (ByteData? message) async {
+          calls.add(codec.decodeMethodCall(message).method);
+          return codec.encodeSuccessEnvelope(null);
+        });
+      });
+      addTearDown(() {
+        for (final channel in relistenChannels.keys) {
+          messenger.setMockMessageHandler(channel, null);
+        }
+      });
+
+      final stream = firestore
+          .collection('foo')
+          .snapshots(listenSource: ListenSource.defaultSource);
+
+      await stream.listen((_) {}).cancel();
+      final secondSubscription = stream.listen((_) {});
+
+      firstObserver.complete(firstObserverId);
+      await pumpEventQueue();
+      secondObserver.complete(secondObserverId);
+      await pumpEventQueue();
+
+      expect(
+        relistenChannels['plugins.flutter.io/firebase_firestore/query/$firstObserverId'],
+        isEmpty,
+      );
+      expect(
+        relistenChannels['plugins.flutter.io/firebase_firestore/query/$secondObserverId'],
+        <String>['listen'],
+      );
+
+      await secondSubscription.cancel();
+    });
+
     test('snapshotsInSync() does not attach a native listener when cancelled '
         'before setup completes', () async {
       const syncObserverId = 'sync-observer-id';
@@ -354,6 +408,128 @@ void main() {
 
       expect(syncChannelCalls, isEmpty);
     });
+  });
+
+  group('query snapshot chunks over the event channel', () {
+    const observerId = 'chunk-observer';
+    const channel = 'plugins.flutter.io/firebase_firestore/query/$observerId';
+    late MethodChannelFirebaseFirestore firestore;
+    late List<QuerySnapshotPlatform> snapshots;
+    late List<Object> errors;
+
+    setUp(() {
+      firestore = MethodChannelFirebaseFirestore(
+        app: app,
+        databaseId: '(default)',
+      );
+      snapshots = <QuerySnapshotPlatform>[];
+      errors = <Object>[];
+      messenger.setMockMessageHandler(channel, (ByteData? message) async {
+        return codec.encodeSuccessEnvelope(null);
+      });
+    });
+
+    tearDown(() => messenger.setMockMessageHandler(channel, null));
+
+    Future<void> send(Object? frame) async {
+      unawaited(
+        messenger.handlePlatformMessage(
+          channel,
+          codec.encodeSuccessEnvelope(frame),
+          (_) {},
+        ),
+      );
+      await pumpEventQueue();
+    }
+
+    Map<Object?, Object?> start(int id, {int documentCount = 0}) =>
+        querySnapshotChunkStart(
+          snapshotId: id,
+          documentCount: documentCount,
+          documentChangeCount: 0,
+          metadata: InternalSnapshotMetadata(
+            hasPendingWrites: false,
+            isFromCache: true,
+          ),
+        );
+
+    test('publishes only the complete logical snapshot', () async {
+      final subscription = firestore
+          .collection('foo')
+          .snapshots(listenSource: ListenSource.defaultSource)
+          .listen(snapshots.add, onError: errors.add);
+      addTearDown(subscription.cancel);
+      hostApi.snapshotObserverId.complete(observerId);
+      await pumpEventQueue();
+      await send(start(1, documentCount: 1));
+      await send(
+        querySnapshotDocumentChunk(1, <Object?>[
+          InternalDocumentSnapshot(
+            path: 'foo/bar',
+            data: <String, Object?>{'value': 1},
+            metadata: InternalSnapshotMetadata(
+              hasPendingWrites: false,
+              isFromCache: true,
+            ),
+          ),
+        ]),
+      );
+      expect(snapshots, isEmpty);
+      await send(querySnapshotChunkEnd(1));
+      expect(snapshots, hasLength(1));
+      expect(snapshots.single.docs.single.data(), <String, Object?>{
+        'value': 1,
+      });
+      expect(errors, isEmpty);
+    });
+
+    test('resets incomplete assembly after a native stream error', () async {
+      final subscription = firestore
+          .collection('foo')
+          .snapshots(listenSource: ListenSource.defaultSource)
+          .listen(snapshots.add, onError: errors.add);
+      addTearDown(subscription.cancel);
+      hostApi.snapshotObserverId.complete(observerId);
+      await pumpEventQueue();
+      await send(start(1, documentCount: 1));
+      unawaited(
+        messenger.handlePlatformMessage(
+          channel,
+          codec.encodeErrorEnvelope(code: 'unavailable', message: 'Retry'),
+          (_) {},
+        ),
+      );
+      await pumpEventQueue();
+      expect(errors, hasLength(1));
+      await send(start(2));
+      await send(querySnapshotChunkEnd(2));
+      expect(snapshots, hasLength(1));
+      expect(snapshots.single.docs, isEmpty);
+      expect(errors, hasLength(1));
+    });
+
+    test(
+      're-listening does not inherit a cancelled partial snapshot',
+      () async {
+        final stream = firestore
+            .collection('foo')
+            .snapshots(listenSource: ListenSource.defaultSource);
+        final subscription = stream.listen(snapshots.add, onError: errors.add);
+        hostApi.snapshotObserverId.complete(observerId);
+        await pumpEventQueue();
+        await send(start(1, documentCount: 1));
+        await subscription.cancel();
+        await pumpEventQueue();
+        final second = stream.listen(snapshots.add, onError: errors.add);
+        addTearDown(second.cancel);
+        await pumpEventQueue();
+        await send(start(2));
+        await send(querySnapshotChunkEnd(2));
+        expect(snapshots, hasLength(1));
+        expect(snapshots.single.docs, isEmpty);
+        expect(errors, isEmpty);
+      },
+    );
   });
 
   test('namedQueryGet binds the snapshot to the calling instance', () async {
