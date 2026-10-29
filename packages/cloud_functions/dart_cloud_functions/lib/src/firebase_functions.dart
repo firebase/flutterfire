@@ -77,6 +77,28 @@ class DartFirebaseFunctions {
   /// The region the functions are deployed to, such as `us-central1`.
   final String region;
 
+  /// Whether tokens, such as the Auth ID token, may be sent over plain HTTP
+  /// to a non-loopback host.
+  ///
+  /// Mirrors `FirebaseFunctions.allowInsecureTokenAttachment` from
+  /// `cloud_functions`. Set it before calling a function on a local emulator
+  /// from a physical device:
+  ///
+  /// ```dart
+  /// DartFirebaseFunctions.instance
+  ///   ..allowInsecureTokenAttachment = true
+  ///   ..useFunctionsEmulator('192.168.1.10', 5001);
+  /// ```
+  ///
+  /// Only debug builds honor this value; profile and release builds ignore
+  /// it. Unlike in `cloud_functions`, where only Apple platforms check, it
+  /// applies on every platform, because this package refuses to send tokens
+  /// insecurely on all of them.
+  ///
+  /// Sending tokens over plain HTTP exposes them on the local network. Enable
+  /// this only for a local emulator.
+  bool allowInsecureTokenAttachment = false;
+
   final CallableContextProvider _contextProvider;
   final http.Client? _httpClient;
   String? _emulatorOrigin;
@@ -191,6 +213,11 @@ class DartHttpsCallable {
       origin: _functions._emulatorOrigin,
     );
     final context = await _fetchContext();
+    checkTokenTransport(
+      endpoint,
+      context,
+      allowInsecure: kDebugMode && _functions.allowInsecureTokenAttachment,
+    );
     developer.log('POST $endpoint', name: 'dart_cloud_functions');
 
     final client = _functions._httpClient ?? http.Client();

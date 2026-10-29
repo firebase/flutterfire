@@ -105,6 +105,48 @@ void main() {
     });
   });
 
+  group('checkTokenTransport', () {
+    const withToken = CallableContext(authToken: 'id-token');
+
+    void check(String url, [CallableContext context = withToken]) =>
+        checkTokenTransport(Uri.parse(url), context);
+
+    test('allows tokens over HTTPS', () {
+      expect(() => check('https://example.com/listFruit'), returnsNormally);
+    });
+
+    for (final host in ['localhost', '127.0.0.1', '[::1]', '10.0.2.2']) {
+      test('allows tokens over HTTP to $host', () {
+        expect(() => check('http://$host:5001/listFruit'), returnsNormally);
+      });
+    }
+
+    test('refuses tokens over HTTP to any other host', () {
+      expect(
+        () => check('http://192.168.1.20:5001/listFruit'),
+        _throwsFunctionsException('unauthenticated'),
+      );
+    });
+
+    test('allows calls without tokens over HTTP to any host', () {
+      expect(
+        () => check('http://example.com/listFruit', const CallableContext()),
+        returnsNormally,
+      );
+    });
+
+    test('allows tokens over HTTP to any host with allowInsecure', () {
+      expect(
+        () => checkTokenTransport(
+          Uri.parse('http://192.168.1.20:5001/listFruit'),
+          withToken,
+          allowInsecure: true,
+        ),
+        returnsNormally,
+      );
+    });
+  });
+
   group('encodeCallableRequest', () {
     test('wraps parameters in a data envelope', () {
       expect(

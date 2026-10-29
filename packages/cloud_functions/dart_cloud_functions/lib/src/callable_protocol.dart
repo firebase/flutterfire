@@ -21,6 +21,33 @@ Map<String, String> callableRequestHeaders(CallableContext context) {
   };
 }
 
+/// Hosts that may receive tokens over plain HTTP: the device itself, and
+/// `10.0.2.2`, the Android emulator's address for the host machine.
+const _loopbackHosts = {'localhost', '127.0.0.1', '::1', '10.0.2.2'};
+
+/// Throws an `unauthenticated` [DartFirebaseFunctionsException] if
+/// [context]'s tokens would be sent over plain HTTP to a non-loopback host.
+///
+/// Tokens are credentials, so, as with `shouldAttachTokens` in the Apple SDK,
+/// they only travel over HTTPS or to the local machine, such as the
+/// emulator. A call without tokens may use any URL. [allowInsecure] skips the
+/// check, for `DartFirebaseFunctions.allowInsecureTokenAttachment`.
+void checkTokenTransport(
+  Uri endpoint,
+  CallableContext context, {
+  bool allowInsecure = false,
+}) {
+  if (!context.hasTokens || allowInsecure || endpoint.scheme == 'https') {
+    return;
+  }
+  if (_loopbackHosts.contains(endpoint.host.toLowerCase())) return;
+  throw DartFirebaseFunctionsException(
+    code: 'unauthenticated',
+    message: 'Refusing to send tokens over HTTP to ${endpoint.host}, which is '
+        'not a loopback host.',
+  );
+}
+
 /// Resolves the URL of a callable function.
 ///
 /// An explicit [uri] is used as is, even when an emulator [origin] is set,

@@ -16,6 +16,9 @@ class CallableContext {
   /// The signed-in user's Firebase ID token, or `null` when nobody is signed
   /// in.
   final String? authToken;
+
+  /// Whether the request would carry any credentials.
+  bool get hasTokens => authToken != null;
 }
 
 /// Returns the tokens for the next callable request.

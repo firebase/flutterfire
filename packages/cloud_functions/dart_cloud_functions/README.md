@@ -43,6 +43,12 @@ try {
 - Calls carry the ID token of the user signed in to Firebase Auth, as
   `Authorization: Bearer <token>`, like `cloud_functions`. This is why the
   package depends on `firebase_auth`.
+- Tokens are only sent over HTTPS or to the local machine (`localhost`,
+  `127.0.0.1`, `::1`, or `10.0.2.2` from the Android emulator). A call that
+  would send them over plain HTTP anywhere else fails with `unauthenticated`,
+  as in the Apple SDK. To call an emulator at your computer's LAN address
+  from a physical device, set `allowInsecureTokenAttachment = true`, as in
+  `cloud_functions`. Only debug builds honor it.
 - `httpsCallableFromUrl()` and `httpsCallableFromUri()` call a function by URL,
   such as a 2nd gen function's `*.run.app` URL.
 - `DartHttpsCallableOptions(timeout: ...)` sets the call timeout (60 seconds by

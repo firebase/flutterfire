@@ -227,6 +227,48 @@ void main() {
       );
       expect(requests, 0);
     });
+
+    test('is never sent over HTTP to a non-loopback host', () async {
+      var requests = 0;
+      final functions = emulatorFunctions(
+        (_) async {
+          requests++;
+          return http.Response('{"result":null}', 200);
+        },
+        contextProvider: () async =>
+            const CallableContext(authToken: 'id-token'),
+      );
+
+      await expectLater(
+        functions
+            .httpsCallableFromUrl('http://192.168.1.20:5001/listFruit')
+            .call(),
+        _throwsCode('unauthenticated'),
+      );
+      expect(requests, 0);
+    });
+
+    test(
+      'is sent over HTTP to a non-loopback host with '
+      'allowInsecureTokenAttachment in debug builds',
+      () async {
+        late http.Request sent;
+        final functions = emulatorFunctions(
+          (request) async {
+            sent = request;
+            return http.Response('{"result":null}', 200);
+          },
+          contextProvider: () async =>
+              const CallableContext(authToken: 'id-token'),
+        )..allowInsecureTokenAttachment = true;
+
+        await functions
+            .httpsCallableFromUrl('http://192.168.1.20:5001/listFruit')
+            .call();
+
+        expect(sent.headers['Authorization'], 'Bearer id-token');
+      },
+    );
   });
 
   group('useFunctionsEmulator()', () {
