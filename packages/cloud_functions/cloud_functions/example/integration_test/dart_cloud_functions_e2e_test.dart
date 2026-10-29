@@ -39,6 +39,7 @@ void main() {
       }
       functions = DartFirebaseFunctions.instance;
       connectDartFunctionsEmulator(functions);
+      await connectAuthEmulatorAndSignOut();
       callable = functions.httpsCallable('testFunctionDefaultRegion');
     });
 
@@ -176,29 +177,19 @@ void main() {
     group(
       'Auth token',
       () {
-        setUpAll(() async {
-          await connectAuthEmulator();
-          // Auth persists the user across launches, so start signed out.
-          await FirebaseAuth.instance.signOut();
-        });
-
         tearDown(() async {
           await FirebaseAuth.instance.signOut();
         });
 
-        test(
-          'reaches the function when signed in',
-          () async {
-            final credential = await FirebaseAuth.instance.signInAnonymously();
+        test('reaches the function when signed in', () async {
+          final credential = await FirebaseAuth.instance.signInAnonymously();
 
-            final result =
-                await functions.httpsCallable('testEchoContext').call();
+          final result =
+              await functions.httpsCallable('testEchoContext').call();
 
-            expect(result.data['authUid'], credential.user!.uid);
-            expect(result.data['authorizationHeader'], isTrue);
-          },
-          skip: 'Needs token support (plan step 1.6)',
-        );
+          expect(result.data['authUid'], credential.user!.uid);
+          expect(result.data['authorizationHeader'], isTrue);
+        });
 
         test('is not sent when signed out', () async {
           final result =
@@ -208,9 +199,7 @@ void main() {
           expect(result.data['authorizationHeader'], isFalse);
         });
       },
-      // Firebase Auth on macOS needs keychain entitlements, which this
-      // example app doesn't have.
-      skip: !kIsWeb && defaultTargetPlatform == TargetPlatform.macOS,
+      skip: !canUseAuth,
     );
   });
 }

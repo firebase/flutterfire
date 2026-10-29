@@ -214,8 +214,8 @@ class _MyAppState extends State<MyApp> {
               children: [
                 FloatingActionButton.extended(
                   onPressed: () async {
-                    // Native attaches the signed-in user's token;
-                    // dart_cloud_functions doesn't yet (plan step 1.6).
+                    // Both implementations attach the signed-in user's ID
+                    // token; only native attaches App Check and FCM tokens.
                     await callingFunction(
                       'testEchoContext, called by name',
                       (sender) => sender.callByName(

@@ -50,6 +50,7 @@ void main() {
         }
       }
       connectFunctionsEmulator(FirebaseFunctions.instance);
+      await connectAuthEmulatorAndSignOut();
       callable = FirebaseFunctions.instance.httpsCallable(
         kTestFunctionDefaultRegion,
       );
@@ -580,42 +581,30 @@ void main() {
       }, skip: !kIsWeb);
     });
 
-    group(
-      'Auth token',
-      () {
-        setUpAll(() async {
-          await connectAuthEmulator();
-          // Auth persists the user across launches, so start signed out.
-          await FirebaseAuth.instance.signOut();
-        });
+    group('Auth token', () {
+      tearDown(() async {
+        await FirebaseAuth.instance.signOut();
+      });
 
-        tearDown(() async {
-          await FirebaseAuth.instance.signOut();
-        });
+      test('reaches the function when signed in', () async {
+        final credential = await FirebaseAuth.instance.signInAnonymously();
 
-        test('reaches the function when signed in', () async {
-          final credential = await FirebaseAuth.instance.signInAnonymously();
+        final result = await FirebaseFunctions.instance
+            .httpsCallable(kTestEchoContext)
+            .call();
 
-          final result = await FirebaseFunctions.instance
-              .httpsCallable(kTestEchoContext)
-              .call();
+        expect(result.data['authUid'], equals(credential.user!.uid));
+        expect(result.data['authorizationHeader'], isTrue);
+      });
 
-          expect(result.data['authUid'], equals(credential.user!.uid));
-          expect(result.data['authorizationHeader'], isTrue);
-        });
+      test('is not sent when signed out', () async {
+        final result = await FirebaseFunctions.instance
+            .httpsCallable(kTestEchoContext)
+            .call();
 
-        test('is not sent when signed out', () async {
-          final result = await FirebaseFunctions.instance
-              .httpsCallable(kTestEchoContext)
-              .call();
-
-          expect(result.data['authUid'], isNull);
-          expect(result.data['authorizationHeader'], isFalse);
-        });
-      },
-      // Firebase Auth on macOS needs keychain entitlements, which this
-      // example app doesn't have.
-      skip: !kIsWeb && defaultTargetPlatform == TargetPlatform.macOS,
-    );
+        expect(result.data['authUid'], isNull);
+        expect(result.data['authorizationHeader'], isFalse);
+      });
+    }, skip: !canUseAuth);
   });
 }

@@ -62,3 +62,21 @@ Future<void> connectAuthEmulator() {
     automaticHostMapping: automaticHostMapping,
   );
 }
+
+/// Whether the example app can sign in to Firebase Auth.
+///
+/// On macOS that needs keychain entitlements, which the app doesn't have.
+bool get canUseAuth => kIsWeb || defaultTargetPlatform != TargetPlatform.macOS;
+
+/// Points Firebase Auth at the local Auth emulator and signs out.
+///
+/// Firebase Auth restores the last signed-in user when the app starts, such as
+/// one left over from trying the example app. Once that user's ID token has
+/// expired, the next call refreshes it, and the refresh fails if Auth isn't
+/// pointed at the emulator yet. Tests call this first to start from a known
+/// state.
+Future<void> connectAuthEmulatorAndSignOut() async {
+  if (!canUseAuth) return;
+  await connectAuthEmulator();
+  await FirebaseAuth.instance.signOut();
+}
