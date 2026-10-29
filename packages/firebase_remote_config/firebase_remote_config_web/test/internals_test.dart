@@ -23,45 +23,48 @@ JSObject firebaseError(String code, String message) {
 
 void main() {
   group('convertWebExceptions', () {
-    test('reports realtime errors with the codes Android and iOS use',
-        () async {
-      const Map<String, String> codes = <String, String>{
-        'remoteconfig/stream-error': 'config-update-stream-error',
-        'remoteconfig/update-message-invalid': 'config-update-message-invalid',
-        'remoteconfig/update-not-fetched': 'config-update-not-fetched',
-        'remoteconfig/realtime-unavailable': 'config-update-unavailable',
-      };
-      final controller = StreamController<String>.broadcast(sync: true);
-      final stream = convertWebExceptions(() => controller.stream);
+    test(
+      'reports realtime errors with the codes Android and iOS use',
+      () async {
+        const Map<String, String> codes = <String, String>{
+          'remoteconfig/stream-error': 'config-update-stream-error',
+          'remoteconfig/update-message-invalid':
+              'config-update-message-invalid',
+          'remoteconfig/update-not-fetched': 'config-update-not-fetched',
+          'remoteconfig/realtime-unavailable': 'config-update-unavailable',
+        };
+        final controller = StreamController<String>.broadcast(sync: true);
+        final stream = convertWebExceptions(() => controller.stream);
 
-      final expectation = expectLater(
-        stream,
-        emitsInOrder(<Object>[
-          for (final MapEntry(key: jsCode, value: code) in codes.entries)
-            emitsError(
-              isA<FirebaseException>()
-                  .having((e) => e.plugin, 'plugin', 'firebase_remote_config')
-                  .having((e) => e.code, 'code', code)
-                  .having(
-                    (e) => e.message,
-                    'message',
-                    allOf(
-                      contains('Unable to connect'),
-                      isNot(contains(jsCode)),
+        final expectation = expectLater(
+          stream,
+          emitsInOrder(<Object>[
+            for (final MapEntry(key: jsCode, value: code) in codes.entries)
+              emitsError(
+                isA<FirebaseException>()
+                    .having((e) => e.plugin, 'plugin', 'firebase_remote_config')
+                    .having((e) => e.code, 'code', code)
+                    .having(
+                      (e) => e.message,
+                      'message',
+                      allOf(
+                        contains('Unable to connect'),
+                        isNot(contains(jsCode)),
+                      ),
                     ),
-                  ),
-            ),
-          // The stream stays open after an error.
-          'update',
-        ]),
-      );
-      for (final String jsCode in codes.keys) {
-        controller.addError(firebaseError(jsCode, 'Unable to connect'));
-      }
-      controller.add('update');
+              ),
+            // The stream stays open after an error.
+            'update',
+          ]),
+        );
+        for (final String jsCode in codes.keys) {
+          controller.addError(firebaseError(jsCode, 'Unable to connect'));
+        }
+        controller.add('update');
 
-      await expectation;
-      await controller.close();
-    });
+        await expectation;
+        await controller.close();
+      },
+    );
   });
 }

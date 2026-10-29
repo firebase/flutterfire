@@ -23,8 +23,9 @@ void main() {
   });
 
   group('onConfigUpdated', () {
-    const EventChannel channel =
-        EventChannel('plugins.flutter.io/firebase_remote_config_updated');
+    const EventChannel channel = EventChannel(
+      'plugins.flutter.io/firebase_remote_config_updated',
+    );
 
     late FirebaseApp app;
 
@@ -42,12 +43,13 @@ void main() {
     void mockNativeEvents(void Function(MockStreamHandlerEventSink) send) {
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockStreamHandler(
-        channel,
-        MockStreamHandler.inline(
-          onListen: (Object? arguments, MockStreamHandlerEventSink events) =>
-              send(events),
-        ),
-      );
+            channel,
+            MockStreamHandler.inline(
+              onListen:
+                  (Object? arguments, MockStreamHandlerEventSink events) =>
+                      send(events),
+            ),
+          );
     }
 
     Matcher isRealtimeError(String code, String message) {
@@ -57,45 +59,49 @@ void main() {
           .having((e) => e.message, 'message', message);
     }
 
-    test('reports realtime errors as FirebaseExceptions with their code',
-        () async {
-      const List<String> codes = <String>[
-        'config-update-stream-error',
-        'config-update-message-invalid',
-        'config-update-not-fetched',
-        'config-update-unavailable',
-        'unknown',
-      ];
-      mockNativeEvents((events) {
-        for (final String code in codes) {
-          events.error(
-            code: 'firebase_remote_config',
-            message: 'native message',
-            details: <String, String>{'code': code, 'message': 'msg $code'},
-          );
-        }
-      });
+    test(
+      'reports realtime errors as FirebaseExceptions with their code',
+      () async {
+        const List<String> codes = <String>[
+          'config-update-stream-error',
+          'config-update-message-invalid',
+          'config-update-not-fetched',
+          'config-update-unavailable',
+          'unknown',
+        ];
+        mockNativeEvents((events) {
+          for (final String code in codes) {
+            events.error(
+              code: 'firebase_remote_config',
+              message: 'native message',
+              details: <String, String>{'code': code, 'message': 'msg $code'},
+            );
+          }
+        });
 
-      final remoteConfig = MethodChannelFirebaseRemoteConfig(app: app);
+        final remoteConfig = MethodChannelFirebaseRemoteConfig(app: app);
 
-      await expectLater(
-        remoteConfig.onConfigUpdated,
-        emitsInOrder(<Matcher>[
-          for (final String code in codes)
-            emitsError(isRealtimeError(code, 'msg $code')),
-        ]),
-      );
-    });
+        await expectLater(
+          remoteConfig.onConfigUpdated,
+          emitsInOrder(<Matcher>[
+            for (final String code in codes)
+              emitsError(isRealtimeError(code, 'msg $code')),
+          ]),
+        );
+      },
+    );
 
     test('keeps the stream open after a realtime error', () async {
       mockNativeEvents((events) {
         events.error(
           code: 'firebase_remote_config',
-          message: 'Unable to connect to the server. Try again in a few '
+          message:
+              'Unable to connect to the server. Try again in a few '
               'minutes. HTTP status code: 503',
           details: <String, String>{
             'code': 'config-update-stream-error',
-            'message': 'Unable to connect to the server. Try again in a few '
+            'message':
+                'Unable to connect to the server. Try again in a few '
                 'minutes. HTTP status code: 503',
           },
         );
