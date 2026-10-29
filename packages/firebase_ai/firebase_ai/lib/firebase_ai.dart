@@ -32,6 +32,7 @@ export 'src/api.dart'
         HarmProbability,
         HarmBlockMethod,
         PromptFeedback,
+        RequestOptions,
         ResponseModalities,
         SafetyRating,
         SafetySetting,

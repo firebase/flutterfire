@@ -17,6 +17,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:fake_async/fake_async.dart';
 import 'package:firebase_ai/src/live_api.dart';
 import 'package:firebase_ai/src/live_session.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -24,6 +25,7 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 
 class FakeWebSocketSink implements WebSocketSink {
   final List<dynamic> sentMessages = [];
+  bool isClosed = false;
 
   @override
   void add(dynamic data) {
@@ -37,13 +39,18 @@ class FakeWebSocketSink implements WebSocketSink {
   Future addStream(Stream stream) async {}
 
   @override
-  Future close([int? closeCode, String? closeReason]) async {}
+  Future close([int? closeCode, String? closeReason]) async {
+    isClosed = true;
+  }
 
   @override
   Future get done => Future.value();
 }
 
 class FakeWebSocketChannel implements WebSocketChannel {
+  FakeWebSocketChannel({Future<void>? ready}) : _ready = ready;
+
+  final Future<void>? _ready;
   final StreamController _controller = StreamController();
   final FakeWebSocketSink _sink = FakeWebSocketSink();
 
@@ -54,6 +61,8 @@ class FakeWebSocketChannel implements WebSocketChannel {
   WebSocketSink get sink => _sink;
 
   List<dynamic> get sentMessages => _sink.sentMessages;
+
+  bool get isClosed => _sink.isClosed;
 
   void emit(dynamic message) => _controller.add(message);
 
@@ -66,7 +75,7 @@ class FakeWebSocketChannel implements WebSocketChannel {
   String? get closeReason => null;
 
   @override
-  Future<void> get ready => Future.value();
+  Future<void> get ready => _ready ?? Future.value();
 
   @override
   String? get protocol => null;
@@ -239,6 +248,106 @@ void main() {
         'realtime_input': {
           'activity_end': {},
         },
+      });
+    });
+
+    test(
+        'create times out at default 180s and closes WebSocket when handshake never completes',
+        () {
+      fakeAsync((async) {
+        Object? caughtError;
+        FakeWebSocketChannel? createdWs;
+        LiveSession.create(
+          uri: 'wss://example.com/ws',
+          headersProvider: () => const <String, String>{},
+          modelString: 'models/gemini-2.0-flash',
+          connector: (_, __) =>
+              createdWs = FakeWebSocketChannel(ready: Completer<void>().future),
+        ).then<void>(
+          (_) {},
+          onError: (Object error) {
+            caughtError = error;
+          },
+        );
+
+        async.elapse(const Duration(seconds: 179));
+        expect(caughtError, isNull);
+        expect(createdWs!.isClosed, isFalse);
+
+        async.elapse(const Duration(seconds: 1));
+        expect(caughtError, isA<TimeoutException>());
+        expect(createdWs!.isClosed, isTrue);
+      });
+    });
+
+    test(
+        'create and resumeSession respect custom timeout and close timed-out WebSocket',
+        () {
+      fakeAsync((async) {
+        var attempt = 0;
+        LiveSession? session;
+        Object? createError;
+        FakeWebSocketChannel? timedOutCreateWs;
+        FakeWebSocketChannel? timedOutResumeWs;
+
+        // First test custom timeout on create().
+        LiveSession.create(
+          uri: 'wss://example.com/ws',
+          headersProvider: () => const <String, String>{},
+          modelString: 'models/gemini-2.0-flash',
+          timeout: const Duration(seconds: 15),
+          connector: (_, __) => timedOutCreateWs =
+              FakeWebSocketChannel(ready: Completer<void>().future),
+        ).then<void>(
+          (_) {},
+          onError: (Object error) {
+            createError = error;
+          },
+        );
+
+        async.elapse(const Duration(seconds: 14));
+        expect(createError, isNull);
+        expect(timedOutCreateWs!.isClosed, isFalse);
+        async.elapse(const Duration(seconds: 1));
+        expect(createError, isA<TimeoutException>());
+        expect(timedOutCreateWs!.isClosed, isTrue);
+
+        // Next test that a session created with custom timeout applies that
+        // same timeout during resumeSession().
+        LiveSession.create(
+          uri: 'wss://example.com/ws',
+          headersProvider: () => const <String, String>{},
+          modelString: 'models/gemini-2.0-flash',
+          timeout: const Duration(seconds: 15),
+          connector: (_, __) {
+            attempt++;
+            if (attempt == 1) {
+              return FakeWebSocketChannel();
+            }
+            return timedOutResumeWs =
+                FakeWebSocketChannel(ready: Completer<void>().future);
+          },
+        ).then((value) {
+          session = value;
+        });
+
+        async.flushMicrotasks();
+        expect(session, isNotNull);
+
+        Object? resumeError;
+        session!.resumeSession().then<void>(
+          (_) {},
+          onError: (Object error) {
+            resumeError = error;
+          },
+        );
+
+        async.elapse(const Duration(seconds: 14));
+        expect(resumeError, isNull);
+        expect(timedOutResumeWs!.isClosed, isFalse);
+        async.elapse(const Duration(seconds: 1));
+        expect(resumeError, isA<TimeoutException>());
+        expect(timedOutResumeWs!.isClosed, isTrue);
       });
     });
   });

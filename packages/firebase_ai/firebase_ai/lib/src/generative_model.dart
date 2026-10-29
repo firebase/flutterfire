@@ -46,6 +46,7 @@ final class GenerativeModel extends BaseApiClientModel {
     ToolConfig? toolConfig,
     Content? systemInstruction,
     http.Client? httpClient,
+    RequestOptions? requestOptions,
   })  : _safetySettings = safetySettings ?? [],
         _generationConfig = generationConfig,
         _toolConfig = toolConfig,
@@ -60,6 +61,7 @@ final class GenerativeModel extends BaseApiClientModel {
             client: HttpApiClient(
                 apiKey: app.options.apiKey,
                 httpClient: httpClient,
+                timeout: requestOptions?.timeout,
                 requestHeaders: BaseModel.firebaseTokens(
                     appCheck, auth, app, useLimitedUseAppCheckTokens)));
 
@@ -77,6 +79,7 @@ final class GenerativeModel extends BaseApiClientModel {
     ToolConfig? toolConfig,
     Content? systemInstruction,
     ApiClient? apiClient,
+    RequestOptions? requestOptions,
   })  : _safetySettings = safetySettings ?? [],
         _generationConfig = generationConfig,
         _toolConfig = toolConfig,
@@ -91,6 +94,7 @@ final class GenerativeModel extends BaseApiClientModel {
             client: apiClient ??
                 HttpApiClient(
                     apiKey: app.options.apiKey,
+                    timeout: requestOptions?.timeout,
                     requestHeaders: BaseModel.firebaseTokens(
                         appCheck, auth, app, useLimitedUseAppCheckTokens)));
 
@@ -211,6 +215,7 @@ GenerativeModel createGenerativeModel({
   ToolConfig? toolConfig,
   Content? systemInstruction,
   http.Client? httpClient,
+  RequestOptions? requestOptions,
 }) =>
     GenerativeModel._(
       model: model,
@@ -226,6 +231,7 @@ GenerativeModel createGenerativeModel({
       toolConfig: toolConfig,
       systemInstruction: systemInstruction,
       httpClient: httpClient,
+      requestOptions: requestOptions,
     );
 
 /// Creates a model with an overridden [ApiClient] for testing.

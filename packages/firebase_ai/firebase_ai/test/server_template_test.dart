@@ -12,9 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:fake_async/fake_async.dart';
 import 'package:firebase_ai/firebase_ai.dart';
 import 'package:firebase_ai/src/base_model.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -50,13 +52,14 @@ void main() {
     const location = 'us-central1';
 
     TemplateGenerativeModel createModel(http.Client client,
-        {bool useAgentPlatform = true}) {
+        {bool useAgentPlatform = true, RequestOptions? requestOptions}) {
       // ignore: invalid_use_of_internal_member
       return createTestTemplateGenerativeModel(
         app: app,
         location: location,
         useAgentPlatform: useAgentPlatform,
         client: client,
+        requestOptions: requestOptions,
       );
     }
 
@@ -240,6 +243,33 @@ void main() {
           'getValue');
       expect(
           history[3].parts.whereType<TextPart>().single.text, 'Some response');
+    });
+
+    test('generateContent applies custom RequestOptions timeout', () {
+      fakeAsync((async) {
+        final hangingHttp = MockClient(
+          (_) => Completer<http.Response>().future,
+        );
+        final model = createModel(
+          hangingHttp,
+          requestOptions: const RequestOptions(timeout: Duration(seconds: 8)),
+        );
+
+        Object? caughtError;
+        model.generateContent(templateId,
+            inputs: {'prompt': 'Some prompt'}).then<void>(
+          (_) {},
+          onError: (Object error) {
+            caughtError = error;
+          },
+        );
+
+        async.elapse(const Duration(seconds: 7));
+        expect(caughtError, isNull);
+
+        async.elapse(const Duration(seconds: 1));
+        expect(caughtError, isA<TimeoutException>());
+      });
     });
   });
 }

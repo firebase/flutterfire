@@ -40,7 +40,8 @@ final class LiveGenerativeModel extends BaseModel {
       FirebaseAuth? auth,
       LiveGenerationConfig? liveGenerationConfig,
       List<Tool>? tools,
-      Content? systemInstruction})
+      Content? systemInstruction,
+      RequestOptions? requestOptions})
       : _app = app,
         _location = location,
         _useAgentPlatform = useAgentPlatform,
@@ -50,6 +51,7 @@ final class LiveGenerativeModel extends BaseModel {
         _tools = tools,
         _systemInstruction = systemInstruction,
         _useLimitedUseAppCheckTokens = useLimitedUseAppCheckTokens,
+        _requestOptions = requestOptions,
         super._(
           serializationStrategy: AgentPlatformSerialization(),
           modelUri: useAgentPlatform
@@ -73,6 +75,7 @@ final class LiveGenerativeModel extends BaseModel {
   final List<Tool>? _tools;
   final Content? _systemInstruction;
   final bool? _useLimitedUseAppCheckTokens;
+  final RequestOptions? _requestOptions;
 
   String _agentPlatformUri() => 'wss://${_modelUri.baseAuthority}/'
       '$_apiUrl.${_modelUri.apiVersion}.$_apiUrlSuffixAgentPlatform/'
@@ -120,6 +123,7 @@ final class LiveGenerativeModel extends BaseModel {
       tools: _tools,
       sessionResumption: sessionResumption,
       liveGenerationConfig: _liveGenerationConfig,
+      timeout: _requestOptions?.timeout,
     );
   }
 }
@@ -136,6 +140,7 @@ LiveGenerativeModel createLiveGenerativeModel({
   LiveGenerationConfig? liveGenerationConfig,
   List<Tool>? tools,
   Content? systemInstruction,
+  RequestOptions? requestOptions,
 }) =>
     LiveGenerativeModel._(
       model: model,
@@ -148,4 +153,5 @@ LiveGenerativeModel createLiveGenerativeModel({
       liveGenerationConfig: liveGenerationConfig,
       tools: tools,
       systemInstruction: systemInstruction,
+      requestOptions: requestOptions,
     );

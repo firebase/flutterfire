@@ -273,6 +273,7 @@ class BidiSessionController extends ChangeNotifier {
 
     _liveModel = useVertexBackend
         ? FirebaseAI.agentPlatform(
+            location: ExampleModels.liveAgentPlatformLocation,
             useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens,
           ).liveGenerativeModel(
             model: ExampleModels.liveAgentPlatform,

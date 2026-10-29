@@ -30,10 +30,13 @@ abstract final class ExampleModels {
   static const String flashLiteTts38 = 'gemini-3.8-flash-lite-tts';
 
   /// Live bidirectional audio streaming model for Agent Platform.
-  static const String liveAgentPlatform =
-      'gemini-live-2.5-flash-preview-native-audio-09-2025';
+  static const String liveAgentPlatform = 'gemini-3.8-live';
+
+  /// Agent Platform location for [liveAgentPlatform]. `gemini-3.8-live` is
+  /// only available in `us-central1` and the `us`/`eu` multi-regions, not in
+  /// `global`.
+  static const String liveAgentPlatformLocation = 'us-central1';
 
   /// Live bidirectional audio streaming model for Google AI.
-  static const String liveGoogleAI =
-      'gemini-2.5-flash-native-audio-preview-09-2025';
+  static const String liveGoogleAI = 'gemini-3.8-live';
 }

@@ -40,17 +40,23 @@ final _utf8Json = json.fuse(utf8);
 /// The http implementation of ApiClient
 final class HttpApiClient implements ApiClient {
   ///Constructor
-  HttpApiClient(
-      {required String apiKey,
-      http.Client? httpClient,
-      FutureOr<Map<String, String>> Function()? requestHeaders})
-      : _apiKey = apiKey,
+  HttpApiClient({
+    required String apiKey,
+    http.Client? httpClient,
+    FutureOr<Map<String, String>> Function()? requestHeaders,
+    Duration? timeout,
+  })  : _apiKey = apiKey,
         // package:http top-level helpers (http.post, Request.send) create and
         // close a Client per call, which prevents TCP/TLS connection reuse.
         _httpClient = httpClient ?? http.Client(),
-        _requestHeaders = requestHeaders;
+        _requestHeaders = requestHeaders,
+        _timeout = timeout ?? defaultTimeout;
+
+  /// Default timeout for HTTP requests and streaming SSE events.
+  static const Duration defaultTimeout = Duration(seconds: 180);
   final String _apiKey;
   final http.Client _httpClient;
+  final Duration _timeout;
 
   final FutureOr<Map<String, String>> Function()? _requestHeaders;
 
@@ -66,11 +72,40 @@ final class HttpApiClient implements ApiClient {
   Future<Map<String, Object?>> makeRequest(
       Uri uri, Map<String, Object?> body) async {
     final headers = await _headers();
-    final response = await _httpClient.post(
+    final abortCompleter = Completer<void>();
+    void abortRequest() {
+      if (!abortCompleter.isCompleted) {
+        abortCompleter.complete();
+      }
+    }
+
+    final request = http.AbortableRequest(
+      'POST',
       uri,
-      headers: headers,
-      body: _utf8Json.encode(body),
+      abortTrigger: abortCompleter.future,
+    )
+      ..headers.addAll(headers)
+      ..bodyBytes = _utf8Json.encode(body);
+    final sendFuture = _httpClient.send(request);
+    unawaited(
+      sendFuture.then(
+        (lateResponse) {
+          if (abortCompleter.isCompleted) {
+            lateResponse.stream.listen((_) {}).cancel().ignore();
+          }
+        },
+        onError: (_) {},
+      ),
     );
+    final http.Response response;
+    try {
+      final streamedResponse = await sendFuture.timeout(_timeout);
+      response =
+          await http.Response.fromStream(streamedResponse).timeout(_timeout);
+    } on TimeoutException {
+      abortRequest();
+      rethrow;
+    }
     if (response.statusCode >= 500) {
       throw FirebaseAIException(
           'Server Error [${response.statusCode}]: ${response.body}');
@@ -83,25 +118,108 @@ final class HttpApiClient implements ApiClient {
   Stream<Map<String, Object?>> streamRequest(
       Uri uri, Map<String, Object?> body) async* {
     Uri streamUri = uri.replace(queryParameters: {'alt': 'sse'});
-    final request = http.Request('POST', streamUri)
+    final abortCompleter = Completer<void>();
+    void abortRequest() {
+      if (!abortCompleter.isCompleted) {
+        abortCompleter.complete();
+      }
+    }
+
+    final request = http.AbortableRequest(
+      'POST',
+      streamUri,
+      abortTrigger: abortCompleter.future,
+    )
       ..bodyBytes = _utf8Json.encode(body)
       ..headers.addAll(await _headers());
-    final response = await _httpClient.send(request);
-    if (response.statusCode != 200) {
-      final body = await response.stream.bytesToString();
-      // Yield a potential error object like a normal result for consistency
-      // with `makeRequest`.
-      yield jsonDecode(body) as Map<String, Object?>;
-      return;
+    final sendFuture = _httpClient.send(request);
+    unawaited(
+      sendFuture.then(
+        (lateResponse) {
+          if (abortCompleter.isCompleted) {
+            lateResponse.stream.listen((_) {}).cancel().ignore();
+          }
+        },
+        onError: (_) {},
+      ),
+    );
+    final http.StreamedResponse response;
+    try {
+      response = await sendFuture.timeout(_timeout);
+    } on TimeoutException {
+      abortRequest();
+      rethrow;
     }
-    final lines =
-        response.stream.toStringStream().transform(const LineSplitter());
-    await for (final line in lines) {
-      const dataPrefix = 'data: ';
-      if (line.startsWith(dataPrefix)) {
-        final jsonText = line.substring(dataPrefix.length);
-        yield jsonDecode(jsonText) as Map<String, Object?>;
+    try {
+      if (response.statusCode != 200) {
+        final String responseBody;
+        try {
+          responseBody = await const Utf8Decoder(allowMalformed: true)
+              .bind(response.stream.timeout(_timeout))
+              .join();
+        } on TimeoutException {
+          abortRequest();
+          rethrow;
+        }
+        try {
+          final decoded = jsonDecode(responseBody);
+          if (decoded is Map<String, Object?>) {
+            // Yield a potential error object like a normal result for
+            // consistency with `makeRequest` and `parseError`.
+            yield decoded;
+            return;
+          }
+        } on FormatException {
+          // Fall through to throw FirebaseAIException below when the error body
+          // is not JSON (e.g. an HTML 502 error page).
+        }
+        throw FirebaseAIException(
+          'Server Error [${response.statusCode}]: $responseBody',
+        );
       }
+      final lines = const Utf8Decoder(allowMalformed: true)
+          .bind(response.stream)
+          .transform(const LineSplitter())
+          .timeout(_timeout);
+      final dataBuffer = <String>[];
+      Map<String, Object?>? flushDataBuffer() {
+        if (dataBuffer.isEmpty) return null;
+        final jsonText = dataBuffer.join('\n').trim();
+        dataBuffer.clear();
+        if (jsonText.isEmpty || jsonText == '[DONE]') return null;
+        final decoded = jsonDecode(jsonText);
+        if (decoded is Map<String, Object?>) {
+          return decoded;
+        }
+        throw FormatException('Unexpected SSE data payload', jsonText);
+      }
+
+      try {
+        await for (final line in lines) {
+          if (line.isEmpty) {
+            final chunk = flushDataBuffer();
+            if (chunk != null) yield chunk;
+            continue;
+          }
+          if (line.startsWith(':')) {
+            continue;
+          }
+          if (line.startsWith('data:')) {
+            var payload = line.substring('data:'.length);
+            if (payload.startsWith(' ')) {
+              payload = payload.substring(1);
+            }
+            dataBuffer.add(payload);
+          }
+        }
+      } on TimeoutException {
+        abortRequest();
+        rethrow;
+      }
+      final trailing = flushDataBuffer();
+      if (trailing != null) yield trailing;
+    } finally {
+      abortRequest();
     }
   }
 }

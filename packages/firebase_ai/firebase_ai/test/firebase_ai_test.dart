@@ -12,8 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'dart:async';
 import 'dart:convert';
 
+import 'package:fake_async/fake_async.dart';
 import 'package:firebase_ai/firebase_ai.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -266,7 +268,81 @@ void main() {
         endsWith('/models/gemini-pro:streamGenerateContent'),
       );
     });
+
+    test('RequestOptions defaults to 180 seconds', () {
+      const options = RequestOptions();
+      expect(options.timeout, const Duration(seconds: 180));
+    });
+
+    test('generativeModel applies custom RequestOptions timeout', () {
+      fakeAsync((async) {
+        final hangingClient = _AsyncRecordingClient(
+          (_) => Completer<http.StreamedResponse>().future,
+        );
+        final ai = FirebaseAI.googleAI(app: app);
+        final model = ai.generativeModel(
+          model: 'gemini-pro',
+          httpClient: hangingClient,
+          requestOptions: const RequestOptions(
+            timeout: Duration(seconds: 12),
+          ),
+        );
+
+        Object? unaryError;
+        model.generateContent([Content.text('prompt')]).then<void>(
+          (_) {},
+          onError: (Object error) {
+            unaryError = error;
+          },
+        );
+
+        Object? streamError;
+        model.generateContentStream([Content.text('prompt')]).listen(
+          (_) {},
+          onError: (Object error) {
+            streamError = error;
+          },
+        );
+
+        async.elapse(const Duration(seconds: 11));
+        expect(unaryError, isNull);
+        expect(streamError, isNull);
+
+        async.elapse(const Duration(seconds: 1));
+        expect(unaryError, isA<TimeoutException>());
+        expect(streamError, isA<TimeoutException>());
+      });
+    });
+
+    test(
+        'liveGenerativeModel and templateGenerativeModel accept RequestOptions',
+        () {
+      final ai = FirebaseAI.googleAI(app: app);
+      const customOptions = RequestOptions(timeout: Duration(seconds: 45));
+
+      final liveModel = ai.liveGenerativeModel(
+        model: 'gemini-2.0-flash',
+        requestOptions: customOptions,
+      );
+      expect(liveModel, isA<LiveGenerativeModel>());
+
+      final templateModel = ai.templateGenerativeModel(
+        requestOptions: customOptions,
+      );
+      expect(templateModel, isA<TemplateGenerativeModel>());
+    });
   });
+}
+
+class _AsyncRecordingClient extends http.BaseClient {
+  _AsyncRecordingClient(this._handler);
+
+  final Future<http.StreamedResponse> Function(http.BaseRequest request)
+      _handler;
+
+  @override
+  Future<http.StreamedResponse> send(http.BaseRequest request) =>
+      _handler(request);
 }
 
 class _RecordingClient extends http.BaseClient {
