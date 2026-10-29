@@ -10,6 +10,7 @@ environment:
   flutter: '>=3.22.0'
 
 dependencies:
+  cloud_firestore: ^7.1.0
   cloud_functions: ^7.0.1
   cloud_functions_platform_interface: ^6.1.1
   cloud_functions_web: ^5.1.15
