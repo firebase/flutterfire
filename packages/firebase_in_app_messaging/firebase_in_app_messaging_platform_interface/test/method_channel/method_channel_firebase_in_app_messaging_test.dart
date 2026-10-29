@@ -302,9 +302,7 @@ void main() {
     // Android counts a display error as an impression, and caps app open
     // campaigns at one a day, so a message nobody saw is not reported.
     group('Android', () {
-      setUp(
-        () => debugDefaultTargetPlatformOverride = TargetPlatform.android,
-      );
+      setUp(() => debugDefaultTargetPlatformOverride = TargetPlatform.android);
 
       test('drops the message without reporting it', () async {
         await _sendFlutterApiMessage('onMessageDisplay', [
