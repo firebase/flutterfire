@@ -15,7 +15,7 @@ class MethodChannelFirebaseFunctions extends FirebaseFunctionsPlatform {
   /// Creates a new [MethodChannelFirebaseFunctions] instance with an [app] and/or
   /// [region].
   MethodChannelFirebaseFunctions({FirebaseApp? app, required String region})
-      : super(app, region);
+    : super(app, region);
 
   /// Internal stub class initializer.
   ///
@@ -37,20 +37,28 @@ class MethodChannelFirebaseFunctions extends FirebaseFunctionsPlatform {
   static final pigeonChannel = CloudFunctionsHostApi();
 
   @override
-  FirebaseFunctionsPlatform delegateFor(
-      {FirebaseApp? app, required String region}) {
+  FirebaseFunctionsPlatform delegateFor({
+    FirebaseApp? app,
+    required String region,
+  }) {
     return MethodChannelFirebaseFunctions(app: app, region: region);
   }
 
   @override
   HttpsCallablePlatform httpsCallable(
-      String? origin, String name, HttpsCallableOptions options) {
+    String? origin,
+    String name,
+    HttpsCallableOptions options,
+  ) {
     return MethodChannelHttpsCallable(this, origin, name, options, null);
   }
 
   @override
   HttpsCallablePlatform httpsCallableWithUri(
-      String? origin, Uri uri, HttpsCallableOptions options) {
+    String? origin,
+    Uri uri,
+    HttpsCallableOptions options,
+  ) {
     return MethodChannelHttpsCallable(this, origin, null, options, uri);
   }
 }

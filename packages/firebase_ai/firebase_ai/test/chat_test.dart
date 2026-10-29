@@ -38,20 +38,23 @@ void main() {
     ]) {
       final client = ClientController();
       final model = createModelWithClient(
-          app: app,
-          useAgentPlatform: true,
-          model: modelName,
-          client: client.client,
-          location: 'us-central1');
+        app: app,
+        useAgentPlatform: true,
+        model: modelName,
+        client: client.client,
+        location: 'us-central1',
+      );
       return (client, model);
     }
 
     test('includes chat history in prompt', () async {
       final (client, model) = createModel('models/$defaultModelName');
-      final chat = model.startChat(history: [
-        Content.text('Hi!'),
-        Content.model([const TextPart('Hello, how can I help you today?')]),
-      ]);
+      final chat = model.startChat(
+        history: [
+          Content.text('Hi!'),
+          Content.model([const TextPart('Hello, how can I help you today?')]),
+        ],
+      );
       const prompt = 'Some prompt';
       final response = await client.checkRequest(
         () => chat.sendMessage(Content.text(prompt)),
@@ -69,10 +72,15 @@ void main() {
 
     test('forwards safety settings', () async {
       final (client, model) = createModel('models/$defaultModelName');
-      final chat = model.startChat(safetySettings: [
-        SafetySetting(HarmCategory.dangerousContent, HarmBlockThreshold.high,
-            HarmBlockMethod.severity),
-      ]);
+      final chat = model.startChat(
+        safetySettings: [
+          SafetySetting(
+            HarmCategory.dangerousContent,
+            HarmBlockThreshold.high,
+            HarmBlockMethod.severity,
+          ),
+        ],
+      );
       const prompt = 'Some prompt';
       await client.checkRequest(
         () => chat.sendMessage(Content.text(prompt)),
@@ -81,7 +89,7 @@ void main() {
             {
               'category': 'HARM_CATEGORY_DANGEROUS_CONTENT',
               'threshold': 'BLOCK_ONLY_HIGH',
-              'method': 'SEVERITY'
+              'method': 'SEVERITY',
             },
           ]);
         },
@@ -91,10 +99,16 @@ void main() {
 
     test('forwards safety settings and config when streaming', () async {
       final (client, model) = createModel('models/$defaultModelName');
-      final chat = model.startChat(safetySettings: [
-        SafetySetting(HarmCategory.dangerousContent, HarmBlockThreshold.high,
-            HarmBlockMethod.probability),
-      ], generationConfig: GenerationConfig(stopSequences: ['a']));
+      final chat = model.startChat(
+        safetySettings: [
+          SafetySetting(
+            HarmCategory.dangerousContent,
+            HarmBlockThreshold.high,
+            HarmBlockMethod.probability,
+          ),
+        ],
+        generationConfig: GenerationConfig(stopSequences: ['a']),
+      );
       const prompt = 'Some prompt';
       final responses = await client.checkStreamRequest(
         () async => chat.sendMessageStream(Content.text(prompt)),
@@ -129,101 +143,103 @@ void main() {
       );
     });
 
-    test('does not combine streamed TextParts with SpeechMetadata in history',
-        () async {
-      final (client, model) = createModel('models/$defaultModelName');
-      final chat = model.startChat();
-      final responses = await client.checkStreamRequest(
-        () async => chat.sendMessageStream(Content.text('Generate dialogue')),
-        verifyRequest: (_, __) {},
-        responses: [
-          {
-            'candidates': [
-              {
-                'content': {
-                  'role': 'model',
-                  'parts': [
-                    {'text': 'Hello'},
-                  ],
+    test(
+      'does not combine streamed TextParts with SpeechMetadata in history',
+      () async {
+        final (client, model) = createModel('models/$defaultModelName');
+        final chat = model.startChat();
+        final responses = await client.checkStreamRequest(
+          () async => chat.sendMessageStream(Content.text('Generate dialogue')),
+          verifyRequest: (_, __) {},
+          responses: [
+            {
+              'candidates': [
+                {
+                  'content': {
+                    'role': 'model',
+                    'parts': [
+                      {'text': 'Hello'},
+                    ],
+                  },
                 },
-              },
-            ],
-          },
-          {
-            'candidates': [
-              {
-                'content': {
-                  'role': 'model',
-                  'parts': [
-                    {'text': ' world!'},
-                  ],
+              ],
+            },
+            {
+              'candidates': [
+                {
+                  'content': {
+                    'role': 'model',
+                    'parts': [
+                      {'text': ' world!'},
+                    ],
+                  },
                 },
-              },
-            ],
-          },
-          {
-            'candidates': [
-              {
-                'content': {
-                  'role': 'model',
-                  'parts': [
-                    {
-                      'text': 'How are you?',
-                      'speechMetadata': {
-                        'speaker': 'Alice',
-                        'style': 'excitedly',
+              ],
+            },
+            {
+              'candidates': [
+                {
+                  'content': {
+                    'role': 'model',
+                    'parts': [
+                      {
+                        'text': 'How are you?',
+                        'speechMetadata': {
+                          'speaker': 'Alice',
+                          'style': 'excitedly',
+                        },
                       },
-                    },
-                  ],
+                    ],
+                  },
                 },
-              },
-            ],
-          },
-          {
-            'candidates': [
-              {
-                'content': {
-                  'role': 'model',
-                  'parts': [
-                    {'text': 'Goodbye'},
-                  ],
+              ],
+            },
+            {
+              'candidates': [
+                {
+                  'content': {
+                    'role': 'model',
+                    'parts': [
+                      {'text': 'Goodbye'},
+                    ],
+                  },
                 },
-              },
-            ],
-          },
-          {
-            'candidates': [
-              {
-                'content': {
-                  'role': 'model',
-                  'parts': [
-                    {'text': ' now.'},
-                  ],
+              ],
+            },
+            {
+              'candidates': [
+                {
+                  'content': {
+                    'role': 'model',
+                    'parts': [
+                      {'text': ' now.'},
+                    ],
+                  },
                 },
-              },
-            ],
-          },
-        ],
-      );
-      await responses.drain<void>();
+              ],
+            },
+          ],
+        );
+        await responses.drain<void>();
 
-      expect(chat.history, hasLength(2));
-      expect(
-        chat.history.last,
-        matchesContent(
-          Content.model([
-            const TextPart('Hello world!'),
-            const TextPart(
-              'How are you?',
-              speechMetadata: SpeechMetadata(
-                speaker: 'Alice',
-                style: 'excitedly',
+        expect(chat.history, hasLength(2));
+        expect(
+          chat.history.last,
+          matchesContent(
+            Content.model([
+              const TextPart('Hello world!'),
+              const TextPart(
+                'How are you?',
+                speechMetadata: SpeechMetadata(
+                  speaker: 'Alice',
+                  style: 'excitedly',
+                ),
               ),
-            ),
-            const TextPart('Goodbye now.'),
-          ]),
-        ),
-      );
-    });
+              const TextPart('Goodbye now.'),
+            ]),
+          ),
+        );
+      },
+    );
   });
 }

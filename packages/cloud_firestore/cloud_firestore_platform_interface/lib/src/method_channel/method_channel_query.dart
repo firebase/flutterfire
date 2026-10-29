@@ -29,8 +29,8 @@ class MethodChannelQuery extends QueryPlatform {
     this.pigeonApp, {
     Map<String, dynamic>? parameters,
     this.isCollectionGroupQuery = false,
-  })  : _pointer = Pointer(path),
-        super(_firestore, parameters);
+  }) : _pointer = Pointer(path),
+       super(_firestore, parameters);
 
   /// Flags whether the current query is for a collection group.
   @override
@@ -94,7 +94,9 @@ class MethodChannelQuery extends QueryPlatform {
 
   @override
   QueryPlatform endBeforeDocument(
-      Iterable<dynamic> orders, Iterable<dynamic> values) {
+    Iterable<dynamic> orders,
+    Iterable<dynamic> values,
+  ) {
     return _copyWithParameters(<String, dynamic>{
       'orderBy': orders,
       'endAt': null,
@@ -112,20 +114,22 @@ class MethodChannelQuery extends QueryPlatform {
 
   /// Fetch the documents for this query
   @override
-  Future<QuerySnapshotPlatform> get(
-      [GetOptions options = const GetOptions()]) async {
+  Future<QuerySnapshotPlatform> get([
+    GetOptions options = const GetOptions(),
+  ]) async {
     try {
-      final InternalQuerySnapshot result =
-          await MethodChannelFirebaseFirestore.pigeonChannel.queryGet(
-        pigeonApp,
-        _pointer.path,
-        isCollectionGroupQuery,
-        _pigeonParameters,
-        InternalGetOptions(
-          source: options.source,
-          serverTimestampBehavior: options.serverTimestampBehavior,
-        ),
-      );
+      final InternalQuerySnapshot result = await MethodChannelFirebaseFirestore
+          .pigeonChannel
+          .queryGet(
+            pigeonApp,
+            _pointer.path,
+            isCollectionGroupQuery,
+            _pigeonParameters,
+            InternalGetOptions(
+              source: options.source,
+              serverTimestampBehavior: options.serverTimestampBehavior,
+            ),
+          );
 
       return MethodChannelQuerySnapshot(firestore, result);
     } catch (e, stack) {
@@ -159,7 +163,7 @@ class MethodChannelQuery extends QueryPlatform {
     // It's fine to let the StreamController be garbage collected once all the
     // subscribers have cancelled; this analyzer warning is safe to ignore.
     late StreamController<QuerySnapshotPlatform>
-        controller; // ignore: close_sinks
+    controller; // ignore: close_sinks
 
     StreamSubscription<QuerySnapshotPlatform>? subscription;
 
@@ -169,10 +173,7 @@ class MethodChannelQuery extends QueryPlatform {
           includeMetadataChanges: includeMetadataChanges,
           serverTimestampBehavior: serverTimestampBehavior,
           listenSource: listenSource,
-        ).listen(
-          controller.add,
-          onError: controller.addError,
-        );
+        ).listen(controller.add, onError: controller.addError);
       },
       onCancel: () {
         subscription?.cancel();
@@ -188,46 +189,45 @@ class MethodChannelQuery extends QueryPlatform {
     required ServerTimestampBehavior serverTimestampBehavior,
     required ListenSource listenSource,
   }) async* {
-    final observerId =
-        await MethodChannelFirebaseFirestore.pigeonChannel.querySnapshot(
-      pigeonApp,
-      _pointer.path,
-      isCollectionGroupQuery,
-      _pigeonParameters,
-      InternalGetOptions(
-        source: Source.serverAndCache,
-        serverTimestampBehavior: serverTimestampBehavior,
-      ),
-      includeMetadataChanges,
-      listenSource,
-    );
+    final observerId = await MethodChannelFirebaseFirestore.pigeonChannel
+        .querySnapshot(
+          pigeonApp,
+          _pointer.path,
+          isCollectionGroupQuery,
+          _pigeonParameters,
+          InternalGetOptions(
+            source: Source.serverAndCache,
+            serverTimestampBehavior: serverTimestampBehavior,
+          ),
+          includeMetadataChanges,
+          listenSource,
+        );
 
     // Keep assembly state local to this listener generation. A cancel or
     // re-listen while Pigeon setup is pending must not reuse partial chunks.
     final snapshotAssembler = QuerySnapshotChunkAssembler();
     try {
       yield* MethodChannelFirebaseFirestore.querySnapshotChannel(observerId)
-          .receiveGuardedBroadcastStream(
-            onError: convertPlatformException,
-          )
+          .receiveGuardedBroadcastStream(onError: convertPlatformException)
           .transform(
-              StreamTransformer<dynamic, QuerySnapshotPlatform>.fromHandlers(
-            handleData: (snapshot, sink) {
-              try {
-                final result = snapshotAssembler.add(snapshot);
-                if (result != null) {
-                  sink.add(MethodChannelQuerySnapshot(firestore, result));
+            StreamTransformer<dynamic, QuerySnapshotPlatform>.fromHandlers(
+              handleData: (snapshot, sink) {
+                try {
+                  final result = snapshotAssembler.add(snapshot);
+                  if (result != null) {
+                    sink.add(MethodChannelQuerySnapshot(firestore, result));
+                  }
+                } catch (error, stackTrace) {
+                  snapshotAssembler.reset();
+                  sink.addError(error, stackTrace);
                 }
-              } catch (error, stackTrace) {
+              },
+              handleError: (error, stackTrace, sink) {
                 snapshotAssembler.reset();
                 sink.addError(error, stackTrace);
-              }
-            },
-            handleError: (error, stackTrace, sink) {
-              snapshotAssembler.reset();
-              sink.addError(error, stackTrace);
-            },
-          ));
+              },
+            ),
+          );
     } finally {
       snapshotAssembler.reset();
     }
@@ -235,9 +235,7 @@ class MethodChannelQuery extends QueryPlatform {
 
   @override
   QueryPlatform orderBy(Iterable<List<dynamic>> orders) {
-    return _copyWithParameters(<String, dynamic>{
-      'orderBy': orders,
-    });
+    return _copyWithParameters(<String, dynamic>{'orderBy': orders});
   }
 
   @override
@@ -259,7 +257,9 @@ class MethodChannelQuery extends QueryPlatform {
 
   @override
   QueryPlatform startAtDocument(
-      Iterable<dynamic> orders, Iterable<dynamic> values) {
+    Iterable<dynamic> orders,
+    Iterable<dynamic> values,
+  ) {
     return _copyWithParameters(<String, dynamic>{
       'orderBy': orders,
       'startAt': values,
@@ -277,9 +277,7 @@ class MethodChannelQuery extends QueryPlatform {
 
   @override
   QueryPlatform where(Iterable<List<dynamic>> conditions) {
-    return _copyWithParameters(<String, dynamic>{
-      'where': conditions,
-    });
+    return _copyWithParameters(<String, dynamic>{'where': conditions});
   }
 
   @override
@@ -303,11 +301,7 @@ class MethodChannelQuery extends QueryPlatform {
       _pigeonParameters,
       _pointer.path,
       pigeonApp,
-      [
-        AggregateQuery(
-          type: AggregateType.count,
-        )
-      ],
+      [AggregateQuery(type: AggregateType.count)],
       isCollectionGroupQuery,
     );
   }
@@ -382,28 +376,17 @@ class MethodChannelQuery extends QueryPlatform {
       _pigeonParameters,
       _pointer.path,
       pigeonApp,
-      fields.map(
-        (e) {
-          if (e is query.count) {
-            return AggregateQuery(
-              type: AggregateType.count,
-            );
-          } else if (e is query.sum) {
-            return AggregateQuery(
-              type: AggregateType.sum,
-              field: e.field,
-            );
-          } else if (e is query.average) {
-            return AggregateQuery(
-              type: AggregateType.average,
-              field: e.field,
-            );
-          } else {
-            throw ArgumentError(
-                'Unsupported aggregate method ${e.runtimeType}');
-          }
-        },
-      ).toList(),
+      fields.map((e) {
+        if (e is query.count) {
+          return AggregateQuery(type: AggregateType.count);
+        } else if (e is query.sum) {
+          return AggregateQuery(type: AggregateType.sum, field: e.field);
+        } else if (e is query.average) {
+          return AggregateQuery(type: AggregateType.average, field: e.field);
+        } else {
+          throw ArgumentError('Unsupported aggregate method ${e.runtimeType}');
+        }
+      }).toList(),
       isCollectionGroupQuery,
     );
   }
@@ -416,12 +399,7 @@ class MethodChannelQuery extends QueryPlatform {
       _pigeonParameters,
       _pointer.path,
       pigeonApp,
-      [
-        AggregateQuery(
-          type: AggregateType.sum,
-          field: field,
-        )
-      ],
+      [AggregateQuery(type: AggregateType.sum, field: field)],
       isCollectionGroupQuery,
     );
   }
@@ -434,12 +412,7 @@ class MethodChannelQuery extends QueryPlatform {
       _pigeonParameters,
       _pointer.path,
       pigeonApp,
-      [
-        AggregateQuery(
-          type: AggregateType.average,
-          field: field,
-        )
-      ],
+      [AggregateQuery(type: AggregateType.average, field: field)],
       isCollectionGroupQuery,
     );
   }
@@ -456,10 +429,10 @@ class MethodChannelQuery extends QueryPlatform {
 
   @override
   int get hashCode => Object.hash(
-        runtimeType,
-        firestore,
-        _pointer,
-        isCollectionGroupQuery,
-        const DeepCollectionEquality().hash(parameters),
-      );
+    runtimeType,
+    firestore,
+    _pointer,
+    isCollectionGroupQuery,
+    const DeepCollectionEquality().hash(parameters),
+  );
 }

@@ -34,17 +34,16 @@ void main() {
     const codec = StandardMethodCodec();
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .handlePlatformMessage(
-      MethodChannelFirebaseMessaging.channel.name,
-      codec.encodeMethodCall(
-        MethodCall('Messaging#onBackgroundMessage', <String, dynamic>{
-          'messageId': messageId,
-          'data': const <String, dynamic>{'foo': 'bar'},
-        }),
-      ),
-      (ByteData? data) => reply.complete(
-        data == null ? null : codec.decodeEnvelope(data),
-      ),
-    );
+          MethodChannelFirebaseMessaging.channel.name,
+          codec.encodeMethodCall(
+            MethodCall('Messaging#onBackgroundMessage', <String, dynamic>{
+              'messageId': messageId,
+              'data': const <String, dynamic>{'foo': 'bar'},
+            }),
+          ),
+          (ByteData? data) =>
+              reply.complete(data == null ? null : codec.decodeEnvelope(data)),
+        );
     return reply.future;
   }
 
@@ -54,12 +53,12 @@ void main() {
     final reply = Completer<void>();
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .handlePlatformMessage(
-      MethodChannelFirebaseMessaging.channel.name,
-      const StandardMethodCodec().encodeMethodCall(
-        MethodCall('Messaging#backgroundMessageHandlerExpected', expected),
-      ),
-      (_) => reply.complete(),
-    );
+          MethodChannelFirebaseMessaging.channel.name,
+          const StandardMethodCodec().encodeMethodCall(
+            MethodCall('Messaging#backgroundMessageHandlerExpected', expected),
+          ),
+          (_) => reply.complete(),
+        );
     return reply.future;
   }
 
@@ -95,8 +94,9 @@ void main() {
 
   test('waits for a handler registered after the message arrived', () async {
     var replied = false;
-    final reply =
-        deliverFromNative('arrived-first').whenComplete(() => replied = true);
+    final reply = deliverFromNative(
+      'arrived-first',
+    ).whenComplete(() => replied = true);
 
     await pumpEventQueue();
     expect(replied, isFalse, reason: 'native must keep waiting');
@@ -129,44 +129,55 @@ void main() {
     MethodChannelFirebaseMessaging.backgroundMessageHandlerRegistrationTimeout =
         const Duration(milliseconds: 50);
 
-    final reply = await deliverFromNative('never-handled')
-        .timeout(const Duration(seconds: 5));
+    final reply = await deliverFromNative(
+      'never-handled',
+    ).timeout(const Duration(seconds: 5));
 
     expect(reply, isNull);
     expect(handled, isEmpty);
   });
 
-  test('a later registration still handles new messages after a timeout',
-      () async {
-    MethodChannelFirebaseMessaging.backgroundMessageHandlerRegistrationTimeout =
-        const Duration(milliseconds: 50);
-    await deliverFromNative('timed-out');
+  test(
+    'a later registration still handles new messages after a timeout',
+    () async {
+      MethodChannelFirebaseMessaging
+          .backgroundMessageHandlerRegistrationTimeout = const Duration(
+        milliseconds: 50,
+      );
+      await deliverFromNative('timed-out');
 
-    FirebaseMessagingPlatform.onBackgroundMessage = handler;
-    await deliverFromNative('after-registration');
+      FirebaseMessagingPlatform.onBackgroundMessage = handler;
+      await deliverFromNative('after-registration');
 
-    expect(handled.map((m) => m.messageId), <String>['after-registration']);
-  });
+      expect(handled.map((m) => m.messageId), <String>['after-registration']);
+    },
+  );
 
-  test('does not wait once the app has been using messaging for a while',
-      () async {
-    MethodChannelFirebaseMessaging.backgroundMessageHandlerRegistrationTimeout =
-        const Duration(milliseconds: 100);
-    await Future<void>.delayed(const Duration(milliseconds: 200));
+  test(
+    'does not wait once the app has been using messaging for a while',
+    () async {
+      MethodChannelFirebaseMessaging
+          .backgroundMessageHandlerRegistrationTimeout = const Duration(
+        milliseconds: 100,
+      );
+      await Future<void>.delayed(const Duration(milliseconds: 200));
 
-    // Would wait the whole timeout if it still held the message.
-    await deliverFromNative('late-without-handler')
-        .timeout(const Duration(milliseconds: 80));
+      // Would wait the whole timeout if it still held the message.
+      await deliverFromNative(
+        'late-without-handler',
+      ).timeout(const Duration(milliseconds: 80));
 
-    expect(handled, isEmpty);
-  });
+      expect(handled, isEmpty);
+    },
+  );
 
   test('does not wait when the app never registered a handler', () async {
     await sendHandlerExpected(false);
 
     // Would wait the whole timeout if it held the message.
-    await deliverFromNative('no-handler-expected')
-        .timeout(const Duration(milliseconds: 80));
+    await deliverFromNative(
+      'no-handler-expected',
+    ).timeout(const Duration(milliseconds: 80));
 
     expect(handled, isEmpty);
   });
@@ -174,8 +185,9 @@ void main() {
   test('does not wait on Android, which never sends these messages', () async {
     debugDefaultTargetPlatformOverride = TargetPlatform.android;
 
-    await deliverFromNative('android')
-        .timeout(const Duration(milliseconds: 80));
+    await deliverFromNative(
+      'android',
+    ).timeout(const Duration(milliseconds: 80));
 
     expect(handled, isEmpty);
   });
@@ -189,9 +201,9 @@ void main() {
     addTearDown(
       () => TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMethodCallHandler(
-        MethodChannelFirebaseMessaging.channel,
-        null,
-      ),
+            MethodChannelFirebaseMessaging.channel,
+            null,
+          ),
     );
 
     FirebaseMessagingPlatform.onBackgroundMessage = handler;
@@ -200,17 +212,19 @@ void main() {
     expect(calls, contains('Messaging#backgroundMessageHandlerRegistered'));
   });
 
-  test('is woken by the handler even when the platform instance was replaced',
-      () async {
-    final reply = deliverFromNative('replaced-instance');
-    await pumpEventQueue();
-    FirebaseMessagingPlatform.instance = _OtherFirebaseMessagingPlatform();
+  test(
+    'is woken by the handler even when the platform instance was replaced',
+    () async {
+      final reply = deliverFromNative('replaced-instance');
+      await pumpEventQueue();
+      FirebaseMessagingPlatform.instance = _OtherFirebaseMessagingPlatform();
 
-    FirebaseMessagingPlatform.onBackgroundMessage = handler;
-    await reply.timeout(const Duration(seconds: 2));
+      FirebaseMessagingPlatform.onBackgroundMessage = handler;
+      await reply.timeout(const Duration(seconds: 2));
 
-    expect(handled.map((m) => m.messageId), <String>['replaced-instance']);
-  });
+      expect(handled.map((m) => m.messageId), <String>['replaced-instance']);
+    },
+  );
 }
 
 class _OtherFirebaseMessagingPlatform extends FirebaseMessagingPlatform {

@@ -6,10 +6,7 @@ import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_inte
 
 class MethodChannelPersistentCacheIndexManager
     extends PersistentCacheIndexManagerPlatform {
-  MethodChannelPersistentCacheIndexManager(
-    this.api,
-    this.app,
-  ) : super();
+  MethodChannelPersistentCacheIndexManager(this.api, this.app) : super();
 
   final FirebaseFirestoreHostApi api;
   final FirestorePigeonFirebaseApp app;

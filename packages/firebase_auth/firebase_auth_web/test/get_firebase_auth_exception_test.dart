@@ -38,20 +38,17 @@ void main() {
     return error;
   }
 
-  test(
-    'converts an Auth error that omits customData without throwing',
-    () {
-      final exception = getFirebaseAuthException(
-        authError(includeCustomData: false),
-      );
+  test('converts an Auth error that omits customData without throwing', () {
+    final exception = getFirebaseAuthException(
+      authError(includeCustomData: false),
+    );
 
-      expect(exception, isA<FirebaseAuthException>());
-      expect(exception.code, 'invalid-credential');
-      expect(exception.email, isNull);
-      expect(exception.phoneNumber, isNull);
-      expect(exception.tenantId, isNull);
-    },
-  );
+    expect(exception, isA<FirebaseAuthException>());
+    expect(exception.code, 'invalid-credential');
+    expect(exception.email, isNull);
+    expect(exception.phoneNumber, isNull);
+    expect(exception.tenantId, isNull);
+  });
 
   test('still reads email from customData when it is present', () {
     final exception = getFirebaseAuthException(

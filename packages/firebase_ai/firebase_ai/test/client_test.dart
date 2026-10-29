@@ -25,51 +25,61 @@ void main() {
   const responseJson = {'ok': true};
 
   MockClient jsonClient() => MockClient((request) async {
-        return http.Response(
-          jsonEncode(responseJson),
-          200,
-          headers: {'content-type': 'application/json'},
-        );
-      });
+    return http.Response(
+      jsonEncode(responseJson),
+      200,
+      headers: {'content-type': 'application/json'},
+    );
+  });
 
   MockClient sseClient() => MockClient((request) async {
-        return http.Response(
-          'data: ${jsonEncode(responseJson)}\n',
-          200,
-          headers: {'content-type': 'text/event-stream'},
-        );
-      });
+    return http.Response(
+      'data: ${jsonEncode(responseJson)}\n',
+      200,
+      headers: {'content-type': 'text/event-stream'},
+    );
+  });
 
   group('HttpApiClient', () {
-    test('reuses a single Client for unary requests when none is injected',
-        () async {
-      var created = 0;
+    test(
+      'reuses a single Client for unary requests when none is injected',
+      () async {
+        var created = 0;
 
-      await http.runWithClient(() async {
-        final client = HttpApiClient(apiKey: 'test-key');
-        await client.makeRequest(uri, requestBody);
-        await client.makeRequest(uri, requestBody);
-        expect(created, 1);
-      }, () {
-        created++;
-        return jsonClient();
-      });
-    });
+        await http.runWithClient(
+          () async {
+            final client = HttpApiClient(apiKey: 'test-key');
+            await client.makeRequest(uri, requestBody);
+            await client.makeRequest(uri, requestBody);
+            expect(created, 1);
+          },
+          () {
+            created++;
+            return jsonClient();
+          },
+        );
+      },
+    );
 
-    test('reuses a single Client for streaming requests when none is injected',
-        () async {
-      var created = 0;
+    test(
+      'reuses a single Client for streaming requests when none is injected',
+      () async {
+        var created = 0;
 
-      await http.runWithClient(() async {
-        final client = HttpApiClient(apiKey: 'test-key');
-        await client.streamRequest(uri, requestBody).drain<void>();
-        await client.streamRequest(uri, requestBody).drain<void>();
-        expect(created, 1);
-      }, () {
-        created++;
-        return sseClient();
-      });
-    });
+        await http.runWithClient(
+          () async {
+            final client = HttpApiClient(apiKey: 'test-key');
+            await client.streamRequest(uri, requestBody).drain<void>();
+            await client.streamRequest(uri, requestBody).drain<void>();
+            expect(created, 1);
+          },
+          () {
+            created++;
+            return sseClient();
+          },
+        );
+      },
+    );
 
     test('uses an injected Client for unary and streaming requests', () async {
       final requests = <http.BaseRequest>[];

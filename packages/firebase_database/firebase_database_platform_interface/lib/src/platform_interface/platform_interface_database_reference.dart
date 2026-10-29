@@ -15,9 +15,8 @@ import 'package:firebase_database_platform_interface/firebase_database_platform_
 /// Note: [QueryPlatform] extends PlatformInterface already.
 abstract class DatabaseReferencePlatform extends QueryPlatform {
   /// Create a [DatabaseReferencePlatform] using [pathComponents]
-  DatabaseReferencePlatform._(
-    DatabasePlatform database,
-  ) : super(database: database);
+  DatabaseReferencePlatform._(DatabasePlatform database)
+    : super(database: database);
 
   /// Gets a DatabaseReference for the location at the specified relative
   /// path. The relative path can either be a simple child key (e.g. ‘fred’) or

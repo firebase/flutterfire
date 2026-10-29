@@ -94,8 +94,8 @@ void main() {
 }
 ''';
       final decoded = jsonDecode(response) as Object;
-      final generateContentResponse =
-          DeveloperSerialization().parseGenerateContentResponse(decoded);
+      final generateContentResponse = DeveloperSerialization()
+          .parseGenerateContentResponse(decoded);
       expect(
         generateContentResponse,
         matchesGenerateContentResponse(
@@ -137,8 +137,8 @@ void main() {
 }
 ''';
       final decoded = jsonDecode(response) as Object;
-      final generateContentResponse =
-          DeveloperSerialization().parseGenerateContentResponse(decoded);
+      final generateContentResponse = DeveloperSerialization()
+          .parseGenerateContentResponse(decoded);
       expect(generateContentResponse.promptFeedback, isNotNull);
       expect(
         generateContentResponse.promptFeedback!.blockReason?.toString(),
@@ -183,8 +183,8 @@ void main() {
 }
 ''';
       final decoded = jsonDecode(response) as Object;
-      final generateContentResponse =
-          DeveloperSerialization().parseGenerateContentResponse(decoded);
+      final generateContentResponse = DeveloperSerialization()
+          .parseGenerateContentResponse(decoded);
       final ratings = generateContentResponse.candidates.single.safetyRatings!;
       expect(ratings, hasLength(3));
       expect(ratings[0].category, HarmCategory.dangerousContent);
@@ -255,8 +255,8 @@ void main() {
 }
 ''';
       final decoded = jsonDecode(response) as Object;
-      final generateContentResponse =
-          DeveloperSerialization().parseGenerateContentResponse(decoded);
+      final generateContentResponse = DeveloperSerialization()
+          .parseGenerateContentResponse(decoded);
       expect(
         generateContentResponse,
         matchesGenerateContentResponse(
@@ -337,33 +337,30 @@ void main() {
 }
 ''';
       final decoded = jsonDecode(response) as Object;
-      final generateContentResponse =
-          DeveloperSerialization().parseGenerateContentResponse(decoded);
+      final generateContentResponse = DeveloperSerialization()
+          .parseGenerateContentResponse(decoded);
       expect(
         generateContentResponse,
         matchesGenerateContentResponse(
-          GenerateContentResponse(
-            [
-              Candidate(
-                Content.model([
-                  const TextPart('some response'),
-                ]),
-                [
-                  SafetyRating(
-                    HarmCategory.sexuallyExplicit,
-                    HarmProbability.negligible,
-                    isBlocked: true,
-                  ),
-                  SafetyRating(
-                      HarmCategory.hateSpeech, HarmProbability.negligible),
-                ],
-                null,
-                FinishReason.stop,
-                null,
-              ),
-            ],
-            null,
-          ),
+          GenerateContentResponse([
+            Candidate(
+              Content.model([const TextPart('some response')]),
+              [
+                SafetyRating(
+                  HarmCategory.sexuallyExplicit,
+                  HarmProbability.negligible,
+                  isBlocked: true,
+                ),
+                SafetyRating(
+                  HarmCategory.hateSpeech,
+                  HarmProbability.negligible,
+                ),
+              ],
+              null,
+              FinishReason.stop,
+              null,
+            ),
+          ], null),
         ),
       );
     });
@@ -451,8 +448,8 @@ void main() {
 }
 ''';
       final decoded = jsonDecode(response) as Object;
-      final generateContentResponse =
-          DeveloperSerialization().parseGenerateContentResponse(decoded);
+      final generateContentResponse = DeveloperSerialization()
+          .parseGenerateContentResponse(decoded);
       expect(
         generateContentResponse,
         matchesGenerateContentResponse(
@@ -586,8 +583,8 @@ void main() {
 }
 ''';
       final decoded = jsonDecode(response) as Object;
-      final generateContentResponse =
-          DeveloperSerialization().parseGenerateContentResponse(decoded);
+      final generateContentResponse = DeveloperSerialization()
+          .parseGenerateContentResponse(decoded);
       expect(
         generateContentResponse,
         matchesGenerateContentResponse(
@@ -670,27 +667,24 @@ void main() {
 }
 ''';
       final decoded = jsonDecode(response) as Object;
-      final generateContentResponse =
-          DeveloperSerialization().parseGenerateContentResponse(decoded);
+      final generateContentResponse = DeveloperSerialization()
+          .parseGenerateContentResponse(decoded);
       expect(
         generateContentResponse,
         matchesGenerateContentResponse(
-          GenerateContentResponse(
-            [
-              Candidate(
-                Content.model([
-                  // ExecutableCode(Language.python, 'print(\'hello world\')'),
-                  // CodeExecutionResult(Outcome.ok, 'hello world'),
-                  const TextPart('hello world')
-                ]),
-                [],
-                null,
-                FinishReason.stop,
-                null,
-              ),
-            ],
-            null,
-          ),
+          GenerateContentResponse([
+            Candidate(
+              Content.model([
+                // ExecutableCode(Language.python, 'print(\'hello world\')'),
+                // CodeExecutionResult(Outcome.ok, 'hello world'),
+                const TextPart('hello world'),
+              ]),
+              [],
+              null,
+              FinishReason.stop,
+              null,
+            ),
+          ], null),
         ),
       );
     }, skip: 'Code Execution Unsupported');
@@ -773,16 +767,20 @@ void main() {
 }
 ''';
       final decoded = jsonDecode(response) as Object;
-      final generateContentResponse =
-          DeveloperSerialization().parseGenerateContentResponse(decoded);
+      final generateContentResponse = DeveloperSerialization()
+          .parseGenerateContentResponse(decoded);
       final candidate = generateContentResponse.candidates.first;
       final urlContextMetadata = candidate.urlContextMetadata;
       expect(urlContextMetadata, isNotNull);
       expect(urlContextMetadata!.urlMetadata, hasLength(1));
-      expect(urlContextMetadata.urlMetadata.first.retrievedUrl,
-          Uri.parse('https://berkshirehathaway.com'));
-      expect(urlContextMetadata.urlMetadata.first.urlRetrievalStatus,
-          UrlRetrievalStatus.success);
+      expect(
+        urlContextMetadata.urlMetadata.first.retrievedUrl,
+        Uri.parse('https://berkshirehathaway.com'),
+      );
+      expect(
+        urlContextMetadata.urlMetadata.first.urlRetrievalStatus,
+        UrlRetrievalStatus.success,
+      );
       final usageMetadata = generateContentResponse.usageMetadata;
       expect(usageMetadata, isNotNull);
       expect(usageMetadata!.toolUsePromptTokenCount, 34);
@@ -914,26 +912,38 @@ void main() {
 }
 ''';
       final decoded = jsonDecode(response) as Object;
-      final generateContentResponse =
-          DeveloperSerialization().parseGenerateContentResponse(decoded);
+      final generateContentResponse = DeveloperSerialization()
+          .parseGenerateContentResponse(decoded);
       final urlContextMetadata =
           generateContentResponse.candidates.first.urlContextMetadata;
       expect(urlContextMetadata, isNotNull);
       expect(urlContextMetadata!.urlMetadata, hasLength(3));
       expect(
-          urlContextMetadata.urlMetadata[0].retrievedUrl,
-          Uri.parse(
-              'https://www.nytimes.com/2023/06/25/realestate/barbiecore-home-decor-interior-design.html?action=click&contentCollection=undefined&region=Footer&module=WhatsNext&version=WhatsNext&contentID=WhatsNext&moduleDetail=most-emailed-0&pgtype=undefinedl'));
-      expect(urlContextMetadata.urlMetadata[0].urlRetrievalStatus,
-          UrlRetrievalStatus.error);
-      expect(urlContextMetadata.urlMetadata[1].retrievedUrl,
-          Uri.parse('https://ai.google.dev'));
-      expect(urlContextMetadata.urlMetadata[1].urlRetrievalStatus,
-          UrlRetrievalStatus.success);
-      expect(urlContextMetadata.urlMetadata[2].retrievedUrl,
-          Uri.parse('https://a-completely-non-existent-url-for-testing.org'));
-      expect(urlContextMetadata.urlMetadata[2].urlRetrievalStatus,
-          UrlRetrievalStatus.error);
+        urlContextMetadata.urlMetadata[0].retrievedUrl,
+        Uri.parse(
+          'https://www.nytimes.com/2023/06/25/realestate/barbiecore-home-decor-interior-design.html?action=click&contentCollection=undefined&region=Footer&module=WhatsNext&version=WhatsNext&contentID=WhatsNext&moduleDetail=most-emailed-0&pgtype=undefinedl',
+        ),
+      );
+      expect(
+        urlContextMetadata.urlMetadata[0].urlRetrievalStatus,
+        UrlRetrievalStatus.error,
+      );
+      expect(
+        urlContextMetadata.urlMetadata[1].retrievedUrl,
+        Uri.parse('https://ai.google.dev'),
+      );
+      expect(
+        urlContextMetadata.urlMetadata[1].urlRetrievalStatus,
+        UrlRetrievalStatus.success,
+      );
+      expect(
+        urlContextMetadata.urlMetadata[2].retrievedUrl,
+        Uri.parse('https://a-completely-non-existent-url-for-testing.org'),
+      );
+      expect(
+        urlContextMetadata.urlMetadata[2].urlRetrievalStatus,
+        UrlRetrievalStatus.error,
+      );
     });
 
     test('allows missing content', () async {
@@ -966,31 +976,36 @@ void main() {
 }
 ''';
       final decoded = jsonDecode(response) as Object;
-      final generateContentResponse =
-          DeveloperSerialization().parseGenerateContentResponse(decoded);
+      final generateContentResponse = DeveloperSerialization()
+          .parseGenerateContentResponse(decoded);
       expect(
         generateContentResponse,
         matchesGenerateContentResponse(
           GenerateContentResponse([
             Candidate(
-                Content(null, []),
-                [
-                  SafetyRating(
-                    HarmCategory.sexuallyExplicit,
-                    HarmProbability.negligible,
-                  ),
-                  SafetyRating(
-                      HarmCategory.hateSpeech, HarmProbability.negligible),
-                  SafetyRating(
-                      HarmCategory.harassment, HarmProbability.negligible),
-                  SafetyRating(
-                    HarmCategory.dangerousContent,
-                    HarmProbability.negligible,
-                  ),
-                ],
-                CitationMetadata([]),
-                FinishReason.safety,
-                null),
+              Content(null, []),
+              [
+                SafetyRating(
+                  HarmCategory.sexuallyExplicit,
+                  HarmProbability.negligible,
+                ),
+                SafetyRating(
+                  HarmCategory.hateSpeech,
+                  HarmProbability.negligible,
+                ),
+                SafetyRating(
+                  HarmCategory.harassment,
+                  HarmProbability.negligible,
+                ),
+                SafetyRating(
+                  HarmCategory.dangerousContent,
+                  HarmProbability.negligible,
+                ),
+              ],
+              CitationMetadata([]),
+              FinishReason.safety,
+              null,
+            ),
           ], null),
         ),
       );
@@ -1022,11 +1037,72 @@ void main() {
 }
 ''';
       final decoded = jsonDecode(response) as Object;
+      final generateContentResponse = DeveloperSerialization()
+          .parseGenerateContentResponse(decoded);
+      expect(generateContentResponse.text, 'Initial text And more text');
+      expect(
+        generateContentResponse.candidates.single.text,
+        'Initial text And more text',
+      );
+    });
+
+    test('with a code execution result that omits output', () {
+      const response = '''
+{
+  "candidates": [
+    {
+      "content": {
+        "role": "model",
+        "parts": [
+          {
+            "executableCode": {
+              "language": "PYTHON",
+              "code": "x = 1 + 1"
+            }
+          },
+          {
+            "codeExecutionResult": {
+              "outcome": "OUTCOME_OK"
+            }
+          },
+          {
+            "text": "The answer is 2."
+          }
+        ]
+      },
+      "finishReason": "STOP"
+    }
+  ]
+}
+''';
+      final decoded = jsonDecode(response) as Object;
       final generateContentResponse =
           DeveloperSerialization().parseGenerateContentResponse(decoded);
-      expect(generateContentResponse.text, 'Initial text And more text');
-      expect(generateContentResponse.candidates.single.text,
-          'Initial text And more text');
+      expect(
+        generateContentResponse,
+        matchesGenerateContentResponse(
+          GenerateContentResponse(
+            [
+              Candidate(
+                Content.model([
+                  ExecutableCodePart(
+                    language: CodeLanguage.python,
+                    code: 'x = 1 + 1',
+                  ),
+                  CodeExecutionResultPart(outcome: Outcome.ok, output: ''),
+                  const TextPart('The answer is 2.'),
+                ]),
+                null,
+                null,
+                FinishReason.stop,
+                null,
+              ),
+            ],
+            null,
+          ),
+        ),
+      );
+      expect(generateContentResponse.text, 'The answer is 2.');
     });
   });
 
@@ -1064,10 +1140,13 @@ void main() {
         ),
       );
       expect(
-          () => DeveloperSerialization().parseGenerateContentResponse(decoded),
-          expectedThrow);
-      expect(() => DeveloperSerialization().parseCountTokensResponse(decoded),
-          expectedThrow);
+        () => DeveloperSerialization().parseGenerateContentResponse(decoded),
+        expectedThrow,
+      );
+      expect(
+        () => DeveloperSerialization().parseCountTokensResponse(decoded),
+        expectedThrow,
+      );
       // expect(() => parseEmbedContentResponse(decoded), expectedThrow);
     });
 
@@ -1096,10 +1175,13 @@ void main() {
         ),
       );
       expect(
-          () => DeveloperSerialization().parseGenerateContentResponse(decoded),
-          expectedThrow);
-      expect(() => DeveloperSerialization().parseCountTokensResponse(decoded),
-          expectedThrow);
+        () => DeveloperSerialization().parseGenerateContentResponse(decoded),
+        expectedThrow,
+      );
+      expect(
+        () => DeveloperSerialization().parseCountTokensResponse(decoded),
+        expectedThrow,
+      );
       // expect(() => parseEmbedContentResponse(decoded), expectedThrow);
     });
 
@@ -1131,10 +1213,13 @@ void main() {
         ),
       );
       expect(
-          () => DeveloperSerialization().parseGenerateContentResponse(decoded),
-          expectedThrow);
-      expect(() => DeveloperSerialization().parseCountTokensResponse(decoded),
-          expectedThrow);
+        () => DeveloperSerialization().parseGenerateContentResponse(decoded),
+        expectedThrow,
+      );
+      expect(
+        () => DeveloperSerialization().parseCountTokensResponse(decoded),
+        expectedThrow,
+      );
       // expect(() => parseEmbedContentResponse(decoded), expectedThrow);
     });
   });

@@ -29,24 +29,14 @@ import 'package:mockito/mockito.dart' as _i1;
 // ignore_for_file: subtype_of_sealed_class
 
 class _FakeFirebaseApp_0 extends _i1.SmartFake implements _i2.FirebaseApp {
-  _FakeFirebaseApp_0(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeFirebaseApp_0(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeFirebaseAnalyticsPlatform_1 extends _i1.SmartFake
     implements _i3.FirebaseAnalyticsPlatform {
-  _FakeFirebaseAnalyticsPlatform_1(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeFirebaseAnalyticsPlatform_1(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 /// A class which mocks [FirebaseAnalyticsWeb].
@@ -56,25 +46,21 @@ class MockFirebaseAnalyticsWeb extends _i1.Mock
     implements _i4.FirebaseAnalyticsWeb {
   @override
   set appInstance(_i2.FirebaseApp? _appInstance) => super.noSuchMethod(
-        Invocation.setter(
-          #appInstance,
-          _appInstance,
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.setter(#appInstance, _appInstance),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  _i2.FirebaseApp get app => (super.noSuchMethod(
-        Invocation.getter(#app),
-        returnValue: _FakeFirebaseApp_0(
-          this,
-          Invocation.getter(#app),
-        ),
-        returnValueForMissingStub: _FakeFirebaseApp_0(
-          this,
-          Invocation.getter(#app),
-        ),
-      ) as _i2.FirebaseApp);
+  _i2.FirebaseApp get app =>
+      (super.noSuchMethod(
+            Invocation.getter(#app),
+            returnValue: _FakeFirebaseApp_0(this, Invocation.getter(#app)),
+            returnValueForMissingStub: _FakeFirebaseApp_0(
+              this,
+              Invocation.getter(#app),
+            ),
+          )
+          as _i2.FirebaseApp);
 
   @override
   _i3.FirebaseAnalyticsPlatform delegateFor({
@@ -82,57 +68,44 @@ class MockFirebaseAnalyticsWeb extends _i1.Mock
     Map<String, dynamic>? webOptions,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #delegateFor,
-          [],
-          {
-            #app: app,
-            #webOptions: webOptions,
-          },
-        ),
-        returnValue: _FakeFirebaseAnalyticsPlatform_1(
-          this,
-          Invocation.method(
-            #delegateFor,
-            [],
-            {
+            Invocation.method(#delegateFor, [], {
               #app: app,
               #webOptions: webOptions,
-            },
-          ),
-        ),
-        returnValueForMissingStub: _FakeFirebaseAnalyticsPlatform_1(
-          this,
-          Invocation.method(
-            #delegateFor,
-            [],
-            {
-              #app: app,
-              #webOptions: webOptions,
-            },
-          ),
-        ),
-      ) as _i3.FirebaseAnalyticsPlatform);
+            }),
+            returnValue: _FakeFirebaseAnalyticsPlatform_1(
+              this,
+              Invocation.method(#delegateFor, [], {
+                #app: app,
+                #webOptions: webOptions,
+              }),
+            ),
+            returnValueForMissingStub: _FakeFirebaseAnalyticsPlatform_1(
+              this,
+              Invocation.method(#delegateFor, [], {
+                #app: app,
+                #webOptions: webOptions,
+              }),
+            ),
+          )
+          as _i3.FirebaseAnalyticsPlatform);
 
   @override
-  _i5.Future<bool> isSupported() => (super.noSuchMethod(
-        Invocation.method(
-          #isSupported,
-          [],
-        ),
-        returnValue: _i5.Future<bool>.value(false),
-        returnValueForMissingStub: _i5.Future<bool>.value(false),
-      ) as _i5.Future<bool>);
+  _i5.Future<bool> isSupported() =>
+      (super.noSuchMethod(
+            Invocation.method(#isSupported, []),
+            returnValue: _i5.Future<bool>.value(false),
+            returnValueForMissingStub: _i5.Future<bool>.value(false),
+          )
+          as _i5.Future<bool>);
 
   @override
-  _i5.Future<int?> getSessionId() => (super.noSuchMethod(
-        Invocation.method(
-          #getSessionId,
-          [],
-        ),
-        returnValue: _i5.Future<int?>.value(),
-        returnValueForMissingStub: _i5.Future<int?>.value(),
-      ) as _i5.Future<int?>);
+  _i5.Future<int?> getSessionId() =>
+      (super.noSuchMethod(
+            Invocation.method(#getSessionId, []),
+            returnValue: _i5.Future<int?>.value(),
+            returnValueForMissingStub: _i5.Future<int?>.value(),
+          )
+          as _i5.Future<int?>);
 
   @override
   _i5.Future<void> logEvent({
@@ -141,18 +114,15 @@ class MockFirebaseAnalyticsWeb extends _i1.Mock
     _i3.AnalyticsCallOptions? callOptions,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #logEvent,
-          [],
-          {
-            #name: name,
-            #parameters: parameters,
-            #callOptions: callOptions,
-          },
-        ),
-        returnValue: _i5.Future<void>.value(),
-        returnValueForMissingStub: _i5.Future<void>.value(),
-      ) as _i5.Future<void>);
+            Invocation.method(#logEvent, [], {
+              #name: name,
+              #parameters: parameters,
+              #callOptions: callOptions,
+            }),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
+          )
+          as _i5.Future<void>);
 
   @override
   _i5.Future<void> setConsent({
@@ -165,36 +135,31 @@ class MockFirebaseAnalyticsWeb extends _i1.Mock
     bool? securityStorageConsentGranted,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #setConsent,
-          [],
-          {
-            #adStorageConsentGranted: adStorageConsentGranted,
-            #analyticsStorageConsentGranted: analyticsStorageConsentGranted,
-            #adPersonalizationSignalsConsentGranted:
-                adPersonalizationSignalsConsentGranted,
-            #adUserDataConsentGranted: adUserDataConsentGranted,
-            #functionalityStorageConsentGranted:
-                functionalityStorageConsentGranted,
-            #personalizationStorageConsentGranted:
-                personalizationStorageConsentGranted,
-            #securityStorageConsentGranted: securityStorageConsentGranted,
-          },
-        ),
-        returnValue: _i5.Future<void>.value(),
-        returnValueForMissingStub: _i5.Future<void>.value(),
-      ) as _i5.Future<void>);
+            Invocation.method(#setConsent, [], {
+              #adStorageConsentGranted: adStorageConsentGranted,
+              #analyticsStorageConsentGranted: analyticsStorageConsentGranted,
+              #adPersonalizationSignalsConsentGranted:
+                  adPersonalizationSignalsConsentGranted,
+              #adUserDataConsentGranted: adUserDataConsentGranted,
+              #functionalityStorageConsentGranted:
+                  functionalityStorageConsentGranted,
+              #personalizationStorageConsentGranted:
+                  personalizationStorageConsentGranted,
+              #securityStorageConsentGranted: securityStorageConsentGranted,
+            }),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
+          )
+          as _i5.Future<void>);
 
   @override
   _i5.Future<void> setAnalyticsCollectionEnabled(bool? enabled) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #setAnalyticsCollectionEnabled,
-          [enabled],
-        ),
-        returnValue: _i5.Future<void>.value(),
-        returnValueForMissingStub: _i5.Future<void>.value(),
-      ) as _i5.Future<void>);
+            Invocation.method(#setAnalyticsCollectionEnabled, [enabled]),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
+          )
+          as _i5.Future<void>);
 
   @override
   _i5.Future<void> setUserId({
@@ -202,27 +167,23 @@ class MockFirebaseAnalyticsWeb extends _i1.Mock
     _i3.AnalyticsCallOptions? callOptions,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #setUserId,
-          [],
-          {
-            #id: id,
-            #callOptions: callOptions,
-          },
-        ),
-        returnValue: _i5.Future<void>.value(),
-        returnValueForMissingStub: _i5.Future<void>.value(),
-      ) as _i5.Future<void>);
+            Invocation.method(#setUserId, [], {
+              #id: id,
+              #callOptions: callOptions,
+            }),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
+          )
+          as _i5.Future<void>);
 
   @override
-  _i5.Future<void> resetAnalyticsData() => (super.noSuchMethod(
-        Invocation.method(
-          #resetAnalyticsData,
-          [],
-        ),
-        returnValue: _i5.Future<void>.value(),
-        returnValueForMissingStub: _i5.Future<void>.value(),
-      ) as _i5.Future<void>);
+  _i5.Future<void> resetAnalyticsData() =>
+      (super.noSuchMethod(
+            Invocation.method(#resetAnalyticsData, []),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
+          )
+          as _i5.Future<void>);
 
   @override
   _i5.Future<void> setUserProperty({
@@ -231,51 +192,44 @@ class MockFirebaseAnalyticsWeb extends _i1.Mock
     _i3.AnalyticsCallOptions? callOptions,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #setUserProperty,
-          [],
-          {
-            #name: name,
-            #value: value,
-            #callOptions: callOptions,
-          },
-        ),
-        returnValue: _i5.Future<void>.value(),
-        returnValueForMissingStub: _i5.Future<void>.value(),
-      ) as _i5.Future<void>);
+            Invocation.method(#setUserProperty, [], {
+              #name: name,
+              #value: value,
+              #callOptions: callOptions,
+            }),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
+          )
+          as _i5.Future<void>);
 
   @override
   _i5.Future<void> setSessionTimeoutDuration(Duration? timeout) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #setSessionTimeoutDuration,
-          [timeout],
-        ),
-        returnValue: _i5.Future<void>.value(),
-        returnValueForMissingStub: _i5.Future<void>.value(),
-      ) as _i5.Future<void>);
+            Invocation.method(#setSessionTimeoutDuration, [timeout]),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
+          )
+          as _i5.Future<void>);
 
   @override
   _i5.Future<void> setDefaultEventParameters(
-          Map<String, Object?>? defaultParameters) =>
+    Map<String, Object?>? defaultParameters,
+  ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #setDefaultEventParameters,
-          [defaultParameters],
-        ),
-        returnValue: _i5.Future<void>.value(),
-        returnValueForMissingStub: _i5.Future<void>.value(),
-      ) as _i5.Future<void>);
+            Invocation.method(#setDefaultEventParameters, [defaultParameters]),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
+          )
+          as _i5.Future<void>);
 
   @override
-  _i5.Future<String?> getAppInstanceId() => (super.noSuchMethod(
-        Invocation.method(
-          #getAppInstanceId,
-          [],
-        ),
-        returnValue: _i5.Future<String?>.value(),
-        returnValueForMissingStub: _i5.Future<String?>.value(),
-      ) as _i5.Future<String?>);
+  _i5.Future<String?> getAppInstanceId() =>
+      (super.noSuchMethod(
+            Invocation.method(#getAppInstanceId, []),
+            returnValue: _i5.Future<String?>.value(),
+            returnValueForMissingStub: _i5.Future<String?>.value(),
+          )
+          as _i5.Future<String?>);
 
   @override
   _i5.Future<void> initiateOnDeviceConversionMeasurement({
@@ -285,17 +239,14 @@ class MockFirebaseAnalyticsWeb extends _i1.Mock
     String? hashedPhoneNumber,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #initiateOnDeviceConversionMeasurement,
-          [],
-          {
-            #emailAddress: emailAddress,
-            #phoneNumber: phoneNumber,
-            #hashedEmailAddress: hashedEmailAddress,
-            #hashedPhoneNumber: hashedPhoneNumber,
-          },
-        ),
-        returnValue: _i5.Future<void>.value(),
-        returnValueForMissingStub: _i5.Future<void>.value(),
-      ) as _i5.Future<void>);
+            Invocation.method(#initiateOnDeviceConversionMeasurement, [], {
+              #emailAddress: emailAddress,
+              #phoneNumber: phoneNumber,
+              #hashedEmailAddress: hashedEmailAddress,
+              #hashedPhoneNumber: hashedPhoneNumber,
+            }),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
+          )
+          as _i5.Future<void>);
 }

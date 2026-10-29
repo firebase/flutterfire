@@ -66,8 +66,9 @@ class RecaptchaVerifierFactoryWeb extends RecaptchaVerifierFactoryPlatform {
 
     if (container == null || container.isEmpty) {
       parameters['size'] = 'invisible'.toJS;
-      web.Element? el =
-          web.window.document.getElementById(_kInvisibleElementId);
+      web.Element? el = web.window.document.getElementById(
+        _kInvisibleElementId,
+      );
 
       // If an existing element exists, something may have already been rendered.
       if (el != null) {

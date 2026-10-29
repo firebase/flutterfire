@@ -22,8 +22,9 @@ void runWebSnapshotListenersTests() {
     late DocumentReference<Map<String, dynamic>> document2;
     setUpAll(() async {
       firestore = FirebaseFirestore.instance;
-      collection = firestore
-          .collection('flutter-tests/web-snapshot-listeners/query-tests');
+      collection = firestore.collection(
+        'flutter-tests/web-snapshot-listeners/query-tests',
+      );
       document = collection.doc('doc1');
       document2 = collection.doc('doc1');
 
@@ -34,43 +35,39 @@ void runWebSnapshotListenersTests() {
       ]);
     });
 
-    test(
-      'document snapshot listeners in debug',
-      () async {
-        Completer<bool> completer = Completer<bool>();
-        Completer<bool> completer2 = Completer<bool>();
-        Completer<bool> completer3 = Completer<bool>();
-        document.snapshots().listen((snapshot) {
-          if (completer.isCompleted) {
-            return;
-          }
-          completer.complete(true);
-        });
+    test('document snapshot listeners in debug', () async {
+      Completer<bool> completer = Completer<bool>();
+      Completer<bool> completer2 = Completer<bool>();
+      Completer<bool> completer3 = Completer<bool>();
+      document.snapshots().listen((snapshot) {
+        if (completer.isCompleted) {
+          return;
+        }
+        completer.complete(true);
+      });
 
-        document.snapshots().listen((snapshot) {
-          if (completer2.isCompleted) {
-            return;
-          }
-          completer2.complete(true);
-        });
+      document.snapshots().listen((snapshot) {
+        if (completer2.isCompleted) {
+          return;
+        }
+        completer2.complete(true);
+      });
 
-        document.snapshots().listen((snapshot) {
-          if (completer3.isCompleted) {
-            return;
-          }
-          completer3.complete(true);
-        });
+      document.snapshots().listen((snapshot) {
+        if (completer3.isCompleted) {
+          return;
+        }
+        completer3.complete(true);
+      });
 
-        final one = await completer.future.timeout(_completerTimeout);
-        final two = await completer2.future.timeout(_completerTimeout);
-        final three = await completer3.future.timeout(_completerTimeout);
+      final one = await completer.future.timeout(_completerTimeout);
+      final two = await completer2.future.timeout(_completerTimeout);
+      final three = await completer3.future.timeout(_completerTimeout);
 
-        expect(one, true);
-        expect(two, true);
-        expect(three, true);
-      },
-      skip: !kIsWeb,
-    );
+      expect(one, true);
+      expect(two, true);
+      expect(three, true);
+    }, skip: !kIsWeb);
 
     test(
       'document snapshot listeners with different doc refs in debug',
@@ -120,79 +117,71 @@ void runWebSnapshotListenersTests() {
       skip: !kIsWeb,
     );
 
-    test(
-      'query snapshot listeners in debug',
-      () async {
-        Completer<bool> completer = Completer<bool>();
-        Completer<bool> completer2 = Completer<bool>();
-        Completer<bool> completer3 = Completer<bool>();
-        collection.snapshots().listen((snapshot) {
-          if (completer.isCompleted) {
-            return;
-          }
-          completer.complete(true);
-        });
+    test('query snapshot listeners in debug', () async {
+      Completer<bool> completer = Completer<bool>();
+      Completer<bool> completer2 = Completer<bool>();
+      Completer<bool> completer3 = Completer<bool>();
+      collection.snapshots().listen((snapshot) {
+        if (completer.isCompleted) {
+          return;
+        }
+        completer.complete(true);
+      });
 
-        collection.snapshots().listen((snapshot) {
-          if (completer2.isCompleted) {
-            return;
-          }
-          completer2.complete(true);
-        });
+      collection.snapshots().listen((snapshot) {
+        if (completer2.isCompleted) {
+          return;
+        }
+        completer2.complete(true);
+      });
 
-        collection.snapshots().listen((snapshot) {
-          if (completer3.isCompleted) {
-            return;
-          }
-          completer3.complete(true);
-        });
-        final one = await completer.future.timeout(_completerTimeout);
-        final two = await completer2.future.timeout(_completerTimeout);
-        final three = await completer3.future.timeout(_completerTimeout);
+      collection.snapshots().listen((snapshot) {
+        if (completer3.isCompleted) {
+          return;
+        }
+        completer3.complete(true);
+      });
+      final one = await completer.future.timeout(_completerTimeout);
+      final two = await completer2.future.timeout(_completerTimeout);
+      final three = await completer3.future.timeout(_completerTimeout);
 
-        expect(one, true);
-        expect(two, true);
-        expect(three, true);
-      },
-      skip: !kIsWeb,
-    );
+      expect(one, true);
+      expect(two, true);
+      expect(three, true);
+    }, skip: !kIsWeb);
 
-    test(
-      'snapshot in sync listeners in debug',
-      () async {
-        Completer<bool> completer = Completer<bool>();
-        Completer<bool> completer2 = Completer<bool>();
-        Completer<bool> completer3 = Completer<bool>();
-        firestore.snapshotsInSync().listen((snapshot) {
-          if (completer.isCompleted) {
-            return;
-          }
-          completer.complete(true);
-        });
+    test('snapshot in sync listeners in debug', () async {
+      Completer<bool> completer = Completer<bool>();
+      Completer<bool> completer2 = Completer<bool>();
+      Completer<bool> completer3 = Completer<bool>();
+      firestore.snapshotsInSync().listen((snapshot) {
+        if (completer.isCompleted) {
+          return;
+        }
+        completer.complete(true);
+      });
 
-        firestore.snapshotsInSync().listen((snapshot) {
-          if (completer2.isCompleted) {
-            return;
-          }
-          completer2.complete(true);
-        });
+      firestore.snapshotsInSync().listen((snapshot) {
+        if (completer2.isCompleted) {
+          return;
+        }
+        completer2.complete(true);
+      });
 
-        firestore.snapshotsInSync().listen((snapshot) {
-          if (completer3.isCompleted) {
-            return;
-          }
-          completer3.complete(true);
-        });
+      firestore.snapshotsInSync().listen((snapshot) {
+        if (completer3.isCompleted) {
+          return;
+        }
+        completer3.complete(true);
+      });
 
-        final one = await completer.future.timeout(_completerTimeout);
-        final two = await completer2.future.timeout(_completerTimeout);
-        final three = await completer3.future.timeout(_completerTimeout);
+      final one = await completer.future.timeout(_completerTimeout);
+      final two = await completer2.future.timeout(_completerTimeout);
+      final three = await completer3.future.timeout(_completerTimeout);
 
-        expect(one, true);
-        expect(two, true);
-        expect(three, true);
-      },
-      skip: !kIsWeb,
-    );
+      expect(one, true);
+      expect(two, true);
+      expect(three, true);
+    }, skip: !kIsWeb);
   });
 }

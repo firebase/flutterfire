@@ -36,7 +36,8 @@ class RemoteNotification {
       bodyLocKey: map['bodyLocKey'],
       android: map['android'] != null
           ? AndroidNotification.fromMap(
-              Map<String, dynamic>.from(map['android']))
+              Map<String, dynamic>.from(map['android']),
+            )
           : null,
       apple: map['apple'] != null
           ? AppleNotification.fromMap(Map<String, dynamic>.from(map['apple']))
@@ -215,7 +216,8 @@ class AppleNotification {
       sound: map['sound'] == null
           ? null
           : AppleNotificationSound.fromMap(
-              Map<String, dynamic>.from(map['sound'])),
+              Map<String, dynamic>.from(map['sound']),
+            ),
     );
   }
 
@@ -302,11 +304,7 @@ List<String> _toList(dynamic value) {
 
 /// Web specific properties of a [RemoteNotification].
 class WebNotification {
-  const WebNotification({
-    this.analyticsLabel,
-    this.image,
-    this.link,
-  });
+  const WebNotification({this.analyticsLabel, this.image, this.link});
 
   /// Constructs a [WebNotification] from a raw Map.
   factory WebNotification.fromMap(Map<String, dynamic> map) {

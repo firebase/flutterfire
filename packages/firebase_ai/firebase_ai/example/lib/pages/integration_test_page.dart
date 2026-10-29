@@ -64,11 +64,12 @@ class TestItem {
       FirebaseAI provider,
       TestLogger logger,
       String modelName,
-    ) run,
-  })  : name = name.contains(model) ? name : '$name ($model)',
-        run = ((provider, logger) => run(provider, logger, model)),
-        googleAIResult = TestResult.pending(),
-        agentPlatformResult = TestResult.pending();
+    )
+    run,
+  }) : name = name.contains(model) ? name : '$name ($model)',
+       run = ((provider, logger) => run(provider, logger, model)),
+       googleAIResult = TestResult.pending(),
+       agentPlatformResult = TestResult.pending();
 }
 
 class TestLogger {
@@ -176,7 +177,8 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
           final response = await model.generateContent([Content.text(prompt)]);
           logger.log('Response received: "${response.text}"');
           final responseText = response.text?.toLowerCase() ?? '';
-          final containsKnightTerms = responseText.contains('thou') ||
+          final containsKnightTerms =
+              responseText.contains('thou') ||
               responseText.contains('thee') ||
               responseText.contains('sir') ||
               responseText.contains('knight') ||
@@ -207,8 +209,9 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
         description:
             'Verifies stateful conversation preservation across turns via ChatSession.',
         run: (provider, logger, modelName) async {
-          logger
-              .log('Initializing model $modelName and starting ChatSession...');
+          logger.log(
+            'Initializing model $modelName and starting ChatSession...',
+          );
           final model = provider.generativeModel(model: modelName);
           final chat = model.startChat();
 
@@ -253,8 +256,9 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
             name: 'getSuperHeroPower',
             description: 'Returns the superpower of a given superhero by name.',
             parameters: {
-              'heroName':
-                  Schema.string(description: 'The name of the superhero.'),
+              'heroName': Schema.string(
+                description: 'The name of the superhero.',
+              ),
             },
             callable: (args) async {
               final hero = args['heroName'] as String?;
@@ -313,8 +317,9 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
             'getSuperHeroPower',
             'Returns the superpower of a given superhero by name.',
             parameters: {
-              'heroName':
-                  Schema.string(description: 'The name of the superhero.'),
+              'heroName': Schema.string(
+                description: 'The name of the superhero.',
+              ),
             },
           );
 
@@ -361,8 +366,9 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
           );
           final manualResponse = FunctionResponse(call.name, {'power': power});
 
-          logger
-              .log('Sending second request with history + FunctionResponse...');
+          logger.log(
+            'Sending second request with history + FunctionResponse...',
+          );
           final nextResponse = await model.generateContent([
             Content.text(prompt),
             response.candidates.first.content,
@@ -568,9 +574,7 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
         description:
             'Verifies extraction of thought logs and usage metadata with ThinkingConfig.',
         run: (provider, logger, modelName) async {
-          logger.log(
-            'Initializing model $modelName with ThinkingConfig...',
-          );
+          logger.log('Initializing model $modelName with ThinkingConfig...');
           final model = provider.generativeModel(
             model: modelName,
             generationConfig: GenerationConfig(
@@ -636,8 +640,9 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
           logger.log('Sending multimodal output prompt: "$prompt"');
           final response = await model.generateContent([Content.text(prompt)]);
 
-          final imageParts = response.inlineDataParts
-              .where((p) => p.mimeType.startsWith('image/'));
+          final imageParts = response.inlineDataParts.where(
+            (p) => p.mimeType.startsWith('image/'),
+          );
           logger.log('Response text: "${response.text}"');
           logger.log('Image parts returned: ${imageParts.length}');
 
@@ -678,11 +683,15 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
 
     setState(() {
       if (isAgentPlatform) {
-        item.agentPlatformResult =
-            TestResult(status: TestStatus.running, logs: 'Running...');
+        item.agentPlatformResult = TestResult(
+          status: TestStatus.running,
+          logs: 'Running...',
+        );
       } else {
-        item.googleAIResult =
-            TestResult(status: TestStatus.running, logs: 'Running...');
+        item.googleAIResult = TestResult(
+          status: TestStatus.running,
+          logs: 'Running...',
+        );
       }
     });
 
@@ -926,10 +935,12 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
 
   @override
   Widget build(BuildContext context) {
-    final googleAIResults =
-        _testCases.map((item) => item.googleAIResult).toList();
-    final vertexAIResults =
-        _testCases.map((item) => item.agentPlatformResult).toList();
+    final googleAIResults = _testCases
+        .map((item) => item.googleAIResult)
+        .toList();
+    final vertexAIResults = _testCases
+        .map((item) => item.agentPlatformResult)
+        .toList();
 
     return Scaffold(
       appBar: AppBar(
@@ -989,8 +1000,10 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
               itemBuilder: (context, index) {
                 final item = _testCases[index];
                 return Card(
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
                   child: ExpansionTile(
                     leading: CircleAvatar(
                       backgroundColor: Colors.grey.shade800,

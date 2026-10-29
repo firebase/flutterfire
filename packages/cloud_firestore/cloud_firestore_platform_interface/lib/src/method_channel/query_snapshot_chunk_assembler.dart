@@ -111,10 +111,7 @@ class QuerySnapshotChunkAssembler {
     }
   }
 
-  void _appendDocumentChanges(
-    Map<Object?, Object?> message,
-    int snapshotId,
-  ) {
+  void _appendDocumentChanges(Map<Object?, Object?> message, int snapshotId) {
     final active = _requireActive(snapshotId);
     final payload = message[_payloadKey];
     if (payload is! List<Object?>) {

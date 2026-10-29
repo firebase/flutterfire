@@ -45,9 +45,7 @@ abstract class FirebasePerformancePlatform extends PlatformInterface {
   }
 
   /// Create an instance with a [FirebaseApp] using an existing instance.
-  factory FirebasePerformancePlatform.instanceFor({
-    required FirebaseApp app,
-  }) {
+  factory FirebasePerformancePlatform.instanceFor({required FirebaseApp app}) {
     return FirebasePerformancePlatform.instance.delegateFor(app: app);
   }
 

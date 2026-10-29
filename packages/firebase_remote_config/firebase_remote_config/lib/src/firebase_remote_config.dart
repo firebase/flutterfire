@@ -11,11 +11,11 @@ part of '../firebase_remote_config.dart';
 // ignore: prefer_mixin
 class FirebaseRemoteConfig extends FirebasePlugin {
   FirebaseRemoteConfig._({required this.app})
-      : super(app.name, 'plugins.flutter.io/firebase_remote_config');
+    : super(app.name, 'plugins.flutter.io/firebase_remote_config');
 
   // Cached instances of [FirebaseRemoteConfig].
   static final Map<String, FirebaseRemoteConfig>
-      _firebaseRemoteConfigInstances = {};
+  _firebaseRemoteConfigInstances = {};
 
   /// Returns the underlying delegate implementation.
   ///

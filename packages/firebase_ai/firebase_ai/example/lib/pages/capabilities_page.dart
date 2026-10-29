@@ -96,17 +96,15 @@ class _CapabilitiesPageState extends State<CapabilitiesPage>
   }
 
   void _scrollDown(ScrollController controller) {
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) {
-        if (controller.hasClients) {
-          controller.animateTo(
-            controller.position.maxScrollExtent,
-            duration: const Duration(milliseconds: 750),
-            curve: Curves.easeOutCirc,
-          );
-        }
-      },
-    );
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (controller.hasClients) {
+        controller.animateTo(
+          controller.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 750),
+          curve: Curves.easeOutCirc,
+        );
+      }
+    });
   }
 
   void _showError(String message) {
@@ -115,9 +113,7 @@ class _CapabilitiesPageState extends State<CapabilitiesPage>
       builder: (context) {
         return AlertDialog(
           title: const Text('Something went wrong'),
-          content: SingleChildScrollView(
-            child: SelectableText(message),
-          ),
+          content: SingleChildScrollView(child: SelectableText(message)),
           actions: [
             TextButton(
               onPressed: () {
@@ -246,9 +242,7 @@ class _CapabilitiesPageState extends State<CapabilitiesPage>
         '${dir.path}/recording_${DateTime.now().millisecondsSinceEpoch}.wav';
 
     await record.start(
-      const RecordConfig(
-        encoder: AudioEncoder.wav,
-      ),
+      const RecordConfig(encoder: AudioEncoder.wav),
       path: filePath,
     );
   }
@@ -294,8 +288,9 @@ class _CapabilitiesPageState extends State<CapabilitiesPage>
       ]);
 
       setState(() {
-        _multimodalMessages
-            .add(MessageData(text: response.text, fromUser: false));
+        _multimodalMessages.add(
+          MessageData(text: response.text, fromUser: false),
+        );
         _multimodalLoading = false;
       });
 
@@ -314,8 +309,9 @@ class _CapabilitiesPageState extends State<CapabilitiesPage>
         _multimodalLoading = true;
       });
 
-      ByteData videoBytes =
-          await rootBundle.load('assets/videos/landscape.mp4');
+      ByteData videoBytes = await rootBundle.load(
+        'assets/videos/landscape.mp4',
+      );
 
       const promptText = 'Can you tell me what is in the video?';
 
@@ -323,16 +319,19 @@ class _CapabilitiesPageState extends State<CapabilitiesPage>
         _multimodalMessages.add(MessageData(text: promptText, fromUser: true));
       });
 
-      final videoPart =
-          InlineDataPart('video/mp4', videoBytes.buffer.asUint8List());
+      final videoPart = InlineDataPart(
+        'video/mp4',
+        videoBytes.buffer.asUint8List(),
+      );
 
       final response = await widget.model.generateContent([
         Content.multi([const TextPart(promptText), videoPart]),
       ]);
 
       setState(() {
-        _multimodalMessages
-            .add(MessageData(text: response.text, fromUser: false));
+        _multimodalMessages.add(
+          MessageData(text: response.text, fromUser: false),
+        );
         _multimodalLoading = false;
       });
 
@@ -351,8 +350,9 @@ class _CapabilitiesPageState extends State<CapabilitiesPage>
         _multimodalLoading = true;
       });
 
-      ByteData docBytes =
-          await rootBundle.load('assets/documents/gemini_summary.pdf');
+      ByteData docBytes = await rootBundle.load(
+        'assets/documents/gemini_summary.pdf',
+      );
 
       const promptText =
           'Write me a summary in one sentence what this document is about.';
@@ -361,16 +361,19 @@ class _CapabilitiesPageState extends State<CapabilitiesPage>
         _multimodalMessages.add(MessageData(text: promptText, fromUser: true));
       });
 
-      final pdfPart =
-          InlineDataPart('application/pdf', docBytes.buffer.asUint8List());
+      final pdfPart = InlineDataPart(
+        'application/pdf',
+        docBytes.buffer.asUint8List(),
+      );
 
       final response = await widget.model.generateContent([
         Content.multi([const TextPart(promptText), pdfPart]),
       ]);
 
       setState(() {
-        _multimodalMessages
-            .add(MessageData(text: response.text, fromUser: false));
+        _multimodalMessages.add(
+          MessageData(text: response.text, fromUser: false),
+        );
         _multimodalLoading = false;
       });
 
@@ -433,10 +436,7 @@ class _CapabilitiesPageState extends State<CapabilitiesPage>
                             await stopRecord();
                           }
                         },
-                  icon: Icon(
-                    Icons.mic,
-                    color: _recording ? Colors.red : null,
-                  ),
+                  icon: Icon(Icons.mic, color: _recording ? Colors.red : null),
                   label: Text(_recording ? 'Stop Rec' : 'Record Audio'),
                 ),
                 ElevatedButton.icon(
@@ -488,8 +488,9 @@ class _CapabilitiesPageState extends State<CapabilitiesPage>
           'characters': Schema.array(
             items: Schema.object(
               properties: {
-                'name':
-                    Schema.string(description: 'The name of the character.'),
+                'name': Schema.string(
+                  description: 'The name of the character.',
+                ),
                 'species': Schema.string(description: 'The animal species.'),
                 'age': Schema.integer(
                   description: 'The age of the character in years.',
@@ -543,10 +544,12 @@ class _CapabilitiesPageState extends State<CapabilitiesPage>
       if (response.text == null) {
         _showError('No response from API.');
       } else {
-        final text = const JsonEncoder.withIndent('  ')
-            .convert(json.decode(response.text!) as Object?);
-        _structuredMessages
-            .add(MessageData(text: '```json\n$text\n```', fromUser: false));
+        final text = const JsonEncoder.withIndent(
+          '  ',
+        ).convert(json.decode(response.text!) as Object?);
+        _structuredMessages.add(
+          MessageData(text: '```json\n$text\n```', fromUser: false),
+        );
         setState(() {
           _structuredLoading = false;
           _scrollDown(_structuredScrollController);
@@ -588,9 +591,7 @@ class _CapabilitiesPageState extends State<CapabilitiesPage>
       );
 
       final jsonSchema = JSONSchema.object(
-        defs: {
-          'text_widget': textWidgetSchema,
-        },
+        defs: {'text_widget': textWidgetSchema},
         properties: {
           'type': JSONSchema.enumString(enumValues: ['Column']),
           'children': JSONSchema.array(
@@ -619,10 +620,12 @@ class _CapabilitiesPageState extends State<CapabilitiesPage>
         ),
       );
 
-      var text = const JsonEncoder.withIndent('  ')
-          .convert(json.decode(response.text ?? '') as Object?);
-      _structuredMessages
-          .add(MessageData(text: '```json\n$text\n```', fromUser: false));
+      var text = const JsonEncoder.withIndent(
+        '  ',
+      ).convert(json.decode(response.text ?? '') as Object?);
+      _structuredMessages.add(
+        MessageData(text: '```json\n$text\n```', fromUser: false),
+      );
 
       setState(() {
         _structuredLoading = false;
@@ -692,10 +695,7 @@ class _CapabilitiesPageState extends State<CapabilitiesPage>
       // 1. Text only
       const prompt = 'tell a short story';
       _tokensMessages.add(
-        MessageData(
-          text: 'Count tokens for text: "$prompt"',
-          fromUser: true,
-        ),
+        MessageData(text: 'Count tokens for text: "$prompt"', fromUser: true),
       );
 
       final content = Content.text(prompt);
@@ -716,16 +716,18 @@ class _CapabilitiesPageState extends State<CapabilitiesPage>
         ),
       );
       ByteData catBytes = await rootBundle.load('assets/images/cat.jpg');
-      ByteData docBytes =
-          await rootBundle.load('assets/documents/gemini_summary.pdf');
+      ByteData docBytes = await rootBundle.load(
+        'assets/documents/gemini_summary.pdf',
+      );
       final multimodalContent = Content.multi([
         const TextPart('Describe this cat and summarize this document.'),
         InlineDataPart('image/jpeg', catBytes.buffer.asUint8List()),
         InlineDataPart('application/pdf', docBytes.buffer.asUint8List()),
       ]);
 
-      final multimodalTokenResponse =
-          await widget.model.countTokens([multimodalContent]);
+      final multimodalTokenResponse = await widget.model.countTokens([
+        multimodalContent,
+      ]);
       final promptDetails = multimodalTokenResponse.promptTokensDetails
           ?.map((d) => '${d.modality.name}: ${d.tokenCount}')
           .join(', ');
@@ -773,8 +775,10 @@ class _CapabilitiesPageState extends State<CapabilitiesPage>
       final response = await widget.model.generateContent(
         content,
         generationConfig: GenerationConfig(
-          thinkingConfig:
-              ThinkingConfig.withThinkingBudget(2048, includeThoughts: true),
+          thinkingConfig: ThinkingConfig.withThinkingBudget(
+            2048,
+            includeThoughts: true,
+          ),
         ),
       );
 
@@ -787,11 +791,7 @@ class _CapabilitiesPageState extends State<CapabilitiesPage>
 
       if (thoughts != null && thoughts.isNotEmpty) {
         _tokensMessages.add(
-          MessageData(
-            text: thoughts,
-            fromUser: false,
-            isThought: true,
-          ),
+          MessageData(text: thoughts, fromUser: false, isThought: true),
         );
       }
 
@@ -805,7 +805,8 @@ class _CapabilitiesPageState extends State<CapabilitiesPage>
             ?.map((d) => '${d.modality.name}: ${d.tokenCount}')
             .join(', ');
 
-        final message = '''
+        final message =
+            '''
 Usage Metadata:
 - promptTokenCount: ${usageMetadata.promptTokenCount} (Details: $promptDetails)
 - candidatesTokenCount: ${usageMetadata.candidatesTokenCount} (Details: $candidateDetails)
@@ -813,18 +814,10 @@ Usage Metadata:
 - thoughtsTokenCount: ${usageMetadata.thoughtsTokenCount}
 - cachedContentTokenCount: ${usageMetadata.cachedContentTokenCount}
 ''';
-        _tokensMessages.add(
-          MessageData(
-            text: message,
-            fromUser: false,
-          ),
-        );
+        _tokensMessages.add(MessageData(text: message, fromUser: false));
       } else {
         _tokensMessages.add(
-          MessageData(
-            text: 'No usage metadata available.',
-            fromUser: false,
-          ),
+          MessageData(text: 'No usage metadata available.', fromUser: false),
         );
       }
     } catch (e) {

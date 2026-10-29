@@ -22,8 +22,9 @@ void runTimestampTests() {
     }
 
     test('sets a $Timestamp & returns one', () async {
-      DocumentReference<Map<String, dynamic>> doc =
-          await initializeTest('timestamp');
+      DocumentReference<Map<String, dynamic>> doc = await initializeTest(
+        'timestamp',
+      );
       DateTime date = DateTime.utc(3000);
 
       await doc.set({'foo': Timestamp.fromDate(date)});
@@ -37,23 +38,26 @@ void runTimestampTests() {
       );
     });
 
-    test('implicitly converts a DateTime without losing microseconds',
-        () async {
-      final doc = await initializeTest('datetime-microseconds');
-      final date = DateTime.utc(2023, 11, 1, 0, 0, 0, 999, 999);
+    test(
+      'implicitly converts a DateTime without losing microseconds',
+      () async {
+        final doc = await initializeTest('datetime-microseconds');
+        final date = DateTime.utc(2023, 11, 1, 0, 0, 0, 999, 999);
 
-      await doc.set(<String, Object?>{'foo': date});
+        await doc.set(<String, Object?>{'foo': date});
 
-      final snapshot = await doc.get();
-      final timestamp = snapshot.data()!['foo'] as Timestamp;
+        final snapshot = await doc.get();
+        final timestamp = snapshot.data()!['foo'] as Timestamp;
 
-      expect(timestamp, Timestamp.fromDate(date));
-      expect(timestamp.microsecondsSinceEpoch, date.microsecondsSinceEpoch);
-    });
+        expect(timestamp, Timestamp.fromDate(date));
+        expect(timestamp.microsecondsSinceEpoch, date.microsecondsSinceEpoch);
+      },
+    );
 
     test('updates a $Timestamp & returns', () async {
-      DocumentReference<Map<String, dynamic>> doc =
-          await initializeTest('geo-point-update');
+      DocumentReference<Map<String, dynamic>> doc = await initializeTest(
+        'geo-point-update',
+      );
       DateTime date = DateTime.utc(3000, 01, 02);
 
       await doc.set({'foo': DateTime.utc(3000)});
@@ -69,8 +73,9 @@ void runTimestampTests() {
     });
 
     test('set pre-1970 $Timestamp and return', () async {
-      DocumentReference<Map<String, dynamic>> doc =
-          await initializeTest('timestamp');
+      DocumentReference<Map<String, dynamic>> doc = await initializeTest(
+        'timestamp',
+      );
       final date = DateTime(1969, 06, 22, 0, 0, 0, 123);
       final localTimestamp = Timestamp.fromDate(date);
 
@@ -79,10 +84,7 @@ void runTimestampTests() {
       DocumentSnapshot<Map<String, dynamic>> snapshot = await doc.get();
       Timestamp retievedTimestamp = snapshot.data()!['foo'];
       expect(retievedTimestamp, isA<Timestamp>());
-      expect(
-        retievedTimestamp,
-        equals(localTimestamp),
-      );
+      expect(retievedTimestamp, equals(localTimestamp));
     });
   });
 }

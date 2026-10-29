@@ -41,10 +41,8 @@ void main() {
 
   test('converts PhoneMultiFactorInfo and parses RFC 1123 enrollmentTime', () {
     final interopInfo = multi_factor_interop.fromJsMultiFactorInfo(
-      buildJsFactorInfo(
-        factorId: 'phone',
-        phoneNumber: '+16505550101',
-      ) as auth_interop.MultiFactorInfoJsImpl,
+      buildJsFactorInfo(factorId: 'phone', phoneNumber: '+16505550101')
+          as auth_interop.MultiFactorInfoJsImpl,
     );
 
     final result = fromInteropMultiFactorInfo(interopInfo);
@@ -85,21 +83,23 @@ void main() {
     );
   });
 
-  test('converts generic MultiFactorInfo and parses RFC 1123 enrollmentTime',
-      () {
-    final interopInfo = multi_factor_interop.fromJsMultiFactorInfo(
-      buildJsFactorInfo(factorId: 'custom', displayName: null)
-          as auth_interop.MultiFactorInfoJsImpl,
-    );
+  test(
+    'converts generic MultiFactorInfo and parses RFC 1123 enrollmentTime',
+    () {
+      final interopInfo = multi_factor_interop.fromJsMultiFactorInfo(
+        buildJsFactorInfo(factorId: 'custom', displayName: null)
+            as auth_interop.MultiFactorInfoJsImpl,
+      );
 
-    final result = fromInteropMultiFactorInfo(interopInfo);
+      final result = fromInteropMultiFactorInfo(interopInfo);
 
-    expect(result, isA<MultiFactorInfo>());
-    expect(result, isNot(isA<PhoneMultiFactorInfo>()));
-    expect(result, isNot(isA<TotpMultiFactorInfo>()));
-    expect(result.uid, 'factor-uid-1');
-    expect(result.factorId, 'custom');
-    expect(result.displayName, isNull);
-    expect(result.enrollmentTimestamp, expectedTimestamp);
-  });
+      expect(result, isA<MultiFactorInfo>());
+      expect(result, isNot(isA<PhoneMultiFactorInfo>()));
+      expect(result, isNot(isA<TotpMultiFactorInfo>()));
+      expect(result.uid, 'factor-uid-1');
+      expect(result.factorId, 'custom');
+      expect(result.displayName, isNull);
+      expect(result.enrollmentTimestamp, expectedTimestamp);
+    },
+  );
 }

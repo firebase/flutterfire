@@ -111,9 +111,9 @@ class VideoInput extends ChangeNotifier {
   Stream<Uint8List> startStreamingImages() {
     final bool isInitialized =
         !kIsWeb && defaultTargetPlatform == TargetPlatform.macOS
-            ? _cameraController != null
-            : (_cameraController as CameraController?)?.value.isInitialized ??
-                false;
+        ? _cameraController != null
+        : (_cameraController as CameraController?)?.value.isInitialized ??
+              false;
 
     if (_cameraController == null || !isInitialized) {
       throw ErrorSummary('Unable to start image stream');
@@ -124,11 +124,11 @@ class VideoInput extends ChangeNotifier {
     _captureTimer = Timer.periodic(
       const Duration(seconds: 1), // Capture images at 1 frame per second
       (timer) async {
-        final bool currentIsInitialized = !kIsWeb &&
-                defaultTargetPlatform == TargetPlatform.macOS
+        final bool currentIsInitialized =
+            !kIsWeb && defaultTargetPlatform == TargetPlatform.macOS
             ? _cameraController != null
             : (_cameraController as CameraController?)?.value.isInitialized ??
-                false;
+                  false;
 
         if (_cameraController == null ||
             !currentIsInitialized ||

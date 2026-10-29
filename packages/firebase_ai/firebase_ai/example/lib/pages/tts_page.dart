@@ -81,26 +81,31 @@ class _TTSPageState extends State<TTSPage> {
   // Single Speaker Controllers
   late final TextEditingController _singlePromptController =
       TextEditingController(text: _selectedModel.defaultSinglePrompt);
-  final TextEditingController _singleStyleController =
-      TextEditingController(text: 'cheerful');
+  final TextEditingController _singleStyleController = TextEditingController(
+    text: 'cheerful',
+  );
   String _selectedVoice = 'Kore';
 
   // Multi Speaker Controllers
-  final TextEditingController _speaker1NameController =
-      TextEditingController(text: 'Joe');
+  final TextEditingController _speaker1NameController = TextEditingController(
+    text: 'Joe',
+  );
   final TextEditingController _speaker1LineController = TextEditingController(
     text: "How's it going today Jane?",
   );
-  final TextEditingController _speaker1StyleController =
-      TextEditingController(text: 'curious');
+  final TextEditingController _speaker1StyleController = TextEditingController(
+    text: 'curious',
+  );
   String _speaker1Voice = 'Kore';
-  final TextEditingController _speaker2NameController =
-      TextEditingController(text: 'Jane');
+  final TextEditingController _speaker2NameController = TextEditingController(
+    text: 'Jane',
+  );
   final TextEditingController _speaker2LineController = TextEditingController(
     text: 'Not too bad, how about you?',
   );
-  final TextEditingController _speaker2StyleController =
-      TextEditingController(text: 'cheerful');
+  final TextEditingController _speaker2StyleController = TextEditingController(
+    text: 'cheerful',
+  );
   String _speaker2Voice = 'Puck';
 
   final List<String> _availableVoices = [
@@ -143,9 +148,7 @@ class _TTSPageState extends State<TTSPage> {
       builder: (context) {
         return AlertDialog(
           title: const Text('Something went wrong'),
-          content: SingleChildScrollView(
-            child: SelectableText(message),
-          ),
+          content: SingleChildScrollView(child: SelectableText(message)),
           actions: [
             TextButton(
               onPressed: () {
@@ -219,17 +222,17 @@ class _TTSPageState extends State<TTSPage> {
 
   /// Builds the multi-speaker prompt as one [TextPart] per line
   Content _taggedMultiSpeakerPrompt() => Content.multi([
-        _speakerLine(
-          speaker: _speaker1NameController.text,
-          line: _speaker1LineController.text,
-          style: _speaker1StyleController.text,
-        ),
-        _speakerLine(
-          speaker: _speaker2NameController.text,
-          line: _speaker2LineController.text,
-          style: _speaker2StyleController.text,
-        ),
-      ]);
+    _speakerLine(
+      speaker: _speaker1NameController.text,
+      line: _speaker1LineController.text,
+      style: _speaker1StyleController.text,
+    ),
+    _speakerLine(
+      speaker: _speaker2NameController.text,
+      line: _speaker2LineController.text,
+      style: _speaker2StyleController.text,
+    ),
+  ]);
 
   TextPart _speakerLine({
     required String speaker,
@@ -333,8 +336,10 @@ class _TTSPageState extends State<TTSPage> {
 
       // Play audio and start visualizer. AudioOutput picks how to play it from
       // the MIME type: raw PCM, or a complete file such as `audio/wav`.
-      final duration =
-          await _audioOutput.playClip(audioPart.bytes, audioPart.mimeType);
+      final duration = await _audioOutput.playClip(
+        audioPart.bytes,
+        audioPart.mimeType,
+      );
       if (duration == null) {
         throw Exception('Audio output is not initialized.');
       }
@@ -452,10 +457,7 @@ class _TTSPageState extends State<TTSPage> {
             border: OutlineInputBorder(),
           ),
           items: _availableVoices.map((voice) {
-            return DropdownMenuItem(
-              value: voice,
-              child: Text(voice),
-            );
+            return DropdownMenuItem(value: voice, child: Text(voice));
           }).toList(),
           onChanged: (value) {
             if (value != null) {
@@ -483,10 +485,7 @@ class _TTSPageState extends State<TTSPage> {
       margin: const EdgeInsets.symmetric(vertical: 8),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
-        side: BorderSide(
-          color: accentColor.withAlpha(80),
-          width: 1.5,
-        ),
+        side: BorderSide(color: accentColor.withAlpha(80), width: 1.5),
       ),
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -532,10 +531,7 @@ class _TTSPageState extends State<TTSPage> {
                       border: OutlineInputBorder(),
                     ),
                     items: _availableVoices.map((voice) {
-                      return DropdownMenuItem(
-                        value: voice,
-                        child: Text(voice),
-                      );
+                      return DropdownMenuItem(value: voice, child: Text(voice));
                     }).toList(),
                     onChanged: onVoiceChanged,
                   ),

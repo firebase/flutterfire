@@ -25,10 +25,7 @@ enum InAppMessageType {
 /// Styled text from a campaign.
 class InAppMessageText {
   /// Creates an [InAppMessageText].
-  const InAppMessageText({
-    required this.text,
-    this.hexColor,
-  });
+  const InAppMessageText({required this.text, this.hexColor});
 
   /// Visible copy.
   final String text;
@@ -87,10 +84,10 @@ class InAppMessage {
     required Future<void> Function(InAppMessageAction action) onClick,
     required Future<void> Function(InAppMessagingDismissType type) onDismiss,
     required Future<void> Function(String reason) onError,
-  })  : _onImpress = onImpress,
-        _onClick = onClick,
-        _onDismiss = onDismiss,
-        _onError = onError;
+  }) : _onImpress = onImpress,
+       _onClick = onClick,
+       _onDismiss = onDismiss,
+       _onError = onError;
 
   final Future<void> Function() _onImpress;
   final Future<void> Function(InAppMessageAction action) _onClick;

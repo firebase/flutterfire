@@ -19,8 +19,11 @@ external StorageJsImpl getStorage([AppJsImpl? app, JSString? bucketUrl]);
 @JS()
 @staticInterop
 external void connectStorageEmulator(
-    StorageJsImpl storage, JSString host, JSNumber port,
-    [EmulatorOptions? options]);
+  StorageJsImpl storage,
+  JSString host,
+  JSNumber port, [
+  EmulatorOptions? options,
+]);
 
 @JS()
 @staticInterop
@@ -28,13 +31,17 @@ external JSPromise /* void */ deleteObject(ReferenceJsImpl ref);
 
 @JS()
 @staticInterop
-external JSPromise<JSString> getBlob(ReferenceJsImpl ref,
-    [JSNumber? maxDownloadSizeBytes]);
+external JSPromise<JSString> getBlob(
+  ReferenceJsImpl ref, [
+  JSNumber? maxDownloadSizeBytes,
+]);
 
 @JS()
 @staticInterop
-external JSPromise<JSArray<JSString>> getBytes(ReferenceJsImpl ref,
-    [JSNumber? maxDownloadSizeBytes]);
+external JSPromise<JSArray<JSString>> getBytes(
+  ReferenceJsImpl ref, [
+  JSNumber? maxDownloadSizeBytes,
+]);
 
 @JS()
 @staticInterop
@@ -46,8 +53,10 @@ external JSPromise<FullMetadataJsImpl> getMetadata(ReferenceJsImpl ref);
 
 @JS()
 @staticInterop
-external JSPromise<ListResultJsImpl> list(ReferenceJsImpl ref,
-    [ListOptionsJsImpl? listOptions]);
+external JSPromise<ListResultJsImpl> list(
+  ReferenceJsImpl ref, [
+  ListOptionsJsImpl? listOptions,
+]);
 
 @JS()
 @staticInterop
@@ -62,13 +71,17 @@ external ReferenceJsImpl ref(JSAny storageOrRef, [JSString? urlOrPath]);
 @JS()
 @staticInterop
 external JSPromise<FullMetadataJsImpl> updateMetadata(
-    ReferenceJsImpl ref, SettableMetadataJsImpl settableMetadata);
+  ReferenceJsImpl ref,
+  SettableMetadataJsImpl settableMetadata,
+);
 
 @JS()
 @staticInterop
 external UploadTaskJsImpl uploadBytesResumable(
-    ReferenceJsImpl ref, JSAny /* Blob | Uint8Array | ArrayBuffer */ data,
-    [UploadMetadataJsImpl? metadata]);
+  ReferenceJsImpl ref,
+  JSAny /* Blob | Uint8Array | ArrayBuffer */ data, [
+  UploadMetadataJsImpl? metadata,
+]);
 
 @JS()
 @staticInterop
@@ -145,14 +158,15 @@ extension type FullMetadataJsImpl._(JSObject _)
 @JS('UploadMetadata')
 extension type UploadMetadataJsImpl._(JSObject _)
     implements SettableMetadataJsImpl, JSObject {
-  external factory UploadMetadataJsImpl(
-      {JSString? md5Hash,
-      JSString? cacheControl,
-      JSString? contentDisposition,
-      JSString? contentEncoding,
-      JSString? contentLanguage,
-      JSString? contentType,
-      JSAny? customMetadata});
+  external factory UploadMetadataJsImpl({
+    JSString? md5Hash,
+    JSString? cacheControl,
+    JSString? contentDisposition,
+    JSString? contentEncoding,
+    JSString? contentLanguage,
+    JSString? contentType,
+    JSAny? customMetadata,
+  });
 
   external JSString? get md5Hash;
   external set md5Hash(JSString? s);
@@ -162,12 +176,18 @@ extension type UploadTaskJsImpl._(JSObject _) implements JSObject {
   external UploadTaskSnapshotJsImpl get snapshot;
   external set snapshot(UploadTaskSnapshotJsImpl t);
   external JSBoolean cancel();
-  external JSFunction on(JSString event,
-      [JSAny nextOrObserver, JSFunction? error, JSFunction? complete]);
+  external JSFunction on(
+    JSString event, [
+    JSAny nextOrObserver,
+    JSFunction? error,
+    JSFunction? complete,
+  ]);
   external JSBoolean pause();
   external JSBoolean resume();
-  external JSPromise /* void */ then(
-      [JSFunction? onResolve, JSFunction? onReject]);
+  external JSPromise /* void */ then([
+    JSFunction? onResolve,
+    JSFunction? onReject,
+  ]);
 }
 
 extension type UploadTaskSnapshotJsImpl._(JSObject _) implements JSObject {
@@ -181,13 +201,14 @@ extension type UploadTaskSnapshotJsImpl._(JSObject _) implements JSObject {
 
 @JS('SettableMetadata')
 extension type SettableMetadataJsImpl._(JSObject _) implements JSObject {
-  external factory SettableMetadataJsImpl(
-      {JSString? cacheControl,
-      JSString? contentDisposition,
-      JSString? contentEncoding,
-      JSString? contentLanguage,
-      JSString? contentType,
-      JSAny? customMetadata});
+  external factory SettableMetadataJsImpl({
+    JSString? cacheControl,
+    JSString? contentDisposition,
+    JSString? contentEncoding,
+    JSString? contentLanguage,
+    JSString? contentType,
+    JSAny? customMetadata,
+  });
 
   external JSString? get cacheControl;
   external set cacheControl(JSString? s);

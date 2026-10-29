@@ -16,10 +16,8 @@ import 'package:pigeon/pigeon.dart';
       package: 'io.flutter.plugins.firebase.firestore',
       className: 'GeneratedAndroidFirebaseFirestore',
     ),
-    objcHeaderOut:
-        '../cloud_firestore/ios/cloud_firestore/Sources/cloud_firestore/include/cloud_firestore/Public/FirestoreMessages.g.h',
-    objcSourceOut:
-        '../cloud_firestore/ios/cloud_firestore/Sources/cloud_firestore/FirestoreMessages.g.m',
+    swiftOut:
+        '../cloud_firestore/ios/cloud_firestore/Sources/cloud_firestore/FirestoreMessages.g.swift',
     cppHeaderOut: '../cloud_firestore/windows/messages.g.h',
     cppSourceOut: '../cloud_firestore/windows/messages.g.cpp',
     cppOptions: CppOptions(namespace: 'cloud_firestore_windows'),
@@ -200,7 +198,7 @@ enum AggregateSource {
 enum PersistenceCacheIndexManagerRequest {
   enableIndexAutoCreation,
   disableIndexAutoCreation,
-  deleteAllIndexes
+  deleteAllIndexes,
 }
 
 class InternalGetOptions {
@@ -213,10 +211,7 @@ class InternalGetOptions {
   final ServerTimestampBehavior serverTimestampBehavior;
 }
 
-enum InternalTransactionResult {
-  success,
-  failure,
-}
+enum InternalTransactionResult { success, failure }
 
 enum InternalTransactionType {
   get,
@@ -289,17 +284,10 @@ class InternalQueryParameters {
   final Map<String?, Object?>? filters;
 }
 
-enum AggregateType {
-  count,
-  sum,
-  average,
-}
+enum AggregateType { count, sum, average }
 
 class AggregateQuery {
-  const AggregateQuery({
-    required this.type,
-    required this.field,
-  });
+  const AggregateQuery({required this.type, required this.field});
 
   final AggregateType type;
   final String? field;
@@ -320,10 +308,7 @@ class AggregateQueryResponse {
 @HostApi(dartHostTestHandler: 'TestFirebaseFirestoreHostApi')
 abstract class FirebaseFirestoreHostApi {
   @async
-  String loadBundle(
-    FirestorePigeonFirebaseApp app,
-    Uint8List bundle,
-  );
+  String loadBundle(FirestorePigeonFirebaseApp app, Uint8List bundle);
 
   @async
   InternalQuerySnapshot namedQueryGet(
@@ -333,29 +318,19 @@ abstract class FirebaseFirestoreHostApi {
   );
 
   @async
-  void clearPersistence(
-    FirestorePigeonFirebaseApp app,
-  );
+  void clearPersistence(FirestorePigeonFirebaseApp app);
 
   @async
-  void disableNetwork(
-    FirestorePigeonFirebaseApp app,
-  );
+  void disableNetwork(FirestorePigeonFirebaseApp app);
 
   @async
-  void enableNetwork(
-    FirestorePigeonFirebaseApp app,
-  );
+  void enableNetwork(FirestorePigeonFirebaseApp app);
 
   @async
-  void terminate(
-    FirestorePigeonFirebaseApp app,
-  );
+  void terminate(FirestorePigeonFirebaseApp app);
 
   @async
-  void waitForPendingWrites(
-    FirestorePigeonFirebaseApp app,
-  );
+  void waitForPendingWrites(FirestorePigeonFirebaseApp app);
 
   @async
   void setIndexConfiguration(
@@ -364,14 +339,10 @@ abstract class FirebaseFirestoreHostApi {
   );
 
   @async
-  void setLoggingEnabled(
-    bool loggingEnabled,
-  );
+  void setLoggingEnabled(bool loggingEnabled);
 
   @async
-  String snapshotsInSyncSetup(
-    FirestorePigeonFirebaseApp app,
-  );
+  String snapshotsInSyncSetup(FirestorePigeonFirebaseApp app);
 
   @async
   String transactionCreate(

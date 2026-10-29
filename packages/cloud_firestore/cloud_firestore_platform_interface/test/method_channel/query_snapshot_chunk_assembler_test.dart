@@ -97,10 +97,9 @@ void main() {
 
       expect(
         () => assembler.add(
-          querySnapshotDocumentChunk(
-            5,
-            <Object?>[_document('projects/p/assets/a', 1)],
-          ),
+          querySnapshotDocumentChunk(5, <Object?>[
+            _document('projects/p/assets/a', 1),
+          ]),
         ),
         throwsStateError,
       );
@@ -117,16 +116,12 @@ void main() {
         ),
       );
       assembler.add(
-        querySnapshotDocumentChunk(
-          9,
-          <Object?>[_document('projects/p/assets/a', 1)],
-        ),
+        querySnapshotDocumentChunk(9, <Object?>[
+          _document('projects/p/assets/a', 1),
+        ]),
       );
 
-      expect(
-        () => assembler.add(querySnapshotChunkEnd(9)),
-        throwsStateError,
-      );
+      expect(() => assembler.add(querySnapshotChunkEnd(9)), throwsStateError);
     });
 
     test('reset abandons an interrupted snapshot', () {

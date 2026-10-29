@@ -37,8 +37,7 @@ class _MockFirebaseFirestoreHostApi extends Mock
     DocumentReferenceRequest parameters,
     bool includeMetadataChanges,
     ListenSource source,
-  ) =>
-      _nextSnapshotObserverId();
+  ) => _nextSnapshotObserverId();
 
   @override
   Future<String> snapshotsInSyncSetup(FirestorePigeonFirebaseApp app) =>
@@ -50,8 +49,10 @@ class _MockFirebaseFirestoreHostApi extends Mock
     String name,
     InternalGetOptions options,
   ) async {
-    final metadata =
-        InternalSnapshotMetadata(hasPendingWrites: false, isFromCache: true);
+    final metadata = InternalSnapshotMetadata(
+      hasPendingWrites: false,
+      isFromCache: true,
+    );
     return InternalQuerySnapshot(
       documents: [
         InternalDocumentSnapshot(
@@ -74,8 +75,7 @@ class _MockFirebaseFirestoreHostApi extends Mock
     InternalGetOptions options,
     bool includeMetadataChanges,
     ListenSource source,
-  ) =>
-      _nextSnapshotObserverId();
+  ) => _nextSnapshotObserverId();
 
   @override
   Future<String> transactionCreate(
@@ -143,56 +143,54 @@ void main() {
     messenger.setMockMessageHandler(channelName, null);
   });
 
-  test(
-    'does not complete the transaction future twice when native reports an '
-    'error while storing a failure',
-    () async {
-      final firestore = MethodChannelFirebaseFirestore(
-        app: app,
-        databaseId: '(default)',
-      );
+  test('does not complete the transaction future twice when native reports an '
+      'error while storing a failure', () async {
+    final firestore = MethodChannelFirebaseFirestore(
+      app: app,
+      databaseId: '(default)',
+    );
 
-      final transactionFuture = firestore.runTransaction<void>(
-        (_) => throw StateError('handler failed'),
-      );
+    final transactionFuture = firestore.runTransaction<void>(
+      (_) => throw StateError('handler failed'),
+    );
 
-      await eventChannelListened.future;
-      unawaited(
-        messenger.handlePlatformMessage(
-          channelName,
-          codec.encodeSuccessEnvelope(<String, Object?>{
-            'appName': 'test-app',
-          }),
-          (_) {},
+    await eventChannelListened.future;
+    unawaited(
+      messenger.handlePlatformMessage(
+        channelName,
+        codec.encodeSuccessEnvelope(<String, Object?>{'appName': 'test-app'}),
+        (_) {},
+      ),
+    );
+    await hostApi.storeResultCalled.future;
+
+    unawaited(
+      messenger.handlePlatformMessage(
+        channelName,
+        codec.encodeSuccessEnvelope(<String, Object?>{
+          'error': <String, Object?>{
+            'code': 'deadline-exceeded',
+            'message': 'Transaction timed out',
+          },
+        }),
+        (_) {},
+      ),
+    );
+
+    await expectLater(
+      transactionFuture,
+      throwsA(
+        isA<FirebaseException>().having(
+          (error) => error.code,
+          'code',
+          'deadline-exceeded',
         ),
-      );
-      await hostApi.storeResultCalled.future;
+      ),
+    );
 
-      unawaited(
-        messenger.handlePlatformMessage(
-          channelName,
-          codec.encodeSuccessEnvelope(<String, Object?>{
-            'error': <String, Object?>{
-              'code': 'deadline-exceeded',
-              'message': 'Transaction timed out',
-            },
-          }),
-          (_) {},
-        ),
-      );
-
-      await expectLater(
-        transactionFuture,
-        throwsA(
-          isA<FirebaseException>()
-              .having((error) => error.code, 'code', 'deadline-exceeded'),
-        ),
-      );
-
-      hostApi.releaseStoreResult.complete();
-      await Future<void>.delayed(Duration.zero);
-    },
-  );
+    hostApi.releaseStoreResult.complete();
+    await Future<void>.delayed(Duration.zero);
+  });
 
   group('snapshot listener cancelled while it registers', () {
     const observerId = 'observer-id';
@@ -234,20 +232,22 @@ void main() {
       );
     });
 
-    test('DocumentReference.snapshots() does not attach a native listener',
-        () async {
-      await expectNoNativeListen(
-        firestore.doc('foo/bar').snapshots(
-              listenSource: ListenSource.defaultSource,
-            ),
-      );
-    });
+    test(
+      'DocumentReference.snapshots() does not attach a native listener',
+      () async {
+        await expectNoNativeListen(
+          firestore
+              .doc('foo/bar')
+              .snapshots(listenSource: ListenSource.defaultSource),
+        );
+      },
+    );
 
     test('Query.snapshots() does not attach a native listener', () async {
       await expectNoNativeListen(
-        firestore.collection('foo').snapshots(
-              listenSource: ListenSource.defaultSource,
-            ),
+        firestore
+            .collection('foo')
+            .snapshots(listenSource: ListenSource.defaultSource),
       );
     });
 
@@ -264,161 +264,150 @@ void main() {
       expect(eventChannelCalls, <String>['listen', 'cancel']);
     });
 
-    test('two listeners on the same stream share one native listener',
-        () async {
-      final stream = firestore
-          .doc('foo/bar')
-          .snapshots(listenSource: ListenSource.defaultSource);
-      final first = stream.listen((_) {});
-      final second = stream.listen((_) {});
-      hostApi.snapshotObserverId.complete(observerId);
-      await pumpEventQueue();
-      expect(eventChannelCalls, <String>['listen']);
-      await first.cancel();
-      await pumpEventQueue();
-      expect(eventChannelCalls, <String>['listen']);
-      await second.cancel();
-      await pumpEventQueue();
-      expect(eventChannelCalls, <String>['listen', 'cancel']);
-    });
-
     test(
-      're-listen while the first pigeon call is still pending attaches only '
-      'the second listener',
+      'two listeners on the same stream share one native listener',
       () async {
-        const firstObserverId = 'observer-id-1';
-        const secondObserverId = 'observer-id-2';
-
-        final firstObserver = Completer<String>();
-        final secondObserver = Completer<String>();
-        hostApi.queuedSnapshotObserverIds
-          ..add(firstObserver)
-          ..add(secondObserver);
-
-        final relistenChannels = <String, List<String>>{
-          'plugins.flutter.io/firebase_firestore/document/$firstObserverId':
-              <String>[],
-          'plugins.flutter.io/firebase_firestore/document/$secondObserverId':
-              <String>[],
-        };
-        relistenChannels.forEach((channel, calls) {
-          messenger.setMockMessageHandler(channel, (ByteData? message) async {
-            calls.add(codec.decodeMethodCall(message).method);
-            return codec.encodeSuccessEnvelope(null);
-          });
-        });
-        addTearDown(() {
-          for (final channel in relistenChannels.keys) {
-            messenger.setMockMessageHandler(channel, null);
-          }
-        });
-
         final stream = firestore
             .doc('foo/bar')
             .snapshots(listenSource: ListenSource.defaultSource);
-
-        await stream.listen((_) {}).cancel();
-        final secondSubscription = stream.listen((_) {});
-
-        firstObserver.complete(firstObserverId);
+        final first = stream.listen((_) {});
+        final second = stream.listen((_) {});
+        hostApi.snapshotObserverId.complete(observerId);
         await pumpEventQueue();
-        secondObserver.complete(secondObserverId);
+        expect(eventChannelCalls, <String>['listen']);
+        await first.cancel();
         await pumpEventQueue();
-
-        expect(
-          relistenChannels[
-              'plugins.flutter.io/firebase_firestore/document/$firstObserverId'],
-          isEmpty,
-        );
-        expect(
-          relistenChannels[
-              'plugins.flutter.io/firebase_firestore/document/$secondObserverId'],
-          <String>['listen'],
-        );
-
-        await secondSubscription.cancel();
+        expect(eventChannelCalls, <String>['listen']);
+        await second.cancel();
+        await pumpEventQueue();
+        expect(eventChannelCalls, <String>['listen', 'cancel']);
       },
     );
 
-    test(
-      'query re-listen while the first pigeon call is still pending attaches only '
-      'the second listener',
-      () async {
-        const firstObserverId = 'observer-id-1';
-        const secondObserverId = 'observer-id-2';
+    test('re-listen while the first pigeon call is still pending attaches only '
+        'the second listener', () async {
+      const firstObserverId = 'observer-id-1';
+      const secondObserverId = 'observer-id-2';
 
-        final firstObserver = Completer<String>();
-        final secondObserver = Completer<String>();
-        hostApi.queuedSnapshotObserverIds
-          ..add(firstObserver)
-          ..add(secondObserver);
+      final firstObserver = Completer<String>();
+      final secondObserver = Completer<String>();
+      hostApi.queuedSnapshotObserverIds
+        ..add(firstObserver)
+        ..add(secondObserver);
 
-        final relistenChannels = <String, List<String>>{
-          'plugins.flutter.io/firebase_firestore/query/$firstObserverId':
-              <String>[],
-          'plugins.flutter.io/firebase_firestore/query/$secondObserverId':
-              <String>[],
-        };
-        relistenChannels.forEach((channel, calls) {
-          messenger.setMockMessageHandler(channel, (ByteData? message) async {
-            calls.add(codec.decodeMethodCall(message).method);
-            return codec.encodeSuccessEnvelope(null);
-          });
-        });
-        addTearDown(() {
-          for (final channel in relistenChannels.keys) {
-            messenger.setMockMessageHandler(channel, null);
-          }
-        });
-
-        final stream = firestore
-            .collection('foo')
-            .snapshots(listenSource: ListenSource.defaultSource);
-
-        await stream.listen((_) {}).cancel();
-        final secondSubscription = stream.listen((_) {});
-
-        firstObserver.complete(firstObserverId);
-        await pumpEventQueue();
-        secondObserver.complete(secondObserverId);
-        await pumpEventQueue();
-
-        expect(
-          relistenChannels[
-              'plugins.flutter.io/firebase_firestore/query/$firstObserverId'],
-          isEmpty,
-        );
-        expect(
-          relistenChannels[
-              'plugins.flutter.io/firebase_firestore/query/$secondObserverId'],
-          <String>['listen'],
-        );
-
-        await secondSubscription.cancel();
-      },
-    );
-
-    test(
-      'snapshotsInSync() does not attach a native listener when cancelled '
-      'before setup completes',
-      () async {
-        const syncObserverId = 'sync-observer-id';
-        const syncChannel =
-            'plugins.flutter.io/firebase_firestore/snapshotsInSync/$syncObserverId';
-        final syncChannelCalls = <String>[];
-        messenger.setMockMessageHandler(syncChannel, (ByteData? message) async {
-          syncChannelCalls.add(codec.decodeMethodCall(message).method);
+      final relistenChannels = <String, List<String>>{
+        'plugins.flutter.io/firebase_firestore/document/$firstObserverId':
+            <String>[],
+        'plugins.flutter.io/firebase_firestore/document/$secondObserverId':
+            <String>[],
+      };
+      relistenChannels.forEach((channel, calls) {
+        messenger.setMockMessageHandler(channel, (ByteData? message) async {
+          calls.add(codec.decodeMethodCall(message).method);
           return codec.encodeSuccessEnvelope(null);
         });
-        addTearDown(() => messenger.setMockMessageHandler(syncChannel, null));
+      });
+      addTearDown(() {
+        for (final channel in relistenChannels.keys) {
+          messenger.setMockMessageHandler(channel, null);
+        }
+      });
 
-        await firestore.snapshotsInSync().listen((_) {}).cancel();
-        hostApi.snapshotsInSyncObserverId.complete(syncObserverId);
-        await pumpEventQueue();
+      final stream = firestore
+          .doc('foo/bar')
+          .snapshots(listenSource: ListenSource.defaultSource);
 
-        expect(syncChannelCalls, isEmpty);
-      },
-    );
+      await stream.listen((_) {}).cancel();
+      final secondSubscription = stream.listen((_) {});
+
+      firstObserver.complete(firstObserverId);
+      await pumpEventQueue();
+      secondObserver.complete(secondObserverId);
+      await pumpEventQueue();
+
+      expect(
+        relistenChannels['plugins.flutter.io/firebase_firestore/document/$firstObserverId'],
+        isEmpty,
+      );
+      expect(
+        relistenChannels['plugins.flutter.io/firebase_firestore/document/$secondObserverId'],
+        <String>['listen'],
+      );
+
+      await secondSubscription.cancel();
+    });
+
+    test('query re-listen while the first pigeon call is still pending attaches only '
+        'the second listener', () async {
+      const firstObserverId = 'observer-id-1';
+      const secondObserverId = 'observer-id-2';
+
+      final firstObserver = Completer<String>();
+      final secondObserver = Completer<String>();
+      hostApi.queuedSnapshotObserverIds
+        ..add(firstObserver)
+        ..add(secondObserver);
+
+      final relistenChannels = <String, List<String>>{
+        'plugins.flutter.io/firebase_firestore/query/$firstObserverId':
+            <String>[],
+        'plugins.flutter.io/firebase_firestore/query/$secondObserverId':
+            <String>[],
+      };
+      relistenChannels.forEach((channel, calls) {
+        messenger.setMockMessageHandler(channel, (ByteData? message) async {
+          calls.add(codec.decodeMethodCall(message).method);
+          return codec.encodeSuccessEnvelope(null);
+        });
+      });
+      addTearDown(() {
+        for (final channel in relistenChannels.keys) {
+          messenger.setMockMessageHandler(channel, null);
+        }
+      });
+
+      final stream = firestore
+          .collection('foo')
+          .snapshots(listenSource: ListenSource.defaultSource);
+
+      await stream.listen((_) {}).cancel();
+      final secondSubscription = stream.listen((_) {});
+
+      firstObserver.complete(firstObserverId);
+      await pumpEventQueue();
+      secondObserver.complete(secondObserverId);
+      await pumpEventQueue();
+
+      expect(
+        relistenChannels['plugins.flutter.io/firebase_firestore/query/$firstObserverId'],
+        isEmpty,
+      );
+      expect(
+        relistenChannels['plugins.flutter.io/firebase_firestore/query/$secondObserverId'],
+        <String>['listen'],
+      );
+
+      await secondSubscription.cancel();
+    });
+
+    test('snapshotsInSync() does not attach a native listener when cancelled '
+        'before setup completes', () async {
+      const syncObserverId = 'sync-observer-id';
+      const syncChannel =
+          'plugins.flutter.io/firebase_firestore/snapshotsInSync/$syncObserverId';
+      final syncChannelCalls = <String>[];
+      messenger.setMockMessageHandler(syncChannel, (ByteData? message) async {
+        syncChannelCalls.add(codec.decodeMethodCall(message).method);
+        return codec.encodeSuccessEnvelope(null);
+      });
+      addTearDown(() => messenger.setMockMessageHandler(syncChannel, null));
+
+      await firestore.snapshotsInSync().listen((_) {}).cancel();
+      hostApi.snapshotsInSyncObserverId.complete(syncObserverId);
+      await pumpEventQueue();
+
+      expect(syncChannelCalls, isEmpty);
+    });
   });
 
   group('query snapshot chunks over the event channel', () {
@@ -429,8 +418,10 @@ void main() {
     late List<Object> errors;
 
     setUp(() {
-      firestore =
-          MethodChannelFirebaseFirestore(app: app, databaseId: '(default)');
+      firestore = MethodChannelFirebaseFirestore(
+        app: app,
+        databaseId: '(default)',
+      );
       snapshots = <QuerySnapshotPlatform>[];
       errors = <Object>[];
       messenger.setMockMessageHandler(channel, (ByteData? message) async {
@@ -486,10 +477,9 @@ void main() {
       expect(snapshots, isEmpty);
       await send(querySnapshotChunkEnd(1));
       expect(snapshots, hasLength(1));
-      expect(
-        snapshots.single.docs.single.data(),
-        <String, Object?>{'value': 1},
-      );
+      expect(snapshots.single.docs.single.data(), <String, Object?>{
+        'value': 1,
+      });
       expect(errors, isEmpty);
     });
 
@@ -518,26 +508,28 @@ void main() {
       expect(errors, hasLength(1));
     });
 
-    test('re-listening does not inherit a cancelled partial snapshot',
-        () async {
-      final stream = firestore
-          .collection('foo')
-          .snapshots(listenSource: ListenSource.defaultSource);
-      final subscription = stream.listen(snapshots.add, onError: errors.add);
-      hostApi.snapshotObserverId.complete(observerId);
-      await pumpEventQueue();
-      await send(start(1, documentCount: 1));
-      await subscription.cancel();
-      await pumpEventQueue();
-      final second = stream.listen(snapshots.add, onError: errors.add);
-      addTearDown(second.cancel);
-      await pumpEventQueue();
-      await send(start(2));
-      await send(querySnapshotChunkEnd(2));
-      expect(snapshots, hasLength(1));
-      expect(snapshots.single.docs, isEmpty);
-      expect(errors, isEmpty);
-    });
+    test(
+      're-listening does not inherit a cancelled partial snapshot',
+      () async {
+        final stream = firestore
+            .collection('foo')
+            .snapshots(listenSource: ListenSource.defaultSource);
+        final subscription = stream.listen(snapshots.add, onError: errors.add);
+        hostApi.snapshotObserverId.complete(observerId);
+        await pumpEventQueue();
+        await send(start(1, documentCount: 1));
+        await subscription.cancel();
+        await pumpEventQueue();
+        final second = stream.listen(snapshots.add, onError: errors.add);
+        addTearDown(second.cancel);
+        await pumpEventQueue();
+        await send(start(2));
+        await send(querySnapshotChunkEnd(2));
+        expect(snapshots, hasLength(1));
+        expect(snapshots.single.docs, isEmpty);
+        expect(errors, isEmpty);
+      },
+    );
   });
 
   test('namedQueryGet binds the snapshot to the calling instance', () async {

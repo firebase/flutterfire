@@ -24,9 +24,7 @@ extension NullableTrustedTypesGetter on web.Window {
 extension CreateScriptUrlWithoutArgs on web.TrustedTypePolicy {
   ///
   @JS('createScriptURL')
-  external web.TrustedScriptURL createScriptURLNoArgs(
-    String input,
-  );
+  external web.TrustedScriptURL createScriptURLNoArgs(String input);
 }
 
 /// This extension allows setting a TrustedScriptURL as the src of a script element,

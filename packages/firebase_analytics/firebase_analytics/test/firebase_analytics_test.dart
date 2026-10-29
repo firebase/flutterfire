@@ -155,39 +155,27 @@ void main() {
       }
 
       testRequiresValueAndCurrencyTogether('logAddToCart', () {
-        return analytics!.logAddToCart(
-          value: 123.90,
-        );
+        return analytics!.logAddToCart(value: 123.90);
       });
 
       testRequiresValueAndCurrencyTogether('logRemoveFromCart', () {
-        return analytics!.logRemoveFromCart(
-          value: 123.90,
-        );
+        return analytics!.logRemoveFromCart(value: 123.90);
       });
 
       testRequiresValueAndCurrencyTogether('logAddToWishlist', () {
-        return analytics!.logAddToWishlist(
-          value: 123.90,
-        );
+        return analytics!.logAddToWishlist(value: 123.90);
       });
 
       testRequiresValueAndCurrencyTogether('logBeginCheckout', () {
-        return analytics!.logBeginCheckout(
-          value: 123.90,
-        );
+        return analytics!.logBeginCheckout(value: 123.90);
       });
 
       testRequiresValueAndCurrencyTogether('logGenerateLead', () {
-        return analytics!.logGenerateLead(
-          value: 123.90,
-        );
+        return analytics!.logGenerateLead(value: 123.90);
       });
 
       testRequiresValueAndCurrencyTogether('logViewItem', () {
-        return analytics!.logViewItem(
-          value: 123.90,
-        );
+        return analytics!.logViewItem(value: 123.90);
       });
 
       test('logEvent with items rejects invalid item parameter types', () {
@@ -195,10 +183,7 @@ void main() {
           () => analytics!.logEvent(
             name: 'custom_event',
             items: [
-              AnalyticsEventItem(
-                itemId: 'id',
-                parameters: {'invalid': true},
-              ),
+              AnalyticsEventItem(itemId: 'id', parameters: {'invalid': true}),
             ],
           ),
           throwsA(isA<AssertionError>()),
@@ -240,8 +225,10 @@ void main() {
         );
         // reserved prefix
         expect(
-          analytics!
-              .setUserProperty(name: 'firebase_test', value: 'test-value'),
+          analytics!.setUserProperty(
+            name: 'firebase_test',
+            value: 'test-value',
+          ),
           throwsArgumentError,
         );
       });
