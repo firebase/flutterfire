@@ -2,9 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:async';
-import 'dart:developer' as developer;
-
+import 'package:dart_cloud_functions/src/callable_client.dart';
 import 'package:dart_cloud_functions/src/callable_context.dart';
 import 'package:dart_cloud_functions/src/callable_protocol.dart';
 import 'package:dart_cloud_functions/src/firebase_callable_context.dart';
@@ -29,7 +27,7 @@ class DartFirebaseFunctions {
     required CallableContextProvider contextProvider,
     http.Client? httpClient,
   })  : _contextProvider = contextProvider,
-        _httpClient = httpClient;
+        _client = CallableClient(httpClient: httpClient);
 
   /// Creates an instance that isn't cached, sends requests with [httpClient]
   /// and gets their tokens from [contextProvider].
@@ -100,7 +98,7 @@ class DartFirebaseFunctions {
   bool allowInsecureTokenAttachment = false;
 
   final CallableContextProvider _contextProvider;
-  final http.Client? _httpClient;
+  final CallableClient _client;
   String? _emulatorOrigin;
 
   /// Sends calls by name to the Cloud Functions emulator at [host] and [port].
@@ -210,7 +208,7 @@ class DartHttpsCallable {
   /// `List` or `String`-keyed `Map` of those. Failures throw a
   /// `DartFirebaseFunctionsException`.
   Future<DartHttpsCallableResult<T>> call<T>([Object? data]) async {
-    final endpoint = callableEndpoint(
+    final url = callableEndpoint(
       projectId: _functions.app.options.projectId,
       region: _functions.region,
       name: name,
@@ -219,32 +217,17 @@ class DartHttpsCallable {
     );
     final context = await _fetchContext();
     checkTokenTransport(
-      endpoint,
+      url,
       context,
       allowInsecure: kDebugMode && _functions.allowInsecureTokenAttachment,
     );
-    developer.log('POST $endpoint', name: 'dart_cloud_functions');
-
-    final client = _functions._httpClient ?? http.Client();
-    try {
-      final response = await client
-          .post(
-            endpoint,
-            headers: callableRequestHeaders(context),
-            body: encodeCallableRequest(data),
-          )
-          .timeout(options.timeout);
-      final value =
-          decodeCallableResponse(response.statusCode, response.bodyBytes);
-      return DartHttpsCallableResult<T>._(value as T);
-    } on TimeoutException {
-      throw callableTimeoutException(options.timeout);
-    } on http.ClientException catch (error) {
-      throw callableNetworkException(error);
-    } finally {
-      // Closing a client we own also aborts a request that timed out.
-      if (_functions._httpClient == null) client.close();
-    }
+    final result = await _functions._client.callFunction(
+      url,
+      data,
+      context: context,
+      timeout: options.timeout,
+    );
+    return DartHttpsCallableResult<T>._(result as T);
   }
 
   /// Gets the tokens for one request.

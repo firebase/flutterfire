@@ -29,6 +29,27 @@ CallableContextProvider _fixedContext([
 ]) =>
     ({required limitedUseAppCheckToken}) async => context;
 
+/// A client that never responds and records its requests and whether it was
+/// closed.
+///
+/// Unlike `MockClient`, which copies each request, it keeps the request
+/// itself, so tests can check its abort trigger.
+class _HangingClient extends http.BaseClient {
+  final requests = <http.BaseRequest>[];
+  bool closed = false;
+
+  @override
+  Future<http.StreamedResponse> send(http.BaseRequest request) {
+    requests.add(request);
+    return Completer<http.StreamedResponse>().future;
+  }
+
+  @override
+  void close() {
+    closed = true;
+  }
+}
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   setupFirebaseCoreMocks();
@@ -141,6 +162,32 @@ void main() {
             .call(),
         _throwsCode('deadline-exceeded'),
       );
+    });
+
+    test('aborts a timed-out request without closing the shared client',
+        () async {
+      final client = _HangingClient();
+      final functions = DartFirebaseFunctions.withHttpClient(
+        client,
+        app: app,
+        contextProvider: _fixedContext(),
+      )..useFunctionsEmulator('localhost', 5001, automaticHostMapping: false);
+
+      await expectLater(
+        functions
+            .httpsCallable(
+              'listFruit',
+              options: const DartHttpsCallableOptions(
+                timeout: Duration(milliseconds: 10),
+              ),
+            )
+            .call(),
+        _throwsCode('deadline-exceeded'),
+      );
+
+      final request = client.requests.single as http.Abortable;
+      await expectLater(request.abortTrigger, completes);
+      expect(client.closed, isFalse);
     });
 
     test('maps a network failure to unavailable', () async {
