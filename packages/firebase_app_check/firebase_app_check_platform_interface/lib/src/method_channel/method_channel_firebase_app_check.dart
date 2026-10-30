@@ -17,7 +17,7 @@ import 'utils/provider_to_string.dart';
 class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
   /// Create an instance of [MethodChannelFirebaseAppCheck].
   MethodChannelFirebaseAppCheck({required FirebaseApp app})
-      : super(appInstance: app) {
+    : super(appInstance: app) {
     _tokenChangesListeners[app.name] = StreamController<String?>.broadcast();
     _listenerRegistration = _registerTokenListener(app);
   }
@@ -33,13 +33,13 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
       _subscription = events
           .receiveGuardedBroadcastStream(onError: convertPlatformException)
           .listen((arguments) {
-        // ignore: close_sinks
-        final controller = _tokenChangesListeners[app.name];
-        if (!_isDisposed && controller != null) {
-          Map<dynamic, dynamic> result = arguments;
-          controller.add(result['token'] as String?);
-        }
-      });
+            // ignore: close_sinks
+            final controller = _tokenChangesListeners[app.name];
+            if (!_isDisposed && controller != null) {
+              Map<dynamic, dynamic> result = arguments;
+              controller.add(result['token'] as String?);
+            }
+          });
       // ignore: avoid_catches_without_on_clauses
     } catch (_) {
       // Silently ignore errors during token listener registration.
@@ -51,7 +51,7 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
       {};
 
   static Map<String, MethodChannelFirebaseAppCheck>
-      _methodChannelFirebaseAppCheckInstances =
+  _methodChannelFirebaseAppCheckInstances =
       <String, MethodChannelFirebaseAppCheck>{};
 
   /// The Pigeon API used for platform communication.

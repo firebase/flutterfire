@@ -7,7 +7,7 @@ part of '../firebase_database.dart';
 /// Represents a query over the data at a particular location.
 class Query {
   Query._(this._queryDelegate, [QueryModifiers? modifiers])
-      : _modifiers = modifiers ?? QueryModifiers([]) {
+    : _modifiers = modifiers ?? QueryModifiers([]) {
     QueryPlatform.verify(_queryDelegate);
   }
 
@@ -178,9 +178,7 @@ class Query {
   Query orderByKey() {
     return Query._(
       _queryDelegate,
-      _modifiers.order(
-        OrderModifier.orderByKey(),
-      ),
+      _modifiers.order(OrderModifier.orderByKey()),
     );
   }
 
@@ -191,9 +189,7 @@ class Query {
   Query orderByValue() {
     return Query._(
       _queryDelegate,
-      _modifiers.order(
-        OrderModifier.orderByValue(),
-      ),
+      _modifiers.order(OrderModifier.orderByValue()),
     );
   }
 
@@ -204,9 +200,7 @@ class Query {
   Query orderByPriority() {
     return Query._(
       _queryDelegate,
-      _modifiers.order(
-        OrderModifier.orderByPriority(),
-      ),
+      _modifiers.order(OrderModifier.orderByPriority()),
     );
   }
 

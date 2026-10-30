@@ -10,7 +10,7 @@ import 'method_channel_reference.dart';
 class MethodChannelTaskSnapshot extends TaskSnapshotPlatform {
   // ignore: public_member_api_docs
   MethodChannelTaskSnapshot(this.storage, TaskState state, this._data)
-      : super(state, _data);
+    : super(state, _data);
 
   /// The [FirebaseStoragePlatform] used to create the task.
   final FirebaseStoragePlatform storage;

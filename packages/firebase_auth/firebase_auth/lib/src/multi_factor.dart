@@ -57,11 +57,10 @@ class MultiFactor {
 class PhoneMultiFactorGenerator {
   /// Transforms a PhoneAuthCredential into a [MultiFactorAssertion]
   /// which can be used to confirm ownership of a phone second factor.
-  static MultiFactorAssertion getAssertion(
-    PhoneAuthCredential credential,
-  ) {
-    final assertion =
-        PhoneMultiFactorGeneratorPlatform.instance.getAssertion(credential);
+  static MultiFactorAssertion getAssertion(PhoneAuthCredential credential) {
+    final assertion = PhoneMultiFactorGeneratorPlatform.instance.getAssertion(
+      credential,
+    );
     return MultiFactorAssertion._(assertion);
   }
 }
@@ -70,11 +69,9 @@ class PhoneMultiFactorGenerator {
 class TotpMultiFactorGenerator {
   /// Transforms a PhoneAuthCredential into a [MultiFactorAssertion]
   /// which can be used to confirm ownership of a phone second factor.
-  static Future<TotpSecret> generateSecret(
-    MultiFactorSession session,
-  ) async {
-    final secret =
-        await TotpMultiFactorGeneratorPlatform.instance.generateSecret(session);
+  static Future<TotpSecret> generateSecret(MultiFactorSession session) async {
+    final secret = await TotpMultiFactorGeneratorPlatform.instance
+        .generateSecret(session);
     return TotpSecret._(
       secret.codeIntervalSeconds,
       secret.codeLength,
@@ -92,10 +89,7 @@ class TotpMultiFactorGenerator {
     String oneTimePassword,
   ) async {
     final assertion = await TotpMultiFactorGeneratorPlatform.instance
-        .getAssertionForEnrollment(
-      secret._instance,
-      oneTimePassword,
-    );
+        .getAssertionForEnrollment(secret._instance, oneTimePassword);
 
     return MultiFactorAssertion._(assertion);
   }
@@ -106,11 +100,8 @@ class TotpMultiFactorGenerator {
     String enrollmentId,
     String oneTimePassword,
   ) async {
-    final assertion =
-        await TotpMultiFactorGeneratorPlatform.instance.getAssertionForSignIn(
-      enrollmentId,
-      oneTimePassword,
-    );
+    final assertion = await TotpMultiFactorGeneratorPlatform.instance
+        .getAssertionForSignIn(enrollmentId, oneTimePassword);
 
     return MultiFactorAssertion._(assertion);
   }
@@ -135,10 +126,7 @@ class TotpSecret {
   );
 
   /// Generate a TOTP secret for the authenticated user.
-  Future<String> generateQrCodeUrl({
-    String? accountName,
-    String? issuer,
-  }) {
+  Future<String> generateQrCodeUrl({String? accountName, String? issuer}) {
     return _instance.generateQrCodeUrl(
       accountName: accountName,
       issuer: issuer,
@@ -146,12 +134,8 @@ class TotpSecret {
   }
 
   /// Opens the specified QR Code URL in a password manager like iCloud Keychain.
-  Future<void> openInOtpApp(
-    String qrCodeUrl,
-  ) async {
-    await _instance.openInOtpApp(
-      qrCodeUrl,
-    );
+  Future<void> openInOtpApp(String qrCodeUrl) async {
+    await _instance.openInOtpApp(qrCodeUrl);
   }
 }
 
@@ -184,9 +168,7 @@ class MultiFactorResolver {
 
   /// Completes sign in with a second factor using an MultiFactorAssertion which
   /// confirms that the user has successfully completed the second factor challenge.
-  Future<UserCredential> resolveSignIn(
-    MultiFactorAssertion assertion,
-  ) async {
+  Future<UserCredential> resolveSignIn(MultiFactorAssertion assertion) async {
     final credential = await _delegate.resolveSignIn(assertion._delegate);
     return UserCredential._(_auth, credential);
   }
@@ -199,14 +181,14 @@ class FirebaseAuthMultiFactorException extends FirebaseAuthException {
   final FirebaseAuthMultiFactorExceptionPlatform _delegate;
 
   FirebaseAuthMultiFactorException._(this._auth, this._delegate)
-      : super(
-          code: _delegate.code,
-          message: _delegate.message,
-          email: _delegate.email,
-          credential: _delegate.credential,
-          phoneNumber: _delegate.phoneNumber,
-          tenantId: _delegate.tenantId,
-        );
+    : super(
+        code: _delegate.code,
+        message: _delegate.message,
+        email: _delegate.email,
+        credential: _delegate.credential,
+        phoneNumber: _delegate.phoneNumber,
+        tenantId: _delegate.tenantId,
+      );
 
   MultiFactorResolver get resolver =>
       MultiFactorResolver._(_auth, _delegate.resolver);

@@ -39,8 +39,9 @@ class SlidingWindow {
   /// The session reduction target, i.e., how many tokens we should keep.
   final int? targetTokens;
   // ignore: public_member_api_docs
-  Map<String, Object?> toJson() =>
-      {if (targetTokens case final targetTokens?) 'targetTokens': targetTokens};
+  Map<String, Object?> toJson() => {
+    if (targetTokens case final targetTokens?) 'targetTokens': targetTokens,
+  };
 }
 
 /// Enables context window compression to manage the model's context window.
@@ -63,11 +64,10 @@ class ContextWindowCompressionConfig {
   final SlidingWindow? slidingWindow;
   // ignore: public_member_api_docs
   Map<String, Object?> toJson() => {
-        if (triggerTokens case final triggerTokens?)
-          'triggerTokens': triggerTokens,
-        if (slidingWindow case final slidingWindow?)
-          'slidingWindow': slidingWindow.toJson()
-      };
+    if (triggerTokens case final triggerTokens?) 'triggerTokens': triggerTokens,
+    if (slidingWindow case final slidingWindow?)
+      'slidingWindow': slidingWindow.toJson(),
+  };
 }
 
 /// Configuration for the session resumption mechanism.
@@ -96,8 +96,8 @@ class SessionResumptionConfig {
 
   // ignore: public_member_api_docs
   Map<String, Object?> toJson() => {
-        if (handle case final handle?) 'handle': handle,
-      };
+    if (handle case final handle?) 'handle': handle,
+  };
 }
 
 /// Configures model input behavior when generating content in the Live API via the realtime supported methods.
@@ -120,13 +120,13 @@ final class RealtimeInputConfig {
 
   // ignore: public_member_api_docs
   Map<String, Object?> toJson() => {
-        if (automaticActivityDetection case final automaticActivityDetection?)
-          'automatic_activity_detection': automaticActivityDetection.toJson(),
-        if (activityHandling case final activityHandling?)
-          'activity_handling': activityHandling.value,
-        if (turnCoverage case final turnCoverage?)
-          'turn_coverage': turnCoverage.value,
-      };
+    if (automaticActivityDetection case final automaticActivityDetection?)
+      'automatic_activity_detection': automaticActivityDetection.toJson(),
+    if (activityHandling case final activityHandling?)
+      'activity_handling': activityHandling.value,
+    if (turnCoverage case final turnCoverage?)
+      'turn_coverage': turnCoverage.value,
+  };
 }
 
 /// Configures the model's automatic detection of user activity.
@@ -138,11 +138,11 @@ final class ActivityDetectionConfig {
     int? prefixPaddingMS,
     int? silenceDurationMS,
   }) : this._(
-          startSensitivity: startSensitivity,
-          endSensitivity: endSensitivity,
-          prefixPaddingMS: prefixPaddingMS,
-          silenceDurationMS: silenceDurationMS,
-        );
+         startSensitivity: startSensitivity,
+         endSensitivity: endSensitivity,
+         prefixPaddingMS: prefixPaddingMS,
+         silenceDurationMS: silenceDurationMS,
+       );
 
   ActivityDetectionConfig._({
     this.startSensitivity,
@@ -154,9 +154,7 @@ final class ActivityDetectionConfig {
 
   /// Disables automatic activity detection.
   factory ActivityDetectionConfig.disabled() {
-    return ActivityDetectionConfig._(
-      disabled: true,
-    );
+    return ActivityDetectionConfig._(disabled: true);
   }
 
   /// Determines how likely the start of speech is detected.
@@ -176,16 +174,16 @@ final class ActivityDetectionConfig {
 
   // ignore: public_member_api_docs
   Map<String, Object?> toJson() => {
-        if (startSensitivity case final startSensitivity?)
-          'start_of_speech_sensitivity': 'START_${startSensitivity.value}',
-        if (endSensitivity case final endSensitivity?)
-          'end_of_speech_sensitivity': 'END_${endSensitivity.value}',
-        if (prefixPaddingMS case final prefixPaddingMS?)
-          'prefix_padding_ms': prefixPaddingMS,
-        if (silenceDurationMS case final silenceDurationMS?)
-          'silence_duration_ms': silenceDurationMS,
-        if (disabled case final disabled?) 'disabled': disabled,
-      };
+    if (startSensitivity case final startSensitivity?)
+      'start_of_speech_sensitivity': 'START_${startSensitivity.value}',
+    if (endSensitivity case final endSensitivity?)
+      'end_of_speech_sensitivity': 'END_${endSensitivity.value}',
+    if (prefixPaddingMS case final prefixPaddingMS?)
+      'prefix_padding_ms': prefixPaddingMS,
+    if (silenceDurationMS case final silenceDurationMS?)
+      'silence_duration_ms': silenceDurationMS,
+    if (disabled case final disabled?) 'disabled': disabled,
+  };
 }
 
 /// How a model handles user input activity.
@@ -236,20 +234,21 @@ enum Sensitivity {
 /// Configures live generation settings.
 final class LiveGenerationConfig extends BaseGenerationConfig {
   // ignore: public_member_api_docs
-  LiveGenerationConfig(
-      {super.speechConfig,
-      this.inputAudioTranscription,
-      this.outputAudioTranscription,
-      this.contextWindowCompression,
-      this.realtimeInputConfig,
-      super.responseModalities,
-      super.maxOutputTokens,
-      super.temperature,
-      super.topP,
-      super.topK,
-      super.presencePenalty,
-      super.frequencyPenalty,
-      super.mediaResolution});
+  LiveGenerationConfig({
+    super.speechConfig,
+    this.inputAudioTranscription,
+    this.outputAudioTranscription,
+    this.contextWindowCompression,
+    this.realtimeInputConfig,
+    super.responseModalities,
+    super.maxOutputTokens,
+    super.temperature,
+    super.topP,
+    super.topK,
+    super.presencePenalty,
+    super.frequencyPenalty,
+    super.mediaResolution,
+  });
 
   /// The transcription of the input aligns with the input audio language.
   final AudioTranscriptionConfig? inputAudioTranscription;
@@ -265,9 +264,7 @@ final class LiveGenerationConfig extends BaseGenerationConfig {
   final RealtimeInputConfig? realtimeInputConfig;
 
   @override
-  Map<String, Object?> toJson() => {
-        ...super.toJson(),
-      };
+  Map<String, Object?> toJson() => {...super.toJson()};
 }
 
 /// An abstract class representing a message received from a live server.
@@ -307,12 +304,13 @@ class LiveServerContent implements LiveServerMessage {
   /// [interrupted] (optional): Indicates if the generation was interrupted.
   /// [inputTranscription] (optional): The input transcription.
   /// [outputTranscription] (optional): The output transcription.
-  LiveServerContent(
-      {this.modelTurn,
-      this.turnComplete,
-      this.interrupted,
-      this.inputTranscription,
-      this.outputTranscription});
+  LiveServerContent({
+    this.modelTurn,
+    this.turnComplete,
+    this.interrupted,
+    this.inputTranscription,
+    this.outputTranscription,
+  });
 
   // TODO(cynthia): Add accessor for media content
   /// The content generated by the model.
@@ -397,8 +395,11 @@ class SessionResumptionUpdate implements LiveServerMessage {
   /// point.
   /// [lastConsumedClientMessageIndex] (optional): The index of the last client
   /// message that is included in the state represented by this update.
-  SessionResumptionUpdate(
-      {this.newHandle, this.resumable, this.lastConsumedClientMessageIndex});
+  SessionResumptionUpdate({
+    this.newHandle,
+    this.resumable,
+    this.lastConsumedClientMessageIndex,
+  });
 
   /// The new handle that represents the state that can be resumed. Empty if
   /// `resumable` is false.
@@ -445,45 +446,45 @@ class LiveClientRealtimeInput {
 
   /// Creates a [LiveClientRealtimeInput] with audio data.
   LiveClientRealtimeInput.audio(this.audio)
-      // ignore: deprecated_member_use_from_same_package
-      : video = null,
-        text = null,
-        activityStart = null,
-        activityEnd = null;
+    // ignore: deprecated_member_use_from_same_package
+    : video = null,
+      text = null,
+      activityStart = null,
+      activityEnd = null;
 
   /// Creates a [LiveClientRealtimeInput] with video data.
   LiveClientRealtimeInput.video(this.video)
-      // ignore: deprecated_member_use_from_same_package
-      : audio = null,
-        text = null,
-        activityStart = null,
-        activityEnd = null;
+    // ignore: deprecated_member_use_from_same_package
+    : audio = null,
+      text = null,
+      activityStart = null,
+      activityEnd = null;
 
   /// Creates a [LiveClientRealtimeInput] with text data.
   LiveClientRealtimeInput.text(this.text)
-      // ignore: deprecated_member_use_from_same_package
-      : audio = null,
-        video = null,
-        activityStart = null,
-        activityEnd = null;
+    // ignore: deprecated_member_use_from_same_package
+    : audio = null,
+      video = null,
+      activityStart = null,
+      activityEnd = null;
 
   /// Creates a [LiveClientRealtimeInput] with activity start signal.
   LiveClientRealtimeInput.activityStart()
-      // ignore: deprecated_member_use_from_same_package
-      : audio = null,
-        video = null,
-        text = null,
-        activityStart = const {},
-        activityEnd = null;
+    // ignore: deprecated_member_use_from_same_package
+    : audio = null,
+      video = null,
+      text = null,
+      activityStart = const {},
+      activityEnd = null;
 
   /// Creates a [LiveClientRealtimeInput] with activity end signal.
   LiveClientRealtimeInput.activityEnd()
-      // ignore: deprecated_member_use_from_same_package
-      : audio = null,
-        video = null,
-        text = null,
-        activityStart = null,
-        activityEnd = const {};
+    // ignore: deprecated_member_use_from_same_package
+    : audio = null,
+      video = null,
+      text = null,
+      activityStart = null,
+      activityEnd = const {};
 
   /// Audio data.
   final InlineDataPart? audio;
@@ -502,14 +503,14 @@ class LiveClientRealtimeInput {
 
   // ignore: public_member_api_docs
   Map<String, dynamic> toJson() => {
-        'realtime_input': {
-          if (audio != null) 'audio': audio!.toMediaChunkJson(),
-          if (video != null) 'video': video!.toMediaChunkJson(),
-          if (text != null) 'text': text,
-          if (activityStart != null) 'activity_start': activityStart,
-          if (activityEnd != null) 'activity_end': activityEnd,
-        },
-      };
+    'realtime_input': {
+      if (audio != null) 'audio': audio!.toMediaChunkJson(),
+      if (video != null) 'video': video!.toMediaChunkJson(),
+      if (text != null) 'text': text,
+      if (activityStart != null) 'activity_start': activityStart,
+      if (activityEnd != null) 'activity_end': activityEnd,
+    },
+  };
 }
 
 /// Represents content from the client in a live stream.
@@ -532,11 +533,11 @@ class LiveClientContent {
 
   // ignore: public_member_api_docs
   Map<String, dynamic> toJson() => {
-        'client_content': {
-          'turns': turns?.map((e) => e.toJson()).toList(),
-          'turn_complete': turnComplete,
-        }
-      };
+    'client_content': {
+      'turns': turns?.map((e) => e.toJson()).toList(),
+      'turn_complete': turnComplete,
+    },
+  };
 }
 
 /// Represents a tool response from the client in a live stream.
@@ -550,16 +551,18 @@ class LiveClientToolResponse {
   final List<FunctionResponse>? functionResponses;
   // ignore: public_member_api_docs
   Map<String, dynamic> toJson() => {
-        'toolResponse': {
-          'functionResponses': functionResponses
-              ?.map((e) => {
-                    'name': e.name,
-                    'response': e.response,
-                    if (e.id != null) 'id': e.id,
-                  })
-              .toList(),
-        },
-      };
+    'toolResponse': {
+      'functionResponses': functionResponses
+          ?.map(
+            (e) => {
+              'name': e.name,
+              'response': e.response,
+              if (e.id != null) 'id': e.id,
+            },
+          )
+          .toList(),
+    },
+  };
 }
 
 /// Parses a JSON object received from the live server into a [LiveServerResponse].
@@ -659,10 +662,7 @@ LiveServerMessage _parseServerMessage(Object jsonObject) {
   } else if (json.containsKey('toolCallCancellation')) {
     final toolCancelData = json['toolCallCancellation'] as Map;
     final Map<String, List<String>> toolCancelJson = toolCancelData.map(
-      (key, value) => MapEntry(
-        key as String,
-        (value as List).cast<String>(),
-      ),
+      (key, value) => MapEntry(key as String, (value as List).cast<String>()),
     );
     return LiveServerToolCallCancellation(functionIds: toolCancelJson['ids']);
   } else if (json.containsKey('setupComplete')) {

@@ -15,25 +15,28 @@ import '../mock.dart';
 void main() {
   setupFirebaseMessagingMocks();
 
-  test('onMessage receives native messages without any other messaging call',
-      () async {
-    final received = <RemoteMessage>[];
-    final subscription =
-        FirebaseMessagingPlatform.onMessage.stream.listen(received.add);
-    addTearDown(subscription.cancel);
+  test(
+    'onMessage receives native messages without any other messaging call',
+    () async {
+      final received = <RemoteMessage>[];
+      final subscription = FirebaseMessagingPlatform.onMessage.stream.listen(
+        received.add,
+      );
+      addTearDown(subscription.cancel);
 
-    await TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .handlePlatformMessage(
-      MethodChannelFirebaseMessaging.channel.name,
-      const StandardMethodCodec().encodeMethodCall(
-        const MethodCall('Messaging#onMessage', <String, dynamic>{
-          'messageId': 'foreground-message',
-        }),
-      ),
-      (_) {},
-    );
-    await pumpEventQueue();
+      await TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .handlePlatformMessage(
+            MethodChannelFirebaseMessaging.channel.name,
+            const StandardMethodCodec().encodeMethodCall(
+              const MethodCall('Messaging#onMessage', <String, dynamic>{
+                'messageId': 'foreground-message',
+              }),
+            ),
+            (_) {},
+          );
+      await pumpEventQueue();
 
-    expect(received.map((m) => m.messageId), <String>['foreground-message']);
-  });
+      expect(received.map((m) => m.messageId), <String>['foreground-message']);
+    },
+  );
 }

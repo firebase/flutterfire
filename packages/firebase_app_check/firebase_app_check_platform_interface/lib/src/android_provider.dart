@@ -7,5 +7,5 @@ enum AndroidProvider {
   // The debug provider
   debug,
   // The play integrity provider (Firebase recommended)
-  playIntegrity
+  playIntegrity,
 }

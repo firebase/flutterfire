@@ -32,15 +32,17 @@ void main() {
       storage = FirebaseStorage.instance;
 
       when(kMockStoragePlatform.ref(any)).thenReturn(mockReferencePlatform);
-      when(mockReferencePlatform.putString(any, any, any))
-          .thenReturn(mockUploadTaskPlatform);
+      when(
+        mockReferencePlatform.putString(any, any, any),
+      ).thenReturn(mockUploadTaskPlatform);
       uploadTask = storage.ref().putString(testString);
     });
 
     group('.snapshotEvents', () {
       test('verify delegate method is called', () async {
-        when(mockUploadTaskPlatform.snapshotEvents)
-            .thenAnswer((_) => Stream.fromIterable([mockTaskSnapshotPlatform]));
+        when(
+          mockUploadTaskPlatform.snapshotEvents,
+        ).thenAnswer((_) => Stream.fromIterable([mockTaskSnapshotPlatform]));
 
         final result = uploadTask.snapshotEvents;
 
@@ -51,8 +53,9 @@ void main() {
 
     group('.snapshot()', () {
       test('verify delegate method is called', () {
-        when(mockUploadTaskPlatform.snapshot)
-            .thenReturn(mockTaskSnapshotPlatform);
+        when(
+          mockUploadTaskPlatform.snapshot,
+        ).thenReturn(mockTaskSnapshotPlatform);
 
         final result = uploadTask.snapshot;
 
@@ -63,8 +66,9 @@ void main() {
 
     group('onComplete()', () {
       test('verify delegate method is called', () async {
-        when(mockUploadTaskPlatform.onComplete)
-            .thenAnswer((_) => Future.value(mockTaskSnapshotPlatform));
+        when(
+          mockUploadTaskPlatform.onComplete,
+        ).thenAnswer((_) => Future.value(mockTaskSnapshotPlatform));
 
         final result = await uploadTask;
 
@@ -76,8 +80,9 @@ void main() {
 
     group('pause()', () {
       test('verify delegate method is called', () async {
-        when(mockUploadTaskPlatform.pause())
-            .thenAnswer((_) => Future.value(true));
+        when(
+          mockUploadTaskPlatform.pause(),
+        ).thenAnswer((_) => Future.value(true));
 
         final result = await uploadTask.pause();
 
@@ -90,8 +95,9 @@ void main() {
 
     group('resume()', () {
       test('verify delegate method is called', () async {
-        when(mockUploadTaskPlatform.resume())
-            .thenAnswer((_) => Future.value(true));
+        when(
+          mockUploadTaskPlatform.resume(),
+        ).thenAnswer((_) => Future.value(true));
 
         final result = await uploadTask.resume();
 
@@ -104,8 +110,9 @@ void main() {
 
     group('cancel()', () {
       test('verify delegate method is called', () async {
-        when(mockUploadTaskPlatform.cancel())
-            .thenAnswer((_) => Future.value(true));
+        when(
+          mockUploadTaskPlatform.cancel(),
+        ).thenAnswer((_) => Future.value(true));
 
         final result = await uploadTask.cancel();
 

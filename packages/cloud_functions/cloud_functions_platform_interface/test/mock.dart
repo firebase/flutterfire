@@ -23,10 +23,11 @@ void setupFirebaseFunctionsMocks([Callback? customHandlers]) {
 
 void handleMethodCall(MethodCallCallback methodCallCallback) =>
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(MethodChannelFirebaseFunctions.channel,
-            (call) async {
-      return await methodCallCallback(call);
-    });
+        .setMockMethodCallHandler(MethodChannelFirebaseFunctions.channel, (
+          call,
+        ) async {
+          return await methodCallCallback(call);
+        });
 
 Future<void> testExceptionHandling(String type, Function testMethod) async {
   try {
@@ -36,7 +37,8 @@ Future<void> testExceptionHandling(String type, Function testMethod) async {
       return;
     }
     fail(
-        'testExceptionHandling: $testMethod threw unexpected FirebaseFunctionsException');
+      'testExceptionHandling: $testMethod threw unexpected FirebaseFunctionsException',
+    );
   } catch (e) {
     fail('testExceptionHandling: $testMethod threw invalid exception $e');
   }

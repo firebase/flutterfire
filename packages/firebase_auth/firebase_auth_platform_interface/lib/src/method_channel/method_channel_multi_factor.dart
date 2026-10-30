@@ -94,10 +94,7 @@ class MethodChannelMultiFactor extends MultiFactorPlatform {
     }
 
     try {
-      await _api.unenroll(
-        pigeonDefault,
-        uidToUnenroll,
-      );
+      await _api.unenroll(pigeonDefault, uidToUnenroll);
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
@@ -120,9 +117,9 @@ class MethodChannelMultiFactorResolver extends MultiFactorResolverPlatform {
     MultiFactorSession session,
     String resolverId,
     MethodChannelFirebaseAuth auth,
-  )   : _resolverId = resolverId,
-        _auth = auth,
-        super(hints, session);
+  ) : _resolverId = resolverId,
+      _auth = auth,
+      super(hints, session);
 
   final String _resolverId;
 
@@ -197,9 +194,7 @@ class MultiFactorAssertion extends MultiFactorAssertionPlatform {
 }
 
 class PhoneMultiFactorAssertion extends MultiFactorAssertion {
-  PhoneMultiFactorAssertion(
-    PhoneAuthCredential credential,
-  ) : super(credential);
+  PhoneMultiFactorAssertion(PhoneAuthCredential credential) : super(credential);
 }
 
 /// Helper class used to generate PhoneMultiFactorAssertions.
@@ -208,17 +203,13 @@ class MethodChannelPhoneMultiFactorGenerator
   /// Transforms a PhoneAuthCredential into a [MultiFactorAssertion]
   /// which can be used to confirm ownership of a phone second factor.
   @override
-  MultiFactorAssertionPlatform getAssertion(
-    PhoneAuthCredential credential,
-  ) {
+  MultiFactorAssertionPlatform getAssertion(PhoneAuthCredential credential) {
     return PhoneMultiFactorAssertion(credential);
   }
 }
 
 class TotpMultiFactorAssertion extends MultiFactorAssertion {
-  TotpMultiFactorAssertion(
-    this.assertionId,
-  ) : super(null);
+  TotpMultiFactorAssertion(this.assertionId) : super(null);
 
   final String assertionId;
 }
@@ -231,9 +222,7 @@ class MethodChannelTotpMultiFactorGenerator
   /// Transforms a PhoneAuthCredential into a [MultiFactorAssertion]
   /// which can be used to confirm ownership of a phone second factor.
   @override
-  Future<TotpSecretPlatform> generateSecret(
-    MultiFactorSession session,
-  ) async {
+  Future<TotpSecretPlatform> generateSecret(MultiFactorSession session) async {
     final pigeonSecret = await _api.generateSecret(session.id);
     return MethodChannelTotpSecret(
       pigeonSecret.codeIntervalSeconds,
@@ -255,8 +244,10 @@ class MethodChannelTotpMultiFactorGenerator
     TotpSecretPlatform secret,
     String oneTimePassword,
   ) async {
-    final totpAssertionId =
-        await _api.getAssertionForEnrollment(secret.secretKey, oneTimePassword);
+    final totpAssertionId = await _api.getAssertionForEnrollment(
+      secret.secretKey,
+      oneTimePassword,
+    );
     return TotpMultiFactorAssertion(totpAssertionId);
   }
 
@@ -267,8 +258,10 @@ class MethodChannelTotpMultiFactorGenerator
     String enrollmentId,
     String oneTimePassword,
   ) async {
-    final totpAssertionId =
-        await _api.getAssertionForSignIn(enrollmentId, oneTimePassword);
+    final totpAssertionId = await _api.getAssertionForSignIn(
+      enrollmentId,
+      oneTimePassword,
+    );
     return TotpMultiFactorAssertion(totpAssertionId);
   }
 }
@@ -303,12 +296,7 @@ class MethodChannelTotpSecret extends TotpSecretPlatform {
 
   /// Opens the specified QR Code URL in a password manager like iCloud Keychain.
   @override
-  Future<void> openInOtpApp(
-    String qrCodeUrl,
-  ) async {
-    await _api.openInOtpApp(
-      secretKey,
-      qrCodeUrl,
-    );
+  Future<void> openInOtpApp(String qrCodeUrl) async {
+    await _api.openInOtpApp(secretKey, qrCodeUrl);
   }
 }

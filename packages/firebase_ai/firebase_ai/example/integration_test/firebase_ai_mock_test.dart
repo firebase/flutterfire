@@ -70,7 +70,7 @@ void main() {
                 {'text': 'Hello!'},
               ],
             },
-          }
+          },
         ],
       };
 
@@ -106,7 +106,7 @@ void main() {
                 {'text': '{"name": "Apple", "price": 1.2}'},
               ],
             },
-          }
+          },
         ],
       };
 
@@ -158,7 +158,7 @@ void main() {
                 {'text': 'Hello!'},
               ],
             },
-          }
+          },
         ],
       };
 
@@ -185,7 +185,7 @@ void main() {
                 {'text': 'I am good.'},
               ],
             },
-          }
+          },
         ],
       };
 

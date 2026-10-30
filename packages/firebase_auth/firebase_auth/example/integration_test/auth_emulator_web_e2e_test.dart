@@ -13,43 +13,39 @@ import 'auth_emulator_web_session_storage_stub.dart'
 import 'test_utils.dart';
 
 void main() {
-  group(
-    'useAuthEmulator sessionStorage (web)',
-    () {
-      test(
-        'connects even when sessionStorage already has the emulator origin',
-        () async {
-          const appName = 'auth-emulator-session-storage';
-          final origin = 'http://$testEmulatorHost:$testEmulatorPort';
+  group('useAuthEmulator sessionStorage (web)', () {
+    test(
+      'connects even when sessionStorage already has the emulator origin',
+      () async {
+        const appName = 'auth-emulator-session-storage';
+        final origin = 'http://$testEmulatorHost:$testEmulatorPort';
 
-          final app = await Firebase.initializeApp(
-            name: appName,
-            options: DefaultFirebaseOptions.currentPlatform,
-          );
-          addTearDown(() async {
-            try {
-              await FirebaseAuth.instanceFor(app: app).signOut();
-            } catch (_) {}
-            clearAuthEmulatorOrigin(appName);
-            await app.delete();
-          });
+        final app = await Firebase.initializeApp(
+          name: appName,
+          options: DefaultFirebaseOptions.currentPlatform,
+        );
+        addTearDown(() async {
+          try {
+            await FirebaseAuth.instanceFor(app: app).signOut();
+          } catch (_) {}
+          clearAuthEmulatorOrigin(appName);
+          await app.delete();
+        });
 
-          // Simulate a previous page load: the sticky note is present, but this
-          // JS Auth instance has not called connectAuthEmulator yet.
-          setAuthEmulatorOrigin(appName, origin);
+        // Simulate a previous page load: the sticky note is present, but this
+        // JS Auth instance has not called connectAuthEmulator yet.
+        setAuthEmulatorOrigin(appName, origin);
 
-          final auth = FirebaseAuth.instanceFor(app: app);
-          await auth.useAuthEmulator(testEmulatorHost, testEmulatorPort);
+        final auth = FirebaseAuth.instanceFor(app: app);
+        await auth.useAuthEmulator(testEmulatorHost, testEmulatorPort);
 
-          final credential = await auth.signInWithEmailAndPassword(
-            email: testEmail,
-            password: testPassword,
-          );
-          expect(credential.user, isNotNull);
-          expect(credential.user!.email, testEmail);
-        },
-      );
-    },
-    skip: !kIsWeb,
-  );
+        final credential = await auth.signInWithEmailAndPassword(
+          email: testEmail,
+          password: testPassword,
+        );
+        expect(credential.user, isNotNull);
+        expect(credential.user!.email, testEmail);
+      },
+    );
+  }, skip: !kIsWeb);
 }

@@ -32,16 +32,18 @@ void main() {
       },
     );
 
-    test('skips when this Auth instance is already on the requested origin',
-        () {
-      expect(
-        shouldSkipConnectAuthEmulator(
-          requestedOrigin: 'http://localhost:9099',
-          connectedEmulatorOrigin: 'http://localhost:9099',
-        ),
-        isTrue,
-      );
-    });
+    test(
+      'skips when this Auth instance is already on the requested origin',
+      () {
+        expect(
+          shouldSkipConnectAuthEmulator(
+            requestedOrigin: 'http://localhost:9099',
+            connectedEmulatorOrigin: 'http://localhost:9099',
+          ),
+          isTrue,
+        );
+      },
+    );
 
     test('does not skip when the connected origin is different', () {
       expect(

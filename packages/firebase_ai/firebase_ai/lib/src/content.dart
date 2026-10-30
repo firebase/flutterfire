@@ -42,10 +42,13 @@ final class Content {
   static Content text(String text) => Content('user', [TextPart(text)]);
 
   /// Return a [Content] with [InlineDataPart].
-  static Content inlineData(String mimeType, Uint8List bytes,
-          {MediaResolution? mediaResolution}) =>
-      Content('user',
-          [InlineDataPart(mimeType, bytes, mediaResolution: mediaResolution)]);
+  static Content inlineData(
+    String mimeType,
+    Uint8List bytes, {
+    MediaResolution? mediaResolution,
+  }) => Content('user', [
+    InlineDataPart(mimeType, bytes, mediaResolution: mediaResolution),
+  ]);
 
   /// Return a [Content] with multiple [Part]s.
   static Content multi(Iterable<Part> parts) => Content('user', [...parts]);
@@ -54,9 +57,11 @@ final class Content {
   static Content model(Iterable<Part> parts) => Content('model', [...parts]);
 
   /// Return a [Content] with [FunctionResponse].
-  static Content functionResponse(String name, Map<String, Object?> response,
-          {String? id}) =>
-      Content('user', [FunctionResponse(name, response, id: id)]);
+  static Content functionResponse(
+    String name,
+    Map<String, Object?> response, {
+    String? id,
+  }) => Content('user', [FunctionResponse(name, response, id: id)]);
 
   /// Return a [Content] with multiple [FunctionResponse].
   static Content functionResponses(Iterable<FunctionResponse> responses) =>
@@ -68,22 +73,28 @@ final class Content {
 
   /// Convert the [Content] to json format.
   Map<String, Object?> toJson() => {
-        if (role case final role?) 'role': role == 'function' ? 'user' : role,
-        'parts': parts.map((p) {
-          return p.toJson();
-        }).toList(),
-      };
+    if (role case final role?) 'role': role == 'function' ? 'user' : role,
+    'parts': parts.map((p) {
+      return p.toJson();
+    }).toList(),
+  };
 }
 
 /// Parse the [Content] from json object.
 Content parseContent(Object jsonObject) {
   return switch (jsonObject) {
-    {'role': final String role, 'parts': final List<Object?> parts} =>
-      Content(role, parts.map(parsePart).toList()),
-    {'role': final String role} =>
-      Content(role, <Part>[]), // Handle case with only role
+    {'role': final String role, 'parts': final List<Object?> parts} => Content(
+      role,
+      parts.map(parsePart).toList(),
+    ),
+    {'role': final String role} => Content(
+      role,
+      <Part>[],
+    ), // Handle case with only role
     {'parts': final List<Object?> parts} => Content(
-        null, parts.map(parsePart).toList()), // Handle case with only parts
+      null,
+      parts.map(parsePart).toList(),
+    ), // Handle case with only parts
     _ => throw unhandledFormat('Content', jsonObject),
   };
 }
@@ -92,9 +103,7 @@ Content parseContent(Object jsonObject) {
 Part parsePart(Object? jsonObject) {
   if (jsonObject is! Map<String, Object?>) {
     log('Unhandled part format: $jsonObject');
-    return UnknownPart(<String, Object?>{
-      'unhandled': jsonObject,
-    });
+    return UnknownPart(<String, Object?>{'unhandled': jsonObject});
   }
 
   final isThought =
@@ -141,18 +150,19 @@ Part parsePart(Object? jsonObject) {
   }
   if (jsonObject.containsKey('codeExecutionResult')) {
     final codeExecutionResult = jsonObject['codeExecutionResult'];
-    if (codeExecutionResult is Map &&
-        codeExecutionResult.containsKey('outcome') &&
-        codeExecutionResult.containsKey('output')) {
-      return CodeExecutionResultPart._(
-        outcome: Outcome.parseValue(codeExecutionResult['outcome'] as String),
-        output: codeExecutionResult['output'] as String,
-        isThought: isThought,
-        thoughtSignature: thoughtSignature,
-      );
-    } else {
-      throw unhandledFormat('codeExecutionResult', codeExecutionResult);
+    if (codeExecutionResult is Map) {
+      final outcome = codeExecutionResult['outcome'];
+      final output = codeExecutionResult['output'];
+      if (outcome is String && output is String?) {
+        return CodeExecutionResultPart._(
+          outcome: Outcome.parseValue(outcome),
+          output: output ?? '',
+          isThought: isThought,
+          thoughtSignature: thoughtSignature,
+        );
+      }
     }
+    throw unhandledFormat('codeExecutionResult', codeExecutionResult);
   }
 
   if (jsonObject.containsKey('inlineData')) {
@@ -174,37 +184,39 @@ Part parsePart(Object? jsonObject) {
   }
   return switch (jsonObject) {
     {'text': final String text} => TextPart._(
-        text,
-        isThought: isThought,
-        thoughtSignature: thoughtSignature,
-        speechMetadata: switch (jsonObject['speechMetadata']) {
-          final Map<Object?, Object?> metadata => SpeechMetadata(
-              speaker: metadata['speaker'] as String?,
-              style: metadata['style'] as String?,
-            ),
-          _ => null,
-        },
-      ),
+      text,
+      isThought: isThought,
+      thoughtSignature: thoughtSignature,
+      speechMetadata: switch (jsonObject['speechMetadata']) {
+        final Map<Object?, Object?> metadata => SpeechMetadata(
+          speaker: metadata['speaker'] as String?,
+          style: metadata['style'] as String?,
+        ),
+        _ => null,
+      },
+    ),
     {
       'fileData': {
         'fileUri': final String fileUri,
         'mimeType': final String mimeType,
-      }
+      },
     } ||
     {
       'file_data': {
         'file_uri': final String fileUri,
         'mime_type': final String mimeType,
-      }
-    } =>
-      FileData._(mimeType, fileUri,
-          mediaResolution: mediaResolution,
-          isThought: isThought,
-          thoughtSignature: thoughtSignature),
+      },
+    } => FileData._(
+      mimeType,
+      fileUri,
+      mediaResolution: mediaResolution,
+      isThought: isThought,
+      thoughtSignature: thoughtSignature,
+    ),
     _ => () {
-        log('unhandled part format: $jsonObject');
-        return UnknownPart(jsonObject);
-      }(),
+      log('unhandled part format: $jsonObject');
+      return UnknownPart(jsonObject);
+    }(),
   };
 }
 
@@ -212,7 +224,7 @@ Part parsePart(Object? jsonObject) {
 sealed class Part {
   // ignore: public_member_api_docs
   const Part({this.isThought, String? thoughtSignature})
-      : _thoughtSignature = thoughtSignature;
+    : _thoughtSignature = thoughtSignature;
   // ignore: public_member_api_docs
   final bool? isThought;
 
@@ -221,10 +233,10 @@ sealed class Part {
 
   /// Convert the [Part] content to json format.
   Object toJson() => {
-        if (isThought case final isThought?) 'thought': isThought,
-        if (_thoughtSignature case final thoughtSignature?)
-          'thoughtSignature': thoughtSignature,
-      };
+    if (isThought case final isThought?) 'thought': isThought,
+    if (_thoughtSignature case final thoughtSignature?)
+      'thoughtSignature': thoughtSignature,
+  };
 }
 
 /// A [Part] that contains unparsable data.
@@ -246,10 +258,7 @@ final class UnknownPart extends Part {
 final class TextPart extends Part {
   // ignore: public_member_api_docs
   const TextPart(this.text, {bool? isThought, this.speechMetadata})
-      : super(
-          isThought: isThought,
-          thoughtSignature: null,
-        );
+    : super(isThought: isThought, thoughtSignature: null);
 
   @visibleForTesting
   // ignore: public_member_api_docs
@@ -258,20 +267,14 @@ final class TextPart extends Part {
     bool? isThought,
     String? thoughtSignature,
     this.speechMetadata,
-  }) : super(
-          isThought: isThought,
-          thoughtSignature: thoughtSignature,
-        );
+  }) : super(isThought: isThought, thoughtSignature: thoughtSignature);
 
   const TextPart._(
     this.text, {
     bool? isThought,
     String? thoughtSignature,
     this.speechMetadata,
-  }) : super(
-          isThought: isThought,
-          thoughtSignature: thoughtSignature,
-        );
+  }) : super(isThought: isThought, thoughtSignature: thoughtSignature);
 
   /// The text content of the [Part]
   final String text;
@@ -303,10 +306,7 @@ final class InlineDataPart extends Part {
     this.willContinue,
     this.mediaResolution,
     bool? isThought,
-  }) : super(
-          isThought: isThought,
-          thoughtSignature: null,
-        );
+  }) : super(isThought: isThought, thoughtSignature: null);
 
   @visibleForTesting
   // ignore: public_member_api_docs
@@ -317,10 +317,7 @@ final class InlineDataPart extends Part {
     this.mediaResolution,
     bool? isThought,
     String? thoughtSignature,
-  }) : super(
-          isThought: isThought,
-          thoughtSignature: thoughtSignature,
-        );
+  }) : super(isThought: isThought, thoughtSignature: thoughtSignature);
 
   const InlineDataPart._(
     this.mimeType,
@@ -329,10 +326,7 @@ final class InlineDataPart extends Part {
     this.mediaResolution,
     bool? isThought,
     String? thoughtSignature,
-  }) : super(
-          isThought: isThought,
-          thoughtSignature: thoughtSignature,
-        );
+  }) : super(isThought: isThought, thoughtSignature: thoughtSignature);
 
   /// File type of the [InlineDataPart].
   ///
@@ -367,10 +361,10 @@ final class InlineDataPart extends Part {
 
   /// The representation of the data in media streaming chunk.
   Object toMediaChunkJson() => {
-        'mimeType': mimeType,
-        'data': base64Encode(bytes),
-        if (willContinue != null) 'willContinue': willContinue,
-      };
+    'mimeType': mimeType,
+    'data': base64Encode(bytes),
+    if (willContinue != null) 'willContinue': willContinue,
+  };
 }
 
 /// A predicted `FunctionCall` returned from the model that contains
@@ -378,15 +372,8 @@ final class InlineDataPart extends Part {
 /// arguments and their values.
 final class FunctionCall extends Part {
   // ignore: public_member_api_docs
-  const FunctionCall(
-    this.name,
-    this.args, {
-    this.id,
-    bool? isThought,
-  }) : super(
-          isThought: isThought,
-          thoughtSignature: null,
-        );
+  const FunctionCall(this.name, this.args, {this.id, bool? isThought})
+    : super(isThought: isThought, thoughtSignature: null);
 
   @visibleForTesting
   // ignore: public_member_api_docs
@@ -396,10 +383,7 @@ final class FunctionCall extends Part {
     this.id,
     bool? isThought,
     String? thoughtSignature,
-  }) : super(
-          isThought: isThought,
-          thoughtSignature: thoughtSignature,
-        );
+  }) : super(isThought: isThought, thoughtSignature: thoughtSignature);
 
   const FunctionCall._(
     this.name,
@@ -407,10 +391,7 @@ final class FunctionCall extends Part {
     this.id,
     bool? isThought,
     String? thoughtSignature,
-  }) : super(
-          isThought: isThought,
-          thoughtSignature: thoughtSignature,
-        );
+  }) : super(isThought: isThought, thoughtSignature: thoughtSignature);
 
   /// The name of the function to call.
   final String name;
@@ -429,11 +410,7 @@ final class FunctionCall extends Part {
     final superJson = super.toJson() as Map<String, Object?>;
     return <String, Object?>{
       ...superJson,
-      'functionCall': {
-        'name': name,
-        'args': args,
-        if (id != null) 'id': id,
-      },
+      'functionCall': {'name': name, 'args': args, if (id != null) 'id': id},
     };
   }
 }
@@ -441,15 +418,8 @@ final class FunctionCall extends Part {
 /// The response class for [FunctionCall]
 final class FunctionResponse extends Part {
   // ignore: public_member_api_docs
-  const FunctionResponse(
-    this.name,
-    this.response, {
-    this.id,
-    bool? isThought,
-  }) : super(
-          isThought: isThought,
-          thoughtSignature: null,
-        );
+  const FunctionResponse(this.name, this.response, {this.id, bool? isThought})
+    : super(isThought: isThought, thoughtSignature: null);
 
   /// The name of the function that was called.
   final String name;
@@ -487,10 +457,7 @@ final class FileData extends Part {
     this.fileUri, {
     this.mediaResolution,
     bool? isThought,
-  }) : super(
-          isThought: isThought,
-          thoughtSignature: null,
-        );
+  }) : super(isThought: isThought, thoughtSignature: null);
 
   @visibleForTesting
   // ignore: public_member_api_docs
@@ -500,10 +467,7 @@ final class FileData extends Part {
     this.mediaResolution,
     bool? isThought,
     String? thoughtSignature,
-  }) : super(
-          isThought: isThought,
-          thoughtSignature: thoughtSignature,
-        );
+  }) : super(isThought: isThought, thoughtSignature: thoughtSignature);
 
   const FileData._(
     this.mimeType,
@@ -511,10 +475,7 @@ final class FileData extends Part {
     this.mediaResolution,
     bool? isThought,
     String? thoughtSignature,
-  }) : super(
-          isThought: isThought,
-          thoughtSignature: thoughtSignature,
-        );
+  }) : super(isThought: isThought, thoughtSignature: thoughtSignature);
 
   /// File type of the [FileData].
   ///
@@ -548,20 +509,14 @@ final class ExecutableCodePart extends Part {
     required this.language,
     required this.code,
     bool? isThought,
-  }) : super(
-          isThought: isThought,
-          thoughtSignature: null,
-        );
+  }) : super(isThought: isThought, thoughtSignature: null);
 
   ExecutableCodePart._({
     required this.language,
     required this.code,
     bool? isThought,
     String? thoughtSignature,
-  }) : super(
-          isThought: isThought,
-          thoughtSignature: thoughtSignature,
-        );
+  }) : super(isThought: isThought, thoughtSignature: thoughtSignature);
 
   /// The programming language of the code.
   final CodeLanguage language;
@@ -586,25 +541,21 @@ final class CodeExecutionResultPart extends Part {
     required this.outcome,
     required this.output,
     bool? isThought,
-  }) : super(
-          isThought: isThought,
-          thoughtSignature: null,
-        );
+  }) : super(isThought: isThought, thoughtSignature: null);
 
   CodeExecutionResultPart._({
     required this.outcome,
     required this.output,
     bool? isThought,
     String? thoughtSignature,
-  }) : super(
-          isThought: isThought,
-          thoughtSignature: thoughtSignature,
-        );
+  }) : super(isThought: isThought, thoughtSignature: thoughtSignature);
 
   /// The result of the execution.
   final Outcome outcome;
 
   /// The stdout from the code execution, or an error message if it failed.
+  ///
+  /// An empty string means the execution produced no stdout.
   final String output;
 
   @override

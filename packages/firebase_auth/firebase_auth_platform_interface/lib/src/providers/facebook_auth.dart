@@ -41,9 +41,7 @@ class FacebookAuthProvider extends AuthProvider {
 
   /// Create a new [FacebookAuthCredential] from a provided [accessToken];
   static OAuthCredential credential(String accessToken) {
-    return FacebookAuthCredential._credential(
-      accessToken,
-    );
+    return FacebookAuthCredential._credential(accessToken);
   }
 
   /// This corresponds to the sign-in method identifier.
@@ -88,12 +86,12 @@ class FacebookAuthProvider extends AuthProvider {
 /// The auth credential returned from calling
 /// [FacebookAuthProvider.credential].
 class FacebookAuthCredential extends OAuthCredential {
-  FacebookAuthCredential._({
-    required String accessToken,
-  }) : super(
-            providerId: _kProviderId,
-            signInMethod: _kProviderId,
-            accessToken: accessToken);
+  FacebookAuthCredential._({required String accessToken})
+    : super(
+        providerId: _kProviderId,
+        signInMethod: _kProviderId,
+        accessToken: accessToken,
+      );
 
   factory FacebookAuthCredential._credential(String accessToken) {
     return FacebookAuthCredential._(accessToken: accessToken);

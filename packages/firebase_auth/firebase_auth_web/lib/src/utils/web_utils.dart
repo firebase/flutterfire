@@ -28,17 +28,15 @@ bool _hasFirebaseAuthErrorCodeAndMessage(JSError e) {
   }
 }
 
-R guardAuthExceptions<R>(
-  R Function() cb, {
-  auth_interop.Auth? auth,
-}) {
+R guardAuthExceptions<R>(R Function() cb, {auth_interop.Auth? auth}) {
   try {
     final value = cb();
     if (value is Future) {
       return value.catchError((err, stack) {
-        final exception = getFirebaseAuthException(err, auth);
-        return Error.throwWithStackTrace(exception, stack);
-      }) as R;
+            final exception = getFirebaseAuthException(err, auth);
+            return Error.throwWithStackTrace(exception, stack);
+          })
+          as R;
     }
 
     return value;
@@ -64,8 +62,9 @@ FirebaseAuthException getFirebaseAuthException(
   auth_interop.Auth? auth,
 ]) {
   final exception = objectException as JSError;
-  final authJsCredential =
-      auth_interop.OAuthProviderJsImpl.credentialFromError(exception);
+  final authJsCredential = auth_interop.OAuthProviderJsImpl.credentialFromError(
+    exception,
+  );
 
   OAuthCredential? credential;
 
@@ -167,14 +166,16 @@ MultiFactorInfo fromInteropMultiFactorInfo(
 
 /// Converts a [auth_interop.ActionCodeInfo] into a [ActionCodeInfo].
 ActionCodeInfo? convertWebActionCodeInfo(
-    auth_interop.ActionCodeInfo? webActionCodeInfo) {
+  auth_interop.ActionCodeInfo? webActionCodeInfo,
+) {
   if (webActionCodeInfo == null) {
     return null;
   }
 
   return ActionCodeInfo(
-    operation:
-        _convertWebActionCodeOperation(webActionCodeInfo.operation.toDart),
+    operation: _convertWebActionCodeOperation(
+      webActionCodeInfo.operation.toDart,
+    ),
     data: ActionCodeInfoData(
       email: webActionCodeInfo.data.email?.toDart,
       previousEmail: webActionCodeInfo.data.previousEmail?.toDart,
@@ -236,7 +237,8 @@ IdTokenResult convertWebIdTokenResult(
 
 /// Converts a [ActionCodeSettings] into a [auth_interop.ActionCodeSettings].
 auth_interop.ActionCodeSettings? convertPlatformActionCodeSettings(
-    ActionCodeSettings? actionCodeSettings) {
+  ActionCodeSettings? actionCodeSettings,
+) {
   if (actionCodeSettings == null) {
     return null;
   }
@@ -291,8 +293,9 @@ auth_interop.AuthProvider convertPlatformAuthProvider(
   }
 
   if (authProvider is AppleAuthProvider) {
-    auth_interop.OAuthProvider oAuthProvider =
-        auth_interop.OAuthProvider(authProvider.providerId);
+    auth_interop.OAuthProvider oAuthProvider = auth_interop.OAuthProvider(
+      authProvider.providerId,
+    );
 
     authProvider.scopes.forEach(oAuthProvider.addScope);
     oAuthProvider.setCustomParameters(authProvider.parameters);
@@ -318,8 +321,9 @@ auth_interop.AuthProvider convertPlatformAuthProvider(
   }
 
   if (authProvider is MicrosoftAuthProvider) {
-    auth_interop.OAuthProvider oAuthProvider =
-        auth_interop.OAuthProvider(authProvider.providerId);
+    auth_interop.OAuthProvider oAuthProvider = auth_interop.OAuthProvider(
+      authProvider.providerId,
+    );
 
     authProvider.scopes.forEach(oAuthProvider.addScope);
     oAuthProvider.setCustomParameters(authProvider.parameters);
@@ -327,8 +331,9 @@ auth_interop.AuthProvider convertPlatformAuthProvider(
   }
 
   if (authProvider is YahooAuthProvider) {
-    auth_interop.OAuthProvider oAuthProvider =
-        auth_interop.OAuthProvider(authProvider.providerId);
+    auth_interop.OAuthProvider oAuthProvider = auth_interop.OAuthProvider(
+      authProvider.providerId,
+    );
 
     authProvider.scopes.forEach(oAuthProvider.addScope);
     oAuthProvider.setCustomParameters(authProvider.parameters);
@@ -348,8 +353,9 @@ auth_interop.AuthProvider convertPlatformAuthProvider(
   }
 
   if (authProvider is OAuthProvider) {
-    auth_interop.OAuthProvider oAuthProvider =
-        auth_interop.OAuthProvider(authProvider.providerId);
+    auth_interop.OAuthProvider oAuthProvider = auth_interop.OAuthProvider(
+      authProvider.providerId,
+    );
 
     authProvider.scopes.forEach(oAuthProvider.addScope);
     oAuthProvider.setCustomParameters(authProvider.parameters);
@@ -365,7 +371,8 @@ auth_interop.AuthProvider convertPlatformAuthProvider(
 
 /// Converts a [auth_interop.AuthCredential] into a [AuthCredential].
 AuthCredential? convertWebAuthCredential(
-    auth_interop.AuthCredential? authCredential) {
+  auth_interop.AuthCredential? authCredential,
+) {
   if (authCredential == null) {
     return null;
   }
@@ -419,7 +426,8 @@ auth_interop.OAuthCredential? convertPlatformCredential(
 
   if (credential is FacebookAuthCredential) {
     return auth_interop.FacebookAuthProvider.credential(
-        credential.accessToken!);
+      credential.accessToken!,
+    );
   }
 
   if (credential is GithubAuthCredential) {
@@ -442,20 +450,22 @@ auth_interop.OAuthCredential? convertPlatformCredential(
 
   if (credential is PhoneAuthCredential) {
     return auth_interop.PhoneAuthProvider.credential(
-      credential.verificationId!,
-      credential.smsCode!,
-    ) as auth_interop.OAuthCredential;
+          credential.verificationId!,
+          credential.smsCode!,
+        )
+        as auth_interop.OAuthCredential;
   }
 
   if (credential is OAuthCredential) {
     auth_interop.OAuthCredentialOptions credentialOptions =
         auth_interop.OAuthCredentialOptions(
-      accessToken: credential.accessToken?.toJS,
-      rawNonce: credential.rawNonce?.toJS,
-      idToken: credential.idToken?.toJS,
-    );
-    return auth_interop.OAuthProvider(credential.providerId)
-        .credential(credentialOptions);
+          accessToken: credential.accessToken?.toJS,
+          rawNonce: credential.rawNonce?.toJS,
+          idToken: credential.idToken?.toJS,
+        );
+    return auth_interop.OAuthProvider(
+      credential.providerId,
+    ).credential(credentialOptions);
   }
 
   return null;
@@ -483,6 +493,7 @@ String convertRecaptchaVerifierTheme(RecaptchaVerifierTheme theme) {
 
 /// Converts a [multi_factor_interop.MultiFactorSession] into a [MultiFactorSession].
 MultiFactorSession convertMultiFactorSession(
-    multi_factor_interop.MultiFactorSession multiFactorSession) {
+  multi_factor_interop.MultiFactorSession multiFactorSession,
+) {
   return MultiFactorSessionWeb('web', multiFactorSession);
 }

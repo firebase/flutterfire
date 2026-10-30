@@ -11,41 +11,51 @@ void main() {
 
   group('$FirebaseException', () {
     test('should return a formatted message', () async {
-      FirebaseException e = FirebaseException(
-        plugin: 'foo',
-        message: 'bar',
-      );
+      FirebaseException e = FirebaseException(plugin: 'foo', message: 'bar');
 
       expect(e.toString(), '[foo/unknown] bar');
     });
 
     test('should return a formatted message with a custom code', () async {
-      FirebaseException e =
-          FirebaseException(plugin: 'foo', message: 'bar', code: 'baz');
+      FirebaseException e = FirebaseException(
+        plugin: 'foo',
+        message: 'bar',
+        code: 'baz',
+      );
 
       expect(e.toString(), '[foo/baz] bar');
     });
 
     test('should return a formatted message with a stack trace', () async {
       FirebaseException e = FirebaseException(
-          plugin: 'foo',
-          message: 'bar',
-          code: 'baz',
-          stackTrace: StackTrace.current);
+        plugin: 'foo',
+        message: 'bar',
+        code: 'baz',
+        stackTrace: StackTrace.current,
+      );
 
       // Anything with a stack trace adds 2 blanks lines following the message.
       expect(e.toString(), startsWith('[foo/baz] bar\n\n'));
     });
 
     test('should override the == operator', () async {
-      FirebaseException e1 =
-          FirebaseException(plugin: 'foo', message: 'bar', code: 'baz');
+      FirebaseException e1 = FirebaseException(
+        plugin: 'foo',
+        message: 'bar',
+        code: 'baz',
+      );
 
-      FirebaseException e2 =
-          FirebaseException(plugin: 'foo', message: 'bar', code: 'baz');
+      FirebaseException e2 = FirebaseException(
+        plugin: 'foo',
+        message: 'bar',
+        code: 'baz',
+      );
 
-      FirebaseException e3 =
-          FirebaseException(plugin: 'foo', message: 'bar', code: 'baz');
+      FirebaseException e3 = FirebaseException(
+        plugin: 'foo',
+        message: 'bar',
+        code: 'baz',
+      );
 
       expect(e1 == e2, true);
       expect(e1 != e3, false);

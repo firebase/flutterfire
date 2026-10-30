@@ -14,9 +14,7 @@ import 'firebase_options.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(MyApp());
 }
 
@@ -27,9 +25,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-          title: const Text('In-App Messaging example'),
-        ),
+        appBar: AppBar(title: const Text('In-App Messaging example')),
         body: Builder(
           builder: (BuildContext context) {
             return Center(
@@ -60,10 +56,7 @@ class ProgrammaticTriggersExample extends StatelessWidget {
           children: <Widget>[
             const Text(
               'Programmatic Trigger',
-              style: TextStyle(
-                fontStyle: FontStyle.italic,
-                fontSize: 18,
-              ),
+              style: TextStyle(fontStyle: FontStyle.italic, fontSize: 18),
             ),
             const SizedBox(height: 8),
             const Text('Manually trigger events programmatically '),
@@ -82,7 +75,7 @@ class ProgrammaticTriggersExample extends StatelessWidget {
                 'Programmatic Triggers'.toUpperCase(),
                 style: const TextStyle(color: Colors.white),
               ),
-            )
+            ),
           ],
         ),
       ),
@@ -106,21 +99,29 @@ class _MessageEventsExampleState extends State<MessageEventsExample> {
 
     _subscriptions.addAll(<StreamSubscription<Object>>[
       MyApp.fiam.onMessageClicked.listen((InAppMessagingClickEvent event) {
-        _log('clicked ${event.campaignMetadata.campaignName}, '
-            'action url: ${event.action.actionUrl}');
+        _log(
+          'clicked ${event.campaignMetadata.campaignName}, '
+          'action url: ${event.action.actionUrl}',
+        );
       }),
-      MyApp.fiam.onMessageImpression
-          .listen((InAppMessagingImpressionEvent event) {
+      MyApp.fiam.onMessageImpression.listen((
+        InAppMessagingImpressionEvent event,
+      ) {
         _log('impression for ${event.campaignMetadata.campaignName}');
       }),
       MyApp.fiam.onMessageDismissed.listen((InAppMessagingDismissEvent event) {
-        _log('dismissed ${event.campaignMetadata.campaignName} '
-            '(${event.dismissType.name})');
+        _log(
+          'dismissed ${event.campaignMetadata.campaignName} '
+          '(${event.dismissType.name})',
+        );
       }),
-      MyApp.fiam.onMessageDisplayError
-          .listen((InAppMessagingDisplayErrorEvent event) {
-        _log('display error for ${event.campaignMetadata.campaignName}: '
-            '${event.errorMessage}');
+      MyApp.fiam.onMessageDisplayError.listen((
+        InAppMessagingDisplayErrorEvent event,
+      ) {
+        _log(
+          'display error for ${event.campaignMetadata.campaignName}: '
+          '${event.errorMessage}',
+        );
       }),
     ]);
   }
@@ -149,10 +150,7 @@ class _MessageEventsExampleState extends State<MessageEventsExample> {
           children: <Widget>[
             const Text(
               'Message events',
-              style: TextStyle(
-                fontStyle: FontStyle.italic,
-                fontSize: 18,
-              ),
+              style: TextStyle(fontStyle: FontStyle.italic, fontSize: 18),
             ),
             const SizedBox(height: 8),
             const Text('Last event received from the campaign'),
@@ -205,7 +203,8 @@ class _CustomDisplayExampleState extends State<CustomDisplayExample> {
             message.primaryAction ?? message.action;
         return AlertDialog(
           title: Text(
-              message.title?.text ?? message.campaignMetadata.campaignName),
+            message.title?.text ?? message.campaignMetadata.campaignName,
+          ),
           content: Text(message.body?.text ?? 'Custom Flutter in-app message'),
           actions: <Widget>[
             TextButton(
@@ -249,10 +248,7 @@ class _CustomDisplayExampleState extends State<CustomDisplayExample> {
           children: <Widget>[
             const Text(
               'Custom Flutter display',
-              style: TextStyle(
-                fontStyle: FontStyle.italic,
-                fontSize: 18,
-              ),
+              style: TextStyle(fontStyle: FontStyle.italic, fontSize: 18),
             ),
             const SizedBox(height: 8),
             const Text(
@@ -290,10 +286,7 @@ class AnalyticsEventExample extends StatelessWidget {
           children: <Widget>[
             const Text(
               'Log an analytics event',
-              style: TextStyle(
-                fontStyle: FontStyle.italic,
-                fontSize: 18,
-              ),
+              style: TextStyle(fontStyle: FontStyle.italic, fontSize: 18),
             ),
             const SizedBox(height: 8),
             const Text('Trigger an analytics event'),

@@ -38,13 +38,13 @@ class FirebaseDataConnect extends FirebasePlugin {
     required this.connectorConfig,
     CallerSDKType? sdkType,
     this.cacheSettings,
-  })  : options = DataConnectOptions(
-          app.options.projectId,
-          connectorConfig.location,
-          connectorConfig.connector,
-          connectorConfig.serviceId,
-        ),
-        super(app.name, 'plugins.flutter.io/firebase_data_connect') {
+  }) : options = DataConnectOptions(
+         app.options.projectId,
+         connectorConfig.location,
+         connectorConfig.connector,
+         connectorConfig.serviceId,
+       ),
+       super(app.name, 'plugins.flutter.io/firebase_data_connect') {
     registerWebLibraryVersion('flutter-fire-dc', packageVersion);
     _queryManager = QueryManager(this);
     if (sdkType != null) {

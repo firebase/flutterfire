@@ -47,7 +47,7 @@ jobs:
           firebase-tools-version: '15.25.1'
           bootstrap-scope: 'firebase_data_connect*'
       - name: Setup PostgreSQL for Linux/macOS/Windows
-        uses: ikalnytskyi/action-setup-postgres@c4dda34aae1c821e3a771b68b73b13af3198a7ee
+        uses: ikalnytskyi/action-setup-postgres@325155bfd7807b2a21ac9c2c7bb9b9a6eacc44df
       - name: Firebase Emulator Cache
         id: firebase-emulator-cache
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
@@ -139,7 +139,7 @@ jobs:
         # The example's pubspec also pins this; there is no Podfile.
         run: flutter config --enable-swift-package-manager
       - name: Setup PostgreSQL for Linux/macOS/Windows
-        uses: ikalnytskyi/action-setup-postgres@c4dda34aae1c821e3a771b68b73b13af3198a7ee
+        uses: ikalnytskyi/action-setup-postgres@325155bfd7807b2a21ac9c2c7bb9b9a6eacc44df
       - uses: hendrikmuhs/ccache-action@f09c25b45002a07be2955cbe52e8cee55643f89d
         name: Xcode Compile Cache
         with:
@@ -238,7 +238,7 @@ jobs:
           firebase-tools-version: '15.25.1'
           bootstrap-scope: 'firebase_data_connect*'
       - name: Setup PostgreSQL for Linux/macOS/Windows
-        uses: ikalnytskyi/action-setup-postgres@c4dda34aae1c821e3a771b68b73b13af3198a7ee
+        uses: ikalnytskyi/action-setup-postgres@325155bfd7807b2a21ac9c2c7bb9b9a6eacc44df
       - name: Generate dummy Firebase configs
         run: dart ./.github/workflows/scripts/generate-dummy-firebase-configs.dart
       - name: Firebase Emulator Cache
@@ -291,7 +291,7 @@ jobs:
           firebase-tools-version: '15.25.1'
           bootstrap-scope: 'firebase_data_connect*'
       - name: Setup PostgreSQL for Linux/macOS/Windows
-        uses: ikalnytskyi/action-setup-postgres@c4dda34aae1c821e3a771b68b73b13af3198a7ee
+        uses: ikalnytskyi/action-setup-postgres@325155bfd7807b2a21ac9c2c7bb9b9a6eacc44df
       - name: Generate dummy Firebase configs
         run: dart ./.github/workflows/scripts/generate-dummy-firebase-configs.dart
       - name: Firebase Emulator Cache

@@ -19,7 +19,7 @@ import 'utils/exception.dart';
 class MethodChannelReference extends ReferencePlatform {
   /// Creates a [ReferencePlatform] that is implemented using [MethodChannel].
   MethodChannelReference(FirebaseStoragePlatform storage, String path)
-      : super(storage, path);
+    : super(storage, path);
 
   /// FirebaseApp pigeon instance
   InternalStorageFirebaseApp get pigeonFirebaseApp {
@@ -41,8 +41,10 @@ class MethodChannelReference extends ReferencePlatform {
   @override
   Future<void> delete() async {
     try {
-      await MethodChannelFirebaseStorage.pigeonChannel
-          .referenceDelete(pigeonFirebaseApp, pigeonReference);
+      await MethodChannelFirebaseStorage.pigeonChannel.referenceDelete(
+        pigeonFirebaseApp,
+        pigeonReference,
+      );
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
@@ -95,7 +97,8 @@ class MethodChannelReference extends ReferencePlatform {
 
   /// Convert a [InternalListResult] to [ListResultPlatform]
   ListResultPlatform convertListReference(
-      InternalListResult pigeonReferenceList) {
+    InternalListResult pigeonReferenceList,
+  ) {
     List<String> referencePaths = [];
     for (final reference in pigeonReferenceList.items) {
       referencePaths.add(reference!.fullPath);
@@ -117,8 +120,11 @@ class MethodChannelReference extends ReferencePlatform {
     try {
       InternalListOptions pigeonOptions = convertOptions(options);
       InternalListResult pigeonReferenceList =
-          await MethodChannelFirebaseStorage.pigeonChannel
-              .referenceList(pigeonFirebaseApp, pigeonReference, pigeonOptions);
+          await MethodChannelFirebaseStorage.pigeonChannel.referenceList(
+            pigeonFirebaseApp,
+            pigeonReference,
+            pigeonOptions,
+          );
       return convertListReference(pigeonReferenceList);
     } catch (e, stack) {
       convertPlatformException(e, stack);
@@ -129,8 +135,10 @@ class MethodChannelReference extends ReferencePlatform {
   Future<ListResultPlatform> listAll() async {
     try {
       InternalListResult pigeonReferenceList =
-          await MethodChannelFirebaseStorage.pigeonChannel
-              .referenceListAll(pigeonFirebaseApp, pigeonReference);
+          await MethodChannelFirebaseStorage.pigeonChannel.referenceListAll(
+            pigeonFirebaseApp,
+            pigeonReference,
+          );
       return convertListReference(pigeonReferenceList);
     } catch (e, stack) {
       convertPlatformException(e, stack);
@@ -140,8 +148,11 @@ class MethodChannelReference extends ReferencePlatform {
   @override
   Future<Uint8List?> getData(int maxSize) async {
     try {
-      return await MethodChannelFirebaseStorage.pigeonChannel
-          .referenceGetData(pigeonFirebaseApp, pigeonReference, maxSize);
+      return await MethodChannelFirebaseStorage.pigeonChannel.referenceGetData(
+        pigeonFirebaseApp,
+        pigeonReference,
+        maxSize,
+      );
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
@@ -156,7 +167,8 @@ class MethodChannelReference extends ReferencePlatform {
   @override
   TaskPlatform putBlob(dynamic data, [SettableMetadata? metadata]) {
     throw UnimplementedError(
-        'putBlob() is not supported on native platforms. Use [put], [putFile] or [putString] instead.');
+      'putBlob() is not supported on native platforms. Use [put], [putFile] or [putString] instead.',
+    );
   }
 
   @override
@@ -166,11 +178,20 @@ class MethodChannelReference extends ReferencePlatform {
   }
 
   @override
-  TaskPlatform putString(String data, PutStringFormat format,
-      [SettableMetadata? metadata]) {
+  TaskPlatform putString(
+    String data,
+    PutStringFormat format, [
+    SettableMetadata? metadata,
+  ]) {
     int handle = MethodChannelFirebaseStorage.nextMethodChannelHandleId;
     return MethodChannelPutStringTask(
-        handle, storage, fullPath, data, format, metadata);
+      handle,
+      storage,
+      fullPath,
+      data,
+      format,
+      metadata,
+    );
   }
 
   /// Convert a [SettableMetadata] to [InternalSettableMetadata]
@@ -190,8 +211,11 @@ class MethodChannelReference extends ReferencePlatform {
     try {
       InternalFullMetaData updatedMetaData = await MethodChannelFirebaseStorage
           .pigeonChannel
-          .referenceUpdateMetadata(pigeonFirebaseApp, pigeonReference,
-              convertToPigeonMetaData(metadata));
+          .referenceUpdateMetadata(
+            pigeonFirebaseApp,
+            pigeonReference,
+            convertToPigeonMetaData(metadata),
+          );
       return convertMetadata(updatedMetaData);
     } catch (e, stack) {
       convertPlatformException(e, stack);

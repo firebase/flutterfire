@@ -12,9 +12,11 @@ import 'installations_interop.dart' as installations_interop;
 export 'installations_interop.dart';
 
 Installations getInstallationsInstance([App? app]) {
-  return Installations.getInstance(app != null
-      ? installations_interop.getInstallations(app.jsObject)
-      : installations_interop.getInstallations());
+  return Installations.getInstance(
+    app != null
+        ? installations_interop.getInstallations(app.jsObject)
+        : installations_interop.getInstallations(),
+  );
 }
 
 class Installations
@@ -23,7 +25,8 @@ class Installations
 
   /// Creates a new Installations from a [jsObject].
   static Installations getInstance(
-      installations_interop.InstallationsJsImpl jsObject) {
+    installations_interop.InstallationsJsImpl jsObject,
+  ) {
     return _expando[jsObject] ??= Installations._fromJsObject(jsObject);
   }
 
@@ -32,14 +35,15 @@ class Installations
   Future<void> delete() =>
       (installations_interop.deleteInstallations(jsObject)).toDart;
 
-  Future<String> getId() => (installations_interop.getId(jsObject))
-      .toDart
-      .then((value) => value.toDart);
+  Future<String> getId() => (installations_interop.getId(
+    jsObject,
+  )).toDart.then((value) => value.toDart);
 
   Future<String> getToken([bool forceRefresh = false]) =>
-      (installations_interop.getToken(jsObject, forceRefresh.toJS))
-          .toDart
-          .then((value) => value.toDart);
+      (installations_interop.getToken(
+        jsObject,
+        forceRefresh.toJS,
+      )).toDart.then((value) => value.toDart);
 
   JSFunction? _onIdChangedUnsubscribe;
 
@@ -53,8 +57,10 @@ class Installations
 
       void startListen() {
         assert(_onIdChangedUnsubscribe == null);
-        _onIdChangedUnsubscribe =
-            installations_interop.onIdChange(jsObject, wrapper);
+        _onIdChangedUnsubscribe = installations_interop.onIdChange(
+          jsObject,
+          wrapper,
+        );
       }
 
       void stopListen() {

@@ -29,9 +29,13 @@ void resetFirebaseCoreMocks() {
 }
 
 class MockHttpsCallablePlatform extends HttpsCallablePlatform {
-  MockHttpsCallablePlatform(FirebaseFunctionsPlatform functions, String? origin,
-      String? name, HttpsCallableOptions options, Uri? uri)
-      : super(functions, origin, name, options, uri);
+  MockHttpsCallablePlatform(
+    FirebaseFunctionsPlatform functions,
+    String? origin,
+    String? name,
+    HttpsCallableOptions options,
+    Uri? uri,
+  ) : super(functions, origin, name, options, uri);
 
   @override
   Future<dynamic> call([dynamic parameters]) async {
@@ -42,27 +46,45 @@ class MockHttpsCallablePlatform extends HttpsCallablePlatform {
 
 class MockFirebaseFunctionsPlatform extends FirebaseFunctionsPlatform {
   MockFirebaseFunctionsPlatform({FirebaseApp? app, required String region})
-      : super(app, region);
+    : super(app, region);
 
   @override
   HttpsCallablePlatform httpsCallable(
-      String? origin, String name, HttpsCallableOptions options) {
-    HttpsCallablePlatform httpsCallablePlatform =
-        MockHttpsCallablePlatform(this, origin, name, options, null);
+    String? origin,
+    String name,
+    HttpsCallableOptions options,
+  ) {
+    HttpsCallablePlatform httpsCallablePlatform = MockHttpsCallablePlatform(
+      this,
+      origin,
+      name,
+      options,
+      null,
+    );
     return httpsCallablePlatform;
   }
 
   @override
   HttpsCallablePlatform httpsCallableWithUri(
-      String? origin, Uri uri, HttpsCallableOptions options) {
-    HttpsCallablePlatform httpsCallablePlatform =
-        MockHttpsCallablePlatform(this, origin, null, options, uri);
+    String? origin,
+    Uri uri,
+    HttpsCallableOptions options,
+  ) {
+    HttpsCallablePlatform httpsCallablePlatform = MockHttpsCallablePlatform(
+      this,
+      origin,
+      null,
+      options,
+      uri,
+    );
     return httpsCallablePlatform;
   }
 
   @override
-  FirebaseFunctionsPlatform delegateFor(
-      {FirebaseApp? app, required String region}) {
+  FirebaseFunctionsPlatform delegateFor({
+    FirebaseApp? app,
+    required String region,
+  }) {
     MockFirebaseFunctionsPlatform functionsPlatform =
         MockFirebaseFunctionsPlatform(app: app, region: region);
     return functionsPlatform;
