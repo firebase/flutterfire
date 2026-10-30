@@ -2,10 +2,11 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:dart_cloud_functions/src/callable_client.dart';
-import 'package:dart_cloud_functions/src/callable_context.dart';
-import 'package:dart_cloud_functions/src/callable_protocol.dart';
-import 'package:dart_cloud_functions/src/firebase_callable_context.dart';
+import 'package:dart_cloud_functions/src/client.dart';
+import 'package:dart_cloud_functions/src/context.dart';
+import 'package:dart_cloud_functions/src/errors.dart';
+import 'package:dart_cloud_functions/src/firebase_context.dart';
+import 'package:dart_cloud_functions/src/url.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
@@ -52,6 +53,9 @@ class DartFirebaseFunctions {
 
   /// The instance for [app] (the default app when omitted) and [region].
   ///
+  /// [region] may also be a custom domain such as `https://example.com`, as
+  /// in the native SDKs. Calls by name then go to `https://example.com/{name}`.
+  ///
   /// Calls carry the ID token of the user signed in to Firebase Auth for
   /// [app], if any.
   static DartFirebaseFunctions instanceFor({
@@ -72,7 +76,8 @@ class DartFirebaseFunctions {
   /// The app whose Firebase project hosts the functions.
   final FirebaseApp app;
 
-  /// The region the functions are deployed to, such as `us-central1`.
+  /// The region the functions are deployed to, such as `us-central1`, or a
+  /// custom domain such as `https://example.com`.
   final String region;
 
   /// Whether tokens, such as the Auth ID token, may be sent over plain HTTP
@@ -208,7 +213,7 @@ class DartHttpsCallable {
   /// `List` or `String`-keyed `Map` of those. Failures throw a
   /// `DartFirebaseFunctionsException`.
   Future<DartHttpsCallableResult<T>> call<T>([Object? data]) async {
-    final url = callableEndpoint(
+    final url = callableUrl(
       projectId: _functions.app.options.projectId,
       region: _functions.region,
       name: name,
@@ -240,7 +245,7 @@ class DartHttpsCallable {
         limitedUseAppCheckToken: options.limitedUseAppCheckToken,
       );
     } catch (error, stackTrace) {
-      Error.throwWithStackTrace(callableContextException(error), stackTrace);
+      Error.throwWithStackTrace(callableTokenException(error), stackTrace);
     }
   }
 }

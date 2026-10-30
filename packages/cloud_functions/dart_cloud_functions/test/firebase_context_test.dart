@@ -4,7 +4,7 @@
 
 import 'dart:convert';
 
-import 'package:dart_cloud_functions/src/firebase_callable_context.dart';
+import 'package:dart_cloud_functions/src/firebase_context.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 

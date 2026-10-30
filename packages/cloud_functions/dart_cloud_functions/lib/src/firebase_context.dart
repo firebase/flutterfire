@@ -4,7 +4,7 @@
 
 import 'dart:developer' as developer;
 
-import 'package:dart_cloud_functions/src/callable_context.dart';
+import 'package:dart_cloud_functions/src/context.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';

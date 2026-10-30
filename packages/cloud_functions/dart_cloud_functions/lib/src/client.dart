@@ -5,8 +5,9 @@
 import 'dart:async';
 import 'dart:developer' as developer;
 
-import 'package:dart_cloud_functions/src/callable_context.dart';
-import 'package:dart_cloud_functions/src/callable_protocol.dart';
+import 'package:dart_cloud_functions/src/codec.dart';
+import 'package:dart_cloud_functions/src/context.dart';
+import 'package:dart_cloud_functions/src/errors.dart';
 import 'package:http/http.dart' as http;
 
 /// Calls callable functions over HTTP.
@@ -63,4 +64,3 @@ final class CallableClient {
     }
   }
 }
-

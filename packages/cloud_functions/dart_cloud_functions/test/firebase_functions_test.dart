@@ -6,7 +6,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:dart_cloud_functions/dart_cloud_functions.dart';
-import 'package:dart_cloud_functions/src/callable_context.dart';
+import 'package:dart_cloud_functions/src/context.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/test.dart';
 import 'package:flutter/foundation.dart';
