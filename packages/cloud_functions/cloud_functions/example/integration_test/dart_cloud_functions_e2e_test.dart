@@ -14,7 +14,8 @@ import 'package:integration_test/integration_test.dart';
 import 'report_test_results.dart';
 import 'sample_data.dart' as data;
 
-/// The `call()` cases from `e2e_test.dart`, run against `dart_cloud_functions`.
+/// The `call()` and `stream()` cases from `e2e_test.dart`, run against
+/// `dart_cloud_functions`.
 ///
 /// Keep the two files in step until they share one suite (plan item 0.3).
 void main() {
@@ -121,6 +122,158 @@ void main() {
       });
     });
 
+    group('DartHttpsCallable.stream()', () {
+      // Like the native suite, most cases look at the first chunk.
+      Future<Object?> firstChunk(DartHttpsCallable callable, [Object? input]) {
+        return callable
+            .stream<Object?, Object?>(input)
+            .where((response) => response is DartChunk)
+            .map((response) => (response as DartChunk).partialData)
+            .first;
+      }
+
+      test('returns a [DartStreamResponse]', () async {
+        await expectLater(
+          functions.httpsCallable('testStreamResponse').stream(),
+          emits(isA<DartStreamResponse>()),
+        );
+      });
+
+      test('streams the chunks, then the result', () async {
+        final responses = await functions
+            .httpsCallable('testStreamResponse')
+            .stream<String, List<dynamic>>()
+            .toList();
+
+        expect(
+          [
+            for (final response in responses)
+              if (response case DartChunk(:final partialData)) partialData,
+          ],
+          ['Apple', 'Mango', 'Banana'],
+        );
+        expect(
+          responses.last,
+          isA<DartResult<String, List<dynamic>>>().having(
+            (r) => r.result.data,
+            'data',
+            ['Apple', 'Mango', 'Banana'],
+          ),
+        );
+      });
+
+      test('accepts a string value', () async {
+        expect(await firstChunk(callable, 'foo'), 'string');
+      });
+
+      test('accepts a number value', () async {
+        expect(await firstChunk(callable, 123), 'number');
+      });
+
+      test('accepts no arguments', () async {
+        expect(await firstChunk(callable), 'null');
+      });
+
+      test('accepts a false boolean value', () async {
+        expect(await firstChunk(callable, false), 'boolean');
+      });
+
+      test('accepts a true boolean value', () async {
+        expect(await firstChunk(callable, true), 'boolean');
+      });
+
+      test('accepts a [List]', () async {
+        expect(await firstChunk(callable, data.list), 'array');
+      });
+
+      test('accepts a deeply nested [Map]', () async {
+        expect(
+          await firstChunk(callable, {
+            'type': 'deepMap',
+            'inputData': data.deepMap,
+          }),
+          data.deepMap,
+        );
+      });
+
+      test('can be called using a String url', () async {
+        await expectLater(
+          functions.httpsCallableFromUrl(_listFruits2ndGenUrl).stream(),
+          emits(isA<DartStreamResponse>()),
+        );
+      });
+
+      test('can be called using a Uri', () async {
+        await expectLater(
+          functions
+              .httpsCallableFromUri(Uri.parse(_listFruits2ndGenUrl))
+              .stream(),
+          emits(isA<DartStreamResponse>()),
+        );
+      });
+
+      test('sends data when called using a url', () async {
+        final byUrl = functions.httpsCallableFromUrl(
+          _testFunctionDefaultRegionUrl,
+        );
+        expect(await firstChunk(byUrl, 'foo'), 'string');
+      });
+
+      test('concurrent streams on the same callable do not collide', () async {
+        final results = await Future.wait([
+          firstChunk(callable, 'foo'),
+          firstChunk(callable, 123),
+        ]);
+        expect(results, ['string', 'number']);
+      });
+
+      test('emits a [DartResult] as the last value', () async {
+        expect(await callable.stream().last, isA<DartResult>());
+      });
+
+      test('returns objects in the result as Map<String, dynamic>', () async {
+        final last = await callable.stream({
+          'type': 'deepMap',
+          'inputData': data.deepMap,
+        }).last;
+        expect((last as DartResult).result.data, isA<Map<String, dynamic>>());
+      });
+
+      test('emits an error the function throws', () async {
+        await expectLater(
+          callable.stream({}),
+          emitsError(
+            isA<DartFirebaseFunctionsException>()
+                .having((e) => e.code, 'code', 'invalid-argument')
+                .having((e) => e.message, 'message', 'Invalid test requested.'),
+          ),
+        );
+      });
+
+      test(
+        'fails with deadline-exceeded when nothing arrives for the timeout',
+        () async {
+          final timeoutCallable = functions.httpsCallable(
+            'testFunctionTimeout',
+            options:
+                const DartHttpsCallableOptions(timeout: Duration(seconds: 3)),
+          );
+          await expectLater(
+            timeoutCallable.stream({
+              'testTimeout':
+                  const Duration(seconds: 6).inMilliseconds.toString(),
+            }),
+            emitsError(
+              isA<DartFirebaseFunctionsException>()
+                  .having((e) => e.code, 'code', 'deadline-exceeded'),
+            ),
+          );
+        },
+        // Web streams have no timeout, as in the JS SDK.
+        skip: kIsWeb,
+      );
+    });
+
     group('DartFirebaseFunctionsException', () {
       test('is thrown for an HttpsError', () async {
         await expectLater(
@@ -206,3 +359,6 @@ void main() {
 
 String get _listFruits2ndGenUrl =>
     'http://$emulatorUrlHost:5001/flutterfire-e2e-tests/us-central1/listfruits2ndgen';
+
+String get _testFunctionDefaultRegionUrl =>
+    'http://$emulatorUrlHost:5001/flutterfire-e2e-tests/us-central1/testFunctionDefaultRegion';

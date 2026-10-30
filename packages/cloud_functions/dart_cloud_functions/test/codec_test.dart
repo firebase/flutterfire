@@ -114,4 +114,91 @@ void main() {
       );
     });
   });
+
+  group('decodeCallableError', () {
+    test('maps the error object of an error response', () {
+      expect(
+        decodeCallableError(400, utf8.encode(_invalidArgumentBody)).code,
+        'invalid-argument',
+      );
+    });
+
+    test('falls back to the HTTP status for a non-JSON body', () {
+      expect(
+        decodeCallableError(404, utf8.encode(_unknownFunctionBody)).code,
+        'not-found',
+      );
+    });
+  });
+
+  group('decodeCallableEvents', () {
+    Future<List<CallableEvent>> decodeEvents(List<String> chunks) {
+      return decodeCallableEvents(
+        Stream.fromIterable(chunks.map(utf8.encode)),
+      ).toList();
+    }
+
+    test('decodes messages, then the result', () async {
+      expect(
+        await decodeEvents([
+          'data: {"message":"Apple"}\n\n',
+          'data: {"message":"Banana"}\n\ndata: {"result":2}\n\n',
+        ]),
+        [
+          (isResult: false, value: 'Apple'),
+          (isResult: false, value: 'Banana'),
+          (isResult: true, value: 2),
+        ],
+      );
+    });
+
+    test('skips heartbeats and lines that are not events', () async {
+      expect(
+        await decodeEvents([
+          ': ping\n\n',
+          'event: unused\n',
+          'data: not json\n\n',
+          'data: {"unknown":1}\n\n',
+          'data: {"result":1}\n\n',
+        ]),
+        [(isResult: true, value: 1)],
+      );
+    });
+
+    test('accepts CRLF line endings and data: without a space', () async {
+      expect(
+        await decodeEvents(['data:{"message":1}\r\n\r\ndata:{"result":2}\r\n']),
+        [(isResult: false, value: 1), (isResult: true, value: 2)],
+      );
+    });
+
+    test('joins lines and characters split across network chunks', () async {
+      final bytes = utf8.encode('data: {"message":"é"}\n\n');
+      // In UTF-8, é is the two bytes 0xC3 0xA9; split between them.
+      final middle = bytes.indexOf(0xA9);
+
+      final events = await decodeCallableEvents(
+        Stream.fromIterable([bytes.sublist(0, middle), bytes.sublist(middle)]),
+      ).toList();
+
+      expect(events, [(isResult: false, value: 'é')]);
+    });
+
+    test('throws an error event', () async {
+      await expectLater(
+        decodeEvents([
+          'data: {"message":"Apple"}\n\n',
+          'data: {"error":{"status":"INVALID_ARGUMENT","message":"Bad."}}\n\n',
+        ]),
+        _throwsCode('invalid-argument'),
+      );
+    });
+
+    test('makes an error event without a status internal', () async {
+      await expectLater(
+        decodeEvents(['data: {"error":{"message":"Oops."}}\n\n']),
+        _throwsCode('internal'),
+      );
+    });
+  });
 }

@@ -162,6 +162,10 @@ class DartHttpsCallableOptions {
   });
 
   /// How long a call may take before it fails with `deadline-exceeded`.
+  ///
+  /// For [DartHttpsCallable.stream], it's how long a stream may go without
+  /// data on Android, iOS and macOS. Web streams have no timeout, as in the
+  /// JS SDK.
   final Duration timeout;
 
   /// Whether to send a limited-use App Check token instead of the standard
@@ -180,6 +184,34 @@ class DartHttpsCallableResult<T> {
   /// JSON objects arrive as `Map<String, dynamic>` and arrays as
   /// `List<dynamic>`.
   final T data;
+}
+
+/// A response from [DartHttpsCallable.stream]: a [DartChunk] the function sent
+/// along the way, or its final [DartResult].
+///
+/// Mirrors `StreamResponse` from `cloud_functions`.
+sealed class DartStreamResponse<T, R> {}
+
+/// A chunk the function sent while running, with `sendChunk()`.
+///
+/// Mirrors `Chunk` from `cloud_functions`.
+class DartChunk<T, R> extends DartStreamResponse<T, R> {
+  /// Creates a chunk with [partialData].
+  DartChunk(this.partialData);
+
+  /// The data the function sent.
+  final T partialData;
+}
+
+/// The value the function returned, the last response of a stream.
+///
+/// Mirrors `Result` from `cloud_functions`.
+class DartResult<T, R> extends DartStreamResponse<T, R> {
+  /// Creates the final response of a stream, with [result].
+  DartResult(this.result);
+
+  /// The value the function returned.
+  final DartHttpsCallableResult<R> result;
 }
 
 /// A reference to a callable function.
@@ -213,6 +245,43 @@ class DartHttpsCallable {
   /// `List` or `String`-keyed `Map` of those. Failures throw a
   /// `DartFirebaseFunctionsException`.
   Future<DartHttpsCallableResult<T>> call<T>([Object? data]) async {
+    final (url, context) = await _prepare();
+    final result = await _functions._client.callFunction(
+      url,
+      data,
+      context: context,
+      timeout: options.timeout,
+    );
+    return DartHttpsCallableResult<T>._(result as T);
+  }
+
+  /// Streams the function with [data]: each [DartChunk] it sends, then its
+  /// [DartResult].
+  ///
+  /// Only 2nd gen functions stream. [data] must be JSON-encodable, as for
+  /// [call]. The request starts when the stream is listened to, and
+  /// cancelling the subscription aborts it. Failures arrive as
+  /// `DartFirebaseFunctionsException` errors. See
+  /// [DartHttpsCallableOptions.timeout] for how timeouts work.
+  Stream<DartStreamResponse<T, R>> stream<T, R>([Object? data]) async* {
+    final (url, context) = await _prepare();
+    final events = _functions._client.streamFunction(
+      url,
+      data,
+      context: context,
+      // Web streams have no timeout, as in the JS SDK.
+      idleTimeout: kIsWeb ? null : options.timeout,
+    );
+    await for (final event in events) {
+      yield event.isResult
+          ? DartResult<T, R>(DartHttpsCallableResult<R>._(event.value as R))
+          : DartChunk<T, R>(event.value as T);
+    }
+  }
+
+  /// Resolves the function's URL and gets the tokens for one request,
+  /// refusing to send them insecurely.
+  Future<(Uri, CallableContext)> _prepare() async {
     final url = callableUrl(
       projectId: _functions.app.options.projectId,
       region: _functions.region,
@@ -226,13 +295,7 @@ class DartHttpsCallable {
       context,
       allowInsecure: kDebugMode && _functions.allowInsecureTokenAttachment,
     );
-    final result = await _functions._client.callFunction(
-      url,
-      data,
-      context: context,
-      timeout: options.timeout,
-    );
-    return DartHttpsCallableResult<T>._(result as T);
+    return (url, context);
   }
 
   /// Gets the tokens for one request.

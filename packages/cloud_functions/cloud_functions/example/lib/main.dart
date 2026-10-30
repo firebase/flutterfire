@@ -41,7 +41,7 @@ class _MyAppState extends State<MyApp> {
     DartFunctionsBackend(),
   ];
   late FunctionsBackend backend = backends.first;
-  StreamSubscription<StreamResponse<String, List<dynamic>>>? streamSubscription;
+  StreamSubscription<StreamEvent>? streamSubscription;
   List fruit = [];
   List streamResult = [];
   String? streamError;
@@ -87,17 +87,17 @@ class _MyAppState extends State<MyApp> {
     streamSubscription = sender
         .streamByName('testStreamResponse')
         .listen(
-          (data) {
-            switch (data) {
-              case Chunk<String, List<dynamic>>(:final partialData):
+          (event) {
+            switch (event) {
+              case StreamChunk(:final data):
                 setState(() {
                   // adds individual stream values to list
-                  fruit.add(partialData);
+                  fruit.add(data);
                 });
-              case Result<String, List<dynamic>>(:final result):
+              case StreamResult(:final data):
                 setState(() {
                   // stores complete stream result
-                  streamResult = List.from(result.data);
+                  streamResult = List.from((data as List?) ?? const []);
                   resultSource = describeCall(
                     what,
                     sender,

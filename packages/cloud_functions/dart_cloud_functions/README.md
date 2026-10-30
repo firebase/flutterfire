@@ -20,6 +20,7 @@ by side in the same app and compared one-to-one.
 | `HttpsCallable` | `DartHttpsCallable` |
 | `HttpsCallableOptions` | `DartHttpsCallableOptions` |
 | `HttpsCallableResult` | `DartHttpsCallableResult` |
+| `StreamResponse`, `Chunk`, `Result` | `DartStreamResponse`, `DartChunk`, `DartResult` |
 | `FirebaseFunctionsException` | `DartFirebaseFunctionsException` |
 
 ## Usage
@@ -39,7 +40,8 @@ try {
 ```
 
 - `DartFirebaseFunctions.instanceFor(app: ..., region: ...)` selects another
-  app or region. Instances are cached per app and region.
+  app or region. Instances are cached per app and region. The region may also
+  be a custom domain such as `https://example.com`.
 - Calls carry the ID token of the user signed in to Firebase Auth, as
   `Authorization: Bearer <token>`, like `cloud_functions`. If getting the
   token fails, the call fails with `unknown` on Android and Apple, and goes
@@ -67,6 +69,33 @@ try {
   same error codes as `cloud_functions`, so `on FirebaseException catch (e)`
   handles errors from both.
 
+### Streaming
+
+A 2nd gen function can send chunks with `sendChunk()` before it returns.
+`stream()` delivers them as `DartChunk`s, then the return value as a
+`DartResult`:
+
+```dart
+final responses = functions.httpsCallable('countdown').stream<int, String>();
+await for (final response in responses) {
+  switch (response) {
+    case DartChunk(:final partialData):
+      print('Chunk: $partialData');
+    case DartResult(:final result):
+      print('Result: ${result.data}');
+  }
+}
+```
+
+- The request starts when the stream is listened to. Cancelling the
+  subscription aborts it.
+- Errors, including those the function throws mid-stream, arrive as
+  `DartFirebaseFunctionsException` errors on the stream.
+- On Android, iOS and macOS, a stream fails with `deadline-exceeded` if
+  nothing arrives for `DartHttpsCallableOptions.timeout`. The server's
+  heartbeats count, so long streams keep going. Web streams have no timeout,
+  as in the JS SDK.
+
 ## Trying it next to the native plugin
 
 The `cloud_functions` example app has a **Native / Dart** toggle that switches
@@ -78,10 +107,10 @@ flutter run -d macos
 ```
 
 Its `integration_test/dart_cloud_functions_e2e_test.dart` runs the `call()`
-cases of the native e2e suite against this package.
+and `stream()` cases of the native e2e suite against this package.
 
 ## Not yet supported
 
 - FCM tokens: requests are sent without them.
-- Streaming (`stream()`).
-- 64-bit integer encoding, custom domains, and web.
+- 64-bit integer encoding: integers are sent and received as plain JSON
+  numbers.

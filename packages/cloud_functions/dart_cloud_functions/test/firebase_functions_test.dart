@@ -79,6 +79,27 @@ void main() {
       );
   }
 
+  // Like emulatorFunctions(), but the handler gets the request itself,
+  // including its abort trigger, and answers with a stream.
+  DartFirebaseFunctions streamingFunctions(
+    MockClientStreamHandler handler, {
+    CallableContextProvider? contextProvider,
+  }) {
+    return DartFirebaseFunctions.withHttpClient(
+      MockClient.streaming(handler),
+      app: app,
+      contextProvider: contextProvider ?? _fixedContext(),
+    )..useFunctionsEmulator('localhost', 5001, automaticHostMapping: false);
+  }
+
+  /// A response that sends [chunks] of server-sent events, one after another.
+  http.StreamedResponse sse(List<String> chunks, {int statusCode = 200}) {
+    return http.StreamedResponse(
+      Stream.fromIterable(chunks.map(utf8.encode)),
+      statusCode,
+    );
+  }
+
   group('instanceFor()', () {
     test('returns one cached instance per app and region', () {
       expect(
@@ -365,6 +386,200 @@ void main() {
 
       expect(requested, [false, true]);
     });
+  });
+
+  group('DartHttpsCallable.stream()', () {
+    test('emits chunks, then the result', () async {
+      final functions = streamingFunctions(
+        (request, body) async => sse([
+          'data: {"message":"Apple"}\n\n',
+          ': ping\n\n',
+          'data: {"message":"Banana"}\n\ndata: {"result":2}\n\n',
+        ]),
+      );
+
+      final responses = await functions
+          .httpsCallable('listFruit')
+          .stream<String, int>()
+          .toList();
+
+      expect(responses, [
+        isA<DartChunk<String, int>>()
+            .having((r) => r.partialData, 'partialData', 'Apple'),
+        isA<DartChunk<String, int>>()
+            .having((r) => r.partialData, 'partialData', 'Banana'),
+        isA<DartResult<String, int>>().having((r) => r.result.data, 'data', 2),
+      ]);
+    });
+
+    test('asks for an event stream with the data and the tokens', () async {
+      late http.BaseRequest sent;
+      late String sentBody;
+      final functions = streamingFunctions(
+        (request, body) async {
+          sent = request;
+          sentBody = await body.bytesToString();
+          return sse(['data: {"result":null}\n\n']);
+        },
+        contextProvider: _fixedContext(
+          const CallableContext(authToken: 'id-token'),
+        ),
+      );
+
+      await functions
+          .httpsCallable('listFruit')
+          .stream<Object?, Object?>({'type': 'number'}).drain<void>();
+
+      expect(sent.headers, containsPair('Accept', 'text/event-stream'));
+      expect(sent.headers, containsPair('Authorization', 'Bearer id-token'));
+      expect(jsonDecode(sentBody), {
+        'data': {'type': 'number'},
+      });
+    });
+
+    test('maps an error status before the stream starts', () async {
+      final functions = streamingFunctions(
+        (request, body) async => sse(['Not found'], statusCode: 404),
+      );
+
+      await expectLater(
+        functions.httpsCallable('doesNotExist').stream<Object?, Object?>(),
+        emitsError(
+          isA<DartFirebaseFunctionsException>()
+              .having((e) => e.code, 'code', 'not-found'),
+        ),
+      );
+    });
+
+    test('emits an error event as an exception', () async {
+      final functions = streamingFunctions(
+        (request, body) async => sse([
+          'data: {"message":"Apple"}\n\n',
+          'data: {"error":{"status":"INVALID_ARGUMENT","message":"Bad."}}\n\n',
+        ]),
+      );
+
+      await expectLater(
+        functions.httpsCallable('listFruit').stream<String, Object?>(),
+        emitsInOrder([
+          isA<DartChunk<String, Object?>>(),
+          emitsError(
+            isA<DartFirebaseFunctionsException>()
+                .having((e) => e.code, 'code', 'invalid-argument'),
+          ),
+        ]),
+      );
+    });
+
+    test('aborts the request when the listener cancels', () async {
+      // The response stays open after the first chunk.
+      final openBody = StreamController<List<int>>()
+        ..add(utf8.encode('data: {"message":"Apple"}\n\n'));
+      addTearDown(openBody.close);
+      late http.Abortable request;
+      final functions = streamingFunctions((sent, body) async {
+        request = sent as http.Abortable;
+        return http.StreamedResponse(openBody.stream, 200);
+      });
+
+      final first = await functions
+          .httpsCallable('listFruit')
+          .stream<String, int>()
+          .first;
+
+      expect(first, isA<DartChunk<String, int>>());
+      await expectLater(request.abortTrigger, completes);
+    });
+
+    test(
+      'fails with deadline-exceeded when nothing arrives, and aborts',
+      () async {
+        // The response starts but never sends anything.
+        final silentBody = StreamController<List<int>>();
+        addTearDown(silentBody.close);
+        late http.Abortable request;
+        final functions = streamingFunctions((sent, body) async {
+          request = sent as http.Abortable;
+          return http.StreamedResponse(silentBody.stream, 200);
+        });
+
+        await expectLater(
+          functions
+              .httpsCallable(
+                'listFruit',
+                options: const DartHttpsCallableOptions(
+                  timeout: Duration(milliseconds: 20),
+                ),
+              )
+              .stream<Object?, Object?>(),
+          emitsError(
+            isA<DartFirebaseFunctionsException>()
+                .having((e) => e.code, 'code', 'deadline-exceeded'),
+          ),
+        );
+        await expectLater(request.abortTrigger, completes);
+      },
+      testOn: 'vm',
+    );
+
+    test(
+      'keeps a long stream going while heartbeats arrive',
+      () async {
+        Stream<List<int>> heartbeatsThenResult() async* {
+          // 6 × 20 ms is longer than the 60 ms timeout, but no gap is.
+          for (var i = 0; i < 6; i++) {
+            await Future<void>.delayed(const Duration(milliseconds: 20));
+            yield utf8.encode(': ping\n\n');
+          }
+          yield utf8.encode('data: {"result":"done"}\n\n');
+        }
+
+        final functions = streamingFunctions(
+          (request, body) async =>
+              http.StreamedResponse(heartbeatsThenResult(), 200),
+        );
+
+        final responses = await functions
+            .httpsCallable(
+              'listFruit',
+              options: const DartHttpsCallableOptions(
+                timeout: Duration(milliseconds: 60),
+              ),
+            )
+            .stream<Object?, String>()
+            .toList();
+
+        expect(responses.single, isA<DartResult<Object?, String>>());
+      },
+      testOn: 'vm',
+    );
+
+    test(
+      'has no timeout on web',
+      () async {
+        Stream<List<int>> slowResult() async* {
+          await Future<void>.delayed(const Duration(milliseconds: 60));
+          yield utf8.encode('data: {"result":"done"}\n\n');
+        }
+
+        final functions = streamingFunctions(
+          (request, body) async => http.StreamedResponse(slowResult(), 200),
+        );
+
+        final responses = await functions
+            .httpsCallable(
+              'listFruit',
+              options: const DartHttpsCallableOptions(
+                timeout: Duration(milliseconds: 20),
+              ),
+            )
+            .stream<Object?, String>()
+            .toList();
+
+        expect(responses.single, isA<DartResult<Object?, String>>());
+      },
+      testOn: 'browser',
+    );
   });
 
   group('useFunctionsEmulator()', () {

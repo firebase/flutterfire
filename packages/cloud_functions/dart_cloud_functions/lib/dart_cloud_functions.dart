@@ -17,9 +17,12 @@ library;
 
 export 'package:dart_cloud_functions/src/firebase_functions.dart'
     show
+        DartChunk,
         DartFirebaseFunctions,
         DartHttpsCallable,
         DartHttpsCallableOptions,
-        DartHttpsCallableResult;
+        DartHttpsCallableResult,
+        DartResult,
+        DartStreamResponse;
 export 'package:dart_cloud_functions/src/firebase_functions_exception.dart'
     show DartFirebaseFunctionsException;

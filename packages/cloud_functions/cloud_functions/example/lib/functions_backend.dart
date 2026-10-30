@@ -5,6 +5,26 @@
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:dart_cloud_functions/dart_cloud_functions.dart';
 
+/// One response of a streaming call, from either implementation.
+///
+/// `cloud_functions` can't build its own `Result` outside the plugin, so both
+/// backends map their responses to these.
+sealed class StreamEvent {}
+
+/// A chunk the function sent while running.
+class StreamChunk extends StreamEvent {
+  StreamChunk(this.data);
+
+  final Object? data;
+}
+
+/// The value the function returned, which ends the stream.
+class StreamResult extends StreamEvent {
+  StreamResult(this.data);
+
+  final Object? data;
+}
+
 /// The calls this example makes, so the UI can switch at runtime between the
 /// native `cloud_functions` plugin and the pure-Dart `dart_cloud_functions`
 /// package.
@@ -18,8 +38,8 @@ abstract interface class FunctionsBackend {
   /// Calls the function at [url] and returns its data.
   Future<Object?> callByUrl(String url, {required Duration timeout});
 
-  /// Streams the function called [name].
-  Stream<StreamResponse<String, List<dynamic>>> streamByName(String name);
+  /// Streams the function called [name]: its chunks, then its result.
+  Stream<StreamEvent> streamByName(String name);
 }
 
 /// Calls functions through the native `cloud_functions` plugin.
@@ -46,10 +66,16 @@ class NativeFunctionsBackend implements FunctionsBackend {
   }
 
   @override
-  Stream<StreamResponse<String, List<dynamic>>> streamByName(String name) {
+  Stream<StreamEvent> streamByName(String name) {
     return FirebaseFunctions.instance
         .httpsCallable(name)
-        .stream<String, List<dynamic>>();
+        .stream<Object?, Object?>()
+        .map(
+          (response) => switch (response) {
+            Chunk(:final partialData) => StreamChunk(partialData),
+            Result(:final result) => StreamResult(result.data),
+          },
+        );
   }
 }
 
@@ -77,9 +103,15 @@ class DartFunctionsBackend implements FunctionsBackend {
   }
 
   @override
-  Stream<StreamResponse<String, List<dynamic>>> streamByName(String name) {
-    return Stream.error(
-      UnsupportedError('dart_cloud_functions does not support streaming yet.'),
-    );
+  Stream<StreamEvent> streamByName(String name) {
+    return DartFirebaseFunctions.instance
+        .httpsCallable(name)
+        .stream<Object?, Object?>()
+        .map(
+          (response) => switch (response) {
+            DartChunk(:final partialData) => StreamChunk(partialData),
+            DartResult(:final result) => StreamResult(result.data),
+          },
+        );
   }
 }

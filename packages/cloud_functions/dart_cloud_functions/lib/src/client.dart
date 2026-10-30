@@ -43,13 +43,7 @@ final class CallableClient {
   }) async {
     developer.log('POST $url', name: 'dart_cloud_functions');
     final abort = Completer<void>();
-    final request = http.AbortableRequest(
-      'POST',
-      url,
-      abortTrigger: abort.future,
-    )
-      ..headers.addAll(callableRequestHeaders(context))
-      ..body = encodeCallableRequest(data);
+    final request = _request(url, data, context, abort.future);
     try {
       final response = await _httpClient
           .send(request)
@@ -63,4 +57,65 @@ final class CallableClient {
       throw callableNetworkException(error);
     }
   }
+
+  /// Streams the function at [url] with [data]: the messages it sends, then
+  /// its result.
+  ///
+  /// The request carries [context]'s tokens. With an [idleTimeout], the
+  /// stream fails with `deadline-exceeded` if no data arrives for that long.
+  /// The server's heartbeats count as data, so long streams keep going.
+  /// Cancelling the subscription, a timeout or any other failure aborts the
+  /// request.
+  Stream<CallableEvent> streamFunction(
+    Uri url,
+    Object? data, {
+    required CallableContext context,
+    Duration? idleTimeout,
+  }) async* {
+    developer.log('POST $url (streaming)', name: 'dart_cloud_functions');
+    final abort = Completer<void>();
+    final request = _request(url, data, context, abort.future)
+      ..headers['Accept'] = 'text/event-stream';
+    try {
+      final response = await _timeout(_httpClient.send(request), idleTimeout);
+      final body = _idleTimeout(response.stream, idleTimeout);
+      if (response.statusCode < 200 || response.statusCode >= 300) {
+        final bytes = await http.ByteStream(body).toBytes();
+        throw decodeCallableError(response.statusCode, bytes);
+      }
+      await for (final event in decodeCallableEvents(body)) {
+        yield event;
+      }
+    } on TimeoutException {
+      if (idleTimeout == null) rethrow;
+      throw callableTimeoutException(idleTimeout);
+    } on http.ClientException catch (error) {
+      throw callableNetworkException(error);
+    } finally {
+      if (!abort.isCompleted) abort.complete();
+    }
+  }
+
+  /// A POST of [data] in the `data` envelope, with [context]'s tokens, that
+  /// [abortTrigger] can abort.
+  http.AbortableRequest _request(
+    Uri url,
+    Object? data,
+    CallableContext context,
+    Future<void> abortTrigger,
+  ) {
+    return http.AbortableRequest('POST', url, abortTrigger: abortTrigger)
+      ..headers.addAll(callableRequestHeaders(context))
+      ..body = encodeCallableRequest(data);
+  }
 }
+
+/// Fails [future] with a [TimeoutException] if it takes longer than [timeout],
+/// when set.
+Future<T> _timeout<T>(Future<T> future, Duration? timeout) =>
+    timeout == null ? future : future.timeout(timeout);
+
+/// Fails [stream] with a [TimeoutException] if it goes longer than [timeout]
+/// without an event, when set.
+Stream<T> _idleTimeout<T>(Stream<T> stream, Duration? timeout) =>
+    timeout == null ? stream : stream.timeout(timeout);
