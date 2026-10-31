@@ -234,9 +234,10 @@ void main(List<String> arguments) {
     // The auth example's Android app applies the `google-services` plugin and
     // both its Xcode projects list GoogleService-Info.plist in a Resources
     // build phase, so the native builds fail outright without these files.
+    // Its Android applicationId and Apple bundle id differ from each other.
     _writeNativeConfigs(
       exampleRoot: 'packages/firebase_auth/firebase_auth/example',
-      androidPackageName: 'io.flutter.plugins.firebase.auth.example',
+      androidPackageName: 'io.flutter.plugins.firebase.tests',
       appleBundleId: 'io.flutter.plugins.firebase.auth.example',
     );
   }
