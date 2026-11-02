@@ -231,6 +231,7 @@ IdTokenResult convertWebIdTokenResult(
       expirationTimestamp:
           webIdTokenResult.expirationTime.millisecondsSinceEpoch,
       signInProvider: webIdTokenResult.signInProvider,
+      signInSecondFactor: webIdTokenResult.signInSecondFactor,
     ),
   );
 }
