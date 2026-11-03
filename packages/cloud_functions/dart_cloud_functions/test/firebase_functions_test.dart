@@ -452,13 +452,16 @@ void main() {
 
       await expectLater(
         functions.httpsCallable('doesNotExist').stream<Object?, Object?>(),
-        emitsError(
-          isA<DartFirebaseFunctionsException>().having(
-            (e) => e.code,
-            'code',
-            'not-found',
+        emitsInOrder(<Object>[
+          emitsError(
+            isA<DartFirebaseFunctionsException>().having(
+              (e) => e.code,
+              'code',
+              'not-found',
+            ),
           ),
-        ),
+          emitsDone,
+        ]),
       );
     });
 
@@ -481,6 +484,7 @@ void main() {
               'invalid-argument',
             ),
           ),
+          emitsDone,
         ]),
       );
     });

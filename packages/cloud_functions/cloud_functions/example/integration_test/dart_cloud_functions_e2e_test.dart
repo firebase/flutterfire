@@ -269,14 +269,21 @@ void main() {
         expect((last as DartResult).result.data, isA<Map<String, dynamic>>());
       });
 
-      test('emits an error the function throws', () async {
+      test('emits a [DartFirebaseFunctionsException] on error', () async {
         await expectLater(
           callable.stream({}),
-          emitsError(
-            isA<DartFirebaseFunctionsException>()
-                .having((e) => e.code, 'code', 'invalid-argument')
-                .having((e) => e.message, 'message', 'Invalid test requested.'),
-          ),
+          emitsInOrder(<Object>[
+            emitsError(
+              isA<DartFirebaseFunctionsException>()
+                  .having((e) => e.code, 'code', 'invalid-argument')
+                  .having(
+                    (e) => e.message,
+                    'message',
+                    'Invalid test requested.',
+                  ),
+            ),
+            emitsDone,
+          ]),
         );
       });
 
