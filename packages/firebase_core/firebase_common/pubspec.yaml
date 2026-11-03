@@ -1,0 +1,23 @@
+name: firebase_common
+description: Pure-Dart types shared by the Firebase client and server Dart SDKs.
+homepage: https://github.com/firebase/flutterfire/tree/main/packages/firebase_core/firebase_common
+repository: https://github.com/firebase/flutterfire/tree/main/packages/firebase_core/firebase_common
+version: 1.0.0
+resolution: workspace
+
+# No `flutter:` constraint or dependency: a Flutter SDK constraint alone makes
+# `dart pub get` fail for apps that do not use Flutter. The Dart floor stays at
+# or below the server SDKs' (firebase_admin_sdk and google_cloud_firestore are
+# on ^3.9.0), so they can depend on this package without raising theirs.
+environment:
+  sdk: '^3.9.0'
+
+# Only types shared with the server SDKs live here; the client contracts are in
+# `firebase_core_interface`, so their breaking changes do not reach the servers.
+# Keep lower bounds at or below what Flutter stable pins, so a pub workspace
+# with a Flutter app and a server package still resolves.
+dependencies:
+  meta: ^1.8.0
+
+dev_dependencies:
+  test: ^1.25.0

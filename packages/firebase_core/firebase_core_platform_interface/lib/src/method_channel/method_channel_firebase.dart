@@ -38,15 +38,17 @@ class MethodChannelFirebase extends FirebasePlatform {
     MethodChannelFirebaseApp methodChannelFirebaseApp =
         MethodChannelFirebaseApp(
           response.name,
-          FirebaseOptions.fromPigeon(response.options),
+          response.options.toFirebaseOptions(),
           isAutomaticDataCollectionEnabled:
               response.isAutomaticDataCollectionEnabled,
         );
 
     appInstances[methodChannelFirebaseApp.name] = methodChannelFirebaseApp;
 
-    FirebasePlugin._constantsForPluginApps[methodChannelFirebaseApp.name] =
-        response.pluginConstants;
+    FirebasePlugin.setConstantsForApp(
+      methodChannelFirebaseApp.name,
+      response.pluginConstants,
+    );
   }
 
   /// Returns the created [FirebaseAppPlatform] instances.
@@ -83,7 +85,7 @@ class MethodChannelFirebase extends FirebasePlatform {
           defaultApp == null &&
           _options == null) {
         final options = await api.optionsFromResource();
-        _options = FirebaseOptions.fromPigeon(options);
+        _options = options.toFirebaseOptions();
       }
 
       // If no options are present & no default app has been setup, the user is

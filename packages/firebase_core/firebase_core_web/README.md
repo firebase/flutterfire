@@ -2,6 +2,9 @@
 
 The web implementation of `firebase_core`.
 
+The implementation itself lives in [`firebase_core_js`](https://pub.dev/packages/firebase_core_js),
+which Dart web apps that do not use Flutter can depend on directly.
+
 To learn more about Firebase, please visit the [Firebase website](https://firebase.google.com)
 
 ## Getting Started

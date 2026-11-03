@@ -20,6 +20,9 @@ class Firebase {
   static FirebasePlatform? delegatePackingProperty;
 
   static FirebasePlatform get _delegate {
+    // `firebase_core_interface` cannot default to the Flutter-only method channel
+    // implementation, so it is set here for platforms without a Dart one.
+    FirebasePlatform.fallbackInstanceFactory ??= MethodChannelFirebase.new;
     return delegatePackingProperty ??= FirebasePlatform.instance;
   }
 
