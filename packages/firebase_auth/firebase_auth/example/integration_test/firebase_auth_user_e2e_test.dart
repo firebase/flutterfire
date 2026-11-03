@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
@@ -113,34 +114,71 @@ void main() {
       );
 
       group('getIdTokenResult()', () {
-        test(
-          'should return a valid IdTokenResult Object',
-          () async {
-            // Setup
-            final userCredential = await FirebaseAuth.instance
-                .createUserWithEmailAndPassword(
-                  email: email,
-                  password: testPassword,
-                );
-            final user = userCredential.user!;
+        test('should return a valid IdTokenResult Object', () async {
+          // Setup
+          final userCredential = await FirebaseAuth.instance
+              .createUserWithEmailAndPassword(
+                email: email,
+                password: testPassword,
+              );
+          final user = userCredential.user!;
 
-            // Test
-            final idTokenResult = await user.getIdTokenResult();
+          // Test
+          final idTokenResult = await user.getIdTokenResult();
 
-            // Assertions
-            expect(idTokenResult.token.runtimeType, equals(String));
-            expect(idTokenResult.authTime.runtimeType, equals(DateTime));
-            expect(idTokenResult.issuedAtTime.runtimeType, equals(DateTime));
-            expect(idTokenResult.expirationTime.runtimeType, equals(DateTime));
-            expect(idTokenResult.token!.length, greaterThan(24));
-            expect(idTokenResult.signInProvider, equals('password'));
-          },
-          skip:
-              !kIsWeb &&
-              (defaultTargetPlatform == TargetPlatform.windows ||
-                  defaultTargetPlatform == TargetPlatform.macOS),
-        );
-        // TODO add custom claims and tenant id tests for id token result
+          // Assertions
+          expect(idTokenResult.token.runtimeType, equals(String));
+          expect(idTokenResult.authTime.runtimeType, equals(DateTime));
+          expect(idTokenResult.issuedAtTime.runtimeType, equals(DateTime));
+          expect(idTokenResult.expirationTime.runtimeType, equals(DateTime));
+          expect(idTokenResult.token!.length, greaterThan(24));
+          expect(idTokenResult.signInProvider, equals('password'));
+        }, skip: !kIsWeb && defaultTargetPlatform == TargetPlatform.macOS);
+
+        test('should return custom claims and token metadata', () async {
+          const customClaims = <String, Object>{
+            'orgId': 'test-org',
+            'admin': true,
+            'roles': ['reader', 'editor'],
+            'profile': {'name': 'München 😀', 'quota': 2.5},
+          };
+          final credential = await FirebaseAuth.instance.signInWithCustomToken(
+            emulatorCreateCustomToken(
+              'token-claims-user',
+              claims: customClaims,
+            ),
+          );
+          final result = await credential.user!.getIdTokenResult(true);
+          final payload =
+              jsonDecode(
+                    utf8.decode(
+                      base64Url.decode(
+                        base64Url.normalize(result.token!.split('.')[1]),
+                      ),
+                    ),
+                  )
+                  as Map<String, dynamic>;
+
+          expect(result.claims, equals(payload));
+          for (final claim in customClaims.entries) {
+            expect(result.claims![claim.key], equals(claim.value));
+          }
+          expect(
+            result.authTime!.millisecondsSinceEpoch,
+            payload['auth_time'] * 1000,
+          );
+          expect(
+            result.issuedAtTime!.millisecondsSinceEpoch,
+            payload['iat'] * 1000,
+          );
+          expect(
+            result.expirationTime!.millisecondsSinceEpoch,
+            payload['exp'] * 1000,
+          );
+          expect(result.signInProvider, 'custom');
+          expect(result.signInSecondFactor, isNull);
+        });
+        // TODO add tenant id tests for id token result
       });
 
       group(
