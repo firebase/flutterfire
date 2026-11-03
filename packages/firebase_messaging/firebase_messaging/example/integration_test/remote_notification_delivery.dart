@@ -40,12 +40,18 @@ Future<Map<String, Object?>> deliverRemoteNotification(
 }
 
 /// Hands data messages to the plugin's broadcast receiver back to back, like
-/// Google Play services does when several pushes arrive at once. Fails if the
+/// Google Play services does when several pushes arrive at once. With
+/// [dismissalFirst], the receiver first gets the broadcast firebase-messaging
+/// sends when the user dismisses a notification it displayed. Fails if the
 /// app did not count as in the foreground, where messages go to `onMessage`.
-Future<void> deliverToAndroidReceiver(List<String> messageIds) async {
+Future<void> deliverToAndroidReceiver(
+  List<String> messageIds, {
+  bool dismissalFirst = false,
+}) async {
   final delivery = await _remoteNotificationsChannel
       .invokeMapMethod<String, Object?>('deliverToReceiver', {
         'messageIds': messageIds,
+        'dismissalFirst': dismissalFirst,
       });
   expect(
     delivery!['foreground'],
@@ -249,6 +255,25 @@ void remoteNotificationDeliveryTests() {
           received.first.data,
           containsPair('test', 'remote-notification-delivery'),
         );
+      });
+
+      test('a dismissed notification does not reach onMessage', () async {
+        // When the user dismisses a notification it displayed, firebase-messaging
+        // sends a broadcast with the action messages arrive with, the event
+        // wrapped inside. Read as a message, it has no ID and nothing in it.
+        final messageId = _uniqueMessageId('after-dismissal');
+        final received = <String?>[];
+        final subscription = FirebaseMessaging.onMessage
+            .where((m) => m.messageId == null || m.messageId == messageId)
+            .listen((message) => received.add(message.messageId));
+        addTearDown(subscription.cancel);
+
+        await deliverToAndroidReceiver([messageId], dismissalFirst: true);
+        await _waitUntil(() => received.contains(messageId));
+        // Leave time for an unexpected message to show up.
+        await Future<void>.delayed(const Duration(milliseconds: 500));
+
+        expect(received, <String?>[messageId]);
       });
 
       test('an engine that starts listening later only gets the messages '

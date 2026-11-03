@@ -55,6 +55,9 @@ class MainActivity : FlutterActivity() {
               }
               val foreground = isAppInForeground()
               val receiver = FlutterFirebaseMessagingReceiver()
+              if (call.argument<Boolean>("dismissalFirst") == true) {
+                receiver.onReceive(applicationContext, notificationDismissal())
+              }
               for (messageId in messageIds) {
                 val intent =
                     Intent("com.google.android.c2dm.intent.RECEIVE").apply {
@@ -164,6 +167,15 @@ class MainActivity : FlutterActivity() {
     ActivityManager.getMyMemoryState(state)
     return state.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND
   }
+
+  /// What firebase-messaging broadcasts when the user dismisses a notification
+  /// it displayed (the notification's delete intent): the NOTIFICATION_DISMISS
+  /// intent, wrapped in a broadcast with the action messages arrive with.
+  private fun notificationDismissal(): Intent =
+      Intent("com.google.android.c2dm.intent.RECEIVE").apply {
+        setPackage(packageName)
+        putExtra("wrapped_intent", Intent("com.google.firebase.messaging.NOTIFICATION_DISMISS"))
+      }
 
   /// Starts another engine running `secondEngineMain` from the test, which
   /// listens to onMessage and reports what it receives. The messaging plugin
