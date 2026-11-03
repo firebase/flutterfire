@@ -69,7 +69,8 @@ void checkTokenTransport(
   if (_loopbackHosts.contains(url.host.toLowerCase())) return;
   throw DartFirebaseFunctionsException(
     code: 'unauthenticated',
-    message: 'Refusing to send tokens over HTTP to ${url.host}, which is '
+    message:
+        'Refusing to send tokens over HTTP to ${url.host}, which is '
         'not a loopback host.',
   );
 }

@@ -34,6 +34,5 @@ class CallableContext {
 /// Called once per request, so a sign-in or sign-out between two calls takes
 /// effect on the next one. [limitedUseAppCheckToken] asks for a limited-use
 /// App Check token instead of the standard one.
-typedef CallableContextProvider = Future<CallableContext> Function({
-  required bool limitedUseAppCheckToken,
-});
+typedef CallableContextProvider =
+    Future<CallableContext> Function({required bool limitedUseAppCheckToken});

@@ -32,10 +32,9 @@ Matcher _throwsCode(String code) {
 void main() {
   group('callableRequestHeaders', () {
     test('sends JSON without tokens', () {
-      expect(
-        callableRequestHeaders(const CallableContext()),
-        {'Content-Type': 'application/json'},
-      );
+      expect(callableRequestHeaders(const CallableContext()), {
+        'Content-Type': 'application/json',
+      });
     });
 
     test('sends the ID token with the Bearer scheme', () {
@@ -72,10 +71,14 @@ void main() {
 
   group('decodeCallableResponse', () {
     test('returns the result field', () {
-      expect(
-        _decode(200, _listFruitBody),
-        ['Apple', 'Banana', 'Cherry', 'Date', 'Fig', 'Grapes'],
-      );
+      expect(_decode(200, _listFruitBody), [
+        'Apple',
+        'Banana',
+        'Cherry',
+        'Date',
+        'Fig',
+        'Grapes',
+      ]);
     });
 
     test('returns objects as Map<String, dynamic>', () {

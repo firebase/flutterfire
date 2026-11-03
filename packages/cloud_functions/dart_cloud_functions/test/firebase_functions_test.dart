@@ -73,10 +73,10 @@ void main() {
       app: app,
       contextProvider: contextProvider ?? _fixedContext(),
     )..useFunctionsEmulator(
-        'localhost',
-        5001,
-        automaticHostMapping: automaticHostMapping,
-      );
+      'localhost',
+      5001,
+      automaticHostMapping: automaticHostMapping,
+    );
   }
 
   // Like emulatorFunctions(), but the handler gets the request itself,
@@ -185,31 +185,33 @@ void main() {
       );
     });
 
-    test('aborts a timed-out request without closing the shared client',
-        () async {
-      final client = _HangingClient();
-      final functions = DartFirebaseFunctions.withHttpClient(
-        client,
-        app: app,
-        contextProvider: _fixedContext(),
-      )..useFunctionsEmulator('localhost', 5001, automaticHostMapping: false);
+    test(
+      'aborts a timed-out request without closing the shared client',
+      () async {
+        final client = _HangingClient();
+        final functions = DartFirebaseFunctions.withHttpClient(
+          client,
+          app: app,
+          contextProvider: _fixedContext(),
+        )..useFunctionsEmulator('localhost', 5001, automaticHostMapping: false);
 
-      await expectLater(
-        functions
-            .httpsCallable(
-              'listFruit',
-              options: const DartHttpsCallableOptions(
-                timeout: Duration(milliseconds: 10),
-              ),
-            )
-            .call(),
-        _throwsCode('deadline-exceeded'),
-      );
+        await expectLater(
+          functions
+              .httpsCallable(
+                'listFruit',
+                options: const DartHttpsCallableOptions(
+                  timeout: Duration(milliseconds: 10),
+                ),
+              )
+              .call(),
+          _throwsCode('deadline-exceeded'),
+        );
 
-      final request = client.requests.single as http.Abortable;
-      await expectLater(request.abortTrigger, completes);
-      expect(client.closed, isFalse);
-    });
+        final request = client.requests.single as http.Abortable;
+        await expectLater(request.abortTrigger, completes);
+        expect(client.closed, isFalse);
+      },
+    );
 
     test('maps a network failure to unavailable', () async {
       final functions = emulatorFunctions((request) async {
@@ -231,8 +233,9 @@ void main() {
           sent = request;
           return http.Response('{"result":null}', 200);
         },
-        contextProvider:
-            _fixedContext(const CallableContext(authToken: 'id-token')),
+        contextProvider: _fixedContext(
+          const CallableContext(authToken: 'id-token'),
+        ),
       );
 
       await functions.httpsCallable('listFruit').call();
@@ -282,10 +285,10 @@ void main() {
         },
         contextProvider: ({required limitedUseAppCheckToken}) async =>
             throw FirebaseException(
-          plugin: 'firebase_auth',
-          code: 'network-request-failed',
-          message: 'A network error has occurred.',
-        ),
+              plugin: 'firebase_auth',
+              code: 'network-request-failed',
+              message: 'A network error has occurred.',
+            ),
       );
 
       await expectLater(
@@ -310,8 +313,9 @@ void main() {
           requests++;
           return http.Response('{"result":null}', 200);
         },
-        contextProvider:
-            _fixedContext(const CallableContext(authToken: 'id-token')),
+        contextProvider: _fixedContext(
+          const CallableContext(authToken: 'id-token'),
+        ),
       );
 
       await expectLater(
@@ -323,27 +327,25 @@ void main() {
       expect(requests, 0);
     });
 
-    test(
-      'is sent over HTTP to a non-loopback host with '
-      'allowInsecureTokenAttachment in debug builds',
-      () async {
-        late http.Request sent;
-        final functions = emulatorFunctions(
-          (request) async {
-            sent = request;
-            return http.Response('{"result":null}', 200);
-          },
-          contextProvider:
-              _fixedContext(const CallableContext(authToken: 'id-token')),
-        )..allowInsecureTokenAttachment = true;
+    test('is sent over HTTP to a non-loopback host with '
+        'allowInsecureTokenAttachment in debug builds', () async {
+      late http.Request sent;
+      final functions = emulatorFunctions(
+        (request) async {
+          sent = request;
+          return http.Response('{"result":null}', 200);
+        },
+        contextProvider: _fixedContext(
+          const CallableContext(authToken: 'id-token'),
+        ),
+      )..allowInsecureTokenAttachment = true;
 
-        await functions
-            .httpsCallableFromUrl('http://192.168.1.20:5001/listFruit')
-            .call();
+      await functions
+          .httpsCallableFromUrl('http://192.168.1.20:5001/listFruit')
+          .call();
 
-        expect(sent.headers['Authorization'], 'Bearer id-token');
-      },
-    );
+      expect(sent.headers['Authorization'], 'Bearer id-token');
+    });
   });
 
   group('App Check token', () {
@@ -404,10 +406,16 @@ void main() {
           .toList();
 
       expect(responses, [
-        isA<DartChunk<String, int>>()
-            .having((r) => r.partialData, 'partialData', 'Apple'),
-        isA<DartChunk<String, int>>()
-            .having((r) => r.partialData, 'partialData', 'Banana'),
+        isA<DartChunk<String, int>>().having(
+          (r) => r.partialData,
+          'partialData',
+          'Apple',
+        ),
+        isA<DartChunk<String, int>>().having(
+          (r) => r.partialData,
+          'partialData',
+          'Banana',
+        ),
         isA<DartResult<String, int>>().having((r) => r.result.data, 'data', 2),
       ]);
     });
@@ -426,9 +434,9 @@ void main() {
         ),
       );
 
-      await functions
-          .httpsCallable('listFruit')
-          .stream<Object?, Object?>({'type': 'number'}).drain<void>();
+      await functions.httpsCallable('listFruit').stream<Object?, Object?>({
+        'type': 'number',
+      }).drain<void>();
 
       expect(sent.headers, containsPair('Accept', 'text/event-stream'));
       expect(sent.headers, containsPair('Authorization', 'Bearer id-token'));
@@ -445,8 +453,11 @@ void main() {
       await expectLater(
         functions.httpsCallable('doesNotExist').stream<Object?, Object?>(),
         emitsError(
-          isA<DartFirebaseFunctionsException>()
-              .having((e) => e.code, 'code', 'not-found'),
+          isA<DartFirebaseFunctionsException>().having(
+            (e) => e.code,
+            'code',
+            'not-found',
+          ),
         ),
       );
     });
@@ -464,8 +475,11 @@ void main() {
         emitsInOrder([
           isA<DartChunk<String, Object?>>(),
           emitsError(
-            isA<DartFirebaseFunctionsException>()
-                .having((e) => e.code, 'code', 'invalid-argument'),
+            isA<DartFirebaseFunctionsException>().having(
+              (e) => e.code,
+              'code',
+              'invalid-argument',
+            ),
           ),
         ]),
       );
@@ -513,8 +527,11 @@ void main() {
               )
               .stream<Object?, Object?>(),
           emitsError(
-            isA<DartFirebaseFunctionsException>()
-                .having((e) => e.code, 'code', 'deadline-exceeded'),
+            isA<DartFirebaseFunctionsException>().having(
+              (e) => e.code,
+              'code',
+              'deadline-exceeded',
+            ),
           ),
         );
         await expectLater(request.abortTrigger, completes);
@@ -522,64 +539,56 @@ void main() {
       testOn: 'vm',
     );
 
-    test(
-      'keeps a long stream going while heartbeats arrive',
-      () async {
-        Stream<List<int>> heartbeatsThenResult() async* {
-          // 6 × 20 ms is longer than the 60 ms timeout, but no gap is.
-          for (var i = 0; i < 6; i++) {
-            await Future<void>.delayed(const Duration(milliseconds: 20));
-            yield utf8.encode(': ping\n\n');
-          }
-          yield utf8.encode('data: {"result":"done"}\n\n');
+    test('keeps a long stream going while heartbeats arrive', () async {
+      Stream<List<int>> heartbeatsThenResult() async* {
+        // 6 × 20 ms is longer than the 60 ms timeout, but no gap is.
+        for (var i = 0; i < 6; i++) {
+          await Future<void>.delayed(const Duration(milliseconds: 20));
+          yield utf8.encode(': ping\n\n');
         }
+        yield utf8.encode('data: {"result":"done"}\n\n');
+      }
 
-        final functions = streamingFunctions(
-          (request, body) async =>
-              http.StreamedResponse(heartbeatsThenResult(), 200),
-        );
+      final functions = streamingFunctions(
+        (request, body) async =>
+            http.StreamedResponse(heartbeatsThenResult(), 200),
+      );
 
-        final responses = await functions
-            .httpsCallable(
-              'listFruit',
-              options: const DartHttpsCallableOptions(
-                timeout: Duration(milliseconds: 60),
-              ),
-            )
-            .stream<Object?, String>()
-            .toList();
+      final responses = await functions
+          .httpsCallable(
+            'listFruit',
+            options: const DartHttpsCallableOptions(
+              timeout: Duration(milliseconds: 60),
+            ),
+          )
+          .stream<Object?, String>()
+          .toList();
 
-        expect(responses.single, isA<DartResult<Object?, String>>());
-      },
-      testOn: 'vm',
-    );
+      expect(responses.single, isA<DartResult<Object?, String>>());
+    }, testOn: 'vm');
 
-    test(
-      'has no timeout on web',
-      () async {
-        Stream<List<int>> slowResult() async* {
-          await Future<void>.delayed(const Duration(milliseconds: 60));
-          yield utf8.encode('data: {"result":"done"}\n\n');
-        }
+    test('has no timeout on web', () async {
+      Stream<List<int>> slowResult() async* {
+        await Future<void>.delayed(const Duration(milliseconds: 60));
+        yield utf8.encode('data: {"result":"done"}\n\n');
+      }
 
-        final functions = streamingFunctions(
-          (request, body) async => http.StreamedResponse(slowResult(), 200),
-        );
+      final functions = streamingFunctions(
+        (request, body) async => http.StreamedResponse(slowResult(), 200),
+      );
 
-        final responses = await functions
-            .httpsCallable(
-              'listFruit',
-              options: const DartHttpsCallableOptions(
-                timeout: Duration(milliseconds: 20),
-              ),
-            )
-            .stream<Object?, String>()
-            .toList();
+      final responses = await functions
+          .httpsCallable(
+            'listFruit',
+            options: const DartHttpsCallableOptions(
+              timeout: Duration(milliseconds: 20),
+            ),
+          )
+          .stream<Object?, String>()
+          .toList();
 
-        expect(responses.single, isA<DartResult<Object?, String>>());
-      },
-      testOn: 'browser',
-    );
+      expect(responses.single, isA<DartResult<Object?, String>>());
+    }, testOn: 'browser');
   });
 
   group('useFunctionsEmulator()', () {
@@ -590,32 +599,21 @@ void main() {
     Future<Uri> sentUrlOn(TargetPlatform platform) async {
       debugDefaultTargetPlatformOverride = platform;
       late Uri sentUrl;
-      final functions = emulatorFunctions(
-        (request) async {
-          sentUrl = request.url;
-          return http.Response('{"result":null}', 200);
-        },
-        automaticHostMapping: true,
-      );
+      final functions = emulatorFunctions((request) async {
+        sentUrl = request.url;
+        return http.Response('{"result":null}', 200);
+      }, automaticHostMapping: true);
       await functions.httpsCallable('listFruit').call();
       return sentUrl;
     }
 
-    test(
-      'maps localhost to 10.0.2.2 on Android',
-      () async {
-        expect((await sentUrlOn(TargetPlatform.android)).host, '10.0.2.2');
-      },
-      testOn: 'vm',
-    );
+    test('maps localhost to 10.0.2.2 on Android', () async {
+      expect((await sentUrlOn(TargetPlatform.android)).host, '10.0.2.2');
+    }, testOn: 'vm');
 
-    test(
-      'keeps localhost on web, even in an Android browser',
-      () async {
-        expect((await sentUrlOn(TargetPlatform.android)).host, 'localhost');
-      },
-      testOn: 'browser',
-    );
+    test('keeps localhost on web, even in an Android browser', () async {
+      expect((await sentUrlOn(TargetPlatform.android)).host, 'localhost');
+    }, testOn: 'browser');
 
     test('keeps localhost on other platforms', () async {
       expect((await sentUrlOn(TargetPlatform.macOS)).host, 'localhost');

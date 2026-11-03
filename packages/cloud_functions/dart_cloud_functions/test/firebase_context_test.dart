@@ -11,9 +11,9 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   group('idTokenOrNullOnWeb', () {
     Future<String?> failingGetToken() async => throw FirebaseException(
-          plugin: 'firebase_auth',
-          code: 'network-request-failed',
-        );
+      plugin: 'firebase_auth',
+      code: 'network-request-failed',
+    );
 
     test('returns the token', () async {
       expect(await idTokenOrNullOnWeb(() async => 'id-token'), 'id-token');
@@ -33,25 +33,30 @@ void main() {
 
   group('appCheckTokenOrFallback', () {
     Future<String?> failingGetToken() async => throw FirebaseException(
-          plugin: 'firebase_app_check',
-          code: 'unknown',
-          message: 'Too many attempts.',
-        );
+      plugin: 'firebase_app_check',
+      code: 'unknown',
+      message: 'Too many attempts.',
+    );
 
     test('returns the token', () async {
-      final token =
-          await appCheckTokenOrFallback(() async => 'app-check-token');
+      final token = await appCheckTokenOrFallback(
+        () async => 'app-check-token',
+      );
 
       expect(token, 'app-check-token');
     });
 
-    test('returns the placeholder on Android and Apple when fetching fails',
-        () async {
-      final token =
-          await appCheckTokenOrFallback(failingGetToken, onWeb: false);
+    test(
+      'returns the placeholder on Android and Apple when fetching fails',
+      () async {
+        final token = await appCheckTokenOrFallback(
+          failingGetToken,
+          onWeb: false,
+        );
 
-      expect(token, placeholderAppCheckToken);
-    });
+        expect(token, placeholderAppCheckToken);
+      },
+    );
 
     test('returns null on web when fetching fails', () async {
       final token = await appCheckTokenOrFallback(failingGetToken, onWeb: true);

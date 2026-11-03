@@ -125,8 +125,9 @@ void main() {
       });
 
       test('returns objects as Map<String, dynamic>', () async {
-        final result =
-            await functions.httpsCallable('testMapConvertType').call();
+        final result = await functions
+            .httpsCallable('testMapConvertType')
+            .call();
         expect(result.data, isA<Map<String, dynamic>>());
       });
 
@@ -284,17 +285,22 @@ void main() {
         () async {
           final timeoutCallable = functions.httpsCallable(
             'testFunctionTimeout',
-            options:
-                const DartHttpsCallableOptions(timeout: Duration(seconds: 3)),
+            options: const DartHttpsCallableOptions(
+              timeout: Duration(seconds: 3),
+            ),
           );
           await expectLater(
             timeoutCallable.stream({
-              'testTimeout':
-                  const Duration(seconds: 6).inMilliseconds.toString(),
+              'testTimeout': const Duration(
+                seconds: 6,
+              ).inMilliseconds.toString(),
             }),
             emitsError(
-              isA<DartFirebaseFunctionsException>()
-                  .having((e) => e.code, 'code', 'deadline-exceeded'),
+              isA<DartFirebaseFunctionsException>().having(
+                (e) => e.code,
+                'code',
+                'deadline-exceeded',
+              ),
             ),
           );
         },
@@ -337,54 +343,56 @@ void main() {
         region: 'europe-west1',
       );
       if (target.usesEmulator) connectDartFunctionsEmulator(europe);
-      final result =
-          await europe.httpsCallable('testFunctionCustomRegion').call();
+      final result = await europe
+          .httpsCallable('testFunctionCustomRegion')
+          .call();
       expect(result.data, 'europe-west1');
     });
 
-    test('times out when DartHttpsCallableOptions.timeout is exceeded',
-        () async {
-      final timeoutCallable = functions.httpsCallable(
-        'testFunctionTimeout',
-        options: const DartHttpsCallableOptions(timeout: Duration(seconds: 3)),
-      );
-      await expectLater(
-        timeoutCallable.call({
-          'testTimeout': const Duration(seconds: 6).inMilliseconds.toString(),
-        }),
-        throwsA(
-          isA<DartFirebaseFunctionsException>()
-              .having((e) => e.code, 'code', 'deadline-exceeded'),
-        ),
-      );
-    });
-
-    group(
-      'Auth token',
-      () {
-        tearDown(() async {
-          await auth.signOut();
-        });
-
-        test('reaches the function when signed in', () async {
-          final credential = await auth.signInAnonymously();
-
-          final result =
-              await functions.httpsCallable('testEchoContext').call();
-
-          expect(result.data['authUid'], credential.user!.uid);
-          expect(result.data['authorizationHeader'], isTrue);
-        });
-
-        test('is not sent when signed out', () async {
-          final result =
-              await functions.httpsCallable('testEchoContext').call();
-
-          expect(result.data['authUid'], isNull);
-          expect(result.data['authorizationHeader'], isFalse);
-        });
+    test(
+      'times out when DartHttpsCallableOptions.timeout is exceeded',
+      () async {
+        final timeoutCallable = functions.httpsCallable(
+          'testFunctionTimeout',
+          options: const DartHttpsCallableOptions(
+            timeout: Duration(seconds: 3),
+          ),
+        );
+        await expectLater(
+          timeoutCallable.call({
+            'testTimeout': const Duration(seconds: 6).inMilliseconds.toString(),
+          }),
+          throwsA(
+            isA<DartFirebaseFunctionsException>().having(
+              (e) => e.code,
+              'code',
+              'deadline-exceeded',
+            ),
+          ),
+        );
       },
-      skip: !canUseAuth,
     );
+
+    group('Auth token', () {
+      tearDown(() async {
+        await auth.signOut();
+      });
+
+      test('reaches the function when signed in', () async {
+        final credential = await auth.signInAnonymously();
+
+        final result = await functions.httpsCallable('testEchoContext').call();
+
+        expect(result.data['authUid'], credential.user!.uid);
+        expect(result.data['authorizationHeader'], isTrue);
+      });
+
+      test('is not sent when signed out', () async {
+        final result = await functions.httpsCallable('testEchoContext').call();
+
+        expect(result.data['authUid'], isNull);
+        expect(result.data['authorizationHeader'], isFalse);
+      });
+    }, skip: !canUseAuth);
   });
 }

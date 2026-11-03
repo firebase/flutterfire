@@ -42,8 +42,8 @@ CallableContextProvider firebaseCallableContext(FirebaseApp app) {
 }
 
 Future<String?> _idToken(FirebaseApp app) => idTokenOrNullOnWeb(
-      () async => FirebaseAuth.instanceFor(app: app).currentUser?.getIdToken(),
-    );
+  () async => FirebaseAuth.instanceFor(app: app).currentUser?.getIdToken(),
+);
 
 Future<String?> _appCheckToken(
   FirebaseApp app, {

@@ -82,20 +82,22 @@ void main() {
       expect(url.toString(), 'https://example.com/api/listFruit');
     });
 
-    test('prefers the emulator over a custom domain, with the default region',
-        () {
-      final url = callableUrl(
-        projectId: 'my-project',
-        region: 'https://example.com',
-        name: 'listFruit',
-        origin: 'http://localhost:5001',
-      );
+    test(
+      'prefers the emulator over a custom domain, with the default region',
+      () {
+        final url = callableUrl(
+          projectId: 'my-project',
+          region: 'https://example.com',
+          name: 'listFruit',
+          origin: 'http://localhost:5001',
+        );
 
-      expect(
-        url.toString(),
-        'http://localhost:5001/my-project/us-central1/listFruit',
-      );
-    });
+        expect(
+          url.toString(),
+          'http://localhost:5001/my-project/us-central1/listFruit',
+        );
+      },
+    );
   });
 
   group('checkTokenTransport', () {

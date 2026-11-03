@@ -28,10 +28,10 @@ class FunctionsEnvironment {
   /// Callers point the app's instances at the emulators, as `main()` and the
   /// e2e tests do.
   factory FunctionsEnvironment.emulator() => FunctionsEnvironment(
-        label: 'Emulator',
-        app: Firebase.app(),
-        usesEmulator: true,
-      );
+    label: 'Emulator',
+    app: Firebase.app(),
+    usesEmulator: true,
+  );
 
   /// A short name for the environment, shown in the UI.
   final String label;
@@ -64,16 +64,18 @@ class FunctionsEnvironment {
 abstract final class DeployedConfig {
   static const projectId = String.fromEnvironment('DEPLOYED_PROJECT_ID');
   static const apiKey = String.fromEnvironment('DEPLOYED_API_KEY');
-  static const messagingSenderId =
-      String.fromEnvironment('DEPLOYED_MESSAGING_SENDER_ID');
+  static const messagingSenderId = String.fromEnvironment(
+    'DEPLOYED_MESSAGING_SENDER_ID',
+  );
   static const androidAppId = String.fromEnvironment('DEPLOYED_ANDROID_APP_ID');
   static const iosAppId = String.fromEnvironment('DEPLOYED_IOS_APP_ID');
   static const webAppId = String.fromEnvironment('DEPLOYED_WEB_APP_ID');
 
   /// Optional: the URL "Call by URL" calls, such as the function's `run.app`
   /// URL. Without it, the call uses the function's `cloudfunctions.net` URL.
-  static const listFruitsUrl =
-      String.fromEnvironment('DEPLOYED_LIST_FRUITS_URL');
+  static const listFruitsUrl = String.fromEnvironment(
+    'DEPLOYED_LIST_FRUITS_URL',
+  );
 }
 
 /// This platform's app ID setting, as a `(key, value)` record.
@@ -93,18 +95,18 @@ abstract final class DeployedConfig {
 
 /// The settings this platform needs, as `(key, value)` records.
 List<(String, String)> get _deployedSettings => [
-      ('DEPLOYED_PROJECT_ID', DeployedConfig.projectId),
-      ('DEPLOYED_API_KEY', DeployedConfig.apiKey),
-      ('DEPLOYED_MESSAGING_SENDER_ID', DeployedConfig.messagingSenderId),
-      _appIdSetting,
-    ];
+  ('DEPLOYED_PROJECT_ID', DeployedConfig.projectId),
+  ('DEPLOYED_API_KEY', DeployedConfig.apiKey),
+  ('DEPLOYED_MESSAGING_SENDER_ID', DeployedConfig.messagingSenderId),
+  _appIdSetting,
+];
 
 /// The settings this platform needs that the build doesn't have: all of them
 /// when the app runs without `deployed.env.json`.
 List<String> get missingDeployedSettings => [
-      for (final (key, value) in _deployedSettings)
-        if (value.isEmpty) key,
-    ];
+  for (final (key, value) in _deployedSettings)
+    if (value.isEmpty) key,
+];
 
 /// Explains how to set up the deployed project, for when it's missing.
 String get deployedSetupHint {

@@ -23,7 +23,7 @@ final class CallableClient {
   /// Creates a client that sends requests with [httpClient], or with a new
   /// [http.Client] when omitted.
   CallableClient({http.Client? httpClient})
-      : _httpClient = httpClient ?? http.Client();
+    : _httpClient = httpClient ?? http.Client();
 
   final http.Client _httpClient;
 

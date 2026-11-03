@@ -41,9 +41,9 @@ enum FunctionsImplementation {
 
   /// A backend that calls [app]'s functions with this implementation.
   FunctionsBackend backendFor(FirebaseApp app) => switch (this) {
-        native => NativeFunctionsBackend(app),
-        dart => DartFunctionsBackend(app),
-      };
+    native => NativeFunctionsBackend(app),
+    dart => DartFunctionsBackend(app),
+  };
 }
 
 /// The calls this example makes, so the UI can switch at runtime between the
@@ -89,7 +89,10 @@ class NativeFunctionsBackend implements FunctionsBackend {
 
   @override
   Stream<StreamEvent> streamByName(String name) {
-    return _functions.httpsCallable(name).stream<Object?, Object?>().map(
+    return _functions
+        .httpsCallable(name)
+        .stream<Object?, Object?>()
+        .map(
           (response) => switch (response) {
             Chunk(:final partialData) => StreamChunk(partialData),
             Result(:final result) => StreamResult(result.data),
@@ -129,7 +132,10 @@ class DartFunctionsBackend implements FunctionsBackend {
 
   @override
   Stream<StreamEvent> streamByName(String name) {
-    return _functions.httpsCallable(name).stream<Object?, Object?>().map(
+    return _functions
+        .httpsCallable(name)
+        .stream<Object?, Object?>()
+        .map(
           (response) => switch (response) {
             DartChunk(:final partialData) => StreamChunk(partialData),
             DartResult(:final result) => StreamResult(result.data),

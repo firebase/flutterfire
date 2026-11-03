@@ -97,18 +97,14 @@ void main() {
     });
 
     for (final platform in [TargetPlatform.iOS, TargetPlatform.macOS]) {
-      test(
-        'maps 409 to already-exists on ${platform.name}',
-        () {
-          debugDefaultTargetPlatformOverride = platform;
+      test('maps 409 to already-exists on ${platform.name}', () {
+        debugDefaultTargetPlatformOverride = platform;
 
-          expect(
-            callableErrorForResponse(409, null),
-            _isFunctionsException('already-exists'),
-          );
-        },
-        testOn: 'vm',
-      );
+        expect(
+          callableErrorForResponse(409, null),
+          _isFunctionsException('already-exists'),
+        );
+      }, testOn: 'vm');
 
       test(
         'maps an unexpected HTTP status to internal on ${platform.name}',
@@ -124,22 +120,18 @@ void main() {
       );
     }
 
-    test(
-      'keeps the Android and JS codes on web, even in an iOS browser',
-      () {
-        debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+    test('keeps the Android and JS codes on web, even in an iOS browser', () {
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
 
-        expect(
-          callableErrorForResponse(409, null),
-          _isFunctionsException('aborted'),
-        );
-        expect(
-          callableErrorForResponse(418, null),
-          _isFunctionsException('unknown'),
-        );
-      },
-      testOn: 'browser',
-    );
+      expect(
+        callableErrorForResponse(409, null),
+        _isFunctionsException('aborted'),
+      );
+      expect(
+        callableErrorForResponse(418, null),
+        _isFunctionsException('unknown'),
+      );
+    }, testOn: 'browser');
   });
 
   group('callableTokenException', () {

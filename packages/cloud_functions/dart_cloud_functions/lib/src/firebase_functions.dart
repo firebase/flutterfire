@@ -27,8 +27,8 @@ class DartFirebaseFunctions {
     this.region, {
     required CallableContextProvider contextProvider,
     http.Client? httpClient,
-  })  : _contextProvider = contextProvider,
-        _client = CallableClient(httpClient: httpClient);
+  }) : _contextProvider = contextProvider,
+       _client = CallableClient(httpClient: httpClient);
 
   /// Creates an instance that isn't cached, sends requests with [httpClient]
   /// and gets their tokens from [contextProvider].
@@ -39,11 +39,11 @@ class DartFirebaseFunctions {
     required CallableContextProvider contextProvider,
     String region = _defaultRegion,
   }) : this._(
-          app,
-          region,
-          contextProvider: contextProvider,
-          httpClient: httpClient,
-        );
+         app,
+         region,
+         contextProvider: contextProvider,
+         httpClient: httpClient,
+       );
 
   static const _defaultRegion = 'us-central1';
   static final Map<String, DartFirebaseFunctions> _instances = {};
@@ -119,8 +119,9 @@ class DartFirebaseFunctions {
     final isAndroid =
         !kIsWeb && defaultTargetPlatform == TargetPlatform.android;
     final isLoopback = host == 'localhost' || host == '127.0.0.1';
-    final mappedHost =
-        automaticHostMapping && isAndroid && isLoopback ? '10.0.2.2' : host;
+    final mappedHost = automaticHostMapping && isAndroid && isLoopback
+        ? '10.0.2.2'
+        : host;
     _emulatorOrigin = 'http://$mappedHost:$port';
   }
 
