@@ -16,6 +16,7 @@ import java.util.concurrent.Executors;
 
 public class FlutterFirebaseMessagingReceiver extends BroadcastReceiver {
   private static final String TAG = "FLTFireMsgReceiver";
+  private static final String EXTRA_WRAPPED_INTENT = "wrapped_intent";
   static HashMap<String, RemoteMessage> notifications = new HashMap<>();
 
   // SharedPreferences writes and process-state lookups must not run on the main
@@ -41,6 +42,11 @@ public class FlutterFirebaseMessagingReceiver extends BroadcastReceiver {
           TAG,
           "broadcast received but intent contained no extras to process RemoteMessage. Operation"
               + " cancelled.");
+      return;
+    }
+
+    if (isNotificationEvent(intent)) {
+      Log.d(TAG, "broadcast received for a notification event, not a message. Ignored.");
       return;
     }
 
@@ -97,5 +103,15 @@ public class FlutterFirebaseMessagingReceiver extends BroadcastReceiver {
             }
           }
         });
+  }
+
+  // Whether the broadcast reports an event of a notification the Firebase SDK displayed itself,
+  // such as the user dismissing it, rather than a message. firebase-messaging sends those events
+  // with the action messages arrive with, the event's own intent in the "wrapped_intent" extra.
+  // Its own receiver, CloudMessagingReceiver, checks for that extra first and never handles such a
+  // broadcast as a message; read as one, it has no ID and nothing in it.
+  @SuppressWarnings("deprecation") // getParcelableExtra(String, Class) needs API 33.
+  static boolean isNotificationEvent(Intent intent) {
+    return intent.getParcelableExtra(EXTRA_WRAPPED_INTENT) instanceof Intent;
   }
 }
