@@ -9,6 +9,7 @@ import 'package:cloud_functions/cloud_functions.dart';
 import 'package:cloud_functions_example/emulator_config.dart';
 import 'package:cloud_functions_example/firebase_options.dart';
 import 'package:cloud_functions_example/functions_backend.dart';
+import 'package:cloud_functions_example/functions_environment.dart';
 import 'package:dart_cloud_functions/dart_cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -23,24 +24,39 @@ Future<void> main() async {
   // https://firebase.google.com/docs/functions/local-emulator
   connectFunctionsEmulator(FirebaseFunctions.instance);
   connectDartFunctionsEmulator(DartFirebaseFunctions.instance);
-  // Sign-in uses the Auth emulator, which the Functions emulator trusts.
+  // Sign-in uses the Auth emulator, which the Functions emulator trusts. On
+  // web, the Firebase JS SDK then adds a "Running in emulator mode" banner to
+  // the bottom of the page. It stays up even while calls go to the deployed
+  // project, and FlutterFire doesn't expose the SDK's option to turn it off.
   await connectAuthEmulator();
 
-  runApp(MyApp());
+  // A second app for a deployed project, when the build has its settings.
+  final deployed = await initializeDeployedEnvironment();
+
+  runApp(MyApp(deployed: deployed));
 }
 
 class MyApp extends StatefulWidget {
-  MyApp({Key? key}) : super(key: key);
+  MyApp({Key? key, this.deployed}) : super(key: key);
+
+  /// The deployed project, or `null` when the build has no settings for it.
+  final FunctionsEnvironment? deployed;
+
   @override
   _MyAppState createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
-  final List<FunctionsBackend> backends = [
-    NativeFunctionsBackend(),
-    DartFunctionsBackend(),
+  late final List<FunctionsEnvironment> environments = [
+    FunctionsEnvironment.emulator(),
+    if (widget.deployed case final deployed?) deployed,
   ];
-  late FunctionsBackend backend = backends.first;
+
+  /// Where calls go. Starts with the deployed project when there is one.
+  late FunctionsEnvironment environment = environments.last;
+
+  /// Which implementation sends the calls.
+  FunctionsImplementation implementation = FunctionsImplementation.native;
   StreamSubscription<StreamEvent>? streamSubscription;
   List fruit = [];
   List streamResult = [];
@@ -65,16 +81,24 @@ class _MyAppState extends State<MyApp> {
     super.dispose();
   }
 
-  void selectBackend(FunctionsBackend selected) {
+  void selectImplementation(FunctionsImplementation selected) {
     setState(() {
-      backend = selected;
+      implementation = selected;
+    });
+    streamFunction();
+  }
+
+  void selectEnvironment(FunctionsEnvironment selected) {
+    setState(() {
+      environment = selected;
     });
     streamFunction();
   }
 
   void streamFunction() {
     const what = 'testStreamResponse, streamed by name';
-    final sender = backend;
+    final sender = implementation;
+    final target = environment;
     final stopwatch = Stopwatch()..start();
     streamSubscription?.cancel();
     setState(() {
@@ -82,9 +106,10 @@ class _MyAppState extends State<MyApp> {
       streamResult.clear();
       streamError = null;
       identity = null;
-      resultSource = describeCall(what, sender);
+      resultSource = describeCall(what, sender, target);
     });
     streamSubscription = sender
+        .backendFor(target.app)
         .streamByName('testStreamResponse')
         .listen(
           (event) {
@@ -101,6 +126,7 @@ class _MyAppState extends State<MyApp> {
                   resultSource = describeCall(
                     what,
                     sender,
+                    target,
                     elapsed: stopwatch.elapsed,
                   );
                 });
@@ -110,16 +136,18 @@ class _MyAppState extends State<MyApp> {
             debugPrint('Error: $e');
             setState(() {
               streamError = '$e';
-              resultSource = describeCall(what, sender, failed: true);
+              resultSource = describeCall(what, sender, target, failed: true);
             });
           },
         );
   }
 
-  /// Describes a call, e.g. "listFruit, called by name · sent by Dart · 12 ms".
+  /// Describes a call, e.g. "listFruit, called by name · sent by Dart to
+  /// Deployed · 84 ms".
   String describeCall(
     String what,
-    FunctionsBackend sender, {
+    FunctionsImplementation sender,
+    FunctionsEnvironment target, {
     Duration? elapsed,
     bool failed = false,
   }) {
@@ -128,13 +156,11 @@ class _MyAppState extends State<MyApp> {
       (false, null) => 'waiting…',
       (false, final Duration elapsed) => '${elapsed.inMilliseconds} ms',
     };
-    return '$what · sent by ${sender.label} · $outcome';
+    return '$what · sent by ${sender.label} to ${target.label} · $outcome';
   }
 
   @override
   Widget build(BuildContext context) {
-    final localhostMapped = emulatorUrlHost;
-
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(title: const Text('Firebase Functions Example')),
@@ -143,17 +169,35 @@ class _MyAppState extends State<MyApp> {
           children: [
             Padding(
               padding: const EdgeInsets.all(8),
-              child: SegmentedButton<FunctionsBackend>(
-                segments: [
-                  for (final option in backends)
-                    ButtonSegment(value: option, label: Text(option.label)),
+              child: Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  SegmentedButton<FunctionsImplementation>(
+                    segments: [
+                      for (final option in FunctionsImplementation.values)
+                        ButtonSegment(value: option, label: Text(option.label)),
+                    ],
+                    selected: {implementation},
+                    onSelectionChanged: (selection) =>
+                        selectImplementation(selection.single),
+                  ),
+                  SegmentedButton<FunctionsEnvironment>(
+                    segments: [
+                      for (final option in environments)
+                        ButtonSegment(value: option, label: Text(option.label)),
+                    ],
+                    selected: {environment},
+                    onSelectionChanged: (selection) =>
+                        selectEnvironment(selection.single),
+                  ),
                 ],
-                selected: {backend},
-                onSelectionChanged: (selection) =>
-                    selectBackend(selection.single),
               ),
             ),
-            const _AuthStatusBar(),
+            if (widget.deployed == null) const _DeployedSetupHint(),
+            _AuthStatusBar(
+              auth: FirebaseAuth.instanceFor(app: environment.app),
+            ),
             if (resultSource != null)
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -261,10 +305,11 @@ class _MyAppState extends State<MyApp> {
                   onPressed: () async {
                     // See .github/workflows/scripts/functions/src/index.ts for the example function we
                     // are using for this example
+                    final url = environment.listFruitsUrl;
                     await callingFunction(
                       'listfruits2ndgen, called by URL',
                       (sender) => sender.callByUrl(
-                        'http://$localhostMapped:5001/flutterfire-e2e-tests/us-central1/listfruits2ndgen',
+                        url,
                         timeout: const Duration(seconds: 5),
                       ),
                       context,
@@ -288,27 +333,34 @@ class _MyAppState extends State<MyApp> {
     BuildContext context, {
     void Function(Object? data)? show,
   }) async {
-    // Capture the backend so switching mid-call doesn't mislabel the result.
-    final sender = backend;
+    // Capture the implementation and environment so switching mid-call doesn't
+    // mislabel the result.
+    final sender = implementation;
+    final target = environment;
     final stopwatch = Stopwatch()..start();
     // Stop a running stream so its chunks don't mix into these results.
     await streamSubscription?.cancel();
     setState(() {
-      resultSource = describeCall(what, sender);
+      resultSource = describeCall(what, sender, target);
     });
     try {
-      final data = await call(sender);
+      final data = await call(sender.backendFor(target.app));
       setState(() {
         fruit.clear();
         streamResult.clear();
         streamError = null;
         identity = null;
         (show ?? showFruit)(data);
-        resultSource = describeCall(what, sender, elapsed: stopwatch.elapsed);
+        resultSource = describeCall(
+          what,
+          sender,
+          target,
+          elapsed: stopwatch.elapsed,
+        );
       });
     } catch (e) {
       setState(() {
-        resultSource = describeCall(what, sender, failed: true);
+        resultSource = describeCall(what, sender, target, failed: true);
       });
       ScaffoldMessenger.of(
         context,
@@ -330,15 +382,44 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
-/// Signs in anonymously or out against the Auth emulator, and shows the
-/// current user.
+/// Explains how to add a deployed project, or what its settings are missing.
+class _DeployedSetupHint extends StatelessWidget {
+  const _DeployedSetupHint();
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+    // A project ID means a settings file was passed, but it's incomplete.
+    final incomplete = DeployedConfig.projectId.isNotEmpty;
+    final foreground = incomplete
+        ? colors.onErrorContainer
+        : colors.onSecondaryContainer;
+    return Card(
+      color: incomplete ? colors.errorContainer : colors.secondaryContainer,
+      margin: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+      child: ListTile(
+        iconColor: foreground,
+        textColor: foreground,
+        leading: Icon(incomplete ? Icons.warning_amber : Icons.info_outline),
+        title: Text(deployedSetupHint),
+      ),
+    );
+  }
+}
+
+/// Signs in anonymously or out with [auth], and shows the current user.
+///
+/// [auth] belongs to the selected environment, so the emulator and the
+/// deployed project each have their own user.
 class _AuthStatusBar extends StatelessWidget {
-  const _AuthStatusBar();
+  const _AuthStatusBar({required this.auth});
+
+  final FirebaseAuth auth;
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<User?>(
-      stream: FirebaseAuth.instance.authStateChanges(),
+      stream: auth.authStateChanges(),
       builder: (context, snapshot) {
         final user = snapshot.data;
         return Padding(
@@ -364,9 +445,9 @@ class _AuthStatusBar extends StatelessWidget {
   Future<void> _toggleSignIn(BuildContext context, User? user) async {
     try {
       if (user == null) {
-        await FirebaseAuth.instance.signInAnonymously();
+        await auth.signInAnonymously();
       } else {
-        await FirebaseAuth.instance.signOut();
+        await auth.signOut();
       }
     } catch (e) {
       // On macOS this fails without keychain entitlements.

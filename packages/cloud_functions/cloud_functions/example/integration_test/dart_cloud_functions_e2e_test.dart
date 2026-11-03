@@ -4,6 +4,7 @@
 
 import 'package:cloud_functions_example/emulator_config.dart';
 import 'package:cloud_functions_example/firebase_options.dart';
+import 'package:cloud_functions_example/functions_environment.dart';
 import 'package:dart_cloud_functions/dart_cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -22,8 +23,17 @@ void main() {
   final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
   reportTestResultsToDriver(binding);
 
-  group('dart_cloud_functions', () {
+  // Calls go to the local emulators, or to a deployed project when the build
+  // has `--dart-define-from-file=deployed.env.json` (see the example's
+  // README).
+  final suiteName = DeployedConfig.projectId.isEmpty
+      ? 'dart_cloud_functions'
+      : 'dart_cloud_functions (deployed: ${DeployedConfig.projectId})';
+
+  group(suiteName, () {
+    late FunctionsEnvironment target;
     late DartFirebaseFunctions functions;
+    late FirebaseAuth auth;
     late DartHttpsCallable callable;
 
     setUpAll(() async {
@@ -38,9 +48,21 @@ void main() {
           rethrow;
         }
       }
-      functions = DartFirebaseFunctions.instance;
-      connectDartFunctionsEmulator(functions);
-      await connectAuthEmulatorAndSignOut();
+      final deployed = await initializeDeployedEnvironment();
+      // An incomplete deployed.env.json should fail, not quietly test the
+      // emulators instead.
+      if (deployed == null && DeployedConfig.projectId.isNotEmpty) {
+        fail(deployedSetupHint);
+      }
+      target = deployed ?? FunctionsEnvironment.emulator();
+      functions = DartFirebaseFunctions.instanceFor(app: target.app);
+      auth = FirebaseAuth.instanceFor(app: target.app);
+      if (target.usesEmulator) {
+        connectDartFunctionsEmulator(functions);
+        await connectAuthEmulatorAndSignOut();
+      } else if (canUseAuth) {
+        await auth.signOut();
+      }
       callable = functions.httpsCallable('testFunctionDefaultRegion');
     });
 
@@ -109,14 +131,17 @@ void main() {
       });
 
       test('can be called using a String url', () async {
-        final result =
-            await functions.httpsCallableFromUrl(_listFruits2ndGenUrl).call();
+        final result = await functions
+            .httpsCallableFromUrl(target.functionUrl('listfruits2ndgen'))
+            .call();
         expect(result.data, data.fruits);
       });
 
       test('can be called using a Uri', () async {
         final result = await functions
-            .httpsCallableFromUri(Uri.parse(_listFruits2ndGenUrl))
+            .httpsCallableFromUri(
+              Uri.parse(target.functionUrl('listfruits2ndgen')),
+            )
             .call();
         expect(result.data, data.fruits);
       });
@@ -198,7 +223,9 @@ void main() {
 
       test('can be called using a String url', () async {
         await expectLater(
-          functions.httpsCallableFromUrl(_listFruits2ndGenUrl).stream(),
+          functions
+              .httpsCallableFromUrl(target.functionUrl('listfruits2ndgen'))
+              .stream(),
           emits(isA<DartStreamResponse>()),
         );
       });
@@ -206,7 +233,9 @@ void main() {
       test('can be called using a Uri', () async {
         await expectLater(
           functions
-              .httpsCallableFromUri(Uri.parse(_listFruits2ndGenUrl))
+              .httpsCallableFromUri(
+                Uri.parse(target.functionUrl('listfruits2ndgen')),
+              )
               .stream(),
           emits(isA<DartStreamResponse>()),
         );
@@ -214,7 +243,7 @@ void main() {
 
       test('sends data when called using a url', () async {
         final byUrl = functions.httpsCallableFromUrl(
-          _testFunctionDefaultRegionUrl,
+          target.functionUrl('testFunctionDefaultRegion'),
         );
         expect(await firstChunk(byUrl, 'foo'), 'string');
       });
@@ -303,8 +332,11 @@ void main() {
     });
 
     test('instanceFor() accepts a custom region', () async {
-      final europe = DartFirebaseFunctions.instanceFor(region: 'europe-west1');
-      connectDartFunctionsEmulator(europe);
+      final europe = DartFirebaseFunctions.instanceFor(
+        app: target.app,
+        region: 'europe-west1',
+      );
+      if (target.usesEmulator) connectDartFunctionsEmulator(europe);
       final result =
           await europe.httpsCallable('testFunctionCustomRegion').call();
       expect(result.data, 'europe-west1');
@@ -331,11 +363,11 @@ void main() {
       'Auth token',
       () {
         tearDown(() async {
-          await FirebaseAuth.instance.signOut();
+          await auth.signOut();
         });
 
         test('reaches the function when signed in', () async {
-          final credential = await FirebaseAuth.instance.signInAnonymously();
+          final credential = await auth.signInAnonymously();
 
           final result =
               await functions.httpsCallable('testEchoContext').call();
@@ -356,9 +388,3 @@ void main() {
     );
   });
 }
-
-String get _listFruits2ndGenUrl =>
-    'http://$emulatorUrlHost:5001/flutterfire-e2e-tests/us-central1/listfruits2ndgen';
-
-String get _testFunctionDefaultRegionUrl =>
-    'http://$emulatorUrlHost:5001/flutterfire-e2e-tests/us-central1/testFunctionDefaultRegion';

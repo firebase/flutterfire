@@ -4,6 +4,7 @@
 
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:dart_cloud_functions/dart_cloud_functions.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 /// One response of a streaming call, from either implementation.
 ///
@@ -25,13 +26,30 @@ class StreamResult extends StreamEvent {
   final Object? data;
 }
 
+/// The implementations the example can switch between at runtime.
+enum FunctionsImplementation {
+  /// The native `cloud_functions` plugin.
+  native('Native'),
+
+  /// The pure-Dart `dart_cloud_functions` package.
+  dart('Dart');
+
+  const FunctionsImplementation(this.label);
+
+  /// A short name for the implementation, shown in the UI.
+  final String label;
+
+  /// A backend that calls [app]'s functions with this implementation.
+  FunctionsBackend backendFor(FirebaseApp app) => switch (this) {
+        native => NativeFunctionsBackend(app),
+        dart => DartFunctionsBackend(app),
+      };
+}
+
 /// The calls this example makes, so the UI can switch at runtime between the
 /// native `cloud_functions` plugin and the pure-Dart `dart_cloud_functions`
 /// package.
 abstract interface class FunctionsBackend {
-  /// A short name for the implementation, shown in the UI.
-  String get label;
-
   /// Calls the function called [name] and returns its data.
   Future<Object?> callByName(String name, {required Duration timeout});
 
@@ -42,14 +60,18 @@ abstract interface class FunctionsBackend {
   Stream<StreamEvent> streamByName(String name);
 }
 
-/// Calls functions through the native `cloud_functions` plugin.
+/// Calls [app]'s functions through the native `cloud_functions` plugin.
 class NativeFunctionsBackend implements FunctionsBackend {
-  @override
-  String get label => 'Native';
+  NativeFunctionsBackend(this.app);
+
+  /// The app whose functions this backend calls.
+  final FirebaseApp app;
+
+  FirebaseFunctions get _functions => FirebaseFunctions.instanceFor(app: app);
 
   @override
   Future<Object?> callByName(String name, {required Duration timeout}) async {
-    final callable = FirebaseFunctions.instance.httpsCallable(
+    final callable = _functions.httpsCallable(
       name,
       options: HttpsCallableOptions(timeout: timeout),
     );
@@ -58,7 +80,7 @@ class NativeFunctionsBackend implements FunctionsBackend {
 
   @override
   Future<Object?> callByUrl(String url, {required Duration timeout}) async {
-    final callable = FirebaseFunctions.instance.httpsCallableFromUrl(
+    final callable = _functions.httpsCallableFromUrl(
       url,
       options: HttpsCallableOptions(timeout: timeout),
     );
@@ -67,10 +89,7 @@ class NativeFunctionsBackend implements FunctionsBackend {
 
   @override
   Stream<StreamEvent> streamByName(String name) {
-    return FirebaseFunctions.instance
-        .httpsCallable(name)
-        .stream<Object?, Object?>()
-        .map(
+    return _functions.httpsCallable(name).stream<Object?, Object?>().map(
           (response) => switch (response) {
             Chunk(:final partialData) => StreamChunk(partialData),
             Result(:final result) => StreamResult(result.data),
@@ -79,14 +98,20 @@ class NativeFunctionsBackend implements FunctionsBackend {
   }
 }
 
-/// Calls functions through the pure-Dart `dart_cloud_functions` package.
+/// Calls [app]'s functions through the pure-Dart `dart_cloud_functions`
+/// package.
 class DartFunctionsBackend implements FunctionsBackend {
-  @override
-  String get label => 'Dart';
+  DartFunctionsBackend(this.app);
+
+  /// The app whose functions this backend calls.
+  final FirebaseApp app;
+
+  DartFirebaseFunctions get _functions =>
+      DartFirebaseFunctions.instanceFor(app: app);
 
   @override
   Future<Object?> callByName(String name, {required Duration timeout}) async {
-    final callable = DartFirebaseFunctions.instance.httpsCallable(
+    final callable = _functions.httpsCallable(
       name,
       options: DartHttpsCallableOptions(timeout: timeout),
     );
@@ -95,7 +120,7 @@ class DartFunctionsBackend implements FunctionsBackend {
 
   @override
   Future<Object?> callByUrl(String url, {required Duration timeout}) async {
-    final callable = DartFirebaseFunctions.instance.httpsCallableFromUrl(
+    final callable = _functions.httpsCallableFromUrl(
       url,
       options: DartHttpsCallableOptions(timeout: timeout),
     );
@@ -104,10 +129,7 @@ class DartFunctionsBackend implements FunctionsBackend {
 
   @override
   Stream<StreamEvent> streamByName(String name) {
-    return DartFirebaseFunctions.instance
-        .httpsCallable(name)
-        .stream<Object?, Object?>()
-        .map(
+    return _functions.httpsCallable(name).stream<Object?, Object?>().map(
           (response) => switch (response) {
             DartChunk(:final partialData) => StreamChunk(partialData),
             DartResult(:final result) => StreamResult(result.data),

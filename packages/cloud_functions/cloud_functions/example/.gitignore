@@ -43,3 +43,6 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Settings for a deployed Firebase project (see the README)
+deployed.env.json
