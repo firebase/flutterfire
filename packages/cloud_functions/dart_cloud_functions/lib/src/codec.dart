@@ -10,8 +10,7 @@ import 'package:dart_cloud_functions/src/firebase_functions_exception.dart';
 
 /// The headers of a callable request that carries [context]'s tokens.
 ///
-/// The ID token uses the `Bearer` scheme, which callable functions require
-/// (`firebase_ai` sends `Firebase` instead).
+/// The ID token uses the `Bearer` scheme, which callable functions require.
 Map<String, String> callableRequestHeaders(CallableContext context) {
   return {
     'Content-Type': 'application/json',

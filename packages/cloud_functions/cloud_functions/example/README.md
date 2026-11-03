@@ -18,9 +18,10 @@ The example calls functions from the e2e test backend in
 
 ## Run against the emulators
 
-From `.github/workflows/scripts`, start the emulators with
-`firebase emulators:start --only auth,functions --project flutterfire-e2e-tests`,
-then run `flutter run` from this directory.
+From `.github/workflows/scripts`, install and build the test functions once
+with `npm ci --prefix functions`, then start the emulators with
+`firebase emulators:start --only auth,functions --project flutterfire-e2e-tests`.
+Then run `flutter run` from this directory.
 
 ## Run against a deployed project
 

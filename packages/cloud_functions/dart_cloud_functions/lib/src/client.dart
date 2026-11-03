@@ -3,7 +3,6 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:developer' as developer;
 
 import 'package:dart_cloud_functions/src/codec.dart';
 import 'package:dart_cloud_functions/src/context.dart';
@@ -41,7 +40,6 @@ final class CallableClient {
     required CallableContext context,
     required Duration timeout,
   }) async {
-    developer.log('POST $url', name: 'dart_cloud_functions');
     final abort = Completer<void>();
     final request = _request(url, data, context, abort.future);
     try {
@@ -72,7 +70,6 @@ final class CallableClient {
     required CallableContext context,
     Duration? idleTimeout,
   }) async* {
-    developer.log('POST $url (streaming)', name: 'dart_cloud_functions');
     final abort = Completer<void>();
     final request = _request(url, data, context, abort.future)
       ..headers['Accept'] = 'text/event-stream';

@@ -18,7 +18,7 @@ import 'sample_data.dart' as data;
 /// The `call()` and `stream()` cases from `e2e_test.dart`, run against
 /// `dart_cloud_functions`.
 ///
-/// Keep the two files in step until they share one suite (plan item 0.3).
+/// Keep the shared cases in step with `e2e_test.dart`.
 void main() {
   final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
   reportTestResultsToDriver(binding);

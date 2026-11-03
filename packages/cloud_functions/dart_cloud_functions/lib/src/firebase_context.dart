@@ -12,11 +12,10 @@ import 'package:flutter/foundation.dart';
 
 /// Gets each request's tokens from the Firebase services of [app].
 ///
-/// The ID token comes from `FirebaseAuth.instanceFor(app: app)`, not from
-/// `app.getService<FirebaseAuth>()` as in `firebase_ai`. The service is only
-/// registered once the app has used `FirebaseAuth`, so a call made before
-/// that would go out without the token of a user restored from a previous
-/// launch.
+/// The ID token comes from `FirebaseAuth.instanceFor(app: app)` rather than
+/// `app.getService<FirebaseAuth>()`. That service is only registered once the
+/// app has used `FirebaseAuth`, so a call made before then would go out
+/// without the token of a user restored from a previous launch.
 ///
 /// The App Check token comes from `app.getService<FirebaseAppCheck>()`. That
 /// service is registered when the app sets up App Check, so apps that don't
