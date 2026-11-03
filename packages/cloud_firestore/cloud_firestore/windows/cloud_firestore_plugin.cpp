@@ -1847,6 +1847,8 @@ class QuerySnapshotStreamHandler
   std::unique_ptr<flutter::StreamHandlerError<flutter::EncodableValue>>
   OnCancelInternal(const flutter::EncodableValue* arguments) override {
     listener_.Remove();
+    // Each listen gets a new channel, so this handler will not be reused.
+    query_.reset();
     EndStreamOnPlatformThread(events_state_);
     return nullptr;
   }
@@ -1945,6 +1947,8 @@ class DocumentSnapshotStreamHandler
   std::unique_ptr<flutter::StreamHandlerError<flutter::EncodableValue>>
   OnCancelInternal(const flutter::EncodableValue* arguments) override {
     listener_.Remove();
+    // Each listen gets a new channel, so this handler will not be reused.
+    reference_.reset();
     EndStreamOnPlatformThread(events_state_);
     return nullptr;
   }
