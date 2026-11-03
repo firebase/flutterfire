@@ -28,10 +28,10 @@ by side in the same app and compared one-to-one.
   or custom domain) or by URL, streaming, the Cloud Functions emulator,
   timeouts, the Auth ID token, and App Check tokens, including limited-use
   ones.
-- **Tested:** the unit tests run on the VM and in Chrome. The e2e suite passes
-  against the emulators on Android, iOS, macOS and web, and against a deployed
-  project on iOS and macOS; its streaming cases haven't run on Android yet.
-  Windows and Linux are untested.
+- **Tested:** the unit tests run on the VM and in Chrome, compiled to JS and to
+  Wasm. The e2e suite passes against the emulators on Android, iOS, macOS and
+  web, and against a deployed project on iOS and macOS; its streaming cases
+  haven't run on Android yet. Windows and Linux are untested.
 - **Not yet supported:**
   - FCM tokens: requests are sent without them.
   - Large integers: they're sent as plain JSON numbers rather than the
@@ -147,12 +147,18 @@ Where this package deliberately differs from `cloud_functions`:
 
 ## Running the tests
 
-Unit tests, from this directory:
+Unit tests, from this directory, on the VM and then in Chrome, compiled to JS
+and to Wasm:
 
 ```sh
 flutter test
-flutter test --platform chrome
+flutter test --platform chrome test/web
+flutter test --platform chrome --wasm test/web
 ```
+
+`test/web/browser_test.dart` runs the whole suite in the browser. That's where
+CI's `test:browser` step looks for the browser tests of packages that aren't
+web plugins.
 
 The e2e suite, `integration_test/dart_cloud_functions_e2e_test.dart` in the
 `cloud_functions` example app, runs the `call()` and `stream()` cases of the
