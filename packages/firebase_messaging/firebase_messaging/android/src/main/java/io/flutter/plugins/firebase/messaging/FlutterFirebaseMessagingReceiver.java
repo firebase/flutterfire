@@ -7,8 +7,12 @@ package io.flutter.plugins.firebase.messaging;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
+import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 import com.google.firebase.messaging.RemoteMessage;
 import java.util.HashMap;
 import java.util.concurrent.Executor;
@@ -16,6 +20,7 @@ import java.util.concurrent.Executors;
 
 public class FlutterFirebaseMessagingReceiver extends BroadcastReceiver {
   private static final String TAG = "FLTFireMsgReceiver";
+  private static final String EXTRA_WRAPPED_INTENT = "wrapped_intent";
   static HashMap<String, RemoteMessage> notifications = new HashMap<>();
 
   // SharedPreferences writes and process-state lookups must not run on the main
@@ -26,7 +31,6 @@ public class FlutterFirebaseMessagingReceiver extends BroadcastReceiver {
 
   @Override
   public void onReceive(Context context, Intent intent) {
-    Log.d(TAG, "broadcast received for message");
     if (ContextHolder.getApplicationContext() == null) {
       Context aContext = context;
       if (context.getApplicationContext() != null) {
@@ -36,15 +40,11 @@ public class FlutterFirebaseMessagingReceiver extends BroadcastReceiver {
       ContextHolder.setApplicationContext(aContext);
     }
 
-    if (intent.getExtras() == null) {
-      Log.d(
-          TAG,
-          "broadcast received but intent contained no extras to process RemoteMessage. Operation"
-              + " cancelled.");
+    RemoteMessage remoteMessage = remoteMessageFrom(intent);
+    if (remoteMessage == null) {
       return;
     }
-
-    RemoteMessage remoteMessage = new RemoteMessage(intent.getExtras());
+    Log.d(TAG, "broadcast received for message");
 
     // Keep the in-memory message available to the plugin on the main thread; it is
     // read from the main thread when a notification is tapped.
@@ -97,5 +97,45 @@ public class FlutterFirebaseMessagingReceiver extends BroadcastReceiver {
             }
           }
         });
+  }
+
+  /**
+   * Returns the message to deliver for a broadcast, or null for a broadcast without extras or for a
+   * notification event.
+   *
+   * <p>When firebase-messaging displays a notification for a message that has analytics enabled, it
+   * gives the notification a delete intent. If the user dismisses the notification, Android sends
+   * the app that intent: a {@code com.google.android.c2dm.intent.RECEIVE} broadcast, the action
+   * messages use, with the {@code NOTIFICATION_DISMISS} intent in its {@code wrapped_intent} extra.
+   * Google's CloudMessagingReceiver handles a broadcast with an intent there as a notification
+   * event, never as a message, and this receiver ignores it. Read as a message, it has no ID and
+   * nothing in it.
+   */
+  @VisibleForTesting
+  @Nullable
+  static RemoteMessage remoteMessageFrom(Intent intent) {
+    Bundle extras = intent.getExtras();
+    if (extras == null) {
+      Log.d(
+          TAG,
+          "broadcast received but intent contained no extras to process RemoteMessage. Operation"
+              + " cancelled.");
+      return null;
+    }
+
+    // The same check as CloudMessagingReceiver. The typed getter needs API 33, and AndroidX's
+    // IntentCompat only relies on it from API 34.
+    @SuppressWarnings("deprecation")
+    Parcelable wrappedIntent = intent.getParcelableExtra(EXTRA_WRAPPED_INTENT);
+    if (wrappedIntent instanceof Intent) {
+      Log.d(
+          TAG,
+          "broadcast received for notification event "
+              + ((Intent) wrappedIntent).getAction()
+              + ", not a message. Ignored.");
+      return null;
+    }
+
+    return new RemoteMessage(extras);
   }
 }

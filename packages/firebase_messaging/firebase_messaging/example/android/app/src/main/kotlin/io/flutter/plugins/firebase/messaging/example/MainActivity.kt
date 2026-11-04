@@ -2,9 +2,14 @@ package io.flutter.plugins.firebase.messaging.example
 
 import android.app.ActivityManager
 import android.app.KeyguardManager
+import android.app.Notification
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.os.ParcelFileDescriptor
 import io.flutter.FlutterInjector
 import io.flutter.embedding.android.FlutterActivity
@@ -39,21 +44,7 @@ class MainActivity : FlutterActivity() {
                 result.error("INVALID_ARG", "messageIds is required", null)
                 return@setMethodCallHandler
               }
-              // The receiver only sends messages to onMessage while the app is in the
-              // foreground, which the lock screen prevents.
-              if (!isAppInForeground()) {
-                try {
-                  executeShell("wm dismiss-keyguard")
-                } catch (_: Exception) {
-                  // Reported below.
-                }
-                // The keyguard goes away asynchronously.
-                for (attempt in 0 until 20) {
-                  if (isAppInForeground()) break
-                  Thread.sleep(100)
-                }
-              }
-              val foreground = isAppInForeground()
+              val foreground = unlockAndCheckForeground()
               val receiver = FlutterFirebaseMessagingReceiver()
               for (messageId in messageIds) {
                 val intent =
@@ -68,6 +59,36 @@ class MainActivity : FlutterActivity() {
               // own thread, as when pushes arrive faster than the main thread runs.
               Thread.sleep(500)
               result.success(mapOf("foreground" to foreground))
+            }
+            "dismissFirebaseNotification" -> {
+              val foreground = unlockAndCheckForeground()
+              val deleteIntent =
+                  try {
+                    firebaseNotificationDeleteIntent()
+                  } catch (e: Exception) {
+                    result.error("SDK_CHANGED", errorMessage(e), null)
+                    return@setMethodCallHandler
+                  }
+              if (deleteIntent == null) {
+                result.error("SDK_CHANGED", "firebase-messaging set no delete intent", null)
+                return@setMethodCallHandler
+              }
+              // Android sends the delete intent when the user dismisses the notification. With
+              // a callback, the broadcast is ordered: the callback runs once every receiver has
+              // finished with it, and gets the result code Firebase's own receiver set.
+              try {
+                deleteIntent.send(
+                    applicationContext,
+                    0,
+                    null,
+                    { _, _, resultCode, _, _ ->
+                      result.success(mapOf("foreground" to foreground, "resultCode" to resultCode))
+                    },
+                    Handler(Looper.getMainLooper()),
+                )
+              } catch (e: PendingIntent.CanceledException) {
+                result.error("SEND_FAILED", errorMessage(e), null)
+              }
             }
             "startSecondEngine" -> {
               val callbackHandle = call.argument<Number>("callbackHandle")
@@ -155,6 +176,56 @@ class MainActivity : FlutterActivity() {
             else -> result.notImplemented()
           }
         }
+  }
+
+  /// Dismisses the lock screen if needed: the receiver only sends messages to
+  /// onMessage while the app is in the foreground. Returns whether it is.
+  private fun unlockAndCheckForeground(): Boolean {
+    if (!isAppInForeground()) {
+      try {
+        executeShell("wm dismiss-keyguard")
+      } catch (_: Exception) {
+        // Reported by the return value.
+      }
+      // The keyguard goes away asynchronously.
+      for (attempt in 0 until 20) {
+        if (isAppInForeground()) break
+        Thread.sleep(100)
+      }
+    }
+    return isAppInForeground()
+  }
+
+  /// The delete intent firebase-messaging sets on a notification it displays,
+  /// which Android sends when the user dismisses the notification. Built by
+  /// the SDK rather than by hand, so the test follows any change to that
+  /// broadcast. The builder is hidden SDK API: reflection keeps a change to it
+  /// from breaking the build, and fails only this test.
+  private fun firebaseNotificationDeleteIntent(): PendingIntent? {
+    // A notification message as FCM delivers it. The SDK only sets a delete
+    // intent when analytics is enabled for the message (google.c.a.e).
+    val data =
+        Bundle().apply {
+          putString("gcm.n.e", "1")
+          putString("gcm.notification.title", "e2e")
+          putString("google.c.a.e", "1")
+        }
+    val paramsClass = Class.forName("com.google.firebase.messaging.NotificationParams")
+    val params = paramsClass.getConstructor(Bundle::class.java).newInstance(data)
+    val info =
+        Class.forName("com.google.firebase.messaging.CommonNotificationBuilder")
+            .getMethod(
+                "createNotificationInfo",
+                Context::class.java,
+                Context::class.java,
+                paramsClass,
+                String::class.java,
+                Bundle::class.java,
+            )
+            .invoke(null, applicationContext, applicationContext, params, "e2e", Bundle())!!
+    val builder = info.javaClass.getField("notificationBuilder").get(info)!!
+    val notification = builder.javaClass.getMethod("build").invoke(builder) as Notification
+    return notification.deleteIntent
   }
 
   private fun isAppInForeground(): Boolean {

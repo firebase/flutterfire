@@ -54,6 +54,30 @@ Future<void> deliverToAndroidReceiver(List<String> messageIds) async {
   );
 }
 
+/// Sends the broadcast Android sends when the user dismisses a notification
+/// that firebase-messaging displayed, as built by the SDK. Returns once every
+/// receiver of the broadcast has handled it. Fails if the app did not count as
+/// in the foreground, where a dismissal read as a message reaches `onMessage`,
+/// or if Firebase's own receiver did not handle the broadcast.
+Future<void> dismissFirebaseNotification() async {
+  final dismissal = await _remoteNotificationsChannel
+      .invokeMapMethod<String, Object?>('dismissFirebaseNotification')
+      .timeout(const Duration(seconds: 20));
+  expect(
+    dismissal!['foreground'],
+    isTrue,
+    reason: 'The app must be in the foreground with the screen unlocked.',
+  );
+  expect(
+    dismissal['resultCode'],
+    _activityResultOk,
+    reason: "Firebase's own receiver did not handle the broadcast.",
+  );
+}
+
+/// `Activity.RESULT_OK`.
+const _activityResultOk = -1;
+
 /// Entry point of the second engine started by the Android tests: listens to
 /// `onMessage` and reports what it receives to `MainActivity.kt`.
 @pragma('vm:entry-point')
@@ -249,6 +273,24 @@ void remoteNotificationDeliveryTests() {
           received.first.data,
           containsPair('test', 'remote-notification-delivery'),
         );
+      });
+
+      test('dismissing a notification displayed by Firebase does not reach '
+          'onMessage', () async {
+        final messageId = _uniqueMessageId('after-dismissal');
+        final received = <String?>[];
+        // Read as a message, the dismissal has no ID.
+        final subscription = FirebaseMessaging.onMessage
+            .where((m) => m.messageId == null || m.messageId == messageId)
+            .listen((message) => received.add(message.messageId));
+        addTearDown(subscription.cancel);
+
+        await dismissFirebaseNotification();
+        // Anything the dismissal sends to onMessage arrives before this message.
+        await deliverToAndroidReceiver([messageId]);
+        await _waitUntil(() => received.contains(messageId));
+
+        expect(received, <String?>[messageId]);
       });
 
       test('an engine that starts listening later only gets the messages '
