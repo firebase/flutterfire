@@ -20,18 +20,18 @@ import 'package:http/http.dart' as http;
 /// writes down.
 Future<void> _sendCounterUpdates((Uri, int) arguments) async {
   final (Uri url, int updateCount) = arguments;
-  final http.Client client = http.Client();
+  final client = http.Client();
   try {
     for (int value = 1; value <= updateCount; value++) {
-      final http.Response response = await client.patch(
+      final response = await client.patch(
         url,
-        headers: const <String, String>{
+        headers: const {
           'Authorization': 'Bearer owner',
           'Content-Type': 'application/json',
         },
-        body: jsonEncode(<String, Object?>{
-          'fields': <String, Object?>{
-            'value': <String, Object?>{'integerValue': '$value'},
+        body: jsonEncode({
+          'fields': {
+            'value': {'integerValue': '$value'},
           },
         }),
       );
@@ -573,7 +573,7 @@ void runQueryTests() {
           final DocumentReference<Map<String, dynamic>> counter = collection
               .doc('counter');
           const int updateCount = 300;
-          final String payload = List.filled(400, 'x').join();
+          final String payload = 'x' * 400;
 
           final WriteBatch batch = instance.batch();
           for (int index = 0; index < 20; index++) {
