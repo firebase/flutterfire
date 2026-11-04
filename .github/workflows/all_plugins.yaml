@@ -279,7 +279,7 @@ jobs:
   # resolve and build for Dart apps that do not use Flutter (Jaspr,
   # `dart compile js`/`wasm`), on their minimum Dart SDK rather than the one
   # Flutter bundles. `firebase_common` also runs on the VM for the server SDKs.
-  pure_dart:
+  pure_dart_common:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -298,13 +298,19 @@ jobs:
           dart pub get
           dart test
           dart test -p chrome
+
+  # A separate job: a second setup-dart in the same job fails because the first
+  # one's SDK download is still in RUNNER_TEMP.
+  pure_dart_web:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       # The lowest Dart SDK firebase_core_interface and firebase_core_js support.
       - uses: dart-lang/setup-dart@6afc89df92d6eb3834022f73cd65adc8cdfcb92d
-        if: ${{ !cancelled() }}
         with:
           sdk: '3.10.0'
       - name: 'Build a Dart web app without Flutter'
-        if: ${{ !cancelled() }}
         # Outside `.github/workflows/scripts/`, so editing it does not start every e2e suite.
         working-directory: .github/pure_dart_web
         run: |
