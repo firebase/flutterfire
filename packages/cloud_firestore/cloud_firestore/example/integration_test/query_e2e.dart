@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:collection/collection.dart' show IterableExtension;
@@ -11,6 +12,37 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:http/http.dart' as http;
+
+/// Sets the document at the given URL to 1, 2, 3 and so on up to the given
+/// count, each write awaited before the next. Run with [compute], so that
+/// handling the listener's snapshots on the main isolate doesn't slow the
+/// writes down.
+Future<void> _sendCounterUpdates((Uri, int) arguments) async {
+  final (Uri url, int updateCount) = arguments;
+  final http.Client client = http.Client();
+  try {
+    for (int value = 1; value <= updateCount; value++) {
+      final http.Response response = await client.patch(
+        url,
+        headers: const <String, String>{
+          'Authorization': 'Bearer owner',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(<String, Object?>{
+          'fields': <String, Object?>{
+            'value': <String, Object?>{'integerValue': '$value'},
+          },
+        }),
+      );
+      if (response.statusCode != 200) {
+        throw StateError('Update $value failed: ${response.statusCode}');
+      }
+    }
+  } finally {
+    client.close();
+  }
+}
 
 void runQueryTests() {
   group('$Query', () {
@@ -514,6 +546,89 @@ void runQueryTests() {
         },
         timeout: const Timeout.factor(10),
         skip: kIsWeb || defaultTargetPlatform == TargetPlatform.windows,
+      );
+
+      test(
+        'delivers snapshots of server updates in order',
+        () async {
+          final String path = (await initializeTest(
+            'snapshot-delivery-order',
+          )).path;
+          // Its own instance, because saving every snapshot to the persistent
+          // cache the rest of the suite uses spaces them too far apart to overlap.
+          final FirebaseApp app = await Firebase.initializeApp(
+            name: 'snapshot-delivery-order',
+            options: firestore.app.options,
+          );
+          final FirebaseFirestore instance =
+              FirebaseFirestore.instanceFor(app: app)
+                ..settings = const Settings(persistenceEnabled: false)
+                ..useFirestoreEmulator('localhost', 8080);
+          addTearDown(() async {
+            await instance.terminate();
+            await app.delete();
+          });
+          final CollectionReference<Map<String, dynamic>> collection = instance
+              .collection(path);
+          final DocumentReference<Map<String, dynamic>> counter = collection
+              .doc('counter');
+          const int updateCount = 300;
+          final String payload = List.filled(400, 'x').join();
+
+          final WriteBatch batch = instance.batch();
+          for (int index = 0; index < 20; index++) {
+            batch.set(collection.doc('doc-$index'), <String, Object?>{
+              'index': index,
+              'payload': payload,
+            });
+          }
+          batch.set(counter, <String, Object?>{'value': 0});
+          await batch.commit();
+
+          final Completer<void> initialSnapshot = Completer<void>();
+          final Completer<void> lastUpdate = Completer<void>();
+          final List<String> outOfOrder = <String>[];
+          int newest = -1;
+          final StreamSubscription<QuerySnapshot<Map<String, dynamic>>>
+          subscription = collection.snapshots().listen((snapshot) {
+            final int value = snapshot.docs
+                .firstWhere((doc) => doc.id == 'counter')
+                .get('value');
+            if (value < newest) {
+              outOfOrder.add('$value after $newest');
+            }
+            newest = max(newest, value);
+            if (!initialSnapshot.isCompleted) {
+              initialSnapshot.complete();
+            }
+            if (value == updateCount && !lastUpdate.isCompleted) {
+              lastUpdate.complete();
+            }
+          });
+          addTearDown(subscription.cancel);
+          await initialSnapshot.future.timeout(const Duration(seconds: 30));
+
+          // Each write is awaited, so the value only ever goes up. REST writes
+          // reach the listener over the watch stream in quick succession, which
+          // is when consecutive snapshots of one query can overlap.
+          await compute(_sendCounterUpdates, (
+            Uri.parse(
+              'http://10.0.2.2:8080/v1/projects/'
+              '${firestore.app.options.projectId}/databases/(default)/documents/'
+              '${counter.path}',
+            ),
+            updateCount,
+          ));
+
+          await lastUpdate.future.timeout(const Duration(minutes: 4));
+          // An older snapshot can still arrive after the newest one, which is
+          // what would leave a listener showing stale data.
+          await Future<void>.delayed(const Duration(seconds: 2));
+          expect(outOfOrder, isEmpty);
+        },
+        timeout: const Timeout.factor(10),
+        // The URL uses the Android emulator's address for the host machine.
+        skip: kIsWeb || defaultTargetPlatform != TargetPlatform.android,
       );
 
       test('listeners throws a [FirebaseException] with Query', () async {
