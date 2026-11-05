@@ -615,7 +615,37 @@ void main() {
           json,
         );
         expect(response.totalTokens, 123);
-        // Developer API does not return other fields
+        // ignore: deprecated_member_use_from_same_package
+        expect(response.promptTokensDetails, isNull);
+      });
+
+      test('parses promptTokensDetails when present', () {
+        final json = {
+          'totalTokens': 123,
+          'promptTokensDetails': [
+            {'modality': 'TEXT', 'tokenCount': 100},
+            {'modality': 'AUDIO', 'tokenCount': 23},
+          ],
+        };
+        final response = DeveloperSerialization().parseCountTokensResponse(
+          json,
+        );
+        expect(response.totalTokens, 123);
+        // ignore: deprecated_member_use_from_same_package
+        final details = response.promptTokensDetails;
+        expect(details, isNotNull);
+        expect(details, hasLength(2));
+        expect(details![0].modality, ContentModality.text);
+        expect(details[0].tokenCount, 100);
+        expect(details[1].modality, ContentModality.audio);
+        expect(details[1].tokenCount, 23);
+      });
+
+      test('defaults totalTokens to 0 on empty JSON object', () {
+        final response = DeveloperSerialization().parseCountTokensResponse(
+          <String, Object?>{},
+        );
+        expect(response.totalTokens, 0);
         // ignore: deprecated_member_use_from_same_package
         expect(response.promptTokensDetails, isNull);
       });
