@@ -65,7 +65,10 @@ class FirebaseCoreWeb extends FirebasePlatform {
       _services.containsKey(service);
 
   /// Registers that [FirebaseCoreWeb] is the platform implementation.
-  static void registerWith(dynamic registrar) {
+  ///
+  /// Dart web apps without Flutter call this before using [FirebasePlatform].
+  /// [registrar] is ignored; it is kept for callers that still pass one.
+  static void registerWith([dynamic registrar]) {
     FirebasePlatform.instance = FirebaseCoreWeb();
   }
 

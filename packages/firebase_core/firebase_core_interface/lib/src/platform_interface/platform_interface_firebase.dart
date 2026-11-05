@@ -63,7 +63,7 @@ abstract class FirebasePlatform extends PlatformInterface {
         'No FirebasePlatform implementation has been registered. In Flutter '
         'apps, call Firebase.initializeApp() first, or setupFirebaseCoreMocks() '
         'in tests. Dart web apps without Flutter must register one first, for '
-        'example with FirebaseCoreWeb.registerWith(null) from firebase_core_js.',
+        'example with FirebaseCoreWeb.registerWith() from firebase_core_js.',
       );
     }
     final instance = factory();
