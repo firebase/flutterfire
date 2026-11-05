@@ -292,7 +292,7 @@ jobs:
       - name: 'Test firebase_common without Flutter'
         run: |
           # Inside the workspace, `pub get` resolves every member, Flutter ones included.
-          cp -r packages/firebase_core/firebase_common "$RUNNER_TEMP/firebase_common"
+          cp -r packages/firebase_common "$RUNNER_TEMP/firebase_common"
           cd "$RUNNER_TEMP/firebase_common"
           sed -i '/^resolution: workspace$/d' pubspec.yaml
           dart pub get

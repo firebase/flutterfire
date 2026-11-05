@@ -14,6 +14,6 @@ dependencies:
 
 dependency_overrides:
   firebase_common:
-    path: ../../packages/firebase_core/firebase_common
+    path: ../../packages/firebase_common
   firebase_core_interface:
     path: ../../packages/firebase_core/firebase_core_interface

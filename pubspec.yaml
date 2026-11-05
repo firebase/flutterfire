@@ -32,7 +32,7 @@ workspace:
   - packages/firebase_auth/firebase_auth/example
   - packages/firebase_auth/firebase_auth_platform_interface
   - packages/firebase_auth/firebase_auth_web
-  - packages/firebase_core/firebase_common
+  - packages/firebase_common
   - packages/firebase_core/firebase_core
   - packages/firebase_core/firebase_core/example
   - packages/firebase_core/firebase_core_interface

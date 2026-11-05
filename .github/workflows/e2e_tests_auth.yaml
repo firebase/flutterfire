@@ -23,6 +23,7 @@ on:
     paths:
       - 'packages/firebase_auth/**'
       - 'packages/firebase_core/**'
+      - 'packages/firebase_common/**'
       - '.github/workflows/e2e_tests_auth.yaml'
       - '.github/workflows/reusable_e2e_*.yaml'
       - '.github/actions/setup-flutterfire/**'
@@ -33,6 +34,7 @@ on:
     paths:
       - 'packages/firebase_auth/**'
       - 'packages/firebase_core/**'
+      - 'packages/firebase_common/**'
       - '.github/workflows/e2e_tests_auth.yaml'
       - '.github/workflows/reusable_e2e_*.yaml'
       - '.github/actions/setup-flutterfire/**'

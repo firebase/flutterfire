@@ -1,7 +1,7 @@
 name: firebase_common
 description: Pure-Dart types shared by the Firebase client and server Dart SDKs.
-homepage: https://github.com/firebase/flutterfire/tree/main/packages/firebase_core/firebase_common
-repository: https://github.com/firebase/flutterfire/tree/main/packages/firebase_core/firebase_common
+homepage: https://github.com/firebase/flutterfire/tree/main/packages/firebase_common
+repository: https://github.com/firebase/flutterfire/tree/main/packages/firebase_common
 version: 1.0.0
 resolution: workspace
 
