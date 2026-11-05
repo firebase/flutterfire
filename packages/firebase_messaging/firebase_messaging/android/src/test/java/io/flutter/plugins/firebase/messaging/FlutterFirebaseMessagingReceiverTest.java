@@ -13,9 +13,10 @@ import android.os.Parcelable;
 import org.junit.Test;
 
 public class FlutterFirebaseMessagingReceiverTest {
-  // The android.jar of unit tests keeps no extras, so this broadcast answers the two reads the
-  // receiver makes itself: all its extras, and the "wrapped_intent" one.
-  private static Intent broadcast(final Bundle extras, final Parcelable wrappedIntent) {
+  // The android.jar of unit tests keeps no extras, so this broadcast answers the reads the receiver
+  // makes itself: all its extras, the "wrapped_intent" one and the "message_type" one.
+  private static Intent broadcast(
+      final Bundle extras, final Parcelable wrappedIntent, final String messageType) {
     return new Intent() {
       @Override
       public Bundle getExtras() {
@@ -27,7 +28,20 @@ public class FlutterFirebaseMessagingReceiverTest {
       public <T extends Parcelable> T getParcelableExtra(String name) {
         return "wrapped_intent".equals(name) ? (T) wrappedIntent : null;
       }
+
+      @Override
+      public String getStringExtra(String name) {
+        return "message_type".equals(name) ? messageType : null;
+      }
     };
+  }
+
+  private static Intent broadcast(Bundle extras, Parcelable wrappedIntent) {
+    return broadcast(extras, wrappedIntent, null);
+  }
+
+  private static Intent broadcastOfType(String messageType) {
+    return broadcast(new Bundle(), null, messageType);
   }
 
   @Test
@@ -56,5 +70,28 @@ public class FlutterFirebaseMessagingReceiverTest {
     // CloudMessagingReceiver also reads only an Intent there as a notification event.
     assertNotNull(
         FlutterFirebaseMessagingReceiver.remoteMessageFrom(broadcast(new Bundle(), new Bundle())));
+  }
+
+  @Test
+  public void readsTheMessageOfABroadcastOfTypeGcm() {
+    assertNotNull(FlutterFirebaseMessagingReceiver.remoteMessageFrom(broadcastOfType("gcm")));
+  }
+
+  @Test
+  public void ignoresADeletedMessagesBroadcast() {
+    // Like the broadcast FCM sends when it has deleted messages pending for the app.
+    assertNull(
+        FlutterFirebaseMessagingReceiver.remoteMessageFrom(broadcastOfType("deleted_messages")));
+  }
+
+  @Test
+  public void ignoresMessageTypesOtherThanGcm() {
+    // FirebaseMessagingService passes upstream message events to their own callbacks, and drops
+    // a type it does not know.
+    for (String messageType : new String[] {"send_event", "send_error", "unknown"}) {
+      assertNull(
+          messageType,
+          FlutterFirebaseMessagingReceiver.remoteMessageFrom(broadcastOfType(messageType)));
+    }
   }
 }

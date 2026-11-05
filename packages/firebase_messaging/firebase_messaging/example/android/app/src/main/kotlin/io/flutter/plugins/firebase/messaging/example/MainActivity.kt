@@ -44,6 +44,7 @@ class MainActivity : FlutterActivity() {
                 result.error("INVALID_ARG", "messageIds is required", null)
                 return@setMethodCallHandler
               }
+              val messageType = call.argument<String>("messageType")
               val foreground = unlockAndCheckForeground()
               val receiver = FlutterFirebaseMessagingReceiver()
               for (messageId in messageIds) {
@@ -52,6 +53,7 @@ class MainActivity : FlutterActivity() {
                       putExtra("google.message_id", messageId)
                       putExtra("from", "e2e")
                       putExtra("test", "remote-notification-delivery")
+                      messageType?.let { putExtra("message_type", it) }
                     }
                 receiver.onReceive(applicationContext, intent)
               }

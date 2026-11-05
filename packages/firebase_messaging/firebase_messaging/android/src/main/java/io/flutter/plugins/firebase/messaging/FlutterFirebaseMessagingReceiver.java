@@ -21,6 +21,8 @@ import java.util.concurrent.Executors;
 public class FlutterFirebaseMessagingReceiver extends BroadcastReceiver {
   private static final String TAG = "FLTFireMsgReceiver";
   private static final String EXTRA_WRAPPED_INTENT = "wrapped_intent";
+  private static final String EXTRA_MESSAGE_TYPE = "message_type";
+  private static final String MESSAGE_TYPE_MESSAGE = "gcm";
   static HashMap<String, RemoteMessage> notifications = new HashMap<>();
 
   // SharedPreferences writes and process-state lookups must not run on the main
@@ -100,8 +102,8 @@ public class FlutterFirebaseMessagingReceiver extends BroadcastReceiver {
   }
 
   /**
-   * Returns the message to deliver for a broadcast, or null for a broadcast without extras or for a
-   * notification event.
+   * Returns the message to deliver for a broadcast, or null for a broadcast without extras, for a
+   * notification event, or for one whose {@code message_type} is set and is not {@code gcm}.
    *
    * <p>When firebase-messaging displays a notification for a message that has analytics enabled, it
    * gives the notification a delete intent. If the user dismisses the notification, Android sends
@@ -133,6 +135,17 @@ public class FlutterFirebaseMessagingReceiver extends BroadcastReceiver {
           "broadcast received for notification event "
               + ((Intent) wrappedIntent).getAction()
               + ", not a message. Ignored.");
+      return null;
+    }
+
+    // FirebaseMessagingService passes a broadcast to onMessageReceived only if it has no message
+    // type or gcm. Any other type is not a message: deleted_messages, which FCM sends when it has
+    // deleted messages pending for the app, send_event and send_error, about upstream messages, or
+    // a type the SDK does not know and drops.
+    String messageType = intent.getStringExtra(EXTRA_MESSAGE_TYPE);
+    if (messageType != null && !MESSAGE_TYPE_MESSAGE.equals(messageType)) {
+      Log.d(
+          TAG, "broadcast received for message type " + messageType + ", not a message. Ignored.");
       return null;
     }
 

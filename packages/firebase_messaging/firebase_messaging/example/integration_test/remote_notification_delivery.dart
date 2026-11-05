@@ -42,10 +42,17 @@ Future<Map<String, Object?>> deliverRemoteNotification(
 /// Hands data messages to the plugin's broadcast receiver back to back, like
 /// Google Play services does when several pushes arrive at once. Fails if the
 /// app did not count as in the foreground, where messages go to `onMessage`.
-Future<void> deliverToAndroidReceiver(List<String> messageIds) async {
+///
+/// [messageType] gives the broadcasts a `message_type`, as FCM does for
+/// broadcasts that are not messages, such as `deleted_messages`.
+Future<void> deliverToAndroidReceiver(
+  List<String> messageIds, {
+  String? messageType,
+}) async {
   final delivery = await _remoteNotificationsChannel
       .invokeMapMethod<String, Object?>('deliverToReceiver', {
         'messageIds': messageIds,
+        if (messageType != null) 'messageType': messageType,
       });
   expect(
     delivery!['foreground'],
@@ -273,6 +280,30 @@ void remoteNotificationDeliveryTests() {
           received.first.data,
           containsPair('test', 'remote-notification-delivery'),
         );
+      });
+
+      test('a deleted messages broadcast does not reach onMessage', () async {
+        final deletedMessagesId = _uniqueMessageId('deleted-messages');
+        final messageId = _uniqueMessageId('after-deleted-messages');
+        final received = <String?>[];
+        final subscription = FirebaseMessaging.onMessage
+            .where(
+              (m) =>
+                  m.messageId == deletedMessagesId || m.messageId == messageId,
+            )
+            .listen((message) => received.add(message.messageId));
+        addTearDown(subscription.cancel);
+
+        // Like the broadcast FCM sends when it has deleted messages pending for
+        // the app.
+        await deliverToAndroidReceiver([
+          deletedMessagesId,
+        ], messageType: 'deleted_messages');
+        // Anything the broadcast sends to onMessage arrives before this message.
+        await deliverToAndroidReceiver([messageId]);
+        await _waitUntil(() => received.contains(messageId));
+
+        expect(received, <String?>[messageId]);
       });
 
       test('dismissing a notification displayed by Firebase does not reach '
