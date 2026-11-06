@@ -66,6 +66,7 @@ class MockFirebaseAppWithCollectionEnabled implements TestFirebaseCoreHostApi {
 void setupFirebaseCrashlyticsMocks() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
+  MethodChannelFirebase.registerWith();
   TestFirebaseCoreHostApi.setUp(MockFirebaseAppWithCollectionEnabled());
   TestFirebaseCrashlyticsHostApi.setUp(hostApi);
 }

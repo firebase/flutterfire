@@ -9,15 +9,15 @@ whose web implementation, `firebase_core_web`, re-exports this package.
 
 # Usage
 
-Register the implementation, then initialize an app:
+Register the implementation, then use `Firebase` as in a Flutter app. This
+library exports the same names as `firebase_core`:
 
 ```dart
-import 'package:firebase_core_interface/firebase_core_interface.dart';
 import 'package:firebase_core_js/firebase_core_js.dart';
 
 Future<void> main() async {
   FirebaseCoreWeb.registerWith();
-  final app = await FirebasePlatform.instance.initializeApp(
+  final app = await Firebase.initializeApp(
     options: const FirebaseOptions(
       apiKey: '...',
       appId: '...',

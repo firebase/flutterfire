@@ -61,6 +61,7 @@ class MockFirebaseAppAI implements TestFirebaseCoreHostApi {
 void setupFirebaseVertexAIMocks() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
+  MethodChannelFirebase.registerWith();
   TestFirebaseCoreHostApi.setUp(MockFirebaseAppAI());
 }
 

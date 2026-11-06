@@ -33,7 +33,7 @@ flutter:
   plugin:
     platforms:
       web:
-        # Not `FirebaseCoreWeb`: this class also registers the
-        # `flutter-fire-core` version for platform logging.
+        # Not `FirebaseCoreWeb`: this class registers through the
+        # `FirebasePlatform` that `firebase_core` reads.
         pluginClass: FirebaseCoreWebPlugin
         fileName: firebase_core_web.dart

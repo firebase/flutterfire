@@ -8,7 +8,6 @@ environment:
   sdk: '^3.10.0'
 
 dependencies:
-  firebase_core_interface: ^1.0.0
   firebase_core_js:
     path: ../../packages/firebase_core/firebase_core_js
 

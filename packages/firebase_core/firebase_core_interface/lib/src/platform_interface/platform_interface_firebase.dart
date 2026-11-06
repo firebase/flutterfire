@@ -32,11 +32,12 @@ abstract class FirebasePlatform extends PlatformInterface {
   /// with [fallbackInstanceFactory], and throws a [StateError] if that is not
   /// set either.
   ///
-  /// On Android, Apple platforms and Windows no implementation registers
-  /// itself, so in Flutter apps this throws until the first `Firebase` call
-  /// (such as `Firebase.initializeApp()`) or, in tests,
-  /// `setupFirebaseCoreMocks()`. Both set [fallbackInstanceFactory] to
-  /// `MethodChannelFirebase`.
+  /// On Android, Apple platforms and Windows, `firebase_core` sets
+  /// [fallbackInstanceFactory] to `MethodChannelFirebase` before `main`,
+  /// through the Flutter plugin registrant. Flutter tests and isolates started
+  /// from Dart (`Isolate.spawn`, `compute`) do not run the registrant: tests
+  /// call `setupFirebaseCoreMocks()` or `MethodChannelFirebase.registerWith()`
+  /// first, and such isolates `DartPluginRegistrant.ensureInitialized()`.
   static FirebasePlatform get instance =>
       _instance ??= _createFallbackInstance();
 
@@ -50,10 +51,9 @@ abstract class FirebasePlatform extends PlatformInterface {
   /// Creates [instance] when it is read before an implementation has
   /// registered itself.
   ///
-  /// For platform implementations only. `firebase_core` sets this to
-  /// `MethodChannelFirebase.new` on its first use, as does
-  /// `setupFirebaseCoreMocks()`, so Flutter apps use method channels on
-  /// platforms without a Dart implementation.
+  /// For platform implementations only. `MethodChannelFirebase.registerWith()`
+  /// sets this, so Flutter apps use method channels on platforms without a
+  /// Dart implementation.
   static FirebasePlatform Function()? fallbackInstanceFactory;
 
   static FirebasePlatform _createFallbackInstance() {
@@ -61,9 +61,12 @@ abstract class FirebasePlatform extends PlatformInterface {
     if (factory == null) {
       throw StateError(
         'No FirebasePlatform implementation has been registered. In Flutter '
-        'apps, call Firebase.initializeApp() first, or setupFirebaseCoreMocks() '
-        'in tests. Dart web apps without Flutter must register one first, for '
-        'example with FirebaseCoreWeb.registerWith() from firebase_core_js.',
+        'tests, call setupFirebaseCoreMocks() or '
+        'MethodChannelFirebase.registerWith() first. In isolates started '
+        'with Isolate.spawn, Isolate.run or compute, call '
+        'DartPluginRegistrant.ensureInitialized() first. Dart web apps '
+        'without Flutter must register one first, for example with '
+        'FirebaseCoreWeb.registerWith() from firebase_core_js.',
       );
     }
     final instance = factory();

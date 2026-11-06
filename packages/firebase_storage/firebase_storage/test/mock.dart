@@ -7,6 +7,8 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart'
+    show MethodChannelFirebase;
 import 'package:firebase_core_platform_interface/test.dart';
 import 'package:firebase_storage_platform_interface/firebase_storage_platform_interface.dart';
 import 'package:flutter/services.dart';
@@ -82,6 +84,7 @@ class MockFirebaseAppStorage implements TestFirebaseCoreHostApi {
 void setupFirebaseStorageMocks() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
+  MethodChannelFirebase.registerWith();
   TestFirebaseCoreHostApi.setUp(MockFirebaseAppStorage());
 
   // Mock Platform Interface Methods

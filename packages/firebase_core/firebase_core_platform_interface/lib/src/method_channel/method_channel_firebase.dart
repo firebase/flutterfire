@@ -7,6 +7,17 @@ part of '../../firebase_core_platform_interface.dart';
 
 /// The [FirebasePlatform] implementation that delegates to a [MethodChannel].
 class MethodChannelFirebase extends FirebasePlatform {
+  /// Makes [MethodChannelFirebase] the implementation that
+  /// [FirebasePlatform.instance] falls back to.
+  ///
+  /// The Flutter plugin registrant calls this before `main` on Android, Apple
+  /// platforms and Windows, and `setupFirebaseCoreMocks()` calls it in tests.
+  /// An implementation set with [FirebasePlatform.instance] still takes
+  /// precedence.
+  static void registerWith() {
+    FirebasePlatform.fallbackInstanceFactory ??= MethodChannelFirebase.new;
+  }
+
   /// Tracks local [MethodChannelFirebaseApp] instances.
   @visibleForTesting
   static Map<String, MethodChannelFirebaseApp> appInstances = {};

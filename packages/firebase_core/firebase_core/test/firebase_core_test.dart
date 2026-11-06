@@ -3,6 +3,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'dart:io';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -129,10 +131,15 @@ void main() {
   test('.initializeApp() with demoProjectId', () async {
     const String demoProjectId = 'demo-project-id';
     const String expectedName = demoProjectId;
-    const FirebaseOptions expectedOptions = FirebaseOptions(
+    // The app ID names the OS the tests run on.
+    final String platform = Platform.isAndroid
+        ? 'android'
+        : Platform.isIOS || Platform.isMacOS
+        ? 'ios'
+        : 'web';
+    final FirebaseOptions expectedOptions = FirebaseOptions(
       apiKey: 'ADemoProjectApiKey000000000000000000000',
-      // Flutter tests use android as the default platform.
-      appId: '1:1:android:1',
+      appId: '1:1:$platform:1',
       messagingSenderId: '1',
       projectId: demoProjectId,
     );

@@ -3,7 +3,16 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-part of '../firebase_core.dart';
+import 'package:meta/meta.dart';
+
+import 'constants.dart';
+import 'demo_app_platform.dart'
+    if (dart.library.io) 'demo_app_platform_io.dart';
+import 'firebase_options.dart';
+import 'platform_interface/platform_interface_firebase.dart';
+import 'platform_interface/platform_interface_firebase_app.dart';
+
+part 'firebase_app.dart';
 
 /// The entry point for accessing Firebase.
 class Firebase {
@@ -11,20 +20,16 @@ class Firebase {
   Firebase._();
 
   // Cached & lazily loaded instance of [FirebasePlatform].
-  // Avoids a [MethodChannelFirebase] being initialized until the user
-  // starts using Firebase.
+  // Avoids creating the platform implementation until the user starts using
+  // Firebase.
   // The property is visible for testing to allow tests to set a mock
   // instance directly as a static property since the class is not initialized.
   @visibleForTesting
   // ignore: public_member_api_docs
   static FirebasePlatform? delegatePackingProperty;
 
-  static FirebasePlatform get _delegate {
-    // `firebase_core_interface` cannot default to the Flutter-only method channel
-    // implementation, so it is set here for platforms without a Dart one.
-    FirebasePlatform.fallbackInstanceFactory ??= MethodChannelFirebase.new;
-    return delegatePackingProperty ??= FirebasePlatform.instance;
-  }
+  static FirebasePlatform get _delegate =>
+      delegatePackingProperty ??= FirebasePlatform.instance;
 
   /// Returns a list of all [FirebaseApp] instances that have been created.
   static List<FirebaseApp> get apps {
@@ -53,16 +58,7 @@ class Firebase {
   }) async {
     FirebaseOptions? resolvedOptions = options;
     if (demoProjectId != null) {
-      late final String platformString;
-      if (defaultTargetPlatform == TargetPlatform.android) {
-        platformString = 'android';
-      } else if (defaultTargetPlatform == TargetPlatform.iOS ||
-          defaultTargetPlatform == TargetPlatform.macOS) {
-        platformString = 'ios';
-      } else {
-        // We use 'web' as the default platform for unknown platforms.
-        platformString = 'web';
-      }
+      final platformString = demoAppPlatform;
       // A name must be set, otherwise [DEFAULT] will be used and the options
       // we've provided will be ignored if any platform specific configuration
       // files exist (i.e. GoogleService-Info.plist for iOS).

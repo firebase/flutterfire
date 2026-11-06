@@ -4,13 +4,12 @@
 
 // ignore_for_file: avoid_print
 
-import 'package:firebase_core_interface/firebase_core_interface.dart';
 import 'package:firebase_core_js/firebase_core_js.dart';
 
 Future<void> main() async {
   FirebaseCoreWeb.registerWith();
   try {
-    final app = await FirebasePlatform.instance.initializeApp(
+    final app = await Firebase.initializeApp(
       options: const FirebaseOptions(
         apiKey: 'apiKey',
         appId: 'appId',

@@ -64,6 +64,8 @@ class FirebaseCoreWeb extends FirebasePlatform {
   static bool isServiceRegistered(String service) =>
       _services.containsKey(service);
 
+  static const String _libraryName = 'flutter-fire-core';
+
   /// Registers that [FirebaseCoreWeb] is the platform implementation.
   ///
   /// Dart web apps without Flutter call this before using [FirebasePlatform].
@@ -215,6 +217,11 @@ class FirebaseCoreWeb extends FirebasePlatform {
   /// Initializes the Firebase JS SDKs by injecting them into the `head` of the
   /// document when Firebase is initialized.
   Future<void> _initializeCore() async {
+    // Here rather than in a `registerWith`, so that the version is reported
+    // however this implementation was registered. Registered now if the JS SDK
+    // is already loaded, otherwise once it is.
+    registerLibraryVersion(_libraryName, packageVersion);
+
     // If Firebase is already available, core has already been initialized
     // (or the user has added the scripts to their html file).
     if (globalContext.getProperty('firebase_core'.toJS) != null) {

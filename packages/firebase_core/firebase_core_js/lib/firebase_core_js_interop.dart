@@ -3,6 +3,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+export 'src/guard_web_exceptions.dart';
 export 'src/interop/core.dart';
 export 'src/interop/utils/es6_interop.dart';
 export 'src/interop/utils/func.dart';

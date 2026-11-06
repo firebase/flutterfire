@@ -10,10 +10,12 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  test('Firebase uses MethodChannelFirebase when nothing registered', () async {
-    // A custom host API instead of setupFirebaseCoreMocks(), which would set
-    // the fallback itself.
+  test('Firebase uses MethodChannelFirebase after registerWith', () async {
+    // A custom host API instead of setupFirebaseCoreMocks(), which would
+    // register MethodChannelFirebase itself.
     TestFirebaseCoreHostApi.setUp(MockFirebaseApp());
+    // What the Flutter plugin registrant does before `main`.
+    MethodChannelFirebase.registerWith();
 
     final app = await Firebase.initializeApp();
 

@@ -13,7 +13,19 @@ import 'package:firebase_core_js/src/interop/utils/es6_interop.dart';
 import 'package:meta/meta.dart';
 import 'package:web/web.dart' as web;
 
+import 'src/firebase_core_version.dart';
 import 'src/interop/core.dart' as firebase;
+
+// The same names `firebase_core` exports, so that Dart web apps without
+// Flutter only need this import.
+export 'package:firebase_core_interface/firebase_core_interface.dart'
+    show
+        Firebase,
+        FirebaseApp,
+        FirebaseException,
+        FirebaseOptions,
+        FirebaseService,
+        defaultFirebaseAppName;
 
 part 'src/firebase_app_web.dart';
 part 'src/firebase_core_web.dart';

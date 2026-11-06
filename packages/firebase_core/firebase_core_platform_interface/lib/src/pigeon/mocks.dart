@@ -53,12 +53,10 @@ class MockFirebaseApp implements TestFirebaseCoreHostApi {
 /// [setupFirebaseCoreMocks] can be used to mock the FirebasePlatform.
 ///
 /// If you need to customize the mock, you can implement [TestFirebaseCoreHostApi]
-/// and call `TestFirebaseCoreHostApi.setUp(MyMock());`. A test that then reads
-/// `FirebasePlatform.instance` before any `Firebase` call must also set
-/// `FirebasePlatform.fallbackInstanceFactory = MethodChannelFirebase.new`.
+/// and call `TestFirebaseCoreHostApi.setUp(MyMock());`. Then also call
+/// `MethodChannelFirebase.registerWith()`, which the Flutter plugin registrant
+/// calls in apps.
 void setupFirebaseCoreMocks() {
-  // What `firebase_core` does on first use, for tests that read
-  // `FirebasePlatform.instance` directly.
-  FirebasePlatform.fallbackInstanceFactory ??= MethodChannelFirebase.new;
+  MethodChannelFirebase.registerWith();
   TestFirebaseCoreHostApi.setUp(MockFirebaseApp());
 }

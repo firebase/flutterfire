@@ -10,7 +10,6 @@ import 'dart:js_interop_unsafe';
 
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:firebase_core_web/firebase_core_web.dart';
-import 'package:firebase_core_web/src/firebase_core_version.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:web/web.dart' as web;
 
@@ -47,7 +46,8 @@ void main() {
 
       expect(
         _getPlatformInfoString(),
-        contains('flutter-fire-core/$packageVersion'),
+        // The version itself is checked in `firebase_core_js`.
+        contains('flutter-fire-core/'),
       );
     },
   );
