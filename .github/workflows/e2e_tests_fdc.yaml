@@ -193,7 +193,7 @@ jobs:
           unset PGSERVICEFILE
           firebase experiments:enable dataconnect
           ./start-firebase-emulator.sh
-      - uses: futureware-tech/simulator-action@e89aa8f93d3aec35083ff49d2854d07f7186f7f5
+      - uses: futureware-tech/simulator-action@c768f52966d5f70335ec77881f9806b24a52f80e
         id: simulator
         with:
           # https://github.com/actions/runner-images/blob/main/images/macos/xcode-27-arm64-Readme.md#installed-simulators
