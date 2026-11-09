@@ -29,7 +29,8 @@ class _FakeFirebase extends FirebasePlatform {
 }
 
 JSObject _jsError(String message, {String? code}) {
-  final error = (globalContext['Error']! as JSFunction)
+  final error = globalContext
+      .getProperty<JSFunction>('Error'.toJS)
       .callAsConstructor<JSObject>(message.toJS);
   if (code != null) {
     error['name'] = 'FirebaseError'.toJS;

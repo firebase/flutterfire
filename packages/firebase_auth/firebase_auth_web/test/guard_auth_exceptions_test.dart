@@ -14,7 +14,8 @@ import 'package:flutter_test/flutter_test.dart';
 
 /// A JS error shaped like the `FirebaseError` the Auth JS SDK throws.
 JSObject _firebaseAuthError() {
-  final error = (globalContext['Error']! as JSFunction)
+  final error = globalContext
+      .getProperty<JSFunction>('Error'.toJS)
       .callAsConstructor<JSObject>(
         'Firebase: Error (auth/user-disabled).'.toJS,
       );

@@ -22,7 +22,8 @@ class _FakeFunctions extends FirebaseFunctionsPlatform {
 
 /// A JS error shaped like the `FunctionsError` the JS SDK rejects with.
 JSObject _functionsError() {
-  final error = (globalContext['Error']! as JSFunction)
+  final error = globalContext
+      .getProperty<JSFunction>('Error'.toJS)
       .callAsConstructor<JSObject>('not allowed'.toJS);
   error['name'] = 'FirebaseError'.toJS;
   error['code'] = 'functions/permission-denied'.toJS;
@@ -30,7 +31,8 @@ JSObject _functionsError() {
   return error;
 }
 
-JSPromise _rejectWith(JSAny error) => (globalContext['Promise']! as JSObject)
+JSPromise _rejectWith(JSAny error) => globalContext
+    .getProperty<JSObject>('Promise'.toJS)
     .callMethod<JSPromise>('reject'.toJS, error);
 
 /// Matches the exact JS value [expected], not a wrapper around it.
@@ -94,7 +96,8 @@ void main() {
     });
 
     test('rethrows a plain JS Error that has no code', () async {
-      final error = (globalContext['Error']! as JSFunction)
+      final error = globalContext
+          .getProperty<JSFunction>('Error'.toJS)
           .callAsConstructor<JSObject>('network down'.toJS);
       final web = callableReturning(callable(() => _rejectWith(error)));
 

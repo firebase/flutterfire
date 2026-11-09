@@ -22,7 +22,10 @@ bool isFirebaseFunctionsError(Object? error) {
 /// Returns the string value of [property] on [object], or `null`.
 String? _stringProperty(JSObject object, String property) {
   final value = object.getProperty(property.toJS);
-  return value.isA<JSString>() ? (value! as JSString).toDart : null;
+  if (value != null && value.isA<JSString>()) {
+    return (value as JSString).toDart;
+  }
+  return null;
 }
 
 /// Given a web error, a [FirebaseFunctionsException] is returned.
