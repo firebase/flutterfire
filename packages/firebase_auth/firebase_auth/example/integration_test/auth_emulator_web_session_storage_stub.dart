@@ -5,3 +5,7 @@
 void setAuthEmulatorOrigin(String appName, String origin) {}
 
 void clearAuthEmulatorOrigin(String appName) {}
+
+String? getAuthEmulatorOriginLocal(String appName) => null;
+
+void clearAuthEmulatorOriginLocal(String appName) {}

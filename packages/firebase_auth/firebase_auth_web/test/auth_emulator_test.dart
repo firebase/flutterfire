@@ -132,4 +132,65 @@ void main() {
       '[DEFAULT]-firebaseEmulatorOrigin',
     );
   });
+
+  group('persistedAuthEmulatorOrigin', () {
+    test('uses localStorage when both stores have a value', () {
+      expect(
+        persistedAuthEmulatorOrigin(
+          localOrigin: 'http://localhost:9099',
+          sessionOrigin: 'http://127.0.0.1:9099',
+        ),
+        'http://localhost:9099',
+      );
+    });
+
+    test('falls back to sessionStorage when localStorage is empty', () {
+      expect(
+        persistedAuthEmulatorOrigin(
+          localOrigin: null,
+          sessionOrigin: 'http://localhost:9099',
+        ),
+        'http://localhost:9099',
+      );
+    });
+
+    test('returns null when neither store has an origin', () {
+      expect(
+        persistedAuthEmulatorOrigin(localOrigin: null, sessionOrigin: null),
+        isNull,
+      );
+    });
+  });
+
+  group('shouldRememberRequestedOriginAfterFailedConnect', () {
+    test('stores a different origin for the next launch', () {
+      expect(
+        shouldRememberRequestedOriginAfterFailedConnect(
+          requestedOrigin: 'http://127.0.0.1:9100',
+          connectedOrigin: 'http://localhost:9099',
+        ),
+        isTrue,
+      );
+    });
+
+    test('stores the request when this instance is still on production', () {
+      expect(
+        shouldRememberRequestedOriginAfterFailedConnect(
+          requestedOrigin: 'http://localhost:9099',
+          connectedOrigin: null,
+        ),
+        isTrue,
+      );
+    });
+
+    test('does not rewrite an origin this instance is already using', () {
+      expect(
+        shouldRememberRequestedOriginAfterFailedConnect(
+          requestedOrigin: 'http://localhost:9099',
+          connectedOrigin: 'http://localhost:9099',
+        ),
+        isFalse,
+      );
+    });
+  });
 }

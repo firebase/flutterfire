@@ -7,12 +7,17 @@ import 'package:firebase_auth_example/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:integration_test/integration_test.dart';
 
 import 'auth_emulator_web_session_storage_stub.dart'
     if (dart.library.js_interop) 'auth_emulator_web_session_storage_web.dart';
+import 'report_test_results.dart';
 import 'test_utils.dart';
 
 void main() {
+  final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  reportTestResultsToDriver(binding);
+
   group('useAuthEmulator sessionStorage (web)', () {
     test(
       'connects even when sessionStorage already has the emulator origin',
@@ -29,6 +34,7 @@ void main() {
             await FirebaseAuth.instanceFor(app: app).signOut();
           } catch (_) {}
           clearAuthEmulatorOrigin(appName);
+          clearAuthEmulatorOriginLocal(appName);
           await app.delete();
         });
 
@@ -45,6 +51,60 @@ void main() {
         );
         expect(credential.user, isNotNull);
         expect(credential.user!.email, testEmail);
+      },
+    );
+
+    test(
+      'stays on the emulator after sessionStorage is cleared when the user persisted',
+      () async {
+        final appName =
+            'auth-emulator-persist-${DateTime.now().microsecondsSinceEpoch}';
+        final email =
+            'persist-${DateTime.now().microsecondsSinceEpoch}@example.com';
+        final origin = 'http://$testEmulatorHost:$testEmulatorPort';
+        FirebaseApp? app;
+
+        addTearDown(() async {
+          final existing = app;
+          if (existing != null) {
+            try {
+              await FirebaseAuth.instanceFor(app: existing).signOut();
+            } catch (_) {}
+            try {
+              await existing.delete();
+            } catch (_) {}
+          }
+          clearAuthEmulatorOrigin(appName);
+          clearAuthEmulatorOriginLocal(appName);
+        });
+
+        clearAuthEmulatorOrigin(appName);
+        clearAuthEmulatorOriginLocal(appName);
+
+        app = await Firebase.initializeApp(
+          name: appName,
+          options: DefaultFirebaseOptions.currentPlatform,
+        );
+        final auth = FirebaseAuth.instanceFor(app: app);
+        await auth.useAuthEmulator(testEmulatorHost, testEmulatorPort);
+        expect(getAuthEmulatorOriginLocal(appName), origin);
+
+        final created = await auth.createUserWithEmailAndPassword(
+          email: email,
+          password: testPassword,
+        );
+        expect(created.user, isNotNull);
+
+        clearAuthEmulatorOrigin(appName);
+        await app.delete();
+
+        app = await Firebase.initializeApp(
+          name: appName,
+          options: DefaultFirebaseOptions.currentPlatform,
+        );
+        final restored = FirebaseAuth.instanceFor(app: app);
+        expect(restored.currentUser?.email, email);
+        expect(await restored.currentUser!.getIdToken(true), isNotEmpty);
       },
     );
   }, skip: !kIsWeb);

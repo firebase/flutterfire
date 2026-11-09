@@ -7,12 +7,20 @@ import 'package:integration_test/common.dart' show Failure;
 import 'package:integration_test/integration_test.dart';
 import 'package:test_api/hooks.dart' show TestHandle;
 
+bool _reportTestResultsRegistered = false;
+
 /// Records every executed test via the package:test lifecycle (plain `test()`
 /// declarations never reach the binding's `results` map - only `testWidgets`
 /// does) and publishes them through
 /// [IntegrationTestWidgetsFlutterBinding.reportData], the only channel that
 /// crosses the wire on web.
+///
+/// A second call would register another [setUp] and report each test twice.
 void reportTestResultsToDriver(IntegrationTestWidgetsFlutterBinding binding) {
+  if (_reportTestResultsRegistered) {
+    return;
+  }
+  _reportTestResultsRegistered = true;
   final executed = <String>[];
   setUp(() {
     executed.add(TestHandle.current.name);

@@ -13,12 +13,20 @@ bool isAuthEmulatorDebugHost(String hostname) {
 /// Origin string passed to the JS SDK `connectAuthEmulator`.
 String authEmulatorOrigin(String host, int port) => 'http://$host:$port';
 
-/// SessionStorage key for a persisted emulator origin, per Firebase app.
+/// Storage key for a persisted emulator origin, per Firebase app.
 String authEmulatorOriginStorageKey(String appName) =>
     '$appName-firebaseEmulatorOrigin';
 
-/// Whether plugin init should call `connectAuthEmulator` from sessionStorage
-/// before Auth finishes restoring a persisted user.
+/// [localOrigin] when set, otherwise [sessionOrigin].
+String? persistedAuthEmulatorOrigin({
+  required String? localOrigin,
+  required String? sessionOrigin,
+}) {
+  return localOrigin ?? sessionOrigin;
+}
+
+/// Whether plugin init should call `connectAuthEmulator` from the stored
+/// origin before Auth finishes restoring a persisted user.
 bool shouldReusePersistedAuthEmulator({
   required String hostname,
   required bool isDebugMode,
@@ -41,4 +49,13 @@ bool shouldSkipConnectAuthEmulator({
 }) {
   return connectedEmulatorOrigin != null &&
       connectedEmulatorOrigin == requestedOrigin;
+}
+
+/// Whether a failed connect should still store [requestedOrigin] for the next
+/// launch. A matching connected origin needs no rewrite.
+bool shouldRememberRequestedOriginAfterFailedConnect({
+  required String requestedOrigin,
+  required String? connectedOrigin,
+}) {
+  return connectedOrigin != requestedOrigin;
 }
