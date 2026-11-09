@@ -7,7 +7,6 @@
 import 'package:firebase_core_js/firebase_core_js.dart';
 
 Future<void> main() async {
-  FirebaseCoreWeb.registerWith();
   try {
     final app = await Firebase.initializeApp(
       options: const FirebaseOptions(

@@ -8,7 +8,11 @@ library;
 import 'dart:js_interop';
 import 'dart:js_interop_unsafe';
 
-import 'package:firebase_core_interface/firebase_core_interface.dart';
+import 'package:firebase_core_interface/firebase_core_interface.dart'
+    as core
+    show Firebase;
+import 'package:firebase_core_interface/firebase_core_interface.dart'
+    show FirebaseAppPlatform, FirebasePlatform;
 import 'package:firebase_core_js/firebase_core_js.dart';
 import 'package:firebase_core_js/src/firebase_core_version.dart';
 import 'package:test/test.dart';
@@ -26,6 +30,11 @@ String _getPlatformInfoString() {
   return logger.callMethod<JSString>('getPlatformInfoString'.toJS).toDart;
 }
 
+class _FakeFirebase extends FirebasePlatform {
+  @override
+  List<FirebaseAppPlatform> get apps => [];
+}
+
 const _options = FirebaseOptions(
   apiKey: 'fake-api-key',
   appId: '1:1234567890:web:fake',
@@ -36,6 +45,17 @@ const _options = FirebaseOptions(
 void main() {
   // The version is only registered once per session storage key.
   setUp(() => web.window.sessionStorage.clear());
+
+  // First, before anything registers an implementation.
+  test(
+    'Firebase.initializeApp uses FirebaseCoreWeb without registerWith',
+    () async {
+      final app = await Firebase.initializeApp(options: _options);
+
+      expect(app.name, defaultFirebaseAppName);
+      expect(FirebasePlatform.instance, isA<FirebaseCoreWeb>());
+    },
+  );
 
   test('registerWith registers FirebaseCoreWeb without a registrar', () {
     FirebaseCoreWeb.registerWith();
@@ -74,5 +94,15 @@ void main() {
       ),
       packageVersion,
     );
+  });
+
+  test('Firebase uses a FirebasePlatform that was set directly', () {
+    final fake = _FakeFirebase();
+    FirebasePlatform.instance = fake;
+    // `Firebase` caches the platform it used in the first test.
+    core.Firebase.delegatePackingProperty = null;
+
+    expect(Firebase.apps, isEmpty);
+    expect(core.Firebase.delegatePackingProperty, same(fake));
   });
 }

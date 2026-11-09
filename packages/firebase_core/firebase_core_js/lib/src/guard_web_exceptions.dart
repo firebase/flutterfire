@@ -10,7 +10,9 @@ import 'interop/utils/es6_interop.dart';
 
 // Moved from `_flutterfire_internals`, which re-exports it.
 
-String _toDart(JSString? value) => value!.toDart;
+// `JSError` is erased at runtime, so `is JSError` matches any JS object, and
+// `message` or `code` may be missing.
+String _toDart(JSString? value) => value?.toDart ?? '';
 
 FirebaseException _firebaseExceptionFromCoreFirebaseError(
   JSError firebaseError, {

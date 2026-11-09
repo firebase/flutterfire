@@ -65,8 +65,8 @@ abstract class FirebasePlatform extends PlatformInterface {
         'MethodChannelFirebase.registerWith() first. In isolates started '
         'with Isolate.spawn, Isolate.run or compute, call '
         'DartPluginRegistrant.ensureInitialized() first. Dart web apps '
-        'without Flutter must register one first, for example with '
-        'FirebaseCoreWeb.registerWith() from firebase_core_js.',
+        'without Flutter use Firebase from firebase_core_js, or call '
+        'FirebaseCoreWeb.registerWith() first.',
       );
     }
     final instance = factory();

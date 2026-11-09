@@ -119,6 +119,35 @@ void main() {
       );
     });
 
+    test('propagates JS values without a message unchanged', () async {
+      final error = JSObject();
+      await expectLater(
+        guardWebExceptions(
+          () => Future<void>.error(error),
+          plugin: 'test',
+          codeParser: _codeParser,
+        ),
+        throwsA(same(error)),
+      );
+    });
+
+    test('maps a Firebase JS error without a code', () async {
+      final error = (globalContext['Error']! as JSFunction)
+          .callAsConstructor<JSObject>('Firebase: no code.'.toJS);
+      await expectLater(
+        guardWebExceptions(
+          () => Future<void>.error(error),
+          plugin: 'test',
+          codeParser: _codeParser,
+        ),
+        throwsA(
+          isA<FirebaseException>()
+              .having((e) => e.code, 'code', '')
+              .having((e) => e.message, 'message', 'Firebase: no code.'),
+        ),
+      );
+    });
+
     test('propagates Dart errors unchanged', () async {
       await expectLater(
         guardWebExceptions(
