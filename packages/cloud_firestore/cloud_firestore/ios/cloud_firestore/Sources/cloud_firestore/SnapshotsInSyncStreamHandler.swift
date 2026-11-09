@@ -13,18 +13,22 @@ import Foundation
 
 final class SnapshotsInSyncStreamHandler: NSObject, FlutterStreamHandler {
   private let firestore: Firestore
+  private let snapshotQueue: DispatchQueue
   private var listenerRegistration: ListenerRegistration?
 
-  init(firestore: Firestore) {
+  init(firestore: Firestore, snapshotQueue: DispatchQueue) {
     self.firestore = firestore
+    self.snapshotQueue = snapshotQueue
   }
 
   func onListen(withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink)
     -> FlutterError?
   {
-    listenerRegistration = firestore.addSnapshotsInSyncListener {
-      DispatchQueue.main.async {
-        events(nil)
+    listenerRegistration = firestore.addSnapshotsInSyncListener { [snapshotQueue] in
+      snapshotQueue.async {
+        DispatchQueue.main.async {
+          events(nil)
+        }
       }
     }
     return nil
