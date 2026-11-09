@@ -315,7 +315,7 @@ void setupSecondBucketTests() {
 
     group('putBlob', () {
       test('throws [UnimplementedError] for native platforms', () async {
-        final File file = await createFile('flt-ok.txt');
+        final dynamic file = await createFile('flt-ok.txt');
         final Reference ref = storage.ref('flutter-tests').child('flt-ok.txt');
 
         await expectLater(
@@ -343,7 +343,7 @@ void setupSecondBucketTests() {
       'putFile',
       () {
         test('uploads a file', () async {
-          final File file = await createFile('flt-ok.txt');
+          final dynamic file = await createFile('flt-ok.txt');
 
           final Reference ref = storage
               .ref('flutter-tests')
@@ -364,7 +364,7 @@ void setupSecondBucketTests() {
         });
 
         test('errors if permission denied', () async {
-          File file = await createFile('flt-ok.txt');
+          dynamic file = await createFile('flt-ok.txt');
           final Reference ref = storage.ref('uploadNope.jpeg');
 
           await expectLater(
@@ -423,7 +423,7 @@ void setupSecondBucketTests() {
       test(
         'writes a file',
         () async {
-          File file = await createFile('ok.txt');
+          dynamic file = await createFile('ok.txt');
           TaskSnapshot complete = await storage
               .ref('flutter-tests/ok.txt')
               .writeToFile(file);
