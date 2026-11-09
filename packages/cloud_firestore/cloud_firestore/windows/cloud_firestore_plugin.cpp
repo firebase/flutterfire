@@ -335,7 +335,7 @@ std::map<std::string, std::unique_ptr<flutter::StreamHandler<>>>
     stream_handlers_;
 std::map<std::string, flutter::StreamHandler<flutter::EncodableValue>*>
     cloud_firestore_windows::CloudFirestorePlugin::transaction_handlers_;
-std::map<std::string, std::shared_ptr<firebase::firestore::Transaction>>
+std::map<std::string, std::shared_ptr<CloudFirestorePlugin::TransactionEntry>>
     cloud_firestore_windows::CloudFirestorePlugin::transactions_;
 std::mutex cloud_firestore_windows::CloudFirestorePlugin::transactions_mutex_;
 std::map<std::string, std::unique_ptr<firebase::firestore::Firestore>>
@@ -1069,12 +1069,16 @@ class TransactionStreamHandler
             options,
             [this](Transaction& transaction, std::string& str) -> Error {
               {
+                auto entry =
+                    std::make_shared<CloudFirestorePlugin::TransactionEntry>();
+                {
+                  std::lock_guard<std::mutex> entry_lock(entry->mutex);
+                  entry->transaction = &transaction;
+                }
                 std::lock_guard<std::mutex> lock(
                     CloudFirestorePlugin::transactions_mutex_);
-                auto noopDeleter = [](Transaction*) {};
-                std::shared_ptr<Transaction> ptr(&transaction, noopDeleter);
                 CloudFirestorePlugin::transactions_[transactionId_] =
-                    std::move(ptr);
+                    std::move(entry);
               }
 
               flutter::EncodableMap map;
@@ -1199,8 +1203,21 @@ class TransactionStreamHandler
 
  private:
   void ReleaseTransaction() {
-    std::lock_guard<std::mutex> lock(CloudFirestorePlugin::transactions_mutex_);
-    CloudFirestorePlugin::transactions_.erase(transactionId_);
+    std::shared_ptr<CloudFirestorePlugin::TransactionEntry> entry;
+    {
+      std::lock_guard<std::mutex> lock(
+          CloudFirestorePlugin::transactions_mutex_);
+      const auto it = CloudFirestorePlugin::transactions_.find(transactionId_);
+      if (it == CloudFirestorePlugin::transactions_.end()) {
+        return;
+      }
+      entry = it->second;
+      CloudFirestorePlugin::transactions_.erase(it);
+    }
+    if (entry) {
+      std::lock_guard<std::mutex> lock(entry->mutex);
+      entry->transaction = nullptr;
+    }
   }
 
   void SendDeadlineExceeded() {
@@ -1290,14 +1307,25 @@ void CloudFirestorePlugin::TransactionGet(
   std::string error_message;
   DocumentSnapshot snapshot;
   bool missing = false;
+  std::shared_ptr<TransactionEntry> entry;
   {
     std::lock_guard<std::mutex> lock(transactions_mutex_);
-    const auto transaction = transactions_.find(transaction_id);
-    if (transaction == transactions_.end() || !transaction->second) {
+    const auto it = transactions_.find(transaction_id);
+    if (it != transactions_.end()) {
+      entry = it->second;
+    }
+  }
+  if (!entry) {
+    missing = true;
+  } else {
+    // The update callback nulls the pointer under this mutex before it
+    // returns, and the SDK destroys the transaction on that return.
+    std::lock_guard<std::mutex> lock(entry->mutex);
+    if (entry->transaction == nullptr) {
       missing = true;
     } else {
       snapshot =
-          transaction->second->Get(reference, &error_code, &error_message);
+          entry->transaction->Get(reference, &error_code, &error_message);
     }
   }
   if (missing) {
