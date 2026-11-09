@@ -63,6 +63,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class FlutterFirebaseFirestorePlugin
@@ -90,6 +92,7 @@ public class FlutterFirebaseFirestorePlugin
   private final Map<String, EventChannel> eventChannels = new HashMap<>();
   private final Map<String, StreamHandler> streamHandlers = new HashMap<>();
   private final Map<String, OnTransactionResultListener> transactionHandlers = new HashMap<>();
+  private final Map<String, ExecutorService> snapshotDeliveryExecutors = new ConcurrentHashMap<>();
 
   // Used in the decoder to know which ServerTimestampBehavior to use
   public static final Map<Integer, DocumentSnapshot.ServerTimestampBehavior>
@@ -360,6 +363,13 @@ public class FlutterFirebaseFirestorePlugin
     }
   }
 
+  private ExecutorService snapshotDeliveryExecutor(
+      GeneratedAndroidFirebaseFirestore.FirestorePigeonFirebaseApp app) {
+    String key = app.getAppName() + "|" + app.getDatabaseURL();
+    return snapshotDeliveryExecutors.computeIfAbsent(
+        key, ignored -> Executors.newSingleThreadExecutor());
+  }
+
   @Override
   public void loadBundle(
       @NonNull GeneratedAndroidFirebaseFirestore.FirestorePigeonFirebaseApp app,
@@ -563,7 +573,8 @@ public class FlutterFirebaseFirestorePlugin
 
     result.success(
         registerEventChannel(
-            METHOD_CHANNEL_NAME + "/snapshotsInSync", new SnapshotsInSyncStreamHandler(firestore)));
+            METHOD_CHANNEL_NAME + "/snapshotsInSync",
+            new SnapshotsInSyncStreamHandler(firestore, snapshotDeliveryExecutor(app))));
   }
 
   @Override
@@ -1019,7 +1030,7 @@ public class FlutterFirebaseFirestorePlugin
                 PigeonParser.parsePigeonServerTimestampBehavior(
                     options.getServerTimestampBehavior()),
                 PigeonParser.parseListenSource(source),
-                cachedThreadPool)));
+                snapshotDeliveryExecutor(app))));
   }
 
   @Override

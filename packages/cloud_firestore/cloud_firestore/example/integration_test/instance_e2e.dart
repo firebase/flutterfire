@@ -146,7 +146,8 @@ void runInstanceTests() {
       timeout: const Timeout(Duration(minutes: 2)),
       skip:
           defaultTargetPlatform != TargetPlatform.iOS &&
-          defaultTargetPlatform != TargetPlatform.macOS,
+          defaultTargetPlatform != TargetPlatform.macOS &&
+          defaultTargetPlatform != TargetPlatform.android,
     );
 
     test('enableNetwork()', () async {
