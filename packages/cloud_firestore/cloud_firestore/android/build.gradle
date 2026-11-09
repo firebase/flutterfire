@@ -69,6 +69,8 @@ android {
             exclude group: 'com.google.truth', module: 'truth'
             exclude group: 'com.fasterxml.jackson.core', module: 'jackson-databind'
         }
+        testImplementation 'junit:junit:4.13.2'
+        testImplementation 'org.mockito:mockito-core:5.14.2'
     }
 }
 
