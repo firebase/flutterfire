@@ -133,6 +133,75 @@ void main() {
     );
   });
 
+  group('debugAuthEmulatorOrigin', () {
+    test('does not touch storage outside debug', () {
+      var localReads = 0;
+      var sessionReads = 0;
+      expect(
+        debugAuthEmulatorOrigin(
+          isDebugMode: false,
+          readLocal: () {
+            localReads++;
+            return 'http://localhost:9099';
+          },
+          readSession: () {
+            sessionReads++;
+            return 'http://127.0.0.1:9099';
+          },
+        ),
+        isNull,
+      );
+      expect(localReads, 0);
+      expect(sessionReads, 0);
+    });
+
+    test('returns null when storage throws', () {
+      expect(
+        debugAuthEmulatorOrigin(
+          isDebugMode: true,
+          readLocal: () => throw StateError('blocked'),
+          readSession: () => 'http://localhost:9099',
+        ),
+        isNull,
+      );
+    });
+
+    test('reads localStorage before sessionStorage in debug', () {
+      expect(
+        debugAuthEmulatorOrigin(
+          isDebugMode: true,
+          readLocal: () => 'http://localhost:9099',
+          readSession: () => 'http://127.0.0.1:9099',
+        ),
+        'http://localhost:9099',
+      );
+    });
+  });
+
+  group('rememberDebugAuthEmulatorOrigin', () {
+    test('does not write outside debug', () {
+      var writes = 0;
+      rememberDebugAuthEmulatorOrigin(
+        isDebugMode: false,
+        write: () => writes++,
+      );
+      expect(writes, 0);
+    });
+
+    test('writes once in debug', () {
+      var writes = 0;
+      rememberDebugAuthEmulatorOrigin(isDebugMode: true, write: () => writes++);
+      expect(writes, 1);
+    });
+
+    test('swallows a write that throws', () {
+      rememberDebugAuthEmulatorOrigin(
+        isDebugMode: true,
+        write: () => throw StateError('blocked'),
+      );
+    });
+  });
+
   group('persistedAuthEmulatorOrigin', () {
     test('uses localStorage when both stores have a value', () {
       expect(

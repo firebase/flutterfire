@@ -60,9 +60,10 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
         final String storageKey = authEmulatorOriginStorageKey(
           firebaseApp.name,
         );
-        final String? emulatorOrigin = persistedAuthEmulatorOrigin(
-          localOrigin: web.window.localStorage.getItem(storageKey),
-          sessionOrigin: web.window.sessionStorage.getItem(storageKey),
+        final String? emulatorOrigin = debugAuthEmulatorOrigin(
+          isDebugMode: kDebugMode,
+          readLocal: () => web.window.localStorage.getItem(storageKey),
+          readSession: () => web.window.sessionStorage.getItem(storageKey),
         );
         if (shouldReusePersistedAuthEmulator(
           hostname: web.window.location.hostname,
@@ -627,11 +628,13 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
 }
 
 void _rememberAuthEmulatorOrigin(String appName, String origin) {
-  if (!kDebugMode) {
-    return;
-  }
-  web.window.localStorage.setItem(
-    authEmulatorOriginStorageKey(appName),
-    origin,
+  rememberDebugAuthEmulatorOrigin(
+    isDebugMode: kDebugMode,
+    write: () {
+      web.window.localStorage.setItem(
+        authEmulatorOriginStorageKey(appName),
+        origin,
+      );
+    },
   );
 }

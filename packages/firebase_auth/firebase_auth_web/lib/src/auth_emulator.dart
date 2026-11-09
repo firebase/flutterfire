@@ -17,12 +17,49 @@ String authEmulatorOrigin(String host, int port) => 'http://$host:$port';
 String authEmulatorOriginStorageKey(String appName) =>
     '$appName-firebaseEmulatorOrigin';
 
-/// [localOrigin] when set, otherwise [sessionOrigin].
 String? persistedAuthEmulatorOrigin({
   required String? localOrigin,
   required String? sessionOrigin,
 }) {
   return localOrigin ?? sessionOrigin;
+}
+
+/// Origin stored for a debug launch, or null.
+///
+/// Release builds do not read storage. A blocked page throws SecurityError
+/// from localStorage and sessionStorage, which must not fail startup.
+String? debugAuthEmulatorOrigin({
+  required bool isDebugMode,
+  required String? Function() readLocal,
+  required String? Function() readSession,
+}) {
+  if (!isDebugMode) {
+    return null;
+  }
+  try {
+    return persistedAuthEmulatorOrigin(
+      localOrigin: readLocal(),
+      sessionOrigin: readSession(),
+    );
+  } catch (_) {
+    return null;
+  }
+}
+
+/// Writes the emulator origin in debug builds.
+///
+/// A blocked page throws SecurityError from localStorage. That must not fail
+/// a connect that already succeeded.
+void rememberDebugAuthEmulatorOrigin({
+  required bool isDebugMode,
+  required void Function() write,
+}) {
+  if (!isDebugMode) {
+    return;
+  }
+  try {
+    write();
+  } catch (_) {}
 }
 
 /// Whether plugin init should call `connectAuthEmulator` from the stored
@@ -51,8 +88,6 @@ bool shouldSkipConnectAuthEmulator({
       connectedEmulatorOrigin == requestedOrigin;
 }
 
-/// Whether a failed connect should still store [requestedOrigin] for the next
-/// launch. A matching connected origin needs no rewrite.
 bool shouldRememberRequestedOriginAfterFailedConnect({
   required String requestedOrigin,
   required String? connectedOrigin,
