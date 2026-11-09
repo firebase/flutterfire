@@ -7,7 +7,6 @@ false_secrets:
   - example/**
   - dartpad/**
 
-# Explicit about the supported platforms.
 platforms:
   android:
   ios:
