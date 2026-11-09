@@ -31,8 +31,9 @@ bool _hasFirebaseAuthErrorCodeAndMessage(JSError e) {
 /// Whether [error] is a JS object, as opposed to a Dart error.
 ///
 /// `@staticInterop` types such as [JSError] match any JS object at runtime, so
-/// this is the check to make before casting a caught error to one.
-bool _isJSObject(Object? error) {
+/// this is the check to make before casting a caught error to one. Callers
+/// should rethrow anything else unchanged.
+bool isJSObject(Object? error) {
   // `is JSObject` is false for Dart objects on both dart2js and dart2wasm.
   // ignore: invalid_runtime_check_with_js_interop_types
   return error is JSObject;
@@ -48,14 +49,14 @@ R guardAuthExceptions<R>(R Function() cb, {auth_interop.Auth? auth}) {
               stack,
             ),
             // Dart errors are rethrown as they are, with their stack trace.
-            test: _isJSObject,
+            test: isJSObject,
           )
           as R;
     }
 
     return value;
   } catch (e, stackTrace) {
-    if (!_isJSObject(e) || !_hasFirebaseAuthErrorCodeAndMessage(e as JSError)) {
+    if (!isJSObject(e) || !_hasFirebaseAuthErrorCodeAndMessage(e as JSError)) {
       // Not a firebase auth exception, rethrow & make sure to preserve the stacktrace
       rethrow;
     }
@@ -74,7 +75,7 @@ FirebaseAuthException getFirebaseAuthException(
   Object objectException, [
   auth_interop.Auth? auth,
 ]) {
-  if (!_isJSObject(objectException)) {
+  if (!isJSObject(objectException)) {
     return FirebaseAuthException(
       code: 'unknown',
       message: 'An unknown error occurred: $objectException',

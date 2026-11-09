@@ -592,7 +592,10 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       );
 
       codeSent(verificationId, null);
-    } catch (e) {
+    } catch (e, stackTrace) {
+      // A Dart error, for example from `codeSent`, is not a failed
+      // verification: rethrow it.
+      if (!isJSObject(e)) Error.throwWithStackTrace(e, stackTrace);
       verificationFailed(getFirebaseAuthException(e));
     }
   }
