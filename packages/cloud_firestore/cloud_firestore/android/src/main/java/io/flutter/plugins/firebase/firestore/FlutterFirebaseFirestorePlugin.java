@@ -57,6 +57,7 @@ import io.flutter.plugins.firebase.firestore.utils.PigeonParser;
 import io.flutter.plugins.firebase.firestore.utils.PipelineParser;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -121,15 +122,30 @@ public class FlutterFirebaseFirestorePlugin
   protected static FirebaseFirestore getFirestoreInstanceByNameAndDatabaseUrl(
       String appName, String databaseURL) {
     synchronized (firestoreInstanceCache) {
-      for (Map.Entry<FirebaseFirestore, FlutterFirebaseFirestoreExtension> entry :
-          firestoreInstanceCache.entrySet()) {
-        if (entry.getValue().getInstance().getApp().getName().equals(appName)
+      Iterator<Map.Entry<FirebaseFirestore, FlutterFirebaseFirestoreExtension>> iterator =
+          firestoreInstanceCache.entrySet().iterator();
+      FirebaseFirestore match = null;
+      while (iterator.hasNext()) {
+        Map.Entry<FirebaseFirestore, FlutterFirebaseFirestoreExtension> entry = iterator.next();
+        // getName() throws after delete(), and the SDK has no public check.
+        final String cachedAppName;
+        try {
+          cachedAppName = entry.getValue().getInstance().getApp().getName();
+        } catch (IllegalStateException exception) {
+          if ("FirebaseApp was deleted".equals(exception.getMessage())) {
+            iterator.remove();
+            continue;
+          }
+          throw exception;
+        }
+        if (match == null
+            && cachedAppName.equals(appName)
             && entry.getValue().getDatabaseURL().equals(databaseURL)) {
-          return entry.getKey();
+          match = entry.getKey();
         }
       }
+      return match;
     }
-    return null;
   }
 
   private static void destroyCachedFirebaseFirestoreInstanceForKey(FirebaseFirestore firestore) {

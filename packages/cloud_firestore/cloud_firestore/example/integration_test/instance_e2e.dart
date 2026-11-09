@@ -142,6 +142,21 @@ void runInstanceTests() {
         await querySub.cancel();
         await syncSub.cancel();
         await writerApp.delete();
+
+        // This database is not cached, so the lookup has to walk every
+        // entry, including the deleted writer's.
+        final uncached = FirebaseFirestore.instanceFor(
+          app: Firebase.app(),
+          databaseId: 'insync-after-delete',
+        );
+        uncached.settings = const Settings(persistenceEnabled: false);
+        uncached.useFirestoreEmulator('localhost', 8080);
+        await uncached.doc('flutter-tests/insync-after-delete').set({
+          'ok': true,
+        });
+        await firestore.doc('flutter-tests/insync-after-delete').set({
+          'ok': true,
+        });
       },
       timeout: const Timeout(Duration(minutes: 2)),
       skip:
