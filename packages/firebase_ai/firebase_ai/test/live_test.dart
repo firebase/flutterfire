@@ -342,32 +342,146 @@ void main() {
     test(
       'parseServerMessage returns an unknown message for unhandled format',
       () {
-        for (final jsonObject in [
-          {'unknown': {}},
-          {
-            'voiceActivity': {
-              'type': 'ACTIVITY_START',
-              'audioOffset': '2.520s',
-            },
-          },
-        ]) {
-          final response = parseServerResponse(jsonObject);
-          expect(
-            response.message,
-            isNot(
-              anyOf(
-                isA<LiveServerContent>(),
-                isA<LiveServerToolCall>(),
-                isA<LiveServerToolCallCancellation>(),
-                isA<LiveServerSetupComplete>(),
-                isA<GoingAwayNotice>(),
-                isA<SessionResumptionUpdate>(),
-              ),
+        final response = parseServerResponse({'unknown': {}});
+        expect(
+          response.message,
+          isNot(
+            anyOf(
+              isA<LiveServerContent>(),
+              isA<LiveServerToolCall>(),
+              isA<LiveServerToolCallCancellation>(),
+              isA<LiveServerSetupComplete>(),
+              isA<GoingAwayNotice>(),
+              isA<SessionResumptionUpdate>(),
+              isA<LiveServerVoiceActivity>(),
             ),
-          );
-        }
+          ),
+        );
       },
     );
+
+    group('parseServerMessage voiceActivity', () {
+      late void Function(String message) previousLog;
+      late List<String> logs;
+
+      setUp(() {
+        previousLog = liveServerVoiceActivityLog;
+        logs = <String>[];
+        liveServerVoiceActivityLog = logs.add;
+      });
+
+      tearDown(() {
+        liveServerVoiceActivityLog = previousLog;
+      });
+
+      LiveServerVoiceActivity parseVoiceActivity(Map<String, Object?> fields) {
+        final response = parseServerResponse({'voiceActivity': fields});
+        expect(response.message, isA<LiveServerVoiceActivity>());
+        return response.message as LiveServerVoiceActivity;
+      }
+
+      test('parses speech start and end with the documented offset', () {
+        const witnesses = <String, Duration>{
+          '2.520s': Duration(microseconds: 2520000),
+          ' 2s': Duration(microseconds: 2000000),
+          '2s ': Duration(microseconds: 2000000),
+          '1.5s': Duration(microseconds: 1500000),
+          '3s': Duration(microseconds: 3000000),
+          '0.0000014s': Duration(microseconds: 1),
+          '0.0000015s': Duration(microseconds: 2),
+          '2e1s': Duration(microseconds: 20000000),
+          '+2s': Duration(microseconds: 2000000),
+        };
+
+        for (final entry in witnesses.entries) {
+          for (final type in ['ACTIVITY_START', 'ACTIVITY_END']) {
+            logs.clear();
+            final message = parseVoiceActivity({
+              'type': type,
+              'audioOffset': entry.key,
+            });
+            expect(
+              message.type,
+              type == 'ACTIVITY_START'
+                  ? VoiceActivityType.activityStart
+                  : VoiceActivityType.activityEnd,
+            );
+            expect(message.audioOffset, entry.value);
+            expect(logs, isEmpty);
+          }
+        }
+      });
+
+      test('keeps the speech type when the offset is missing or rejected', () {
+        for (final type in ['ACTIVITY_START', 'ACTIVITY_END']) {
+          final expected = type == 'ACTIVITY_START'
+              ? VoiceActivityType.activityStart
+              : VoiceActivityType.activityEnd;
+
+          logs.clear();
+          final missing = parseVoiceActivity({'type': type});
+          expect(missing.type, expected);
+          expect(missing.audioOffset, isNull);
+          expect(logs, isEmpty);
+
+          for (final offset in ['nope', 'foo', '1e308s', '-1e308s']) {
+            logs.clear();
+            final rejected = parseVoiceActivity({
+              'type': type,
+              'audioOffset': offset,
+            });
+            expect(rejected.type, expected);
+            expect(rejected.audioOffset, isNull);
+            expect(logs, isEmpty);
+          }
+        }
+      });
+
+      test('unknown types keep a valid offset and log only when present', () {
+        logs.clear();
+        final missingType = parseVoiceActivity({'audioOffset': '2.520s'});
+        expect(missingType.type, VoiceActivityType.unknown);
+        expect(missingType.audioOffset, const Duration(microseconds: 2520000));
+        expect(logs, isEmpty);
+
+        logs.clear();
+        final unspecified = parseVoiceActivity({
+          'type': 'TYPE_UNSPECIFIED',
+          'audioOffset': '2.520s',
+        });
+        expect(unspecified.type, VoiceActivityType.unknown);
+        expect(unspecified.audioOffset, const Duration(microseconds: 2520000));
+        expect(logs, isEmpty);
+
+        logs.clear();
+        final garbage = parseVoiceActivity({
+          'type': 'GARBAGE',
+          'audioOffset': '2.520s',
+        });
+        expect(garbage.type, VoiceActivityType.unknown);
+        expect(garbage.audioOffset, const Duration(microseconds: 2520000));
+        expect(logs, ['Ignoring unrecognized VoiceActivityType: GARBAGE']);
+
+        logs.clear();
+        final garbageNope = parseVoiceActivity({
+          'type': 'GARBAGE',
+          'audioOffset': 'nope',
+        });
+        expect(garbageNope.type, VoiceActivityType.unknown);
+        expect(garbageNope.audioOffset, isNull);
+        expect(logs, ['Ignoring unrecognized VoiceActivityType: GARBAGE']);
+      });
+
+      test('throws when audioOffset is not a string', () {
+        expect(
+          () => parseServerResponse({
+            'voiceActivity': {'type': 'ACTIVITY_START', 'audioOffset': 1},
+          }),
+          throwsA(isA<TypeError>()),
+        );
+        expect(logs, isEmpty);
+      });
+    });
 
     test(
       'LiveGenerationConfig with transcriptions toJson() returns correct JSON',

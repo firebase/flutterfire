@@ -75,6 +75,7 @@ export 'src/live_api.dart'
         LiveServerContent,
         LiveServerToolCall,
         LiveServerToolCallCancellation,
+        LiveServerVoiceActivity,
         LiveServerResponse,
         RealtimeInputConfig,
         Sensitivity,
@@ -82,7 +83,8 @@ export 'src/live_api.dart'
         SessionResumptionUpdate,
         SlidingWindow,
         Transcription,
-        TurnCoverage;
+        TurnCoverage,
+        VoiceActivityType;
 export 'src/live_session.dart' show LiveSession;
 export 'src/mime_types.dart' show FirebaseAIMimeTypes;
 export 'src/schema.dart' show JSONSchema, Schema, SchemaType;

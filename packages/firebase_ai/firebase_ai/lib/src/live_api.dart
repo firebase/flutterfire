@@ -13,6 +13,8 @@
 // limitations under the License.
 import 'dart:developer';
 
+import 'package:meta/meta.dart';
+
 import 'api.dart';
 import 'content.dart';
 import 'error.dart';
@@ -413,12 +415,46 @@ class SessionResumptionUpdate implements LiveServerMessage {
   final int? lastConsumedClientMessageIndex;
 }
 
+/// The kind of voice activity reported by a live server.
+enum VoiceActivityType {
+  /// The activity type was missing, unspecified, or not recognized.
+  unknown,
+
+  /// Speech has started.
+  activityStart,
+
+  /// Speech has ended.
+  activityEnd,
+}
+
+/// A live server message that reports speech starting or ending.
+class LiveServerVoiceActivity implements LiveServerMessage {
+  /// Creates a [LiveServerVoiceActivity].
+  ///
+  /// [type] is the reported activity. [audioOffset] is the position of that
+  /// activity in the audio stream when the server sends one.
+  const LiveServerVoiceActivity({required this.type, this.audioOffset});
+
+  /// Whether speech started or ended.
+  final VoiceActivityType type;
+
+  /// Offset of this activity within the audio stream.
+  ///
+  /// `null` when the server omits it or sends a duration string this SDK does
+  /// not accept.
+  final Duration? audioOffset;
+}
+
 /// A server message this SDK does not recognize.
 ///
 /// Handle it with a default case when switching over [LiveServerMessage].
 final class _UnknownLiveServerMessage implements LiveServerMessage {
   const _UnknownLiveServerMessage();
 }
+
+@visibleForTesting
+// ignore: public_member_api_docs
+void Function(String message) liveServerVoiceActivityLog = log;
 
 /// A single response chunk received during a live content generation.
 ///
@@ -679,8 +715,61 @@ LiveServerMessage _parseServerMessage(Object jsonObject) {
       lastConsumedClientMessageIndex:
           sessionResumptionUpdateJson['lastConsumedClientMessageIndex'] as int?,
     );
+  } else if (json.containsKey('voiceActivity')) {
+    final voiceActivityJson = json['voiceActivity'] as Map<String, dynamic>;
+    return LiveServerVoiceActivity(
+      type: _parseVoiceActivityType(voiceActivityJson['type']),
+      audioOffset: _parseVoiceActivityOffset(voiceActivityJson),
+    );
   } else {
     log('Ignoring unrecognized LiveServerMessage: ${json.keys}');
     return const _UnknownLiveServerMessage();
   }
+}
+
+VoiceActivityType _parseVoiceActivityType(Object? rawType) {
+  if (rawType == null) {
+    return VoiceActivityType.unknown;
+  }
+  final type = rawType as String;
+  switch (type) {
+    case 'ACTIVITY_START':
+      return VoiceActivityType.activityStart;
+    case 'ACTIVITY_END':
+      return VoiceActivityType.activityEnd;
+    case 'TYPE_UNSPECIFIED':
+      return VoiceActivityType.unknown;
+    default:
+      liveServerVoiceActivityLog(
+        'Ignoring unrecognized VoiceActivityType: $type',
+      );
+      return VoiceActivityType.unknown;
+  }
+}
+
+Duration? _parseVoiceActivityOffset(Map<String, dynamic> json) {
+  if (!json.containsKey('audioOffset')) {
+    return null;
+  }
+  final rawOffset = json['audioOffset'] as String?;
+  if (rawOffset == null) {
+    return null;
+  }
+  return _parseProtoDuration(rawOffset);
+}
+
+Duration? _parseProtoDuration(String value) {
+  final trimmed = value.trim();
+  if (!trimmed.endsWith('s')) {
+    return null;
+  }
+  final seconds = double.tryParse(trimmed.substring(0, trimmed.length - 1));
+  if (seconds == null || !seconds.isFinite) {
+    return null;
+  }
+  final microseconds = seconds * 1000000;
+  if (!microseconds.isFinite) {
+    return null;
+  }
+  return Duration(microseconds: microseconds.round());
 }
