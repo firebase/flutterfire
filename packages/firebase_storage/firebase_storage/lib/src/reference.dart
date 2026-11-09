@@ -3,7 +3,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-part of firebase_storage;
+part of '../firebase_storage.dart';
 
 /// Represents a reference to a Google Cloud Storage object. Developers can
 /// upload, download, and delete objects, as well as get/set object metadata.

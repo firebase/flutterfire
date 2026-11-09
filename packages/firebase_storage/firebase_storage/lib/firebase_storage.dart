@@ -7,7 +7,7 @@ library firebase_storage;
 
 import 'dart:async';
 import 'dart:convert' show utf8, base64;
-import 'dart:io' show File;
+import 'dart:io' if (dart.library.js_interop) 'src/io_web.dart' show File;
 
 // import 'package:flutter/foundation.dart';
 import 'package:firebase_core/firebase_core.dart';

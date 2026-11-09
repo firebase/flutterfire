@@ -4,7 +4,7 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
+import 'dart:io' if (dart.library.js_interop) '../common/io_web.dart';
 import 'dart:typed_data';
 
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';

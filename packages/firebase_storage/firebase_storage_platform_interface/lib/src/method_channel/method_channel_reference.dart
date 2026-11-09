@@ -4,7 +4,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
+import 'dart:io' if (dart.library.js_interop) '../common/io_web.dart';
 import 'dart:typed_data';
 
 import '../../firebase_storage_platform_interface.dart';
