@@ -7,6 +7,12 @@ false_secrets:
   - example/**
   - dartpad/**
 
+# Explicit about the supported platforms.
+platforms:
+  android:
+  ios:
+  web:
+
 environment:
   sdk: '^3.10.0'
   flutter: '>=3.38.0'
