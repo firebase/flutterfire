@@ -1076,30 +1076,27 @@ void main() {
 }
 ''';
       final decoded = jsonDecode(response) as Object;
-      final generateContentResponse =
-          DeveloperSerialization().parseGenerateContentResponse(decoded);
+      final generateContentResponse = DeveloperSerialization()
+          .parseGenerateContentResponse(decoded);
       expect(
         generateContentResponse,
         matchesGenerateContentResponse(
-          GenerateContentResponse(
-            [
-              Candidate(
-                Content.model([
-                  ExecutableCodePart(
-                    language: CodeLanguage.python,
-                    code: 'x = 1 + 1',
-                  ),
-                  CodeExecutionResultPart(outcome: Outcome.ok, output: ''),
-                  const TextPart('The answer is 2.'),
-                ]),
-                null,
-                null,
-                FinishReason.stop,
-                null,
-              ),
-            ],
-            null,
-          ),
+          GenerateContentResponse([
+            Candidate(
+              Content.model([
+                ExecutableCodePart(
+                  language: CodeLanguage.python,
+                  code: 'x = 1 + 1',
+                ),
+                CodeExecutionResultPart(outcome: Outcome.ok, output: ''),
+                const TextPart('The answer is 2.'),
+              ]),
+              null,
+              null,
+              FinishReason.stop,
+              null,
+            ),
+          ], null),
         ),
       );
       expect(generateContentResponse.text, 'The answer is 2.');

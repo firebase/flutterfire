@@ -554,27 +554,34 @@ void main() {
       expect(part.isThought, true);
       final json = part.toJson() as Map;
       expect(json['thoughtSignature'], 'sig');
-      expect(
-        json['codeExecutionResult'],
-        {'outcome': 'OUTCOME_OK', 'output': ''},
-      );
+      expect(json['codeExecutionResult'], {
+        'outcome': 'OUTCOME_OK',
+        'output': '',
+      });
     });
 
     test('parses a null code execution output as an empty string', () {
-      final result = parsePart({
-        'codeExecutionResult': {'outcome': 'OUTCOME_FAILED', 'output': null},
-      }) as CodeExecutionResultPart;
+      final result =
+          parsePart({
+                'codeExecutionResult': {
+                  'outcome': 'OUTCOME_FAILED',
+                  'output': null,
+                },
+              })
+              as CodeExecutionResultPart;
       expect(result.outcome, Outcome.failed);
       expect(result.output, isEmpty);
     });
 
     test('parses a code execution result that includes output', () {
-      final result = parsePart({
-        'codeExecutionResult': {
-          'outcome': 'OUTCOME_OK',
-          'output': 'hello world',
-        },
-      }) as CodeExecutionResultPart;
+      final result =
+          parsePart({
+                'codeExecutionResult': {
+                  'outcome': 'OUTCOME_OK',
+                  'output': 'hello world',
+                },
+              })
+              as CodeExecutionResultPart;
       expect(result.outcome, Outcome.ok);
       expect(result.output, 'hello world');
     });
