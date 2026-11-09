@@ -81,16 +81,39 @@ def build_upload_symbols_script(upload_symbols_args)
     SCRIPT
 end
 
-# The historical generated phase is a single upload-symbols invocation. Custom
-# phases (a hand-written Debug guard, extra logic) are left untouched.
-def stock_upload_symbols_phase?(shell_script)
-    stripped = shell_script.to_s.strip
-    return false if stripped.empty?
-    return false if stripped.include?("\n")
-    return false unless stripped.include?("FirebaseCrashlytics/upload-symbols")
-    return false if stripped.include?("case ")
-    return false if stripped.include?("if ")
-    true
+# The one-line phase this script generated before the Debug/simulator guards.
+# Any other one-line upload-symbols command is user-owned.
+HISTORICAL_STOCK_UPLOAD_SYMBOLS_SCRIPT = '"$PODS_ROOT/FirebaseCrashlytics/upload-symbols" --flutter-project "$PROJECT_DIR/firebase_app_id_file.json"'
+
+def historical_stock_upload_symbols_phase?(shell_script)
+    shell_script.to_s.strip == HISTORICAL_STOCK_UPLOAD_SYMBOLS_SCRIPT
+end
+
+def generated_upload_symbols_phase?(shell_script, desired_script)
+    shell_script.to_s.strip == desired_script.to_s.strip
+end
+
+DWARF_INPUT_PATH = '${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Resources/DWARF/${PRODUCT_NAME}'
+
+def dwarf_input_missing?(phase)
+    paths = phase.input_paths || []
+    !paths.include?(DWARF_INPUT_PATH)
+end
+
+def append_dwarf_input(phase)
+    return unless dwarf_input_missing?(phase)
+    phase.input_paths = (phase.input_paths || []) + [DWARF_INPUT_PATH]
+end
+
+def upload_symbols_input_paths
+    [
+        "\"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}\"",
+        "\"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/\"",
+        "\"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Info.plist\"",
+        DWARF_INPUT_PATH,
+        "\"$(TARGET_BUILD_DIR)/$(EXECUTABLE_PATH)\"",
+        "\"$(PROJECT_DIR)/firebase_app_id_file.json\"",
+    ]
 end
 
 # Actually open and modify the project
@@ -111,10 +134,15 @@ project.targets.each do |target|
         desired_script = build_upload_symbols_script(upload_symbols_args)
 
         if existing
-            if stock_upload_symbols_phase?(existing.shell_script)
+            if existing.name == PHASE_NAME && historical_stock_upload_symbols_phase?(existing.shell_script)
                 existing.shell_script = desired_script
+                append_dwarf_input(existing)
                 project.save()
                 puts("Updated Crashlytics upload symbols run script.")
+            elsif existing.name == PHASE_NAME && generated_upload_symbols_phase?(existing.shell_script, desired_script) && dwarf_input_missing?(existing)
+                append_dwarf_input(existing)
+                project.save()
+                puts("Updated Crashlytics upload symbols input paths.")
             else
                 puts("Run script to upload symbols already exists.")
             end
@@ -123,13 +151,7 @@ project.targets.each do |target|
 
         phase = target.new_shell_script_build_phase(PHASE_NAME)
         phase.shell_script = desired_script
-        phase.input_paths = [
-            "\"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}\"",
-            "\"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/\"",
-            "\"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Info.plist\"",
-            "\"$(TARGET_BUILD_DIR)/$(EXECUTABLE_PATH)\"",
-            "\"$(PROJECT_DIR)/firebase_app_id_file.json\"",
-        ]
+        phase.input_paths = upload_symbols_input_paths
         project.save()
     end
 end
