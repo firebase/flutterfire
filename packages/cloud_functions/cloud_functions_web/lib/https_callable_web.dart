@@ -58,6 +58,7 @@ class HttpsCallableWeb extends HttpsCallablePlatform {
     try {
       response = await callable.call(parametersJS);
     } catch (e, s) {
+      if (!isFirebaseFunctionsError(e)) rethrow;
       throw convertFirebaseFunctionsException(e as JSObject, s);
     }
 
@@ -100,6 +101,7 @@ class HttpsCallableWeb extends HttpsCallablePlatform {
         yield value;
       }
     } catch (e, s) {
+      if (!isFirebaseFunctionsError(e)) rethrow;
       throw convertFirebaseFunctionsException(e as JSObject, s);
     }
   }
@@ -116,6 +118,7 @@ class HttpsCallableWeb extends HttpsCallablePlatform {
           return web.AbortSignal.any(jsSignals);
       }
     } catch (e, s) {
+      if (!isFirebaseFunctionsError(e)) rethrow;
       throw convertFirebaseFunctionsException(e as JSObject, s);
     }
   }
