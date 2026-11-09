@@ -370,12 +370,8 @@ public class FlutterFirebaseFirestorePlugin
     String key = app.getAppName() + "|" + app.getDatabaseURL();
     return snapshotDeliveryExecutors.computeIfAbsent(
         key,
-        ignored -> {
-          ThreadPoolExecutor executor =
-              new ThreadPoolExecutor(1, 1, 60L, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
-          executor.allowCoreThreadTimeOut(true);
-          return executor;
-        });
+        ignored ->
+            new ThreadPoolExecutor(0, 1, 60L, TimeUnit.SECONDS, new LinkedBlockingQueue<>()));
   }
 
   @Override
