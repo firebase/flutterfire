@@ -140,7 +140,7 @@ jobs:
       - uses: bluefireteam/melos-action@b79b63bcd183f823740a7976cbdb4b0fc95a0eb8
         with:
           melos-version: '5.3.0'
-      - uses: Homebrew/actions/setup-homebrew@e99025eb970cfa124b8284a35463d87426917478
+      - uses: Homebrew/actions/setup-homebrew@d482da0e602890d3160aade42e72c8556103bf04
       - name: 'Install Tools'
         run: |
           alias python=python3
