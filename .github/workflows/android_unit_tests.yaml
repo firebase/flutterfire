@@ -35,6 +35,13 @@ jobs:
           bootstrap-scope: 'tests'
       - name: Gradle cache
         uses: gradle/actions/setup-gradle@90ddb51e90a5fd9ba75f40cf85156b7b41bf76a3
+      - name: Robolectric android-all cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        with:
+          path: ~/.m2/repository/org/robolectric
+          key: robolectric-${{ runner.os }}-${{ hashFiles('packages/firebase_messaging/firebase_messaging/android/build.gradle') }}
+          restore-keys: |
+            robolectric-${{ runner.os }}-
       - name: 'Generate Gradle build files'
         # The Gradle wrapper and local.properties are gitignored, and Flutter injects
         # both. --config-only does that without building any Dart artifacts.
