@@ -2,7 +2,7 @@
 
 A Flutter plugin to use the [Firebase Database API](https://firebase.google.com/docs/database/).
 
-To learn more about Firebase Realtime Database, please visit the [Firebase website](https://firebase.google.com/products/realtime-database)
+To learn more about Firebase Realtime Database, please visit the [Firebase website](https://firebase.google.com/products/realtime-database).
 
 [![pub package](https://img.shields.io/pub/v/firebase_database.svg)](https://pub.dev/packages/firebase_database)
 
