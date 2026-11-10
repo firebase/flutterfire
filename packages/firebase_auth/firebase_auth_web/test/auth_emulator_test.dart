@@ -262,4 +262,71 @@ void main() {
       );
     });
   });
+
+  group('authEmulatorConnectTooLateMessage', () {
+    test('keeps the hot reload message when this instance matches', () {
+      expect(
+        authEmulatorConnectTooLateMessage(
+          appName: '[DEFAULT]',
+          requestedOrigin: 'http://localhost:9099',
+          connectedOrigin: 'http://localhost:9099',
+        ),
+        contains('kept across hot reload'),
+      );
+    });
+
+    test('says production and asks for a full page reload', () {
+      final message = authEmulatorConnectTooLateMessage(
+        appName: '[DEFAULT]',
+        requestedOrigin: 'http://localhost:9099',
+        connectedOrigin: null,
+      );
+      expect(message, contains('production'));
+      expect(message, contains('full page reload'));
+      expect(message, isNot(contains('hot reload')));
+    });
+
+    test('names the origin this instance is actually on', () {
+      expect(
+        authEmulatorConnectTooLateMessage(
+          appName: '[DEFAULT]',
+          requestedOrigin: 'http://127.0.0.1:9100',
+          connectedOrigin: 'http://localhost:9099',
+        ),
+        contains('http://localhost:9099'),
+      );
+    });
+  });
+
+  group('shouldThrowDebugEmulatorConnectFailure', () {
+    test('throws in debug when this instance is on production', () {
+      expect(
+        shouldThrowDebugEmulatorConnectFailure(
+          isDebugMode: true,
+          connectedOrigin: null,
+        ),
+        isTrue,
+      );
+    });
+
+    test('does not throw outside debug', () {
+      expect(
+        shouldThrowDebugEmulatorConnectFailure(
+          isDebugMode: false,
+          connectedOrigin: null,
+        ),
+        isFalse,
+      );
+    });
+
+    test('does not throw when this instance is on an emulator', () {
+      expect(
+        shouldThrowDebugEmulatorConnectFailure(
+          isDebugMode: true,
+          connectedOrigin: 'http://localhost:9099',
+        ),
+        isFalse,
+      );
+    });
+  });
 }

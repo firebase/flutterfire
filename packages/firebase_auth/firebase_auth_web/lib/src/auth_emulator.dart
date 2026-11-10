@@ -94,3 +94,30 @@ bool shouldRememberRequestedOriginAfterFailedConnect({
 }) {
   return connectedOrigin != requestedOrigin;
 }
+
+/// What to print when `connectAuthEmulator` is refused.
+///
+/// JS SDK 13.2 returns without throwing when this instance is already on
+/// [requestedOrigin]. A thrown error means it is on production or another
+/// origin, and hot restart keeps that instance.
+String authEmulatorConnectTooLateMessage({
+  required String appName,
+  required String requestedOrigin,
+  required String? connectedOrigin,
+}) {
+  if (connectedOrigin == requestedOrigin) {
+    return 'Auth emulator is already configured at $requestedOrigin for $appName and kept across hot reload.\n'
+        "To use production Auth, clear this site's storage and restart without the emulator.";
+  }
+  final String current = connectedOrigin ?? 'production';
+  return 'Auth for $appName is on $current, not $requestedOrigin.\n'
+      'The emulator will apply after a full page reload. Hot restart keeps this Auth instance.\n'
+      "To use production Auth, clear this site's storage and restart without the emulator.";
+}
+
+bool shouldThrowDebugEmulatorConnectFailure({
+  required bool isDebugMode,
+  required String? connectedOrigin,
+}) {
+  return isDebugMode && connectedOrigin == null;
+}

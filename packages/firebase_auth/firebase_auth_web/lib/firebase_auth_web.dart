@@ -66,12 +66,13 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
           readSession: () => web.window.sessionStorage.getItem(storageKey),
         );
         if (shouldReusePersistedAuthEmulator(
-          hostname: web.window.location.hostname,
-          isDebugMode: kDebugMode,
-          storedOrigin: emulatorOrigin,
-        )) {
+              hostname: web.window.location.hostname,
+              isDebugMode: kDebugMode,
+              storedOrigin: emulatorOrigin,
+            ) &&
+            emulatorOrigin != null) {
           try {
-            authDelegate.useAuthEmulator(emulatorOrigin!);
+            authDelegate.useAuthEmulator(emulatorOrigin);
             _rememberAuthEmulatorOrigin(firebaseApp.name, emulatorOrigin);
             // ignore: avoid_print
             print(
@@ -81,14 +82,17 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
             );
           } catch (e) {
             if (e.toString().contains('sooner')) {
-              if (authDelegate.emulatorOrigin == emulatorOrigin) {
-                _rememberAuthEmulatorOrigin(firebaseApp.name, emulatorOrigin!);
+              final String? connectedOrigin = authDelegate.emulatorOrigin;
+              if (connectedOrigin == emulatorOrigin) {
+                _rememberAuthEmulatorOrigin(firebaseApp.name, emulatorOrigin);
               }
-              // Happens during hot reload when the emulator is already configured
               // ignore: avoid_print
               print(
-                'Auth emulator is already configured at $emulatorOrigin for ${firebaseApp.name} and kept across hot reload.\n'
-                "To use production Auth, clear this site's storage and restart without the emulator.",
+                authEmulatorConnectTooLateMessage(
+                  appName: firebaseApp.name,
+                  requestedOrigin: emulatorOrigin,
+                  connectedOrigin: connectedOrigin,
+                ),
               );
             } else {
               rethrow;
@@ -545,13 +549,29 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
           connectedOrigin: delegate.emulatorOrigin,
         )) {
           _rememberAuthEmulatorOrigin(delegate.app.name, origin);
-          if (kDebugMode) {
-            // ignore: avoid_print
-            print(
-              'Auth emulator at $origin for ${delegate.app.name} will apply on the next launch.\n'
-              "To use production Auth, clear this site's storage and restart without the emulator.",
-            );
-          }
+        }
+        if (shouldThrowDebugEmulatorConnectFailure(
+          isDebugMode: kDebugMode,
+          connectedOrigin: delegate.emulatorOrigin,
+        )) {
+          throw FirebaseAuthException(
+            code: 'emulator-config-failed',
+            message: authEmulatorConnectTooLateMessage(
+              appName: delegate.app.name,
+              requestedOrigin: origin,
+              connectedOrigin: null,
+            ),
+          );
+        }
+        if (kDebugMode) {
+          // ignore: avoid_print
+          print(
+            authEmulatorConnectTooLateMessage(
+              appName: delegate.app.name,
+              requestedOrigin: origin,
+              connectedOrigin: delegate.emulatorOrigin,
+            ),
+          );
         }
       } else {
         rethrow;
