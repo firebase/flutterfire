@@ -660,7 +660,7 @@ enum HarmCategory {
   const HarmCategory(this._jsonString);
 
   // ignore: unused_element
-  static HarmCategory _parseValue(Object jsonObject) {
+  static HarmCategory _parseValue(Object? jsonObject) {
     return switch (jsonObject) {
       'HARM_CATEGORY_UNSPECIFIED' => HarmCategory.unknown,
       'HARM_CATEGORY_HARASSMENT' => HarmCategory.harassment,
@@ -709,7 +709,7 @@ enum HarmProbability {
   const HarmProbability(this._jsonString);
 
   // ignore: unused_element
-  static HarmProbability _parseValue(Object jsonObject) {
+  static HarmProbability _parseValue(Object? jsonObject) {
     return switch (jsonObject) {
       'UNSPECIFIED' => HarmProbability.unknown,
       'NEGLIGIBLE' => HarmProbability.negligible,
@@ -939,7 +939,7 @@ enum ContentModality {
 
   const ContentModality(this._jsonString);
 
-  static ContentModality _parseValue(Object jsonObject) {
+  static ContentModality _parseValue(Object? jsonObject) {
     return switch (jsonObject) {
       'MODALITY_UNSPECIFIED' => ContentModality.unspecified,
       'TEXT' => ContentModality.text,
@@ -1568,7 +1568,8 @@ final class AgentPlatformSerialization implements SerializationStrategy {
       throw unhandledFormat('CountTokensResponse', jsonObject);
     }
 
-    final totalTokens = jsonObject['totalTokens'] as int;
+    // Proto3 JSON leaves out a count of zero.
+    final totalTokens = jsonObject['totalTokens'] as int? ?? 0;
     final promptTokensDetails = switch (jsonObject) {
       {'promptTokensDetails': final List<Object?> promptTokensDetails} =>
         promptTokensDetails.map(_parseModalityTokenCount).toList(),
