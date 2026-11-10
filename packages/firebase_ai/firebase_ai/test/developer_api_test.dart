@@ -634,11 +634,13 @@ void main() {
         // ignore: deprecated_member_use_from_same_package
         final details = response.promptTokensDetails;
         expect(details, isNotNull);
-        expect(details, hasLength(2));
-        expect(details![0].modality, ContentModality.text);
-        expect(details[0].tokenCount, 100);
-        expect(details[1].modality, ContentModality.audio);
-        expect(details[1].tokenCount, 23);
+        if (details != null) {
+          expect(details, hasLength(2));
+          expect(details[0].modality, ContentModality.text);
+          expect(details[0].tokenCount, 100);
+          expect(details[1].modality, ContentModality.audio);
+          expect(details[1].tokenCount, 23);
+        }
       });
 
       test('defaults totalTokens to 0 on empty JSON object', () {
@@ -649,6 +651,29 @@ void main() {
         // ignore: deprecated_member_use_from_same_package
         expect(response.promptTokensDetails, isNull);
       });
+
+      test(
+        'defaults totalTokens to 0 when omitted with promptTokensDetails',
+        () {
+          final json = {
+            'promptTokensDetails': [
+              {'modality': 'TEXT', 'tokenCount': 0},
+            ],
+          };
+          final response = DeveloperSerialization().parseCountTokensResponse(
+            json,
+          );
+          expect(response.totalTokens, 0);
+          // ignore: deprecated_member_use_from_same_package
+          final details = response.promptTokensDetails;
+          expect(details, isNotNull);
+          if (details != null) {
+            expect(details, hasLength(1));
+            expect(details[0].modality, ContentModality.text);
+            expect(details[0].tokenCount, 0);
+          }
+        },
+      );
 
       test('throws FirebaseAIException on error response', () {
         final json = {
@@ -661,11 +686,17 @@ void main() {
       });
 
       test('throws unhandledFormat on invalid JSON', () {
-        final json = {'wrongKey': 123};
-        expect(
-          () => DeveloperSerialization().parseCountTokensResponse(json),
-          throwsA(isA<FirebaseAISdkException>()),
-        );
+        for (final invalid in <Object>[
+          'not a map',
+          {'wrongKey': 123},
+          {'totalTokens': 'invalid'},
+          {'promptTokensDetails': 'invalid'},
+        ]) {
+          expect(
+            () => DeveloperSerialization().parseCountTokensResponse(invalid),
+            throwsA(isA<FirebaseAISdkException>()),
+          );
+        }
       });
     });
 

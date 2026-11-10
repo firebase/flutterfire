@@ -103,23 +103,33 @@ final class DeveloperSerialization implements SerializationStrategy {
     if (jsonObject is! Map) {
       throw unhandledFormat('CountTokensResponse', jsonObject);
     }
-    if (jsonObject.isEmpty) {
-      return CountTokensResponse(0);
+    if (jsonObject.isEmpty) return CountTokensResponse(0);
+    final totalTokens = switch (jsonObject) {
+      {'totalTokens': final int totalTokens} => totalTokens,
+      {'totalTokens': final Object _} => throw unhandledFormat(
+        'CountTokensResponse',
+        jsonObject,
+      ),
+      _ => null,
+    };
+    final promptTokensDetails = switch (jsonObject) {
+      {'promptTokensDetails': final List<Object?> details} =>
+        parseUsageMetadata({
+          'promptTokensDetails': details,
+        }).promptTokensDetails,
+      {'promptTokensDetails': final Object _} => throw unhandledFormat(
+        'CountTokensResponse',
+        jsonObject,
+      ),
+      _ => null,
+    };
+    if (totalTokens == null && promptTokensDetails == null) {
+      throw unhandledFormat('CountTokensResponse', jsonObject);
     }
-    if (jsonObject case {'totalTokens': final int totalTokens}) {
-      final promptTokensDetails = switch (jsonObject) {
-        {'promptTokensDetails': final List<Object?> details} =>
-          parseUsageMetadata({
-            'promptTokensDetails': details,
-          }).promptTokensDetails,
-        _ => null,
-      };
-      return CountTokensResponse(
-        totalTokens,
-        promptTokensDetails: promptTokensDetails,
-      );
-    }
-    throw unhandledFormat('CountTokensResponse', jsonObject);
+    return CountTokensResponse(
+      totalTokens ?? 0,
+      promptTokensDetails: promptTokensDetails,
+    );
   }
 
   @override
