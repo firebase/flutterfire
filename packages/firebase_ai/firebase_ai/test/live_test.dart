@@ -472,6 +472,19 @@ void main() {
         expect(logs, ['Ignoring unrecognized VoiceActivityType: GARBAGE']);
       });
 
+      test('non-string types map to unknown without logging', () {
+        for (final rawType in <Object?>[1, true, null]) {
+          logs.clear();
+          final message = parseVoiceActivity({
+            'type': rawType,
+            'audioOffset': '2.520s',
+          });
+          expect(message.type, VoiceActivityType.unknown);
+          expect(message.audioOffset, const Duration(microseconds: 2520000));
+          expect(logs, isEmpty);
+        }
+      });
+
       test('throws when audioOffset is not a string', () {
         expect(
           () => parseServerResponse({

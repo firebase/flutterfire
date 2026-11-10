@@ -728,11 +728,10 @@ LiveServerMessage _parseServerMessage(Object jsonObject) {
 }
 
 VoiceActivityType _parseVoiceActivityType(Object? rawType) {
-  if (rawType == null) {
+  if (rawType is! String) {
     return VoiceActivityType.unknown;
   }
-  final type = rawType as String;
-  switch (type) {
+  switch (rawType) {
     case 'ACTIVITY_START':
       return VoiceActivityType.activityStart;
     case 'ACTIVITY_END':
@@ -741,7 +740,7 @@ VoiceActivityType _parseVoiceActivityType(Object? rawType) {
       return VoiceActivityType.unknown;
     default:
       liveServerVoiceActivityLog(
-        'Ignoring unrecognized VoiceActivityType: $type',
+        'Ignoring unrecognized VoiceActivityType: $rawType',
       );
       return VoiceActivityType.unknown;
   }
