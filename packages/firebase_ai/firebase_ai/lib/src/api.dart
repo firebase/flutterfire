@@ -494,7 +494,7 @@ enum UrlRetrievalStatus {
   String toJson() => _jsonString;
 
   // ignore: unused_element
-  static UrlRetrievalStatus _parseValue(Object jsonObject) {
+  static UrlRetrievalStatus _parseValue(Object? jsonObject) {
     return switch (jsonObject) {
       'URL_RETRIEVAL_STATUS_UNSPECIFIED' => UrlRetrievalStatus.unspecified,
       'URL_RETRIEVAL_STATUS_SUCCESS' => UrlRetrievalStatus.success,
