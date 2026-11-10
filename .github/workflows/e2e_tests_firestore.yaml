@@ -81,6 +81,8 @@ jobs:
       package-scope: 'cloud_firestore*'
       cache-key-suffix: 'firestore'
       native-config-args: '--firestore-native'
+      native-test-package: 'packages/cloud_firestore/cloud_firestore/macos/cloud_firestore'
+      native-test-identifier: 'SnapshotSinkAfterCancelTests'
       nightly_test_mode: ${{ inputs.nightly_test_mode == true }}
 
   web:

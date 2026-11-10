@@ -24,6 +24,7 @@ final class QuerySnapshotStreamHandler: NSObject, FlutterStreamHandler {
   private let serverTimestampBehavior: FirebaseFirestore.ServerTimestampBehavior
   private let source: FirebaseFirestore.ListenSource
   private var listenerRegistration: ListenerRegistration?
+  private var eventSink: FlutterEventSink?
   private let snapshotQueue = DispatchQueue(
     label: "io.flutter.plugins.firebase.firestore.query_snapshot"
   )
@@ -58,28 +59,32 @@ final class QuerySnapshotStreamHandler: NSObject, FlutterStreamHandler {
       .withIncludeMetadataChanges(includeMetadataChanges)
       .withSource(source)
 
+    eventSink = events
     listenerRegistration = query.addSnapshotListener(options: options) {
-      [snapshotQueue, serverTimestampBehavior] snapshot, error in
+      [weak self] snapshot, error in
+      guard let self else {
+        return
+      }
       if let error {
         let (code, message) = FirebaseFirestoreUtils.errorCodeAndMessage(from: error)
-        DispatchQueue.main.async {
-          events(
-            FLTFirebasePlugin.createFlutterError(
-              fromCode: code,
-              message: message,
-              optionalDetails: ["code": code, "message": message],
-              andOptionalNSError: error as NSError
-            )
+        self.emit(
+          FLTFirebasePlugin.createFlutterError(
+            fromCode: code,
+            message: message,
+            optionalDetails: ["code": code, "message": message],
+            andOptionalNSError: error as NSError
           )
-        }
+        )
       } else if let snapshot {
-        snapshotQueue.async {
+        let serverTimestampBehavior = self.serverTimestampBehavior
+        self.snapshotQueue.async { [weak self] in
+          guard let self else {
+            return
+          }
           let pigeonSnapshot = PigeonParser.toPigeonQuerySnapshot(
             snapshot, serverTimestampBehavior: serverTimestampBehavior
           )
-          DispatchQueue.main.async {
-            events(pigeonSnapshot)
-          }
+          self.emit(pigeonSnapshot)
         }
       }
     }
@@ -87,8 +92,15 @@ final class QuerySnapshotStreamHandler: NSObject, FlutterStreamHandler {
   }
 
   func onCancel(withArguments arguments: Any?) -> FlutterError? {
+    eventSink = nil
     listenerRegistration?.remove()
     listenerRegistration = nil
     return nil
+  }
+
+  private func emit(_ event: Any?) {
+    DispatchQueue.main.async { [weak self] in
+      self?.eventSink?(event)
+    }
   }
 }
