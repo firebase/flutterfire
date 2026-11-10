@@ -5,6 +5,7 @@
 
 import 'dart:async';
 import 'dart:js_interop';
+import 'dart:js_interop_unsafe';
 
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_auth_web/src/firebase_auth_web_multi_factor.dart';
@@ -527,16 +528,18 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
         );
       }
     } catch (e) {
-      // Cannot be done with 3.2 constraints
+      // `is AuthError` would match any JS object, so check for one directly.
+      // `is JSObject` is false for Dart objects on both dart2js and dart2wasm.
       // ignore: invalid_runtime_check_with_js_interop_types
-      if (e is auth_interop.AuthError) {
-        final String code = e.code.toDart;
-        // this catches Firebase Error from web that occurs after hot reloading & hot restarting
-        if (code != 'auth/emulator-config-failed') {
-          throw getFirebaseAuthException(e);
-        }
-      } else {
-        rethrow;
+      if (e is! JSObject) rethrow;
+      // Not every JS error has a string `code`, so compare it in JS.
+      final isEmulatorConfigFailed = e
+          .getProperty('code'.toJS)
+          .strictEquals('auth/emulator-config-failed'.toJS)
+          .toDart;
+      // this catches Firebase Error from web that occurs after hot reloading & hot restarting
+      if (!isEmulatorConfigFailed) {
+        throw getFirebaseAuthException(e);
       }
     }
   }
@@ -589,7 +592,10 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       );
 
       codeSent(verificationId, null);
-    } catch (e) {
+    } catch (e, stackTrace) {
+      // A Dart error, for example from `codeSent`, is not a failed
+      // verification: rethrow it.
+      if (!isJSObject(e)) Error.throwWithStackTrace(e, stackTrace);
       verificationFailed(getFirebaseAuthException(e));
     }
   }

@@ -28,26 +28,40 @@ bool _hasFirebaseAuthErrorCodeAndMessage(JSError e) {
   }
 }
 
+/// Whether [error] is a JS object, as opposed to a Dart error.
+///
+/// `@staticInterop` types such as [JSError] match any JS object at runtime, so
+/// this is the check to make before casting a caught error to one. Callers
+/// should rethrow anything else unchanged.
+bool isJSObject(Object? error) {
+  // `is JSObject` is false for Dart objects on both dart2js and dart2wasm.
+  // ignore: invalid_runtime_check_with_js_interop_types
+  return error is JSObject;
+}
+
 R guardAuthExceptions<R>(R Function() cb, {auth_interop.Auth? auth}) {
   try {
     final value = cb();
     if (value is Future) {
-      return value.catchError((err, stack) {
-            final exception = getFirebaseAuthException(err, auth);
-            return Error.throwWithStackTrace(exception, stack);
-          })
+      return value.catchError(
+            (Object err, StackTrace stack) => Error.throwWithStackTrace(
+              getFirebaseAuthException(err, auth),
+              stack,
+            ),
+            // Dart errors are rethrown as they are, with their stack trace.
+            test: isJSObject,
+          )
           as R;
     }
 
     return value;
   } catch (e, stackTrace) {
-    final exception = e as JSError;
-    if (!_hasFirebaseAuthErrorCodeAndMessage(e)) {
+    if (!isJSObject(e) || !_hasFirebaseAuthErrorCodeAndMessage(e as JSError)) {
       // Not a firebase auth exception, rethrow & make sure to preserve the stacktrace
       rethrow;
     }
 
-    final error = getFirebaseAuthException(exception, auth);
+    final error = getFirebaseAuthException(e, auth);
 
     Error.throwWithStackTrace(error, stackTrace);
   }
@@ -61,6 +75,13 @@ FirebaseAuthException getFirebaseAuthException(
   Object objectException, [
   auth_interop.Auth? auth,
 ]) {
+  if (!isJSObject(objectException)) {
+    return FirebaseAuthException(
+      code: 'unknown',
+      message: 'An unknown error occurred: $objectException',
+    );
+  }
+
   final exception = objectException as JSError;
   final authJsCredential = auth_interop.OAuthProviderJsImpl.credentialFromError(
     exception,
