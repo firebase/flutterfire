@@ -173,7 +173,7 @@ void main() {
         final appName =
             'auth-emulator-other-origin-${DateTime.now().microsecondsSinceEpoch}';
         const otherHost = '127.0.0.1';
-        final otherOrigin = 'http://$otherHost:$testEmulatorPort';
+        const otherOrigin = 'http://$otherHost:$testEmulatorPort';
         FirebaseApp? app;
 
         addTearDown(() async {
