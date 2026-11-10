@@ -189,9 +189,13 @@ class CloudFirestorePlugin : public flutter::Plugin,
   static std::map<std::string, std::unique_ptr<flutter::StreamHandler<>>>
       stream_handlers_;
   static std::map<std::string, flutter::StreamHandler<>*> transaction_handlers_;
-  static std::map<std::string,
-                  std::shared_ptr<firebase::firestore::Transaction>>
-      transactions_;
+  // `mutex` guards `transaction`. `transactions_mutex_` only guards the map.
+  struct TransactionEntry {
+    firebase::firestore::Transaction* transaction = nullptr;
+    std::mutex mutex;
+  };
+  static std::map<std::string, std::shared_ptr<TransactionEntry>> transactions_;
+  static std::mutex transactions_mutex_;
   static std::map<std::string, std::unique_ptr<firebase::firestore::Firestore>>
       firestoreInstances_;
 };
