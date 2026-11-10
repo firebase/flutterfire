@@ -46,10 +46,7 @@ const _wasmLibraries = {
 /// `'<importing package> -> <import>'`. These imports are not followed when
 /// checking that package; the script fails once one is no longer reached, so
 /// that its entry is removed with the fix.
-const _knownViolations = {
-  // putFile(File) in the public API of firebase_storage and its platform
-  // interface.
-};
+const _knownViolations = <String, Set<String>>{};
 
 void main() {
   final rootDir = p.dirname(
@@ -101,7 +98,7 @@ void main() {
             .map(
               (segments) => Uri.parse('package:$name/${segments.join('/')}'),
             );
-    final known = _knownViolations[name] ?? const <String>{};
+    final known = _knownViolations[name] ?? const {};
     final (:violations, :reachedKnown) = graph.findViolations(
       publicLibraries,
       known,

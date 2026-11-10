@@ -360,7 +360,7 @@ void setupReferenceTests() {
       test(
         'throws [UnimplementedError] for native platforms',
         () async {
-          final dynamic file = await createFile('flt-put-blob.txt');
+          final File file = await createFile('flt-put-blob.txt');
           final Reference ref = storage
               .ref('flutter-tests')
               .child('flt-put-blob.txt');
@@ -393,7 +393,7 @@ void setupReferenceTests() {
         test(
           'uploads a file',
           () async {
-            final dynamic file = await createFile(
+            final File file = await createFile(
               'flt-put-file.txt',
               string: kTestString,
             );
@@ -432,7 +432,7 @@ void setupReferenceTests() {
           () async {
             const text =
                 'put file some text to compare with uploaded and downloaded';
-            final dynamic file = await createFile(
+            final File file = await createFile(
               'read-and-write.txt',
               string: text,
             );
@@ -456,7 +456,7 @@ void setupReferenceTests() {
 
         // TODO(ehesp): Emulator rules issue - comment back in once fixed
         // test('errors if permission denied', () async {
-        //   dynamic file = await createFile('flt-ok.txt');
+        //   File file = await createFile('flt-ok.txt');
         //   final Reference ref = storage.ref('uploadNope.jpeg');
 
         //   await expectLater(
@@ -570,7 +570,7 @@ void setupReferenceTests() {
 
     group('writeToFile', () {
       test('downloads a file', () async {
-        dynamic file = await createFile('ok.jpeg');
+        File file = await createFile('ok.jpeg');
         TaskSnapshot complete = await storage
             .ref('flutter-tests/ok.txt')
             .writeToFile(file);
@@ -580,7 +580,7 @@ void setupReferenceTests() {
 
       // [TODO] This test always time out for catch the exception
       // test('errors if permission denied', () async {
-      //   dynamic file = await createFile('not.jpeg');
+      //   File file = await createFile('not.jpeg');
       //   final Reference ref = storage.ref('/nope.jpeg');
 
       //   await expectLater(

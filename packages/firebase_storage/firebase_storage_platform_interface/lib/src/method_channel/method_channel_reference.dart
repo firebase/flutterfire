@@ -4,7 +4,6 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io' if (dart.library.js_interop) '../common/io_web.dart';
 import 'dart:typed_data';
 
 import '../../firebase_storage_platform_interface.dart';
@@ -172,7 +171,7 @@ class MethodChannelReference extends ReferencePlatform {
   }
 
   @override
-  TaskPlatform putFile(File file, [SettableMetadata? metadata]) {
+  TaskPlatform putFile(covariant Object file, [SettableMetadata? metadata]) {
     int handle = MethodChannelFirebaseStorage.nextMethodChannelHandleId;
     return MethodChannelPutFileTask(handle, storage, fullPath, file, metadata);
   }
@@ -223,7 +222,7 @@ class MethodChannelReference extends ReferencePlatform {
   }
 
   @override
-  TaskPlatform writeToFile(File file) {
+  TaskPlatform writeToFile(covariant Object file) {
     int handle = MethodChannelFirebaseStorage.nextMethodChannelHandleId;
     return MethodChannelDownloadTask(handle, storage, fullPath, file);
   }

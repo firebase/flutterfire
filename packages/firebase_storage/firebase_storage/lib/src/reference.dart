@@ -149,11 +149,11 @@ class Reference {
     );
   }
 
-  /// Upload a [File] from the filesystem. The file must exist.
+  /// Upload a `dart:io` `File` from the filesystem. The file must exist.
   ///
   /// Optionally, you can also set metadata onto the uploaded object.
-  UploadTask putFile(File file, [SettableMetadata? metadata]) {
-    assert(file.absolute.existsSync());
+  UploadTask putFile(covariant Object file, [SettableMetadata? metadata]) {
+    assertFileExists(file);
     return UploadTask._(storage, _delegate.putFile(file, metadata));
   }
 
@@ -220,8 +220,10 @@ class Reference {
 
   /// Writes a remote storage object to the local filesystem.
   ///
-  /// If a file already exists at the given location, it will be overwritten.
-  DownloadTask writeToFile(File file) {
+  /// [file] must be a `dart:io` `File`. If a file already exists at the given
+  /// location, it will be overwritten.
+  DownloadTask writeToFile(covariant Object file) {
+    assertIsFile(file);
     return DownloadTask._(storage, _delegate.writeToFile(file));
   }
 

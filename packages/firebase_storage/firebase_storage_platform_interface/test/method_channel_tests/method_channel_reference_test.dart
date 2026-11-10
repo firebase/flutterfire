@@ -112,6 +112,18 @@ void main() {
       });
     });
 
+    group('putFile', () {
+      test('should throw [ArgumentError] if file is not a File', () {
+        expect(() => ref.putFile('not-a-file'), throwsArgumentError);
+      });
+    });
+
+    group('writeToFile', () {
+      test('should throw [ArgumentError] if file is not a File', () {
+        expect(() => ref.writeToFile('not-a-file'), throwsArgumentError);
+      });
+    });
+
     group('updateMetadata', () {
       test(
         'catch a [PlatformException] error and throws a [FirebaseException] error',

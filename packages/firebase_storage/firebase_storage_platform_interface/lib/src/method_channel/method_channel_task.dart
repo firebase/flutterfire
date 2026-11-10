@@ -4,12 +4,13 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io' if (dart.library.js_interop) '../common/io_web.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 
 import '../../firebase_storage_platform_interface.dart';
+import '../common/io_helper.dart'
+    if (dart.library.js_interop) '../common/io_helper_web.dart';
 import '../pigeon/messages.pigeon.dart';
 import 'method_channel_firebase_storage.dart';
 import 'method_channel_task_snapshot.dart';
@@ -278,7 +279,7 @@ class MethodChannelPutFileTask extends MethodChannelTask {
     int handle,
     FirebaseStoragePlatform storage,
     String path,
-    File file,
+    Object file,
     SettableMetadata? metadata,
   ) : super(
         handle,
@@ -291,7 +292,7 @@ class MethodChannelPutFileTask extends MethodChannelTask {
     int handle,
     FirebaseStoragePlatform storage,
     String path,
-    File file,
+    Object file,
     SettableMetadata? metadata,
   ) {
     InternalSettableMetadata? pigeonSettableMetadata;
@@ -311,7 +312,7 @@ class MethodChannelPutFileTask extends MethodChannelTask {
         path,
         'putFile',
       ),
-      file.path,
+      filePath(file),
       pigeonSettableMetadata,
       handle,
     );
@@ -402,14 +403,14 @@ class MethodChannelDownloadTask extends MethodChannelTask {
     int handle,
     FirebaseStoragePlatform storage,
     String path,
-    File file,
+    Object file,
   ) : super(handle, storage, path, _getTask(handle, storage, path, file));
 
   static Future<String> _getTask(
     int handle,
     FirebaseStoragePlatform storage,
     String path,
-    File file,
+    Object file,
   ) {
     return MethodChannelFirebaseStorage.pigeonChannel.referenceDownloadFile(
       MethodChannelTask.pigeonFirebaseApp(storage),
@@ -418,7 +419,7 @@ class MethodChannelDownloadTask extends MethodChannelTask {
         path,
         'writeToFile',
       ),
-      file.path,
+      filePath(file),
       handle,
     );
   }
