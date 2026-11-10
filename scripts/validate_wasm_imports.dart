@@ -42,12 +42,6 @@ const _wasmLibraries = {
   'js_interop_unsafe',
 };
 
-/// Packages known not to be Wasm-ready, with the imports that make them so, as
-/// `'<importing package> -> <import>'`. These imports are not followed when
-/// checking that package; the script fails once one is no longer reached, so
-/// that its entry is removed with the fix.
-const _knownViolations = <String, Set<String>>{};
-
 void main() {
   final rootDir = p.dirname(
     p.dirname(p.absolute(Platform.script.toFilePath())),
@@ -98,36 +92,13 @@ void main() {
             .map(
               (segments) => Uri.parse('package:$name/${segments.join('/')}'),
             );
-    final known = _knownViolations[name] ?? const {};
-    final (:violations, :reachedKnown) = graph.findViolations(
-      publicLibraries,
-      known,
-    );
+    final violations = graph.findViolations(publicLibraries);
     if (violations.isNotEmpty) errors.add('$name:');
     for (final chain in violations) {
       final reason = chain.last.isScheme('dart')
           ? 'is not available on Wasm'
           : 'could not be resolved (run `melos bootstrap`?)';
       errors.add('  ${chain.last} $reason\n      ${chain.join('\n      -> ')}');
-    }
-    for (final import in known) {
-      if (reachedKnown.contains(import)) {
-        print('Skipped known import in $name: $import.');
-      } else {
-        errors.add(
-          '$name no longer reaches $import: remove it from '
-          '_knownViolations.',
-        );
-      }
-    }
-  }
-
-  for (final name in _knownViolations.keys) {
-    if (!packages.containsKey(name)) {
-      errors.add(
-        '$name is not a published package in the workspace: remove '
-        'it from _knownViolations.',
-      );
     }
   }
 
@@ -161,13 +132,8 @@ class _ImportGraph {
 
   /// Returns the import chain to each import reachable from [libraries] that
   /// is a `dart:` library not available on Wasm, or a `package:` URI that
-  /// cannot be resolved, except the [known] imports
-  /// (`'<importing package> -> <import>'`), and which of those were reached.
-  ({List<List<Uri>> violations, Set<String> reachedKnown}) findViolations(
-    Iterable<Uri> libraries,
-    Set<String> known,
-  ) {
-    final reachedKnown = <String>{};
+  /// cannot be resolved.
+  List<List<Uri>> findViolations(Iterable<Uri> libraries) {
     final parents = <Uri, Uri?>{for (final library in libraries) library: null};
     List<Uri> chainTo(Uri uri) =>
         [for (Uri? u = uri; u != null; u = parents[u]) u].reversed.toList();
@@ -179,12 +145,8 @@ class _ImportGraph {
     final queue = Queue.of(libraries.where(_isResolvable));
     while (queue.isNotEmpty) {
       final current = queue.removeFirst();
-      final package = current.pathSegments.first;
       for (final dependency in _dependenciesOf(current)) {
-        final import = '$package -> $dependency';
-        if (known.contains(import)) {
-          reachedKnown.add(import);
-        } else if (dependency.isScheme('dart')) {
+        if (dependency.isScheme('dart')) {
           if (!_wasmLibraries.contains(dependency.path)) {
             violations.add([...chainTo(current), dependency]);
           }
@@ -200,7 +162,7 @@ class _ImportGraph {
         }
       }
     }
-    return (violations: violations, reachedKnown: reachedKnown);
+    return violations;
   }
 
   bool _isResolvable(Uri library) =>
