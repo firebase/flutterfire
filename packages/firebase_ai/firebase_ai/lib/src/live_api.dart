@@ -18,6 +18,7 @@ import 'package:meta/meta.dart';
 import 'api.dart';
 import 'content.dart';
 import 'error.dart';
+import 'utils/proto_duration.dart';
 
 /// The audio transcription configuration.
 class AudioTranscriptionConfig {
@@ -754,21 +755,5 @@ Duration? _parseVoiceActivityOffset(Map<String, dynamic> json) {
   if (rawOffset == null) {
     return null;
   }
-  return _parseProtoDuration(rawOffset);
-}
-
-Duration? _parseProtoDuration(String value) {
-  final trimmed = value.trim();
-  if (!trimmed.endsWith('s')) {
-    return null;
-  }
-  final seconds = double.tryParse(trimmed.substring(0, trimmed.length - 1));
-  if (seconds == null || !seconds.isFinite) {
-    return null;
-  }
-  final microseconds = seconds * 1000000;
-  if (!microseconds.isFinite) {
-    return null;
-  }
-  return Duration(microseconds: microseconds.round());
+  return parseProtoDuration(rawOffset);
 }
