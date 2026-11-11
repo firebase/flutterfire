@@ -280,8 +280,8 @@ class FlutterFirebaseCorePlugin :
   }
 
   /**
-   * Runs a token lookup off the main thread and reports an SDK failure to Dart under [failureCode]
-   * with the SDK's message, so the Dart side can surface it as a core FirebaseException.
+   * Runs a token lookup off the main thread and reports an SDK failure as a FlutterError under
+   * [failureCode].
    */
   private fun <T> respondWithToken(
       failureCode: String,

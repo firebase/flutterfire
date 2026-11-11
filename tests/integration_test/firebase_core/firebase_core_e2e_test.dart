@@ -86,10 +86,8 @@ void main() {
       expect(app.options.projectId, demoProjectId);
     });
 
-    // The tests app links the Auth, App Check and Messaging plugins, so the
-    // native SDKs' interop components are in the container and, on web, the
-    // JS SDK modules are loaded. Auth runs against the emulator that CI starts
-    // around this suite.
+    // The tests app links the Auth, App Check and Messaging plugins, so every
+    // lookup has an SDK to ask. Auth uses the emulator CI starts for this suite.
     group(
       'interop tokens',
       () {
@@ -116,17 +114,16 @@ void main() {
 
             expect(await defaultApp.getAuthIdToken(), idToken);
           },
-          // Signing in persists the user to the keychain, which the unsigned
-          // macOS test app cannot write to (errSecMissingEntitlement), as in
-          // the firebase_auth suite.
+          // Signing in needs the keychain, which the unsigned macOS test app
+          // can't use, as in the firebase_auth suite.
           skip: !kIsWeb && defaultTargetPlatform == TargetPlatform.macOS,
         );
 
         test(
           'getAppCheckToken answers with a placeholder before activation',
           () async {
-            // App Check is linked but never activated in this app, so the SDK
-            // answers with its placeholder token and the reason.
+            // App Check is never activated here, so the SDK answers with its
+            // placeholder.
             final answer = await defaultApp.getAppCheckToken();
 
             expect(answer, isNotNull);
@@ -137,9 +134,7 @@ void main() {
         );
 
         test('getAppCheckToken is null on web before activation', () async {
-          // The JS SDK creates App Check's token service only on activation,
-          // so until then there is nothing to ask; the JS Functions SDK sends
-          // no App Check token then either.
+          // The JS SDK creates App Check's token service only on activation.
           expect(await defaultApp.getAppCheckToken(), isNull);
         }, skip: !kIsWeb);
 
@@ -160,24 +155,21 @@ void main() {
               isNull,
             );
           },
-          // On Android the token comes from the Instance ID library, which
-          // answers for any app and fetches over the network. On web,
-          // Messaging also serves any app; the next test covers web.
+          // Android's Instance ID library answers for any app, over the
+          // network; web is covered by the next test.
           skip: kIsWeb || defaultTargetPlatform == TargetPlatform.android,
         );
 
         test(
           'getMessagingToken is null on web without notification permission',
           () async {
-            // The test browser never grants notification permission, so the
-            // call returns null without asking Messaging, which would prompt.
+            // CI's browser never grants notification permission.
             expect(await defaultApp.getMessagingToken(), isNull);
           },
           skip: !kIsWeb,
         );
       },
-      // Windows has no token lookup yet: every call answers null there, so the
-      // signed-in check can't hold.
+      // Windows has no token lookup yet; every call is null there.
       skip: !kIsWeb && defaultTargetPlatform == TargetPlatform.windows,
     );
   });

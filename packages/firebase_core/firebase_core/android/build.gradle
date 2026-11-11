@@ -70,10 +70,8 @@ android {
         implementation platform("com.google.firebase:firebase-bom:${getRootProjectExtOrDefaultProperty("FirebaseSDKVersion")}")
         implementation "com.google.firebase:firebase-common"
 
-        // Interfaces through which the Auth, App Check and Messaging SDKs hand
-        // tokens to other SDKs (see InteropTokenProvider).
-        // Interface-only; the BoM does not manage them, so the versions are the
-        // ones the BoM's own SDKs depend on.
+        // Interop interfaces of the Auth, App Check and Instance ID SDKs. Not in the
+        // BoM; pinned to the versions the BoM's own SDKs depend on.
         implementation "com.google.firebase:firebase-auth-interop:20.0.0"
         implementation "com.google.firebase:firebase-appcheck-interop:18.0.0"
         implementation "com.google.firebase:firebase-iid-interop:17.1.0"

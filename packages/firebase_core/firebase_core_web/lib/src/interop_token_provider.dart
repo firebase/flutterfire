@@ -11,26 +11,19 @@ import 'package:web/web.dart' as web;
 import 'interop/core.dart' as firebase;
 import 'interop/utils/es6_interop.dart';
 
-/// Fetches the Auth, App Check and FCM tokens from whichever Firebase JS SDK
-/// modules the app loaded, the way the JS Functions SDK's `ContextProvider`
-/// does.
-///
-/// Each module registers an internal component in its app's component
-/// container once it's loaded and initialized. `getComponent` looks one up by
-/// name and returns null otherwise, so a null token means "not loaded" or
-/// "nothing to give", never failure.
+/// Fetches the Auth, App Check and FCM tokens through the internal components
+/// the Firebase JS SDK modules register, as the JS Functions SDK does. A null
+/// token means the module isn't loaded or has nothing to give, never failure.
 class InteropTokenProvider {
-  /// Creates a provider over `getComponent` that asks Messaging only when
-  /// `notificationsGranted` says the user has already allowed notifications.
+  /// Creates a provider over [getComponent]; [notificationsGranted] gates the
+  /// Messaging lookup.
   InteropTokenProvider({
     required JSObject? Function(String name) getComponent,
     required bool Function() notificationsGranted,
   }) : _getComponent = getComponent,
        _notificationsGranted = notificationsGranted;
 
-  /// Looks tokens up in the component container of the app named [appName].
-  ///
-  /// Throws [noAppExists] when there is no such app.
+  /// Throws [noAppExists] when there is no app named [appName].
   factory InteropTokenProvider.forApp(String appName) {
     final firebase.AppJsImpl app;
     try {
@@ -50,10 +43,7 @@ class InteropTokenProvider {
   final bool Function() _notificationsGranted;
 
   /// The signed-in user's ID token, or null when Auth isn't loaded or nobody is
-  /// signed in.
-  ///
-  /// Throws a core [FirebaseException] with code `auth-token-failed` and Auth's
-  /// message when Auth fails to produce one.
+  /// signed in. Throws `auth-token-failed` when Auth fails.
   Future<String?> getAuthIdToken() async {
     final auth = _getComponent('auth-internal') as _AuthInternal?;
     if (auth == null) {
@@ -71,11 +61,8 @@ class InteropTokenProvider {
     }
   }
 
-  /// App Check's answer, or null when App Check isn't loaded or hasn't been
-  /// activated.
-  ///
-  /// When App Check can't produce a token, the answer carries its placeholder
-  /// token and the reason, as the JS SDK reports them.
+  /// App Check's answer, or null until App Check is activated. On failure, the
+  /// SDK's placeholder token and the reason.
   Future<AppCheckInteropToken?> getAppCheckToken({
     required bool limitedUse,
   }) async {
@@ -106,8 +93,7 @@ class InteropTokenProvider {
   /// The FCM registration token, or null when Messaging isn't loaded, the user
   /// hasn't allowed notifications, or Messaging can't produce one.
   Future<String?> getMessagingToken() async {
-    // Checked before anything else: Messaging's getToken() would ask the user
-    // for permission while it's still undecided.
+    // Messaging's getToken() prompts while permission is undecided.
     if (!_notificationsGranted()) {
       return null;
     }
@@ -143,7 +129,7 @@ String _messageOf(Object error) {
   return '$error';
 }
 
-/// `auth-internal`, the component Auth registers for other modules.
+/// `auth-internal`, Auth's internal component.
 extension type _AuthInternal._(JSObject _) implements JSObject {
   /// Resolves to null when nobody is signed in.
   external JSPromise<_AuthToken?> getToken();
@@ -153,7 +139,7 @@ extension type _AuthToken._(JSObject _) implements JSObject {
   external JSString get accessToken;
 }
 
-/// `app-check-internal`, the component App Check registers for other modules.
+/// `app-check-internal`, App Check's internal component.
 extension type _AppCheckInternal._(JSObject _) implements JSObject {
   external JSPromise<_AppCheckTokenResult> getToken();
 
@@ -171,7 +157,7 @@ extension type _ErrorLike._(JSObject _) implements JSObject {
   external JSString? get message;
 }
 
-/// `messaging-internal`, the component Messaging registers for other modules.
+/// `messaging-internal`, Messaging's internal component.
 extension type _MessagingInternal._(JSObject _) implements JSObject {
   external JSPromise<JSString> getToken();
 }

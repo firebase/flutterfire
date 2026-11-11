@@ -175,7 +175,7 @@ void main() {
     });
   });
 
-  // Loads the real Firebase JS SDK files, as firebase_core_js does, so these
+  // Loads the real Firebase JS SDK files, as firebase_core_web does, so these
   // tests check the lookups against the components the SDK registers.
   group('with the Firebase JS SDK', () {
     late FirebaseCoreWeb coreWeb;

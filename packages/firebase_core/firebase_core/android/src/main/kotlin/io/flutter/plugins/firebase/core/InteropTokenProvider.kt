@@ -14,12 +14,9 @@ import com.google.firebase.internal.api.FirebaseNoSignedInUserException
 import java.util.concurrent.Executor
 
 /**
- * Fetches the Auth, App Check and FCM tokens from whichever SDKs the app links, the way the
- * Firebase Functions SDK's `FirebaseContextProvider` does.
- *
- * Each SDK registers an interop component in its app's component container when it is linked.
- * [getComponent] looks a component up by interface and returns null when no linked SDK registered
- * it, so a null token means "not linked" or "nothing to give", never failure.
+ * Fetches the Auth, App Check and FCM tokens through the interop components the SDKs register in
+ * the app's component container, as the Functions SDK does. A null token means the SDK isn't linked
+ * or has nothing to give, never failure.
  */
 class InteropTokenProvider(
     private val getComponent: (Class<*>) -> Any?,
@@ -35,10 +32,7 @@ class InteropTokenProvider(
 
   private inline fun <reified T> get(): T? = getComponent(T::class.java) as? T
 
-  /**
-   * The signed-in user's ID token, or null when the Auth SDK isn't linked or nobody is signed in.
-   * Fails with the Auth SDK's exception when it can't produce a token.
-   */
+  /** The signed-in user's ID token, or null when Auth isn't linked or nobody is signed in. */
   fun getAuthIdToken(): Task<String?> {
     val auth = get<InternalAuthProvider>() ?: return Tasks.forResult(null)
     return auth.getAccessToken(false).continueWith(executor) { task ->
@@ -55,9 +49,8 @@ class InteropTokenProvider(
   }
 
   /**
-   * The App Check SDK's answer, or null when App Check isn't linked. When the SDK can't produce a
-   * token, for example before it is activated, the answer carries its placeholder token and the
-   * reason, as the SDK reports it.
+   * App Check's answer, or null when it isn't linked. Before activation the SDK answers with its
+   * placeholder token and an error.
    */
   fun getAppCheckToken(limitedUse: Boolean): Task<CoreAppCheckInteropToken?> {
     val appCheck = get<InteropAppCheckTokenProvider>() ?: return Tasks.forResult(null)
@@ -72,10 +65,9 @@ class InteropTokenProvider(
   }
 
   /**
-   * The FCM registration token, or null when nothing provides `FirebaseInstanceIdInternal`.
-   *
-   * Only the Instance ID library provides it, so this answers whenever that library is linked.
-   * `getToken()` blocks on the network when no token is cached yet, hence the executor.
+   * The FCM token, or null when the Instance ID library, the only provider of
+   * `FirebaseInstanceIdInternal`, isn't linked. `getToken()` may block on the network, hence the
+   * executor.
    */
   fun getMessagingToken(): Task<String?> {
     val instanceId = get<FirebaseInstanceIdInternal>() ?: return Tasks.forResult(null)

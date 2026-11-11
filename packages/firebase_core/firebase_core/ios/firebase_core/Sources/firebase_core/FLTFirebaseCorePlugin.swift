@@ -294,9 +294,8 @@ public class FLTFirebaseCorePlugin: NSObject, FlutterPlugin, FLTFirebasePluginPr
     }
   }
 
-  /// Runs a token lookup for the app named `appName` and reports an SDK failure to Dart under
-  /// `failureCode` with the SDK's message, so the Dart side can surface it as a core
-  /// FirebaseException. Replies on the main thread, since the SDKs call back on their own queues.
+  /// Reports an SDK failure as a FlutterError under `failureCode` and replies on the main thread,
+  /// since the SDKs call back on their own queues.
   private func respondWithToken<T>(
     appName: String,
     failureCode: String,

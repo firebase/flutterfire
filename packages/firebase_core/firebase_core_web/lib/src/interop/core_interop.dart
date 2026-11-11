@@ -37,10 +37,8 @@ external void registerVersion(
   JSString? variant,
 ]);
 
-/// The provider for the component named [name] in [app]'s component container.
-///
-/// Internal to the Firebase JS SDK: its modules reach each other's components
-/// through it, as the Functions SDK does for Auth, App Check and Messaging.
+/// The provider for the component named [name] in [app]'s container. Internal
+/// to the JS SDK; how its modules reach each other's components.
 @JS('_getProvider')
 external ProviderJsImpl getProvider(AppJsImpl app, JSString name);
 

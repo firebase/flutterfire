@@ -95,12 +95,9 @@ class MethodChannelFirebaseApp extends FirebaseAppPlatform {
     return _guardTokenCall(() => _tokenApi.getMessagingToken(name));
   }
 
-  /// Surfaces a failure reported by the native plugin as a [FirebaseException]
-  /// for plugin `core`, keeping the code and message native chose.
-  ///
-  /// Answers `null` on Windows, whose plugin has no token lookup yet: from
-  /// core's point of view nothing is linked there, and the contract's answer
-  /// for that is `null`, not the channel error an unregistered API would give.
+  /// Surfaces a native failure as a core [FirebaseException] with native's
+  /// code and message. Answers `null` on Windows, whose plugin has no token
+  /// lookup yet: nothing is linked there, which the contract maps to `null`.
   Future<T?> _guardTokenCall<T>(Future<T?> Function() call) async {
     if (defaultTargetPlatform == TargetPlatform.windows) {
       return null;
