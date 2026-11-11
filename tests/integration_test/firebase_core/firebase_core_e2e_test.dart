@@ -87,8 +87,9 @@ void main() {
     });
 
     // The tests app links the Auth, App Check and Messaging plugins, so the
-    // native SDKs' interop components are in the container. Auth runs against
-    // the emulator that CI starts around this suite.
+    // native SDKs' interop components are in the container and, on web, the
+    // JS SDK modules are loaded. Auth runs against the emulator that CI starts
+    // around this suite.
     group(
       'interop tokens',
       () {
@@ -118,7 +119,7 @@ void main() {
           // Signing in persists the user to the keychain, which the unsigned
           // macOS test app cannot write to (errSecMissingEntitlement), as in
           // the firebase_auth suite.
-          skip: defaultTargetPlatform == TargetPlatform.macOS,
+          skip: !kIsWeb && defaultTargetPlatform == TargetPlatform.macOS,
         );
 
         test(
@@ -132,7 +133,15 @@ void main() {
             expect(answer!.token, isNotEmpty);
             expect(answer.error, isNotNull);
           },
+          skip: kIsWeb,
         );
+
+        test('getAppCheckToken is null on web before activation', () async {
+          // The JS SDK creates App Check's token service only on activation,
+          // so until then there is nothing to ask; the JS Functions SDK sends
+          // no App Check token then either.
+          expect(await defaultApp.getAppCheckToken(), isNull);
+        }, skip: !kIsWeb);
 
         test(
           'getMessagingToken is null for an app other than the default',
@@ -152,12 +161,23 @@ void main() {
             );
           },
           // On Android the token comes from the Instance ID library, which
-          // answers for any app and fetches over the network.
-          skip: defaultTargetPlatform == TargetPlatform.android,
+          // answers for any app and fetches over the network. On web,
+          // Messaging also serves any app; the next test covers web.
+          skip: kIsWeb || defaultTargetPlatform == TargetPlatform.android,
+        );
+
+        test(
+          'getMessagingToken is null on web without notification permission',
+          () async {
+            // The test browser never grants notification permission, so the
+            // call returns null without asking Messaging, which would prompt.
+            expect(await defaultApp.getMessagingToken(), isNull);
+          },
+          skip: !kIsWeb,
         );
       },
-      // No implementation on Windows yet; web lands separately.
-      skip: kIsWeb || defaultTargetPlatform == TargetPlatform.windows,
+      // No implementation on Windows yet.
+      skip: !kIsWeb && defaultTargetPlatform == TargetPlatform.windows,
     );
   });
 }
