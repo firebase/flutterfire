@@ -15,10 +15,6 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-/**
- * Reads the stored callback handle and the manifest opt-out, and decides whether this process
- * should start the background Dart handler.
- */
 final class FlutterFirebaseMessagingBackgroundGate {
   static final String METADATA_KEY = "firebase_messaging_background_handler_enabled";
 
@@ -38,7 +34,6 @@ final class FlutterFirebaseMessagingBackgroundGate {
         manifestEnabled(appContext));
   }
 
-  /** True when the manifest opts out, including before the stored handles have been deleted. */
   static boolean handlerDisabled(Context context) {
     return Boolean.FALSE.equals(manifestEnabled(applicationContext(context)));
   }

@@ -4,12 +4,6 @@
 
 package io.flutter.plugins.firebase.messaging;
 
-/**
- * Whether a background message should start the Dart handler.
- *
- * <p>{@code manifestEnabled} is null when the app manifest does not set {@code
- * firebase_messaging_background_handler_enabled}.
- */
 final class BackgroundHandlerStartDecision {
   enum Action {
     START,

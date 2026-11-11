@@ -219,8 +219,6 @@ class MainActivity : FlutterActivity() {
         }
   }
 
-  /// Sends a data message the way Play services does, after the app has left
-  /// the foreground, and reports whether the background service started.
   private fun probeBackgroundDelivery(
       messageId: String,
       pluginHandle: Long?,
