@@ -58,9 +58,15 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
         final authDelegate = auth_interop.getAuthInstance(firebaseApp);
         // Re-apply a persisted emulator origin before Auth restores the user.
         // Must include 127.0.0.1 — Chrome often uses that instead of localhost.
-        final String? emulatorOrigin = web.window.sessionStorage.getItem(
-          authEmulatorOriginStorageKey(firebaseApp.name),
-        );
+        String? emulatorOrigin;
+        try {
+          emulatorOrigin = web.window.sessionStorage.getItem(
+            authEmulatorOriginStorageKey(firebaseApp.name),
+          );
+        } catch (_) {
+          // Accessing `window.sessionStorage` throws a SecurityError when the
+          // user blocks site data. There is no persisted emulator then.
+        }
         if (shouldReusePersistedAuthEmulator(
           hostname: web.window.location.hostname,
           isDebugMode: kDebugMode,
@@ -522,10 +528,16 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       // Save to session storage so that the emulator is used on refresh
       // only in debug mode
       if (kDebugMode) {
-        web.window.sessionStorage.setItem(
-          authEmulatorOriginStorageKey(delegate.app.name),
-          origin,
-        );
+        try {
+          web.window.sessionStorage.setItem(
+            authEmulatorOriginStorageKey(delegate.app.name),
+            origin,
+          );
+        } catch (_) {
+          // Accessing `window.sessionStorage` throws a SecurityError when the
+          // user blocks site data. The emulator is connected; it just won't
+          // be reapplied after a reload.
+        }
       }
     } catch (e) {
       // `is AuthError` would match any JS object, so check for one directly.

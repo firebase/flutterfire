@@ -43,21 +43,30 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
         final instance = FirebaseAppCheckWeb(
           app: Firebase.app(firebaseApp.name),
         );
-        var recaptchaType = web.window.localStorage.getItem(
-          _sessionKeyRecaptchaType(firebaseApp.name),
-        );
-        var recaptchaSiteKey = web.window.localStorage.getItem(
-          _sessionKeyRecaptchaSiteKey(firebaseApp.name),
-        );
-
-        // For backwards compatibility, with previously used session storage
-        if (recaptchaType == null || recaptchaSiteKey == null) {
-          recaptchaType = web.window.sessionStorage.getItem(
+        String? recaptchaType;
+        String? recaptchaSiteKey;
+        try {
+          recaptchaType = web.window.localStorage.getItem(
             _sessionKeyRecaptchaType(firebaseApp.name),
           );
-          recaptchaSiteKey = web.window.sessionStorage.getItem(
+          recaptchaSiteKey = web.window.localStorage.getItem(
             _sessionKeyRecaptchaSiteKey(firebaseApp.name),
           );
+
+          // For backwards compatibility, with previously used session storage
+          if (recaptchaType == null || recaptchaSiteKey == null) {
+            recaptchaType = web.window.sessionStorage.getItem(
+              _sessionKeyRecaptchaType(firebaseApp.name),
+            );
+            recaptchaSiteKey = web.window.sessionStorage.getItem(
+              _sessionKeyRecaptchaSiteKey(firebaseApp.name),
+            );
+          }
+        } catch (_) {
+          // Accessing web storage throws a SecurityError when the user blocks
+          // site data. Nothing can have been persisted then.
+          recaptchaType = null;
+          recaptchaSiteKey = null;
         }
 
         if (recaptchaType != null) {
@@ -141,16 +150,21 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
       } else {
         throw Exception('Invalid web provider: $providerWeb');
       }
-      web.window.localStorage.setItem(
-        _sessionKeyRecaptchaType(app.name),
-        recaptchaType,
-      );
-      web.window.localStorage.setItem(
-        _sessionKeyRecaptchaSiteKey(app.name),
-        providerWeb is WebDebugProvider
-            ? providerWeb.debugToken ?? ''
-            : providerWeb.siteKey,
-      );
+      try {
+        web.window.localStorage.setItem(
+          _sessionKeyRecaptchaType(app.name),
+          recaptchaType,
+        );
+        web.window.localStorage.setItem(
+          _sessionKeyRecaptchaSiteKey(app.name),
+          providerWeb is WebDebugProvider
+              ? providerWeb.debugToken ?? ''
+              : providerWeb.siteKey,
+        );
+      } catch (_) {
+        // Accessing web storage throws a SecurityError when the user blocks
+        // site data. Persisting is only for the next startup, so continue.
+      }
     }
 
     // activate API no longer exists, recaptcha key has to be passed on initialization of app-check instance.
