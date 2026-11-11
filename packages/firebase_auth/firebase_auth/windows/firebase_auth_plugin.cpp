@@ -5,9 +5,15 @@
 #include "firebase_auth_plugin.h"
 
 // This must be included before many other Windows headers.
+#include <wincrypt.h>
 #include <windows.h>
 
+#include <charconv>
 #include <chrono>
+#include <cmath>
+#include <cstdint>
+#include <limits>
+#include <locale>
 #include <thread>
 
 #include "firebase/app.h"
@@ -966,6 +972,316 @@ void FirebaseAuthPlugin::Delete(
   });
 }
 
+namespace {
+
+class IdTokenClaimsParser {
+ public:
+  explicit IdTokenClaimsParser(std::string_view json) : json_(json) {}
+
+  EncodableMap Parse() {
+    EncodableValue value = ParseValue(0);
+    SkipWhitespace();
+    if (position_ != json_.size() ||
+        !std::holds_alternative<EncodableMap>(value)) {
+      Fail();
+    }
+    return std::get<EncodableMap>(value);
+  }
+
+ private:
+  [[noreturn]] static void Fail() {
+    throw std::runtime_error("Invalid ID-token claims");
+  }
+
+  void SkipWhitespace() {
+    while (position_ < json_.size() &&
+           (json_[position_] == ' ' || json_[position_] == '\t' ||
+            json_[position_] == '\r' || json_[position_] == '\n')) {
+      ++position_;
+    }
+  }
+
+  char Take() {
+    if (position_ == json_.size()) Fail();
+    return json_[position_++];
+  }
+
+  bool Consume(char expected) {
+    SkipWhitespace();
+    if (position_ == json_.size() || json_[position_] != expected) return false;
+    ++position_;
+    return true;
+  }
+
+  uint32_t Hex4() {
+    uint32_t value = 0;
+    for (int i = 0; i < 4; ++i) {
+      char c = Take();
+      int digit = c >= '0' && c <= '9'   ? c - '0'
+                  : c >= 'a' && c <= 'f' ? c - 'a' + 10
+                  : c >= 'A' && c <= 'F' ? c - 'A' + 10
+                                         : -1;
+      if (digit < 0) Fail();
+      value = (value << 4) | static_cast<uint32_t>(digit);
+    }
+    return value;
+  }
+
+  std::string ParseString() {
+    if (Take() != '"') Fail();
+    std::string value;
+    while (true) {
+      unsigned char c = static_cast<unsigned char>(Take());
+      if (c == '"') return value;
+      if (c < 0x20) Fail();
+      if (c >= 0x80) {
+        int count = c >= 0xc2 && c <= 0xdf   ? 1
+                    : c >= 0xe0 && c <= 0xef ? 2
+                    : c >= 0xf0 && c <= 0xf4 ? 3
+                                             : -1;
+        if (count < 0) Fail();
+        uint32_t point = c & (0x7fu >> (count + 1));
+        value.push_back(static_cast<char>(c));
+        for (int i = 0; i < count; ++i) {
+          unsigned char next = static_cast<unsigned char>(Take());
+          if ((next & 0xc0) != 0x80) Fail();
+          point = (point << 6) | (next & 0x3fu);
+          value.push_back(static_cast<char>(next));
+        }
+        if ((count == 2 && point < 0x800u) ||
+            (count == 3 && point < 0x10000u) || point > 0x10ffffu ||
+            (point >= 0xd800u && point <= 0xdfffu))
+          Fail();
+      } else if (c != '\\') {
+        value.push_back(static_cast<char>(c));
+      } else {
+        char escape = Take();
+        switch (escape) {
+          case '"':
+          case '\\':
+          case '/':
+            value.push_back(escape);
+            break;
+          case 'b':
+            value.push_back('\b');
+            break;
+          case 'f':
+            value.push_back('\f');
+            break;
+          case 'n':
+            value.push_back('\n');
+            break;
+          case 'r':
+            value.push_back('\r');
+            break;
+          case 't':
+            value.push_back('\t');
+            break;
+          case 'u': {
+            uint32_t point = Hex4();
+            if (point >= 0xd800u && point <= 0xdbffu) {
+              if (Take() != '\\' || Take() != 'u') Fail();
+              uint32_t low = Hex4();
+              if (low < 0xdc00u || low > 0xdfffu) Fail();
+              point = 0x10000u + ((point - 0xd800u) << 10) + low - 0xdc00u;
+            } else if (point >= 0xdc00u && point <= 0xdfffu) {
+              Fail();
+            }
+            if (point < 0x80u) {
+              value.push_back(static_cast<char>(point));
+            } else {
+              int count = point < 0x800u ? 1 : point < 0x10000u ? 2 : 3;
+              value.push_back(static_cast<char>((count == 1   ? 0xc0u
+                                                 : count == 2 ? 0xe0u
+                                                              : 0xf0u) |
+                                                (point >> (6 * count))));
+              for (int i = count - 1; i >= 0; --i) {
+                value.push_back(
+                    static_cast<char>(0x80u | ((point >> (6 * i)) & 0x3fu)));
+              }
+            }
+            break;
+          }
+          default:
+            Fail();
+        }
+      }
+    }
+  }
+
+  EncodableValue ParseValue(int depth) {
+    // Limit nesting in malformed tokens.
+    if (depth > 64) Fail();
+    SkipWhitespace();
+    if (position_ == json_.size()) Fail();
+    char c = json_[position_];
+    if (c == '"') return EncodableValue(ParseString());
+    if (Consume('{')) {
+      EncodableMap map;
+      if (Consume('}')) return EncodableValue(map);
+      do {
+        SkipWhitespace();
+        std::string key = ParseString();
+        if (!Consume(':')) Fail();
+        map[EncodableValue(key)] = ParseValue(depth + 1);
+      } while (Consume(','));
+      if (!Consume('}')) Fail();
+      return EncodableValue(map);
+    }
+    if (Consume('[')) {
+      flutter::EncodableList list;
+      if (Consume(']')) return EncodableValue(list);
+      do {
+        list.push_back(ParseValue(depth + 1));
+      } while (Consume(','));
+      if (!Consume(']')) Fail();
+      return EncodableValue(list);
+    }
+    for (const auto& literal : {"true", "false", "null"}) {
+      std::string_view word(literal);
+      if (json_.substr(position_, word.size()) == word) {
+        position_ += word.size();
+        return word == "null" ? EncodableValue()
+                              : EncodableValue(word == "true");
+      }
+    }
+    size_t start = position_;
+    if (c == '-') ++position_;
+    auto digits = [this]() {
+      size_t digit_start = position_;
+      while (position_ < json_.size() && json_[position_] >= '0' &&
+             json_[position_] <= '9')
+        ++position_;
+      if (digit_start == position_) Fail();
+    };
+    if (position_ < json_.size() && json_[position_] == '0') {
+      ++position_;
+    } else {
+      digits();
+    }
+    bool integer = true;
+    if (position_ < json_.size() && json_[position_] == '.') {
+      integer = false;
+      ++position_;
+      digits();
+    }
+    if (position_ < json_.size() &&
+        (json_[position_] == 'e' || json_[position_] == 'E')) {
+      integer = false;
+      ++position_;
+      if (position_ < json_.size() &&
+          (json_[position_] == '+' || json_[position_] == '-'))
+        ++position_;
+      digits();
+    }
+    std::string_view number = json_.substr(start, position_ - start);
+    int64_t int_value;
+    if (integer &&
+        std::from_chars(number.data(), number.data() + number.size(), int_value)
+                .ec == std::errc()) {
+      return EncodableValue(int_value);
+    }
+    std::istringstream stream{std::string(number)};
+    stream.imbue(std::locale::classic());
+    double double_value;
+    if (!(stream >> double_value) || !std::isfinite(double_value)) Fail();
+    return EncodableValue(double_value);
+  }
+
+  std::string_view json_;
+  size_t position_ = 0;
+};
+
+std::optional<EncodableMap> DecodeIdTokenClaims(std::string_view token) {
+  const auto first = token.find('.');
+  if (first == std::string_view::npos || first == 0) return std::nullopt;
+  const auto last = token.find('.', first + 1);
+  if (last == std::string_view::npos ||
+      token.find('.', last + 1) != std::string_view::npos) {
+    return std::nullopt;
+  }
+  std::string payload(token.substr(first + 1, last - first - 1));
+  if (payload.empty() || payload.size() % 4 == 1 ||
+      payload.find_first_not_of(
+          "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_") !=
+          std::string::npos) {
+    return std::nullopt;
+  }
+  for (auto& c : payload) {
+    if (c == '-') c = '+';
+    if (c == '_') c = '/';
+  }
+  payload.append((4 - payload.size() % 4) % 4, '=');
+  if (payload.size() > MAXDWORD) return std::nullopt;
+  const auto length = static_cast<DWORD>(payload.size());
+  DWORD decoded_length = 0;
+  if (!CryptStringToBinaryA(payload.data(), length, CRYPT_STRING_BASE64,
+                            nullptr, &decoded_length, nullptr, nullptr)) {
+    return std::nullopt;
+  }
+  std::string json(decoded_length, '\0');
+  if (!CryptStringToBinaryA(payload.data(), length, CRYPT_STRING_BASE64,
+                            reinterpret_cast<BYTE*>(json.data()),
+                            &decoded_length, nullptr, nullptr)) {
+    return std::nullopt;
+  }
+  json.resize(decoded_length);
+  return IdTokenClaimsParser(json).Parse();
+}
+
+}  // namespace
+
+InternalIdTokenResult FirebaseAuthPlugin::ParseIdTokenResult(
+    const std::string& token) {
+  InternalIdTokenResult result;
+  result.set_token(token);
+  try {
+    const auto claims = DecodeIdTokenClaims(token);
+    if (!claims) return result;
+    result.set_claims(*claims);
+    const auto timestamp =
+        [&claims](const char* key) -> std::optional<int64_t> {
+      const auto it = claims->find(EncodableValue(key));
+      if (it == claims->end()) return std::nullopt;
+      const auto value = std::get_if<int64_t>(&it->second);
+      if (!value || *value > (std::numeric_limits<int64_t>::max)() / 1000 ||
+          *value < (std::numeric_limits<int64_t>::min)() / 1000) {
+        return std::nullopt;
+      }
+      return *value * 1000;
+    };
+    if (const auto value = timestamp("auth_time"))
+      result.set_auth_timestamp(*value);
+    if (const auto value = timestamp("iat"))
+      result.set_issued_at_timestamp(*value);
+    if (const auto value = timestamp("exp"))
+      result.set_expiration_timestamp(*value);
+    const auto firebase = claims->find(EncodableValue("firebase"));
+    if (firebase != claims->end()) {
+      const auto metadata = std::get_if<EncodableMap>(&firebase->second);
+      if (metadata) {
+        const auto provider =
+            metadata->find(EncodableValue("sign_in_provider"));
+        if (provider != metadata->end()) {
+          if (const auto value = std::get_if<std::string>(&provider->second)) {
+            result.set_sign_in_provider(*value);
+          }
+        }
+        const auto factor =
+            metadata->find(EncodableValue("sign_in_second_factor"));
+        if (factor != metadata->end()) {
+          if (const auto value = std::get_if<std::string>(&factor->second)) {
+            result.set_sign_in_second_factor(*value);
+          }
+        }
+      }
+    }
+  } catch (const std::exception&) {
+    // Decoding optional claims must not prevent returning the token.
+  }
+  return result;
+}
+
 void FirebaseAuthPlugin::GetIdToken(
     const AuthPigeonFirebaseApp& app, bool force_refresh,
     std::function<void(ErrorOr<InternalIdTokenResult> reply)> result) {
@@ -978,10 +1294,7 @@ void FirebaseAuthPlugin::GetIdToken(
       [result](const firebase::Future<std::string>& completed_future) {
         // We are probably in a different thread right now.
         if (completed_future.error() == 0) {
-          InternalIdTokenResult token_result;
-          std::string_view sv(*completed_future.result());
-          token_result.set_token(sv);
-          result(token_result);
+          result(ParseIdTokenResult(*completed_future.result()));
         } else {
           result(FirebaseAuthPlugin::ParseError(completed_future));
         }
