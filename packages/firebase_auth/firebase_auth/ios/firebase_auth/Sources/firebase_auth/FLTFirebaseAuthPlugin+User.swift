@@ -148,7 +148,8 @@ extension FLTFirebaseAuthPlugin: FirebaseAuthUserHostApi {
     }
     if signInProvider.providerId == kSignInMethodApple {
       launchAppleSignInRequest(
-        app: app, signInProvider: signInProvider, mode: .reauthenticate, completion: completion)
+        app: app, signInProvider: signInProvider, mode: .reauthenticate(currentUser),
+        completion: completion)
       return
     }
     #if os(macOS)
