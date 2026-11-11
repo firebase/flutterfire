@@ -30,6 +30,8 @@ class MethodChannelFirebaseApp extends FirebaseAppPlatform {
 
   final _api = FirebaseAppHostApi();
 
+  final _tokenApi = FirebaseTokenHostApi();
+
   /// Returns whether automatic data collection enabled or disabled.
   @override
   bool get isAutomaticDataCollectionEnabled {
@@ -68,5 +70,43 @@ class MethodChannelFirebaseApp extends FirebaseAppPlatform {
   @override
   Future<void> setAutomaticResourceManagementEnabled(bool enabled) async {
     await _api.setAutomaticResourceManagementEnabled(name, enabled);
+  }
+
+  @override
+  Future<String?> getAuthIdToken() {
+    return _guardTokenCall(() => _tokenApi.getAuthIdToken(name));
+  }
+
+  @override
+  Future<AppCheckInteropToken?> getAppCheckToken({
+    bool limitedUse = false,
+  }) async {
+    final result = await _guardTokenCall(
+      () => _tokenApi.getAppCheckToken(name, limitedUse),
+    );
+    if (result == null) {
+      return null;
+    }
+    return AppCheckInteropToken(token: result.token, error: result.error);
+  }
+
+  @override
+  Future<String?> getMessagingToken() {
+    return _guardTokenCall(() => _tokenApi.getMessagingToken(name));
+  }
+
+  /// Surfaces a failure reported by the native plugin as a [FirebaseException]
+  /// for plugin `core`, keeping the code and message native chose.
+  Future<T> _guardTokenCall<T>(Future<T> Function() call) async {
+    try {
+      return await call();
+    } on PlatformException catch (exception, stackTrace) {
+      throw FirebaseException(
+        plugin: 'core',
+        code: exception.code,
+        message: exception.message,
+        stackTrace: stackTrace,
+      );
+    }
   }
 }

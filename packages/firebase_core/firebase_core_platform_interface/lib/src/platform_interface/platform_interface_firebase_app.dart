@@ -57,6 +57,48 @@ class FirebaseAppPlatform extends PlatformInterface {
     );
   }
 
+  /// The signed-in user's ID token, or `null` when the Auth SDK isn't linked
+  /// into the app or nobody is signed in.
+  ///
+  /// Throws a [FirebaseException] for plugin `core` when the Auth SDK fails to
+  /// produce a token; its message is the SDK's and its code is
+  /// `auth-token-failed`.
+  ///
+  /// For Firebase packages that attach the token to their own requests, as the
+  /// native Functions SDK does; not for app code.
+  Future<String?> getAuthIdToken() async {
+    throw UnimplementedError('getAuthIdToken() has not been implemented.');
+  }
+
+  /// The App Check SDK's answer, or `null` when it isn't linked into the app.
+  ///
+  /// Asking before App Check is activated returns the SDK's placeholder token
+  /// with [AppCheckInteropToken.error] set, as the native SDKs report it.
+  /// With [limitedUse], the SDK issues a limited-use token instead of a cached
+  /// one.
+  ///
+  /// For Firebase packages that attach the token to their own requests, as the
+  /// native Functions SDK does; not for app code.
+  Future<AppCheckInteropToken?> getAppCheckToken({
+    bool limitedUse = false,
+  }) async {
+    throw UnimplementedError('getAppCheckToken() has not been implemented.');
+  }
+
+  /// The FCM registration token, or `null` when Messaging isn't linked into
+  /// the app or has no token.
+  ///
+  /// Never prompts the user and, on Apple and web, never generates a token.
+  /// Messaging only serves the default app, so other apps get `null`.
+  /// On Android, where fetching may hit the network, a failure throws a
+  /// [FirebaseException] for plugin `core` with code `messaging-token-failed`.
+  ///
+  /// For Firebase packages that attach the token to their own requests, as the
+  /// native Functions SDK does; not for app code.
+  Future<String?> getMessagingToken() async {
+    throw UnimplementedError('getMessagingToken() has not been implemented.');
+  }
+
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object other) {
