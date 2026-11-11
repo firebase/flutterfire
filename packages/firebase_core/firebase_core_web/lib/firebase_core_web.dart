@@ -15,6 +15,7 @@ import 'package:meta/meta.dart';
 import 'package:web/web.dart' as web;
 
 import 'src/interop/core.dart' as firebase;
+import 'src/interop_token_provider.dart';
 
 part 'src/firebase_app_web.dart';
 part 'src/firebase_core_web.dart';
