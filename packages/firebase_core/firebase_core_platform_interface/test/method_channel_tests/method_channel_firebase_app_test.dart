@@ -4,6 +4,7 @@
 
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:firebase_core_platform_interface/test.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -118,6 +119,28 @@ void main() {
 
       test('returns null when Messaging has nothing to give', () async {
         expect(await app.getMessagingToken(), isNull);
+      });
+    });
+
+    group('on Windows', () {
+      setUp(() {
+        debugDefaultTargetPlatformOverride = TargetPlatform.windows;
+      });
+
+      tearDown(() {
+        debugDefaultTargetPlatformOverride = null;
+      });
+
+      test('every call is null and native is never asked', () async {
+        native
+          ..authIdToken = 'id-token'
+          ..appCheckToken = CoreAppCheckInteropToken(token: 'app-check-token')
+          ..messagingToken = 'fcm-token';
+
+        expect(await app.getAuthIdToken(), isNull);
+        expect(await app.getAppCheckToken(), isNull);
+        expect(await app.getMessagingToken(), isNull);
+        expect(native.calls, isEmpty);
       });
     });
   });

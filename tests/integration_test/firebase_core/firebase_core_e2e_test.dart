@@ -176,7 +176,8 @@ void main() {
           skip: !kIsWeb,
         );
       },
-      // No implementation on Windows yet.
+      // Windows has no token lookup yet: every call answers null there, so the
+      // signed-in check can't hold.
       skip: !kIsWeb && defaultTargetPlatform == TargetPlatform.windows,
     );
   });
