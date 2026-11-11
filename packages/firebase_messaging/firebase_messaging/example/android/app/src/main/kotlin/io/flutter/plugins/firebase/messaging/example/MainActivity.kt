@@ -284,7 +284,6 @@ class MainActivity : FlutterActivity() {
   private fun callbackPreferences() =
       getSharedPreferences(CALLBACK_PREFERENCES, Context.MODE_PRIVATE)
 
-  /// Explicit false in the application meta-data. Absent and true stay enabled.
   private fun backgroundHandlerDisabled(): Boolean {
     val info = packageManager.getApplicationInfo(packageName, PackageManager.GET_META_DATA)
     val raw = info.metaData?.get(BACKGROUND_HANDLER_METADATA_KEY) ?: return false

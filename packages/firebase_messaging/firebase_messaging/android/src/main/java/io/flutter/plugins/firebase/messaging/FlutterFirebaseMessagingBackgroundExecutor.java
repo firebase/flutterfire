@@ -283,7 +283,6 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
     return readPluginCallbackHandle(ContextHolder.getApplicationContext());
   }
 
-  /** Returns the stored plugin callback handle, or 0 when {@code context} is null or unset. */
   static long readPluginCallbackHandle(Context context) {
     if (context == null) {
       return 0L;

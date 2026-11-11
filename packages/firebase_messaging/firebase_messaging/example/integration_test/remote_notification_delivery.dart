@@ -39,8 +39,6 @@ Future<Map<String, Object?>> deliverRemoteNotification(
   return delivery!;
 }
 
-/// Whether the installed app left the background handler enabled. Absent and
-/// `true` both count as enabled.
 Future<bool> androidBackgroundHandlerEnabled() async {
   final enabled = await _remoteNotificationsChannel.invokeMethod<bool>(
     'backgroundHandlerEnabled',
