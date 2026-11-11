@@ -149,19 +149,10 @@ void main() {
       fakeWs.emit('{"setupComplete": {}}');
 
       await completer.future.timeout(const Duration(seconds: 5));
-      expect(
-        messages[0],
-        isNot(
-          anyOf(
-            isA<LiveServerContent>(),
-            isA<LiveServerToolCall>(),
-            isA<LiveServerToolCallCancellation>(),
-            isA<LiveServerSetupComplete>(),
-            isA<GoingAwayNotice>(),
-            isA<SessionResumptionUpdate>(),
-          ),
-        ),
-      );
+      expect(messages[0], isA<LiveServerVoiceActivity>());
+      final voiceActivity = messages[0] as LiveServerVoiceActivity;
+      expect(voiceActivity.type, VoiceActivityType.activityStart);
+      expect(voiceActivity.audioOffset, const Duration(microseconds: 2520000));
       expect(messages[1], isA<LiveServerSetupComplete>());
       expect(errors, isEmpty);
       expect(done, isFalse);
@@ -174,14 +165,15 @@ void main() {
       final fakeWs = FakeWebSocketChannel();
       final session = LiveSession.forTesting(fakeWs);
 
+      final messages = <LiveServerMessage>[];
       final errors = <Object>[];
       var done = false;
-      final completer = Completer<LiveServerMessage>();
+      final completer = Completer<void>();
       final subscription = session.receive().listen(
         (response) {
-          if (response.message is LiveServerSetupComplete &&
-              !completer.isCompleted) {
-            completer.complete(response.message);
+          messages.add(response.message);
+          if (messages.length == 2 && !completer.isCompleted) {
+            completer.complete();
           }
         },
         onError: (Object error) {
@@ -201,10 +193,22 @@ void main() {
       fakeWs.emit('{"unknown": {}}');
       fakeWs.emit('{"setupComplete": {}}');
 
-      final message = await completer.future.timeout(
-        const Duration(seconds: 5),
+      await completer.future.timeout(const Duration(seconds: 5));
+      expect(
+        messages[0],
+        isNot(
+          anyOf(
+            isA<LiveServerContent>(),
+            isA<LiveServerToolCall>(),
+            isA<LiveServerToolCallCancellation>(),
+            isA<LiveServerSetupComplete>(),
+            isA<GoingAwayNotice>(),
+            isA<SessionResumptionUpdate>(),
+            isA<LiveServerVoiceActivity>(),
+          ),
+        ),
       );
-      expect(message, isA<LiveServerSetupComplete>());
+      expect(messages[1], isA<LiveServerSetupComplete>());
       expect(errors, isEmpty);
       expect(done, isFalse);
 
