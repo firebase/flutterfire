@@ -39,6 +39,37 @@ Future<Map<String, Object?>> deliverRemoteNotification(
   return delivery!;
 }
 
+/// Whether the installed app left the background handler enabled. Absent and
+/// `true` both count as enabled.
+Future<bool> androidBackgroundHandlerEnabled() async {
+  final enabled = await _remoteNotificationsChannel.invokeMethod<bool>(
+    'backgroundHandlerEnabled',
+  );
+  return enabled ?? true;
+}
+
+/// Delivers one data message after the app has left the foreground, the way a
+/// push does when nobody is using the app. Returns whether that happened in
+/// the background, whether the receiver ran, and whether the background
+/// service or its job started.
+///
+/// Pass [pluginHandle] and [userHandle] to store a handler first. Omit both
+/// and any stored handler is cleared before the push.
+Future<Map<String, Object?>> probeBackgroundDelivery(
+  String messageId, {
+  int? pluginHandle,
+  int? userHandle,
+}) async {
+  final probe = await _remoteNotificationsChannel
+      .invokeMapMethod<String, Object?>('probeBackgroundDelivery', {
+        'messageId': messageId,
+        if (pluginHandle != null) 'pluginHandle': pluginHandle,
+        if (userHandle != null) 'userHandle': userHandle,
+      })
+      .timeout(const Duration(seconds: 20));
+  return probe!;
+}
+
 /// Hands data messages to the plugin's broadcast receiver back to back, like
 /// Google Play services does when several pushes arrive at once. Fails if the
 /// app did not count as in the foreground, where messages go to `onMessage`.

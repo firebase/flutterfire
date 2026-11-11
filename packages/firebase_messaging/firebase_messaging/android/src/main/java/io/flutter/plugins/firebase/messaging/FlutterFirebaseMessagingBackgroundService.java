@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.util.Log;
 import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -81,13 +82,22 @@ public class FlutterFirebaseMessagingBackgroundService extends JobIntentService 
     BackgroundHandlerStartDecision.Action action =
         FlutterFirebaseMessagingBackgroundGate.decide(this);
     if (action == BackgroundHandlerStartDecision.Action.SKIP_AND_CLEAR) {
-      // onCreate runs on the main thread, so the preference write happens off it.
       FlutterFirebaseMessagingBackgroundGate.clearHandlesAsync(this);
     }
     if (action != BackgroundHandlerStartDecision.Action.START) {
       return;
     }
     flutterBackgroundExecutor.startBackgroundIsolate();
+  }
+
+  @VisibleForTesting
+  static boolean isolateStartRequested() {
+    return flutterBackgroundExecutor != null && flutterBackgroundExecutor.isolateStartRequested();
+  }
+
+  @VisibleForTesting
+  static void resetExecutorForTests() {
+    flutterBackgroundExecutor = null;
   }
 
   /**

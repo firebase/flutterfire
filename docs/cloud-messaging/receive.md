@@ -203,7 +203,9 @@ To stop that on the next push, add this inside `<application>` in
 
 Leave the entry out, or set it to `true`, and a stored handler still runs. `false` takes
 effect for a process started by a push, and it wins over a stored handler until the entry
-is removed.
+is removed. That push also deletes the stored registration, so taking the entry out later
+does not bring the old handler back. The app has to open and call `onBackgroundMessage`
+again. Set `android:value`. An `android:resource` value is ignored.
 
 #### Web {:#web}
  {:#web}

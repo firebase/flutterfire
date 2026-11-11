@@ -42,6 +42,7 @@ public class FlutterFirebaseMessagingBackgroundGateTest {
     preferences().edit().clear().commit();
     FlutterFirebaseMessagingReceiver.notifications.clear();
     JobIntentService.sClassWorkEnqueuer.clear();
+    FlutterFirebaseMessagingBackgroundService.resetExecutorForTests();
   }
 
   @After
@@ -92,6 +93,18 @@ public class FlutterFirebaseMessagingBackgroundGateTest {
   }
 
   @Test
+  public void manifestFalseUnregistersTheHandlerWhileTheHandleIsStillStored() {
+    writeHandles(42L, 99L);
+    setManifestValue(Boolean.FALSE);
+
+    assertFalse(
+        new FlutterFirebaseMessagingBackgroundExecutor().isDartBackgroundHandlerRegistered());
+    assertEquals(42L, readHandle(FlutterFirebaseMessagingBackgroundExecutor.CALLBACK_HANDLE_KEY));
+    assertEquals(
+        99L, readHandle(FlutterFirebaseMessagingBackgroundExecutor.USER_CALLBACK_HANDLE_KEY));
+  }
+
+  @Test
   public void manifestStringFalseSkipsAStoredHandler() throws Exception {
     lockKeyguard();
     writeHandles(42L, 99L);
@@ -120,6 +133,9 @@ public class FlutterFirebaseMessagingBackgroundGateTest {
     setManifestValue(Boolean.FALSE);
 
     Robolectric.buildService(FlutterFirebaseMessagingBackgroundService.class).create();
+    assertFalse(FlutterFirebaseMessagingBackgroundService.isolateStartRequested());
+    assertFalse(
+        new FlutterFirebaseMessagingBackgroundExecutor().isDartBackgroundHandlerRegistered());
     Shadows.shadowOf(Looper.getMainLooper()).idle();
     FlutterFirebaseMessagingBackgroundGate.awaitClearForTests();
 

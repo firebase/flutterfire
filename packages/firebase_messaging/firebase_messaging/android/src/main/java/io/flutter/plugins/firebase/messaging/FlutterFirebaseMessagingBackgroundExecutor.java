@@ -13,6 +13,7 @@ import android.os.Looper;
 import android.os.Parcel;
 import android.util.Log;
 import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
 import com.google.firebase.messaging.RemoteMessage;
 import io.flutter.FlutterInjector;
 import io.flutter.embedding.engine.FlutterEngine;
@@ -76,6 +77,11 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
    */
   public boolean isNotRunning() {
     return !isCallbackDispatcherReady.get();
+  }
+
+  @VisibleForTesting
+  boolean isolateStartRequested() {
+    return isBackgroundIsolateStarted.get();
   }
 
   private void onInitialized() {
