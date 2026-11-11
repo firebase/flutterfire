@@ -298,6 +298,9 @@ class FlutterFirebaseCorePlugin :
         val cause = e.cause ?: e
         taskCompletionSource.setException(
             FlutterError(failureCode, cause.message ?: cause.toString(), null))
+      } catch (e: IllegalStateException) {
+        // FirebaseApp.getInstance / FirebaseApp.get: no app with that name, or a deleted one.
+        taskCompletionSource.setException(FlutterError("no-app", e.message, null))
       } catch (e: Exception) {
         taskCompletionSource.setException(e)
       }

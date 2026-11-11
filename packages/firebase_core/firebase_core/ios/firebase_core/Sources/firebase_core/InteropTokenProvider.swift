@@ -60,8 +60,13 @@ final class InteropTokenProvider {
   ) {
     let appCheck = getComponent(appCheckInteropProtocolName)
     let handleResult: (AnyObject) -> Void = { result in
+      // A result without `token` means the SDK changed shape; that's a failure, not "not linked".
       guard let token = result.interopToken else {
-        completion(.success(nil))
+        completion(
+          .failure(
+            NSError(
+              domain: "FlutterFirebaseCore", code: 0,
+              userInfo: [NSLocalizedDescriptionKey: "App Check result has no token"])))
         return
       }
       let error: NSError? = result.interopError ?? nil
