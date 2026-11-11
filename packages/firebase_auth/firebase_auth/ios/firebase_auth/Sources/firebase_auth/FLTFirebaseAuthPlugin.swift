@@ -512,11 +512,14 @@ public class FLTFirebaseAuthPlugin: NSObject, FlutterPlugin, FLTFirebasePluginPr
 
     let reauthenticating = isReauthenticatingWithApple
     let userToLink = linkWithAppleUser
-    let signInAuth = signInWithAppleAuth ?? Auth.auth()
+    let capturedSignInAuth = signInWithAppleAuth
     resetAppleSignInMode()
 
     if reauthenticating {
-      guard let currentUser = Auth.auth().currentUser else {
+      guard let appleArguments,
+        FLTFirebasePlugin.firebaseAppNamed(appleArguments.appName) != nil,
+        let currentUser = getFIRAuthFromPigeon(appleArguments).currentUser
+      else {
         finishAppleSignInRequest(AuthErrors.noCurrentUser())
         return
       }
@@ -530,6 +533,7 @@ public class FLTFirebaseAuthPlugin: NSObject, FlutterPlugin, FLTFirebasePluginPr
           authResult: authResult, authorizationCode: authorizationCode, error: error)
       }
     } else {
+      let signInAuth = capturedSignInAuth ?? Auth.auth()
       signInAuth.signIn(with: credential) { authResult, error in
         self.handleSignInWithApple(
           authResult: authResult, authorizationCode: authorizationCode, error: error)
