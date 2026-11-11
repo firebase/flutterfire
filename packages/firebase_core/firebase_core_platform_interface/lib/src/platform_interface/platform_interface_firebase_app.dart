@@ -73,9 +73,13 @@ class FirebaseAppPlatform extends PlatformInterface {
   /// The App Check SDK's answer, or `null` when it isn't linked into the app.
   ///
   /// Asking before App Check is activated returns the SDK's placeholder token
-  /// with [AppCheckInteropToken.error] set, as the native SDKs report it.
+  /// with [AppCheckInteropToken.error] set on Android and Apple. On web, App
+  /// Check has no token service until it's activated, so the answer is `null`
+  /// until then.
   /// With [limitedUse], the SDK issues a limited-use token instead of a cached
-  /// one.
+  /// one. If the SDK's call fails instead of answering, as a web limited-use
+  /// request can, throws a [FirebaseException] for plugin `core` with code
+  /// `app-check-token-failed`.
   ///
   /// For Firebase packages that attach the token to their own requests, as the
   /// native Functions SDK does; not for app code.
@@ -88,10 +92,14 @@ class FirebaseAppPlatform extends PlatformInterface {
   /// The FCM registration token, or `null` when Messaging isn't linked into
   /// the app or has no token.
   ///
-  /// Never prompts the user and, on Apple and web, never generates a token.
-  /// Messaging only serves the default app, so other apps get `null`.
+  /// Never prompts the user. On Apple, returns only a token Messaging already
+  /// holds, and only for the default app. On web, asks Messaging only if the
+  /// user already allowed notifications; Messaging may then create a token,
+  /// as it does for the JS Functions SDK. On Android and web, other apps can
+  /// get a token too.
   /// On Android, where fetching may hit the network, a failure throws a
   /// [FirebaseException] for plugin `core` with code `messaging-token-failed`.
+  /// On web, a failure returns `null`, as the JS Functions SDK ignores it.
   ///
   /// For Firebase packages that attach the token to their own requests, as the
   /// native Functions SDK does; not for app code.
