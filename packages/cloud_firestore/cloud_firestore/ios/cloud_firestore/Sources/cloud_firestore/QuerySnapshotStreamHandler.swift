@@ -24,22 +24,22 @@ final class QuerySnapshotStreamHandler: NSObject, FlutterStreamHandler {
   private let serverTimestampBehavior: FirebaseFirestore.ServerTimestampBehavior
   private let source: FirebaseFirestore.ListenSource
   private var listenerRegistration: ListenerRegistration?
-  private let snapshotQueue = DispatchQueue(
-    label: "io.flutter.plugins.firebase.firestore.query_snapshot"
-  )
+  private let snapshotQueue: DispatchQueue
 
   init(
     firestore: Firestore,
     query: Query?,
     includeMetadataChanges: Bool,
     serverTimestampBehavior: FirebaseFirestore.ServerTimestampBehavior,
-    source: FirebaseFirestore.ListenSource
+    source: FirebaseFirestore.ListenSource,
+    snapshotQueue: DispatchQueue
   ) {
     self.firestore = firestore
     self.query = query
     self.includeMetadataChanges = includeMetadataChanges
     self.serverTimestampBehavior = serverTimestampBehavior
     self.source = source
+    self.snapshotQueue = snapshotQueue
   }
 
   func onListen(withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink)

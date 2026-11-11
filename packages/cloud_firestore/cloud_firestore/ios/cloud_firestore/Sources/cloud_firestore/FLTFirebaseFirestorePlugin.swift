@@ -35,6 +35,8 @@ public class FLTFirebaseFirestorePlugin: NSObject, FlutterPlugin, FLTFirebasePlu
   private var transactionHandlers: [String: TransactionStreamHandler] = [:]
   private let transactionLock = NSLock()
   private let listenersLock = NSLock()
+  private var snapshotDeliveryQueues: [String: DispatchQueue] = [:]
+  private let snapshotDeliveryQueuesLock = NSLock()
 
   static let serverTimestampMap = NSCache<NSNumber, NSString>()
 
@@ -151,6 +153,20 @@ public class FLTFirebaseFirestorePlugin: NSObject, FlutterPlugin, FLTFirebasePlu
     streamHandlers[identifier] = wrapped
     listenersLock.unlock()
     return identifier
+  }
+
+  private func snapshotDeliveryQueue(appName: String, databaseURL: String) -> DispatchQueue {
+    let key = "\(appName)|\(databaseURL)"
+    snapshotDeliveryQueuesLock.lock()
+    defer { snapshotDeliveryQueuesLock.unlock() }
+    if let queue = snapshotDeliveryQueues[key] {
+      return queue
+    }
+    let queue = DispatchQueue(
+      label: "io.flutter.plugins.firebase.firestore.snapshot_delivery.\(key)"
+    )
+    snapshotDeliveryQueues[key] = queue
+    return queue
   }
 
   private func firestore(from pigeonApp: FirestorePigeonFirebaseApp) -> Firestore {
@@ -353,7 +369,10 @@ public class FLTFirebaseFirestorePlugin: NSObject, FlutterPlugin, FLTFirebasePlu
     let firestore = firestore(from: app)
     let identifier = registerEventChannel(
       prefix: kFLTFirebaseFirestoreSnapshotsInSyncEventChannelName,
-      streamHandler: SnapshotsInSyncStreamHandler(firestore: firestore)
+      streamHandler: SnapshotsInSyncStreamHandler(
+        firestore: firestore,
+        snapshotQueue: snapshotDeliveryQueue(appName: app.appName, databaseURL: app.databaseURL)
+      )
     )
     completion(.success(identifier))
   }
@@ -732,7 +751,8 @@ public class FLTFirebaseFirestorePlugin: NSObject, FlutterPlugin, FLTFirebasePlu
         serverTimestampBehavior: PigeonParser.parseServerTimestampBehavior(
           options.serverTimestampBehavior
         ),
-        source: PigeonParser.parseListenSource(source)
+        source: PigeonParser.parseListenSource(source),
+        snapshotQueue: snapshotDeliveryQueue(appName: app.appName, databaseURL: app.databaseURL)
       )
     )
     completion(.success(identifier))

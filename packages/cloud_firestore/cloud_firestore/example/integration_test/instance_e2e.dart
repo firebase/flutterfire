@@ -62,6 +62,109 @@ void runInstanceTests() {
       await snapshots.cancel();
     }, skip: kIsWeb);
 
+    test(
+      'snapshotsInSync() follows a remote query snapshot',
+      () async {
+        final writerApp = await Firebase.initializeApp(
+          name: 'insync-writer-${DateTime.now().microsecondsSinceEpoch}',
+          options: Firebase.app().options,
+        );
+        final writer = FirebaseFirestore.instanceFor(app: writerApp);
+        writer.settings = const Settings(persistenceEnabled: false);
+        writer.useFirestoreEmulator('localhost', 8080);
+
+        final collection = firestore
+            .collection('flutter-tests')
+            .doc('insync-${DateTime.now().microsecondsSinceEpoch}')
+            .collection('items');
+        const docId = 'shared';
+        final events = <String>[];
+
+        final querySub = collection.snapshots().listen((snapshot) {
+          String? value;
+          for (final document in snapshot.docs) {
+            if (document.id == docId) {
+              value = '${document.data()['n']}';
+            }
+          }
+          events.add('query:$value:${snapshot.metadata.hasPendingWrites}');
+        });
+        final syncSub = firestore.snapshotsInSync().listen((_) {
+          events.add('sync');
+        });
+
+        Future<void> waitUntil(bool Function() ready) async {
+          final deadline = DateTime.now().add(const Duration(seconds: 5));
+          while (!ready()) {
+            expect(
+              DateTime.now().isBefore(deadline),
+              isTrue,
+              reason: '$events',
+            );
+            await Future<void>.delayed(const Duration(milliseconds: 20));
+          }
+        }
+
+        Future<void> settle() async {
+          final deadline = DateTime.now().add(const Duration(seconds: 2));
+          var count = events.length;
+          while (DateTime.now().isBefore(deadline)) {
+            await Future<void>.delayed(const Duration(milliseconds: 80));
+            if (events.length == count) {
+              return;
+            }
+            count = events.length;
+          }
+        }
+
+        await waitUntil(
+          () =>
+              events.contains('sync') &&
+              events.any((event) => event.startsWith('query:')),
+        );
+        await settle();
+        events.clear();
+
+        for (var i = 1; i <= 24; i++) {
+          final marker = events.length;
+          await writer.collection(collection.path).doc(docId).set({'n': i});
+          await waitUntil(
+            () => events.sublist(marker).contains('query:$i:false'),
+          );
+          await waitUntil(() => events.sublist(marker).contains('sync'));
+          final slice = events.sublist(marker);
+          final queryAt = slice.indexOf('query:$i:false');
+          final syncAt = slice.indexOf('sync');
+          expect(queryAt, lessThan(syncAt), reason: 'write $i: $slice');
+          await settle();
+        }
+
+        await querySub.cancel();
+        await syncSub.cancel();
+        await writerApp.delete();
+
+        // This database is not cached, so the lookup has to walk every
+        // entry, including the deleted writer's.
+        final uncached = FirebaseFirestore.instanceFor(
+          app: Firebase.app(),
+          databaseId: 'insync-after-delete',
+        );
+        uncached.settings = const Settings(persistenceEnabled: false);
+        uncached.useFirestoreEmulator('localhost', 8080);
+        await uncached.doc('flutter-tests/insync-after-delete').set({
+          'ok': true,
+        });
+        await firestore.doc('flutter-tests/insync-after-delete').set({
+          'ok': true,
+        });
+      },
+      timeout: const Timeout(Duration(minutes: 2)),
+      skip:
+          defaultTargetPlatform != TargetPlatform.iOS &&
+          defaultTargetPlatform != TargetPlatform.macOS &&
+          defaultTargetPlatform != TargetPlatform.android,
+    );
+
     test('enableNetwork()', () async {
       // Write some data while online
       await firestore.enableNetwork();
