@@ -2,8 +2,13 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 @TestOn('chrome')
+import 'dart:js_interop';
+import 'dart:js_interop_unsafe';
+
 import 'package:firebase_app_check_platform_interface/firebase_app_check_platform_interface.dart';
 import 'package:firebase_app_check_web/firebase_app_check_web.dart';
+import 'package:firebase_app_check_web/src/interop/app_check.dart'
+    as app_check_interop;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
@@ -62,6 +67,68 @@ void main() {
       appCheck.onTokenChange;
       verify(appCheck.onTokenChange);
       verifyNoMoreInteractions(appCheck);
+    });
+  });
+
+  group('configureWebDebugTokenGlobal', () {
+    const propertyName = 'FIREBASE_APPCHECK_DEBUG_TOKEN';
+
+    tearDown(() {
+      globalContext.delete(propertyName.toJS);
+    });
+
+    test(
+      'preserves pre-set non-empty token string when debugToken is omitted',
+      () {
+        const cliToken = '11111111-2222-4333-8444-555555555555';
+        globalContext.setProperty(propertyName.toJS, cliToken.toJS);
+
+        app_check_interop.configureWebDebugTokenGlobal(null);
+        expect(
+          (globalContext.getProperty<JSAny?>(propertyName.toJS) as JSString?)
+              ?.toDart,
+          equals(cliToken),
+        );
+
+        app_check_interop.configureWebDebugTokenGlobal('');
+        expect(
+          (globalContext.getProperty<JSAny?>(propertyName.toJS) as JSString?)
+              ?.toDart,
+          equals(cliToken),
+        );
+      },
+    );
+
+    test('overrides existing global when explicit debugToken is non-empty', () {
+      const cliToken = '11111111-2222-4333-8444-555555555555';
+      const overrideToken = 'aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee';
+      globalContext.setProperty(propertyName.toJS, cliToken.toJS);
+
+      app_check_interop.configureWebDebugTokenGlobal(overrideToken);
+
+      expect(
+        (globalContext.getProperty<JSAny?>(propertyName.toJS) as JSString?)
+            ?.toDart,
+        equals(overrideToken),
+      );
+    });
+
+    test('sets global to true when unset or empty and debugToken is null', () {
+      globalContext.delete(propertyName.toJS);
+      app_check_interop.configureWebDebugTokenGlobal(null);
+      expect(
+        (globalContext.getProperty<JSAny?>(propertyName.toJS) as JSBoolean?)
+            ?.toDart,
+        isTrue,
+      );
+
+      globalContext.setProperty(propertyName.toJS, ''.toJS);
+      app_check_interop.configureWebDebugTokenGlobal(null);
+      expect(
+        (globalContext.getProperty<JSAny?>(propertyName.toJS) as JSBoolean?)
+            ?.toDart,
+        isTrue,
+      );
     });
   });
 }

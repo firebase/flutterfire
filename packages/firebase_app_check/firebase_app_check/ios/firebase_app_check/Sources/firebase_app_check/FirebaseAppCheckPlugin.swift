@@ -357,13 +357,24 @@ class AppCheckProviderWrapper: NSObject, AppCheckProvider {
   ) {
     switch providerName {
     case "debug":
-      if let debugToken {
-        setenv("FIRAAppCheckDebugToken", debugToken, 1)
+      let priorEnvToken = getenv("AppCheckDebugToken").map { String(cString: $0) }
+      if let debugToken, !debugToken.isEmpty {
+        setenv("AppCheckDebugToken", debugToken, 1)
       }
-      delegateProvider = AppCheckDebugProvider(app: app)
-      if debugToken == nil, let debugProvider = delegateProvider as? AppCheckDebugProvider {
-        print("Firebase App Check Debug Token: \(debugProvider.localDebugToken())")
+      defer {
+        if let priorEnvToken {
+          setenv("AppCheckDebugToken", priorEnvToken, 1)
+        } else {
+          unsetenv("AppCheckDebugToken")
+        }
       }
+      let debugProvider = AppCheckDebugProvider(app: app)
+      delegateProvider = debugProvider
+      #if DEBUG
+        if debugToken?.isEmpty ?? true, let debugProvider {
+          print("Firebase App Check Debug Token: \(debugProvider.currentDebugToken())")
+        }
+      #endif
     case "appAttest":
       if #available(iOS 14.0, macOS 14.0, macCatalyst 14.0, tvOS 15.0, watchOS 9.0, *) {
         delegateProvider = AppAttestProvider(app: app)
