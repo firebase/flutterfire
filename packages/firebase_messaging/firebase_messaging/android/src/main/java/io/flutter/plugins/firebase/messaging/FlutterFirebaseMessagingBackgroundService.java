@@ -78,6 +78,15 @@ public class FlutterFirebaseMessagingBackgroundService extends JobIntentService 
     if (flutterBackgroundExecutor == null) {
       flutterBackgroundExecutor = new FlutterFirebaseMessagingBackgroundExecutor();
     }
+    BackgroundHandlerStartDecision.Action action =
+        FlutterFirebaseMessagingBackgroundGate.decide(this);
+    if (action == BackgroundHandlerStartDecision.Action.SKIP_AND_CLEAR) {
+      // onCreate runs on the main thread, so the preference write happens off it.
+      FlutterFirebaseMessagingBackgroundGate.clearHandlesAsync(this);
+    }
+    if (action != BackgroundHandlerStartDecision.Action.START) {
+      return;
+    }
     flutterBackgroundExecutor.startBackgroundIsolate();
   }
 

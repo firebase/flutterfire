@@ -36,8 +36,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHandler {
   private static final String TAG = "FLTFireBGExecutor";
-  private static final String CALLBACK_HANDLE_KEY = "callback_handle";
-  private static final String USER_CALLBACK_HANDLE_KEY = "user_callback_handle";
+  static final String CALLBACK_HANDLE_KEY = "callback_handle";
+  static final String USER_CALLBACK_HANDLE_KEY = "user_callback_handle";
 
   private final AtomicBoolean isCallbackDispatcherReady = new AtomicBoolean(false);
 
@@ -172,6 +172,10 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
   }
 
   boolean isDartBackgroundHandlerRegistered() {
+    Context context = ContextHolder.getApplicationContext();
+    if (context != null && FlutterFirebaseMessagingBackgroundGate.handlerDisabled(context)) {
+      return false;
+    }
     return getPluginCallbackHandle() != 0;
   }
 
@@ -270,10 +274,26 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
 
   /** Get the registered Dart callback handle for the messaging plugin. Returns 0 if not set. */
   private long getPluginCallbackHandle() {
+    return readPluginCallbackHandle(ContextHolder.getApplicationContext());
+  }
+
+  /** Returns the stored plugin callback handle, or 0 when {@code context} is null or unset. */
+  static long readPluginCallbackHandle(Context context) {
+    if (context == null) {
+      return 0L;
+    }
     SharedPreferences prefs =
-        ContextHolder.getApplicationContext()
-            .getSharedPreferences(FlutterFirebaseMessagingUtils.SHARED_PREFERENCES_KEY, 0);
-    return prefs.getLong(CALLBACK_HANDLE_KEY, 0);
+        context.getSharedPreferences(FlutterFirebaseMessagingUtils.SHARED_PREFERENCES_KEY, 0);
+    return prefs.getLong(CALLBACK_HANDLE_KEY, 0L);
+  }
+
+  static void clearCallbackHandles(Context context) {
+    if (context == null) {
+      return;
+    }
+    SharedPreferences prefs =
+        context.getSharedPreferences(FlutterFirebaseMessagingUtils.SHARED_PREFERENCES_KEY, 0);
+    prefs.edit().remove(CALLBACK_HANDLE_KEY).remove(USER_CALLBACK_HANDLE_KEY).apply();
   }
 
   private void initializeMethodChannel(BinaryMessenger isolate) {

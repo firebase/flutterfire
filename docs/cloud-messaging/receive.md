@@ -186,6 +186,25 @@ A few things to be aware of:
 4. If the same flag is set both in the manifest and on the command line, the command
    line value wins.
 
+##### Turning off the Android background handler {: #android-background-handler-opt-out}
+
+Registration is stored on the device. Removing `onBackgroundMessage` from `main()` does not
+clear it, and a push can start the process without running `main()`. Installs that have not
+been opened since the update still start a background Flutter engine.
+
+To stop that on the next push, add this inside `<application>` in
+`android/app/src/main/AndroidManifest.xml`:
+
+```xml
+<meta-data
+    android:name="firebase_messaging_background_handler_enabled"
+    android:value="false" />
+```
+
+Leave the entry out, or set it to `true`, and a stored handler still runs. `false` takes
+effect for a process started by a push, and it wins over a stored handler until the entry
+is removed.
+
 #### Web {:#web}
  {:#web}
 

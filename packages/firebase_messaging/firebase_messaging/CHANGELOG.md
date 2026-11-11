@@ -1,3 +1,7 @@
+## 17.0.2
+
+ - **FIX**(messaging,android): do not start the background service when no `onBackgroundMessage` handler is registered ([#18940](https://github.com/firebase/flutterfire/issues/18940)).
+
 ## 17.0.1
 
  - **FIX**(android): replace Groovy space-assignment in plugin build.gradle files ([#18837](https://github.com/firebase/flutterfire/issues/18837)). ([09e913ac](https://github.com/firebase/flutterfire/commit/09e913acd98fa25ea6ff547141e7caf421b7b02d))
