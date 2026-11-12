@@ -5,6 +5,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:yaml/yaml.dart';
+
 /// Writes the package-local `.dart_tool/package_config.json` files that
 /// `flutter_plugin_tools format` checks before running `flutter pub get`.
 ///
@@ -36,19 +38,15 @@ void main() {
         package['name']! as String: package['languageVersion']! as String,
   };
 
-  final rootPubspec = File('pubspec.yaml').readAsStringSync();
-  final workspaceBlock = RegExp(
-    r'^workspace:\n((?:[ ]+- .+\n)+)',
-    multiLine: true,
-  ).firstMatch(rootPubspec);
-  if (workspaceBlock == null) {
+  final rootPubspec = loadYaml(File('pubspec.yaml').readAsStringSync());
+  final workspaceList = rootPubspec is YamlMap
+      ? rootPubspec['workspace']
+      : null;
+  if (workspaceList is! YamlList || workspaceList.isEmpty) {
     stderr.writeln('root pubspec.yaml has no workspace list');
     exit(1);
   }
-  final members = RegExp(
-    r'^[ ]+- (.+)$',
-    multiLine: true,
-  ).allMatches(workspaceBlock.group(1)!).map((Match match) => match.group(1)!);
+  final members = workspaceList.map((Object? member) => member.toString());
 
   var written = 0;
   for (final member in members) {
