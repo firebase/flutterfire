@@ -21,7 +21,7 @@ object FlutterFirebaseAuthPluginException {
       return FlutterError("UNKNOWN", null, null)
     }
     // Tasks.await reports a failed Task as an ExecutionException whose cause is
-    // the Task's exception. getIdToken is the call that uses Tasks.await.
+    // the Task's exception.
     val nativeException = (rawException as? ExecutionException)?.cause as? Exception ?: rawException
     var code = "UNKNOWN"
     var message = nativeException.message

@@ -110,8 +110,6 @@ void main() {
             'should return user-disabled when a forced refresh is refused',
             () async {
               // Demonstrate fix for https://github.com/firebase/flutterfire/issues/18955
-              // A refresh the backend refuses reached Dart as `unknown` on
-              // Android, because Tasks.await wraps the Auth exception.
               final userCredential = await FirebaseAuth.instance
                   .createUserWithEmailAndPassword(
                     email: generateRandomEmail(),
