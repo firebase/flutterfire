@@ -82,6 +82,15 @@ public class FlutterFirebaseMessagingReceiver extends BroadcastReceiver {
                 FlutterFirebaseMessagingBackgroundGate.decide(context);
             if (action == BackgroundHandlerStartDecision.Action.SKIP_AND_CLEAR) {
               FlutterFirebaseMessagingBackgroundGate.clearHandles(context);
+              Log.d(
+                  TAG,
+                  "A background message was ignored because"
+                      + " firebase_messaging_background_handler_enabled is false.");
+            } else if (action == BackgroundHandlerStartDecision.Action.SKIP) {
+              Log.d(
+                  TAG,
+                  "A background message could not be handled in Dart as no onBackgroundMessage"
+                      + " handler has been registered.");
             }
             if (action != BackgroundHandlerStartDecision.Action.START) {
               return;

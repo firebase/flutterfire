@@ -189,8 +189,9 @@ A few things to be aware of:
 ##### Turning off the Android background handler {: #android-background-handler-opt-out}
 
 Registration is stored on the device. Removing `onBackgroundMessage` from `main()` does not
-clear it, and a push can start the process without running `main()`. Installs that have not
-been opened since the update still start a background Flutter engine.
+clear it, and a push can start the process without running `main()`. So every install that
+registered a handler keeps starting a background Flutter engine on pushes, including installs
+that have not been opened since the update.
 
 To stop that on the next push, add this inside `<application>` in
 `android/app/src/main/AndroidManifest.xml`:
