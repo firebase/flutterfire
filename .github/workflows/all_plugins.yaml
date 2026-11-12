@@ -154,7 +154,14 @@ jobs:
           swiftformat --version
       - name: 'Dart, Java, Objective-C and Swift'
         run: |
+          # See prime_format_package_config.dart. Without this, Flutter 3.50
+          # makes the formatter pub-get every package and the job times out.
+          dart .github/workflows/scripts/prime_format_package_config.dart
           flutter pub global run flutter_plugin_tools format --base-branch=origin/main
+          # Flutter 3.50 `flutter pub get` rewrites checked-in xcconfig files
+          # and the tests Windows registrant. Those are not formatting changes.
+          git checkout -- tests/windows/flutter/generated_plugin_registrant.cc tests/windows/flutter/generated_plugins.cmake
+          git ls-files -z -- ':(glob)**/Flutter/*.xcconfig' | xargs -0 git checkout --
           ./.github/workflows/scripts/validate-formatting.sh
 
       # Clean generated build artificats(from format step) to prevent post run jobs from timing out

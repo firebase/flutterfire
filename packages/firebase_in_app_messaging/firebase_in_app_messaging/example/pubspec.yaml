@@ -14,6 +14,7 @@ dependencies:
   firebase_in_app_messaging_platform_interface: ^0.2.7+30
   flutter:
     sdk: flutter
+  material_ui: ^1.11.0
 
 flutter:
   uses-material-design: true

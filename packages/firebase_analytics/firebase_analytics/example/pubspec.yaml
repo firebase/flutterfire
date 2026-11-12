@@ -12,6 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
   in_app_purchase: ^3.2.3
+  material_ui: ^1.11.0
 
 dev_dependencies:
   flutter_test:
