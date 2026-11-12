@@ -13,12 +13,16 @@ import com.google.firebase.auth.FirebaseAuthMultiFactorException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 import java.util.UUID
+import java.util.concurrent.ExecutionException
 
 object FlutterFirebaseAuthPluginException {
-  fun parserExceptionToFlutter(nativeException: Exception?): FlutterError {
-    if (nativeException == null) {
+  fun parserExceptionToFlutter(rawException: Exception?): FlutterError {
+    if (rawException == null) {
       return FlutterError("UNKNOWN", null, null)
     }
+    // Tasks.await reports a failed Task as an ExecutionException whose cause is
+    // the Task's exception. getIdToken is the call that uses Tasks.await.
+    val nativeException = (rawException as? ExecutionException)?.cause as? Exception ?: rawException
     var code = "UNKNOWN"
     var message = nativeException.message
     val additionalData = HashMap<String, Any?>()
