@@ -11,7 +11,7 @@ dependencies:
   firebase_database: ^13.0.1
   flutter:
     sdk: flutter
-  material_ui: ^1.11.0
+  material_ui: ^1.3.0
 
 dev_dependencies:
   # `query_e2e.dart` uses ListEquality when comparing ordered query results.
