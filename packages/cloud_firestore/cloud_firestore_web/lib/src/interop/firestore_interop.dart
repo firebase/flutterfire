@@ -1260,6 +1260,9 @@ extension type PipelineSourceJsImpl._(JSObject _) implements JSObject {
 
   /// Sets the pipeline source to the given document paths or references.
   external PipelineJsImpl documents(JSArray docs);
+
+  /// Sets the pipeline source to the given literal documents.
+  external PipelineJsImpl literals(JSAny documents);
 }
 
 /// Pipeline returned by PipelineSource methods; chain stages and call execute().
@@ -1280,6 +1283,10 @@ extension type PipelineJsImpl._(JSObject _) implements JSObject {
   external PipelineJsImpl findNearest(JSAny options);
   external PipelineJsImpl search(JSAny options);
   external PipelineJsImpl union(JSAny otherOrOptions);
+  external PipelineJsImpl delete(JSAny options);
+  external PipelineJsImpl update(JSAny options);
+  external PipelineJsImpl insert(JSAny options);
+  external PipelineJsImpl upsert(JSAny options);
   external PipelineJsImpl rawStage(
     JSString name,
     JSArray params, [
@@ -1404,5 +1411,38 @@ extension type PipelineExecuteOptionsJsImpl._(JSObject _) implements JSObject {
   // ignore: avoid_setters_without_getters
   external set indexMode(JSString value);
   // ignore: avoid_setters_without_getters
+  external set atomic(JSBoolean value);
+  // ignore: avoid_setters_without_getters
   external set pipeline(JSAny value);
+}
+
+extension type DeleteStageOptionsJsImpl._(JSObject _) implements JSObject {
+  DeleteStageOptionsJsImpl() : this._(JSObject.new());
+}
+
+extension type UpdateStageOptionsJsImpl._(JSObject _) implements JSObject {
+  UpdateStageOptionsJsImpl() : this._(JSObject.new());
+
+  // ignore: avoid_setters_without_getters
+  external set transformedFields(JSAny value);
+}
+
+extension type InsertStageOptionsJsImpl._(JSObject _) implements JSObject {
+  InsertStageOptionsJsImpl() : this._(JSObject.new());
+
+  // ignore: avoid_setters_without_getters
+  external set collection(JSString value);
+  // ignore: avoid_setters_without_getters
+  external set documentIdExpression(JSAny value);
+}
+
+extension type UpsertStageOptionsJsImpl._(JSObject _) implements JSObject {
+  UpsertStageOptionsJsImpl() : this._(JSObject.new());
+
+  // ignore: avoid_setters_without_getters
+  external set collection(JSString value);
+  // ignore: avoid_setters_without_getters
+  external set documentIdExpression(JSAny value);
+  // ignore: avoid_setters_without_getters
+  external set additionalFields(JSAny value);
 }

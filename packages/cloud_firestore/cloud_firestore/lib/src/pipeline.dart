@@ -65,7 +65,10 @@ class Pipeline {
   /// ```
   Future<PipelineSnapshot> execute({ExecuteOptions? options}) async {
     final optionsMap = options != null
-        ? {'indexMode': options.indexMode.name}
+        ? {
+            'indexMode': options.indexMode.name,
+            if (options.atomic) 'atomic': true,
+          }
         : null;
     final platformSnapshot = await _delegate.execute(options: optionsMap);
     return _convertPlatformSnapshot(platformSnapshot);
@@ -807,5 +810,78 @@ class Pipeline {
   Pipeline where(BooleanExpression expression) {
     final stage = _WhereStage(expression);
     return Pipeline._(_firestore, _delegate.addStage(stage.toMap()));
+  }
+
+  /// Deletes each input document at its `__name__` path.
+  ///
+  /// Example:
+  /// ```dart
+  /// firestore
+  ///     .pipeline()
+  ///     .collection('books')
+  ///     .where(Expression.field('genre').equal('Science Fiction'))
+  ///     .delete();
+  /// ```
+  Pipeline delete() {
+    final stage = _DeleteStage();
+    return Pipeline._(_firestore, _delegate.addStage(stage.toMap()));
+  }
+
+  /// Updates each input document at its `__name__` path.
+  ///
+  /// [transformedFields] are aliased expressions applied before the write.
+  /// When omitted, each input document is written back from its current
+  /// fields. This stage does not create missing documents.
+  ///
+  /// Example:
+  /// ```dart
+  /// firestore.pipeline().collection('books').update([
+  ///   Expression.field('rating').as('score'),
+  /// ]);
+  /// ```
+  Pipeline update([List<Selectable> transformedFields = const []]) {
+    final stage = _UpdateStage(transformedFields);
+    return Pipeline._(_firestore, _delegate.addStage(stage.toMap()));
+  }
+
+  /// Inserts each input document.
+  ///
+  /// The write fails if a document already exists at the target path. The
+  /// target is the input document's `__name__` when [collectionPath] and
+  /// [documentId] are both omitted. [collectionPath] writes into that
+  /// collection, reusing the input document id or generating one.
+  /// [documentId] is evaluated for each document: a field path is
+  /// [Expression.field], and a fixed id is [Expression.constant].
+  Pipeline insert({String? collectionPath, Expression? documentId}) {
+    _checkCollectionPath(collectionPath);
+    final stage = _InsertStage(collectionPath, documentId);
+    return Pipeline._(_firestore, _delegate.addStage(stage.toMap()));
+  }
+
+  /// Inserts each input document, or replaces it when the target already exists.
+  ///
+  /// An existing document is replaced entirely. Fields that are not in the
+  /// written document are removed. [additionalFields] are aliased expressions
+  /// merged onto each input document before the write. See [insert] for how
+  /// [collectionPath] and [documentId] choose the target path.
+  Pipeline upsert({
+    String? collectionPath,
+    Expression? documentId,
+    List<Selectable> additionalFields = const [],
+  }) {
+    _checkCollectionPath(collectionPath);
+    final stage = _UpsertStage(collectionPath, documentId, additionalFields);
+    return Pipeline._(_firestore, _delegate.addStage(stage.toMap()));
+  }
+}
+
+void _checkCollectionPath(String? collectionPath) {
+  if (collectionPath == null) {
+    return;
+  }
+  if (collectionPath.isEmpty) {
+    throw ArgumentError('A collection path must be a non-empty string.');
+  } else if (collectionPath.contains('//')) {
+    throw ArgumentError('A collection path must not contain "//".');
   }
 }

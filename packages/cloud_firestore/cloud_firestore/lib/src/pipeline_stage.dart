@@ -385,6 +385,165 @@ final class _UnionStage extends PipelineStage {
   }
 }
 
+/// Stage that deletes each input document.
+final class _DeleteStage extends PipelineStage {
+  @override
+  String get name => 'delete';
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {'stage': name, 'args': <String, dynamic>{}};
+  }
+}
+
+/// Stage that updates each input document.
+final class _UpdateStage extends PipelineStage {
+  final List<Selectable> transformedFields;
+
+  _UpdateStage(this.transformedFields);
+
+  @override
+  String get name => 'update';
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      'stage': name,
+      'args': {
+        'expressions': transformedFields.map((field) => field.toMap()).toList(),
+      },
+    };
+  }
+}
+
+/// Stage that inserts each input document.
+final class _InsertStage extends PipelineStage {
+  final String? collectionPath;
+  final Expression? documentId;
+
+  _InsertStage(this.collectionPath, this.documentId);
+
+  @override
+  String get name => 'insert';
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      'stage': name,
+      'args': _writeTargetArgs(collectionPath, documentId),
+    };
+  }
+}
+
+/// Stage that inserts or replaces each input document.
+final class _UpsertStage extends PipelineStage {
+  final String? collectionPath;
+  final Expression? documentId;
+  final List<Selectable> additionalFields;
+
+  _UpsertStage(this.collectionPath, this.documentId, this.additionalFields);
+
+  @override
+  String get name => 'upsert';
+
+  @override
+  Map<String, dynamic> toMap() {
+    final args = _writeTargetArgs(collectionPath, documentId);
+    if (additionalFields.isNotEmpty) {
+      args['additional_fields'] = additionalFields
+          .map((field) => field.toMap())
+          .toList();
+    }
+    return {'stage': name, 'args': args};
+  }
+}
+
+Map<String, dynamic> _writeTargetArgs(
+  String? collectionPath,
+  Expression? documentId,
+) {
+  final args = <String, dynamic>{};
+  if (collectionPath != null) {
+    args['collection'] = collectionPath;
+  }
+  if (documentId != null) {
+    args['document_id'] = documentId.toMap();
+  }
+  return args;
+}
+
+/// Stage representing literal documents as a pipeline source.
+final class _LiteralsPipelineStage extends PipelineStage {
+  final List<Map<String, Object?>> documents;
+
+  _LiteralsPipelineStage(this.documents);
+
+  @override
+  String get name => 'literals';
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      'stage': name,
+      'args': {'documents': documents.map(_encodeLiteralDocument).toList()},
+    };
+  }
+}
+
+Map<String, dynamic> _encodeLiteralDocument(Map<String, Object?> document) {
+  return document.map(
+    (key, value) => MapEntry(key, _encodeLiteralField(value)),
+  );
+}
+
+Map<String, dynamic> _encodeLiteralField(Object? value) {
+  if (value is Expression) {
+    return {'kind': 'expression', 'expression': value.toMap()};
+  }
+  if (value is DocumentReference) {
+    return {'kind': 'expression', 'expression': Constant(value).toMap()};
+  }
+  return {'kind': 'value', 'value': _encodeLiteralValue(value)};
+}
+
+Object? _encodeLiteralValue(Object? value) {
+  if (value is Expression) {
+    throw ArgumentError(
+      'literals() only supports Expression values as top-level document fields.',
+    );
+  }
+  if (value is DocumentReference) {
+    throw ArgumentError(
+      'literals() only supports DocumentReference values as top-level '
+      'document fields.',
+    );
+  }
+  if (value == null ||
+      value is String ||
+      value is num ||
+      value is bool ||
+      value is DateTime ||
+      value is Timestamp ||
+      value is GeoPoint ||
+      value is Blob ||
+      value is VectorValue) {
+    return value;
+  }
+  if (value is Map) {
+    return value.map(
+      (key, nested) => MapEntry(key.toString(), _encodeLiteralValue(nested)),
+    );
+  }
+  if (value is List) {
+    return value.map(_encodeLiteralValue).toList();
+  }
+  throw ArgumentError(
+    'literals() value must be null, String, num, bool, DateTime, Timestamp, '
+    'GeoPoint, Blob, VectorValue, List, Map, or a top-level Expression. '
+    'Got: ${value.runtimeType}',
+  );
+}
+
 /// Stage for filtering documents
 final class _WhereStage extends PipelineStage {
   final BooleanExpression expression;
