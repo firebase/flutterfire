@@ -920,12 +920,61 @@ void main() {
         );
       });
 
-      test('throws if totalTokens is missing', () {
+      test('defaults totalTokens to 0 on an empty object', () {
+        final response = AgentPlatformSerialization().parseCountTokensResponse(
+          <String, Object?>{},
+        );
+        expect(response.totalTokens, 0);
+        expect(response.promptTokensDetails, isNull);
+      });
+
+      test(
+        'defaults totalTokens to 0 when omitted with promptTokensDetails',
+        () {
+          final json = {
+            'promptTokensDetails': [
+              {'modality': 'TEXT', 'tokenCount': 0},
+            ],
+          };
+          final response = AgentPlatformSerialization()
+              .parseCountTokensResponse(json);
+          expect(response.totalTokens, 0);
+          final details = response.promptTokensDetails;
+          expect(details, isNotNull);
+          if (details != null) {
+            expect(details, hasLength(1));
+            expect(details.first.modality, ContentModality.text);
+            expect(details.first.tokenCount, 0);
+          }
+        },
+      );
+
+      test('throws when the object has neither token field', () {
         final json = {'totalBillableCharacters': 100};
         expect(
           () => AgentPlatformSerialization().parseCountTokensResponse(json),
-          throwsA(anything),
-        ); // More specific error expected
+          throwsA(
+            isA<FirebaseAISdkException>().having(
+              (e) => e.message,
+              'message',
+              contains('CountTokensResponse'),
+            ),
+          ),
+        );
+      });
+
+      test('throws when totalTokens is not an integer', () {
+        final json = {'totalTokens': 'invalid'};
+        expect(
+          () => AgentPlatformSerialization().parseCountTokensResponse(json),
+          throwsA(
+            isA<FirebaseAISdkException>().having(
+              (e) => e.message,
+              'message',
+              contains('CountTokensResponse'),
+            ),
+          ),
+        );
       });
     });
 
