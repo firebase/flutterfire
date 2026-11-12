@@ -384,6 +384,23 @@ public class FLTFirebaseAuthPlugin: NSObject, FlutterPlugin, FLTFirebasePluginPr
     completion?(.failure(error))
   }
 
+  func signedInAppleUser(matching user: User) -> Result<User, Error> {
+    guard let appleArguments,
+      FLTFirebasePlugin.firebaseAppNamed(appleArguments.appName) != nil,
+      let currentUser = getFIRAuthFromPigeon(appleArguments).currentUser
+    else {
+      return .failure(AuthErrors.noCurrentUser())
+    }
+    guard currentUser.uid == user.uid else {
+      return .failure(
+        FlutterError(
+          code: "user-mismatch",
+          message: "The supplied credentials do not correspond to the previously signed in user.",
+          details: nil))
+    }
+    return .success(currentUser)
+  }
+
   func launchAppleSignInRequest(
     app: AuthPigeonFirebaseApp,
     signInProvider: InternalSignInProvider,
@@ -490,30 +507,24 @@ public class FLTFirebaseAuthPlugin: NSObject, FlutterPlugin, FLTFirebasePluginPr
 
     switch mode {
     case .reauthenticate(let user):
-      guard let appleArguments,
-        FLTFirebasePlugin.firebaseAppNamed(appleArguments.appName) != nil,
-        let currentUser = getFIRAuthFromPigeon(appleArguments).currentUser
-      else {
-        finishAppleSignInRequest(AuthErrors.noCurrentUser())
-        return
-      }
-      guard currentUser.uid == user.uid else {
-        finishAppleSignInRequest(
-          FlutterError(
-            code: "user-mismatch",
-            message:
-              "The supplied credentials do not correspond to the previously signed in user.",
-            details: nil))
-        return
-      }
-      user.reauthenticate(with: credential) { authResult, error in
-        self.handleSignInWithApple(
-          authResult: authResult, authorizationCode: authorizationCode, error: error)
+      switch signedInAppleUser(matching: user) {
+      case .failure(let error):
+        finishAppleSignInRequest(error)
+      case .success(let currentUser):
+        currentUser.reauthenticate(with: credential) { authResult, error in
+          self.handleSignInWithApple(
+            authResult: authResult, authorizationCode: authorizationCode, error: error)
+        }
       }
     case .link(let user):
-      user.link(with: credential) { authResult, error in
-        self.handleSignInWithApple(
-          authResult: authResult, authorizationCode: authorizationCode, error: error)
+      switch signedInAppleUser(matching: user) {
+      case .failure(let error):
+        finishAppleSignInRequest(error)
+      case .success(let currentUser):
+        currentUser.link(with: credential) { authResult, error in
+          self.handleSignInWithApple(
+            authResult: authResult, authorizationCode: authorizationCode, error: error)
+        }
       }
     case .signIn(let auth):
       auth.signIn(with: credential) { authResult, error in
@@ -521,10 +532,7 @@ public class FLTFirebaseAuthPlugin: NSObject, FlutterPlugin, FLTFirebasePluginPr
           authResult: authResult, authorizationCode: authorizationCode, error: error)
       }
     case nil:
-      Auth.auth().signIn(with: credential) { authResult, error in
-        self.handleSignInWithApple(
-          authResult: authResult, authorizationCode: authorizationCode, error: error)
-      }
+      finishAppleSignInRequest(AuthErrors.invalidCredential())
     }
   }
 
