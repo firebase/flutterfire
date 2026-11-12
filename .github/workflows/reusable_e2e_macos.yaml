@@ -73,6 +73,19 @@ on:
           caches, so this is required rather than defaulted.
         type: string
         required: true
+      native-test-package:
+        description: >-
+          Repo-relative path of a Swift package whose tests should run after
+          the macOS app build. Empty skips the step. Used with
+          native-test-identifier.
+        type: string
+        default: ''
+      native-test-identifier:
+        description: >-
+          swift test --filter value, e.g. 'SnapshotSinkAfterCancelTests'.
+          Empty skips the step.
+        type: string
+        default: ''
       nightly_test_mode:
         description: >-
           Passed down from nightly.yaml. Shortens the job timeout to 5 minutes.
@@ -108,6 +121,8 @@ jobs:
       PACKAGE_PATH: ${{ inputs.package-path }}
       TEST_TARGET: ${{ inputs.test-target }}
       NATIVE_CONFIG_ARGS: ${{ inputs.native-config-args }}
+      NATIVE_TEST: ${{ inputs.native-test-identifier }}
+      NATIVE_TEST_PACKAGE: ${{ inputs.native-test-package }}
     timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 60 }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
@@ -200,6 +215,29 @@ jobs:
             exit 1
           fi
           exit "$BUILD_EXIT"
+      - name: Native unit tests
+        if: inputs.native-test-identifier != '' && inputs.native-test-package != ''
+        timeout-minutes: 25
+        run: |
+          # The plugin imports FlutterMacOS. Xcode adds that framework while
+          # building the example; swift test needs the same search path.
+          flutter_bin=$(command -v flutter)
+          flutter_root=$(cd "$(dirname "$flutter_bin")/.." && pwd)
+          framework_dir="$flutter_root/bin/cache/artifacts/engine/darwin-x64/FlutterMacOS.xcframework/macos-arm64_x86_64"
+          if [ ! -d "$framework_dir/FlutterMacOS.framework" ]; then
+            framework_dir="$flutter_root/bin/cache/artifacts/engine/darwin-arm64/FlutterMacOS.xcframework/macos-arm64_x86_64"
+          fi
+          if [ ! -d "$framework_dir/FlutterMacOS.framework" ]; then
+            echo "::error::FlutterMacOS.framework not found under $flutter_root"
+            exit 1
+          fi
+          cd "$NATIVE_TEST_PACKAGE"
+          swift test --filter "$NATIVE_TEST" \
+            -Xswiftc -F -Xswiftc "$framework_dir" \
+            -Xcc -F -Xcc "$framework_dir" \
+            -Xlinker -F -Xlinker "$framework_dir" \
+            -Xlinker -framework -Xlinker FlutterMacOS \
+            -Xlinker -rpath -Xlinker "$framework_dir"
       - name: Install Cloud Functions dependencies
         if: inputs.use-firebase-emulators
         # `firebase emulators:exec` does not install these itself (the old
