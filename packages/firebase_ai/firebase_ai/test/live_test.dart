@@ -610,18 +610,16 @@ void main() {
         },
       });
 
-      expect(response.usageMetadata, isNotNull);
-      expect(response.usageMetadata!.promptTokenCount, 10);
-      expect(response.usageMetadata!.candidatesTokenCount, 25);
-      expect(response.usageMetadata!.totalTokenCount, 35);
+      final usageMetadata = response.usageMetadata;
+      expect(usageMetadata, isNotNull);
+      expect(usageMetadata?.promptTokenCount, 10);
+      expect(usageMetadata?.candidatesTokenCount, 25);
+      expect(usageMetadata?.totalTokenCount, 35);
       expect(
-        response.usageMetadata!.promptTokensDetails!.single.modality,
+        usageMetadata?.promptTokensDetails?.single.modality,
         ContentModality.text,
       );
-      expect(
-        response.usageMetadata!.promptTokensDetails!.single.tokenCount,
-        10,
-      );
+      expect(usageMetadata?.promptTokensDetails?.single.tokenCount, 10);
     });
 
     test('usage metadata is optional', () {
