@@ -4,18 +4,32 @@
 
 import 'dart:js_interop';
 
-@JS('sessionStorage')
-external _SessionStorage get _sessionStorage;
-
-extension type _SessionStorage._(JSObject _) implements JSObject {
+extension type _WebStorage._(JSObject _) implements JSObject {
   external void setItem(String key, String value);
   external void removeItem(String key);
+  external String? getItem(String key);
 }
 
+@JS('sessionStorage')
+external _WebStorage get _sessionStorage;
+
+@JS('localStorage')
+external _WebStorage get _localStorage;
+
+String _storageKey(String appName) => '$appName-firebaseEmulatorOrigin';
+
 void setAuthEmulatorOrigin(String appName, String origin) {
-  _sessionStorage.setItem('$appName-firebaseEmulatorOrigin', origin);
+  _sessionStorage.setItem(_storageKey(appName), origin);
 }
 
 void clearAuthEmulatorOrigin(String appName) {
-  _sessionStorage.removeItem('$appName-firebaseEmulatorOrigin');
+  _sessionStorage.removeItem(_storageKey(appName));
+}
+
+String? getAuthEmulatorOriginLocal(String appName) {
+  return _localStorage.getItem(_storageKey(appName));
+}
+
+void clearAuthEmulatorOriginLocal(String appName) {
+  _localStorage.removeItem(_storageKey(appName));
 }

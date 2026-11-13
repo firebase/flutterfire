@@ -26,7 +26,7 @@ void main() {
     stubFirebaseAuthJsSdk()['connectAuthEmulator'] = connectAuthEmulator.toJS;
   }
 
-  test('ignores auth/emulator-config-failed after a hot restart', () async {
+  test('throws in debug when emulator-config-failed on production', () async {
     connectAuthEmulatorThrows(
       jsError(
         'Firebase: Error (auth/emulator-config-failed).',
@@ -34,7 +34,40 @@ void main() {
       ),
     );
 
-    await FirebaseAuthWeb.instance.useAuthEmulator('localhost', 9099);
+    await expectLater(
+      FirebaseAuthWeb.instance.useAuthEmulator('localhost', 9099),
+      throwsA(
+        isA<FirebaseAuthException>().having(
+          (e) => e.code,
+          'code',
+          'emulator-config-failed',
+        ),
+      ),
+    );
+  });
+
+  test('keeps a different emulator when emulator-config-failed', () async {
+    final auth = stubFirebaseAuthJsSdk();
+    final config = JSObject();
+    config['protocol'] = 'http'.toJS;
+    config['host'] = 'localhost'.toJS;
+    config['port'] = 9099.toJS;
+    final authApp = JSObject();
+    authApp['name'] = '[DEFAULT]'.toJS;
+    final instance = JSObject();
+    instance['app'] = authApp;
+    instance['emulatorConfig'] = config;
+    auth['initializeAuth'] = ((JSAny? _, JSAny? _) => instance).toJS;
+    void connectAuthEmulator(JSAny? auth, JSAny? origin) {
+      throw jsError(
+        'Firebase: Error (auth/emulator-config-failed).',
+        code: 'auth/emulator-config-failed',
+      );
+    }
+
+    auth['connectAuthEmulator'] = connectAuthEmulator.toJS;
+
+    await FirebaseAuthWeb.instance.useAuthEmulator('127.0.0.1', 9100);
   });
 
   test('maps a Firebase Auth error to FirebaseAuthException', () async {

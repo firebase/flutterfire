@@ -132,4 +132,201 @@ void main() {
       '[DEFAULT]-firebaseEmulatorOrigin',
     );
   });
+
+  group('debugAuthEmulatorOrigin', () {
+    test('does not touch storage outside debug', () {
+      var localReads = 0;
+      var sessionReads = 0;
+      expect(
+        debugAuthEmulatorOrigin(
+          isDebugMode: false,
+          readLocal: () {
+            localReads++;
+            return 'http://localhost:9099';
+          },
+          readSession: () {
+            sessionReads++;
+            return 'http://127.0.0.1:9099';
+          },
+        ),
+        isNull,
+      );
+      expect(localReads, 0);
+      expect(sessionReads, 0);
+    });
+
+    test('returns null when storage throws', () {
+      expect(
+        debugAuthEmulatorOrigin(
+          isDebugMode: true,
+          readLocal: () => throw StateError('blocked'),
+          readSession: () => 'http://localhost:9099',
+        ),
+        isNull,
+      );
+    });
+
+    test('reads localStorage before sessionStorage in debug', () {
+      expect(
+        debugAuthEmulatorOrigin(
+          isDebugMode: true,
+          readLocal: () => 'http://localhost:9099',
+          readSession: () => 'http://127.0.0.1:9099',
+        ),
+        'http://localhost:9099',
+      );
+    });
+  });
+
+  group('rememberDebugAuthEmulatorOrigin', () {
+    test('does not write outside debug', () {
+      var writes = 0;
+      rememberDebugAuthEmulatorOrigin(
+        isDebugMode: false,
+        write: () => writes++,
+      );
+      expect(writes, 0);
+    });
+
+    test('writes once in debug', () {
+      var writes = 0;
+      rememberDebugAuthEmulatorOrigin(isDebugMode: true, write: () => writes++);
+      expect(writes, 1);
+    });
+
+    test('swallows a write that throws', () {
+      rememberDebugAuthEmulatorOrigin(
+        isDebugMode: true,
+        write: () => throw StateError('blocked'),
+      );
+    });
+  });
+
+  group('persistedAuthEmulatorOrigin', () {
+    test('uses localStorage when both stores have a value', () {
+      expect(
+        persistedAuthEmulatorOrigin(
+          localOrigin: 'http://localhost:9099',
+          sessionOrigin: 'http://127.0.0.1:9099',
+        ),
+        'http://localhost:9099',
+      );
+    });
+
+    test('falls back to sessionStorage when localStorage is empty', () {
+      expect(
+        persistedAuthEmulatorOrigin(
+          localOrigin: null,
+          sessionOrigin: 'http://localhost:9099',
+        ),
+        'http://localhost:9099',
+      );
+    });
+
+    test('returns null when neither store has an origin', () {
+      expect(
+        persistedAuthEmulatorOrigin(localOrigin: null, sessionOrigin: null),
+        isNull,
+      );
+    });
+  });
+
+  group('shouldRememberRequestedOriginAfterFailedConnect', () {
+    test('stores a different origin for the next launch', () {
+      expect(
+        shouldRememberRequestedOriginAfterFailedConnect(
+          requestedOrigin: 'http://127.0.0.1:9100',
+          connectedOrigin: 'http://localhost:9099',
+        ),
+        isTrue,
+      );
+    });
+
+    test('stores the request when this instance is still on production', () {
+      expect(
+        shouldRememberRequestedOriginAfterFailedConnect(
+          requestedOrigin: 'http://localhost:9099',
+          connectedOrigin: null,
+        ),
+        isTrue,
+      );
+    });
+
+    test('does not rewrite an origin this instance is already using', () {
+      expect(
+        shouldRememberRequestedOriginAfterFailedConnect(
+          requestedOrigin: 'http://localhost:9099',
+          connectedOrigin: 'http://localhost:9099',
+        ),
+        isFalse,
+      );
+    });
+  });
+
+  group('authEmulatorConnectTooLateMessage', () {
+    test('keeps the hot reload message when this instance matches', () {
+      expect(
+        authEmulatorConnectTooLateMessage(
+          appName: '[DEFAULT]',
+          requestedOrigin: 'http://localhost:9099',
+          connectedOrigin: 'http://localhost:9099',
+        ),
+        contains('kept across hot reload'),
+      );
+    });
+
+    test('says production and asks for a full page reload', () {
+      final message = authEmulatorConnectTooLateMessage(
+        appName: '[DEFAULT]',
+        requestedOrigin: 'http://localhost:9099',
+        connectedOrigin: null,
+      );
+      expect(message, contains('production'));
+      expect(message, contains('full page reload'));
+      expect(message, isNot(contains('hot reload')));
+    });
+
+    test('names the origin this instance is actually on', () {
+      expect(
+        authEmulatorConnectTooLateMessage(
+          appName: '[DEFAULT]',
+          requestedOrigin: 'http://127.0.0.1:9100',
+          connectedOrigin: 'http://localhost:9099',
+        ),
+        contains('http://localhost:9099'),
+      );
+    });
+  });
+
+  group('shouldThrowDebugEmulatorConnectFailure', () {
+    test('throws in debug when this instance is on production', () {
+      expect(
+        shouldThrowDebugEmulatorConnectFailure(
+          isDebugMode: true,
+          connectedOrigin: null,
+        ),
+        isTrue,
+      );
+    });
+
+    test('does not throw outside debug', () {
+      expect(
+        shouldThrowDebugEmulatorConnectFailure(
+          isDebugMode: false,
+          connectedOrigin: null,
+        ),
+        isFalse,
+      );
+    });
+
+    test('does not throw when this instance is on an emulator', () {
+      expect(
+        shouldThrowDebugEmulatorConnectFailure(
+          isDebugMode: true,
+          connectedOrigin: 'http://localhost:9099',
+        ),
+        isFalse,
+      );
+    });
+  });
 }

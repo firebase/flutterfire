@@ -58,26 +58,42 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
         final authDelegate = auth_interop.getAuthInstance(firebaseApp);
         // Re-apply a persisted emulator origin before Auth restores the user.
         // Must include 127.0.0.1 — Chrome often uses that instead of localhost.
-        final String? emulatorOrigin = web.window.sessionStorage.getItem(
-          authEmulatorOriginStorageKey(firebaseApp.name),
+        final String storageKey = authEmulatorOriginStorageKey(
+          firebaseApp.name,
+        );
+        final String? emulatorOrigin = debugAuthEmulatorOrigin(
+          isDebugMode: kDebugMode,
+          readLocal: () => web.window.localStorage.getItem(storageKey),
+          readSession: () => web.window.sessionStorage.getItem(storageKey),
         );
         if (shouldReusePersistedAuthEmulator(
-          hostname: web.window.location.hostname,
-          isDebugMode: kDebugMode,
-          storedOrigin: emulatorOrigin,
-        )) {
+              hostname: web.window.location.hostname,
+              isDebugMode: kDebugMode,
+              storedOrigin: emulatorOrigin,
+            ) &&
+            emulatorOrigin != null) {
           try {
-            authDelegate.useAuthEmulator(emulatorOrigin!);
+            authDelegate.useAuthEmulator(emulatorOrigin);
+            _rememberAuthEmulatorOrigin(firebaseApp.name, emulatorOrigin);
             // ignore: avoid_print
             print(
-              'Using previously configured Auth emulator at $emulatorOrigin for ${firebaseApp.name} \nTo switch back to production, restart your app with the emulator turned off.',
+              'Using previously configured Auth emulator at $emulatorOrigin for ${firebaseApp.name}.\n'
+              'This debug setting is kept after the browser closes.\n'
+              "To use production Auth, clear this site's storage and restart without the emulator.",
             );
           } catch (e) {
             if (e.toString().contains('sooner')) {
-              // Happens during hot reload when the emulator is already configured
+              final String? connectedOrigin = authDelegate.emulatorOrigin;
+              if (connectedOrigin == emulatorOrigin) {
+                _rememberAuthEmulatorOrigin(firebaseApp.name, emulatorOrigin);
+              }
               // ignore: avoid_print
               print(
-                'Auth emulator is already configured at $emulatorOrigin for ${firebaseApp.name} and kept across hot reload.\nTo switch back to production, restart your app with the emulator turned off.',
+                authEmulatorConnectTooLateMessage(
+                  appName: firebaseApp.name,
+                  requestedOrigin: emulatorOrigin,
+                  connectedOrigin: connectedOrigin,
+                ),
               );
             } else {
               rethrow;
@@ -502,12 +518,11 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
 
   @override
   Future<void> useAuthEmulator(String host, int port) async {
+    // The generic platform interface is with host and port split to
+    // centralize logic between android/ios native, but web takes the
+    // origin as a single string
+    final String origin = authEmulatorOrigin(host, port);
     try {
-      // The generic platform interface is with host and port split to
-      // centralize logic between android/ios native, but web takes the
-      // origin as a single string
-      final String origin = authEmulatorOrigin(host, port);
-
       // Skip only if THIS JS Auth instance is already on that origin.
       // SessionStorage matching is not enough: after a full page reload the
       // Auth instance is new and still points at production (#18689).
@@ -515,18 +530,12 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
         requestedOrigin: origin,
         connectedEmulatorOrigin: delegate.emulatorOrigin,
       )) {
+        _rememberAuthEmulatorOrigin(delegate.app.name, origin);
         return;
       }
 
       delegate.useAuthEmulator(origin);
-      // Save to session storage so that the emulator is used on refresh
-      // only in debug mode
-      if (kDebugMode) {
-        web.window.sessionStorage.setItem(
-          authEmulatorOriginStorageKey(delegate.app.name),
-          origin,
-        );
-      }
+      _rememberAuthEmulatorOrigin(delegate.app.name, origin);
     } catch (e) {
       // `is AuthError` would match any JS object, so check for one directly.
       // `is JSObject` is false for Dart objects on both dart2js and dart2wasm.
@@ -540,6 +549,35 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       // this catches Firebase Error from web that occurs after hot reloading & hot restarting
       if (!isEmulatorConfigFailed) {
         throw getFirebaseAuthException(e);
+      }
+      if (shouldRememberRequestedOriginAfterFailedConnect(
+        requestedOrigin: origin,
+        connectedOrigin: delegate.emulatorOrigin,
+      )) {
+        _rememberAuthEmulatorOrigin(delegate.app.name, origin);
+      }
+      if (shouldThrowDebugEmulatorConnectFailure(
+        isDebugMode: kDebugMode,
+        connectedOrigin: delegate.emulatorOrigin,
+      )) {
+        throw FirebaseAuthException(
+          code: 'emulator-config-failed',
+          message: authEmulatorConnectTooLateMessage(
+            appName: delegate.app.name,
+            requestedOrigin: origin,
+            connectedOrigin: null,
+          ),
+        );
+      }
+      if (kDebugMode) {
+        // ignore: avoid_print
+        print(
+          authEmulatorConnectTooLateMessage(
+            appName: delegate.app.name,
+            requestedOrigin: origin,
+            connectedOrigin: delegate.emulatorOrigin,
+          ),
+        );
       }
     }
   }
@@ -613,4 +651,16 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   Future<void> initializeRecaptchaConfig() async {
     await guardAuthExceptions(() => delegate.initializeRecaptchaConfig());
   }
+}
+
+void _rememberAuthEmulatorOrigin(String appName, String origin) {
+  rememberDebugAuthEmulatorOrigin(
+    isDebugMode: kDebugMode,
+    write: () {
+      web.window.localStorage.setItem(
+        authEmulatorOriginStorageKey(appName),
+        origin,
+      );
+    },
+  );
 }
