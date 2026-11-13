@@ -17,6 +17,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.concurrent.FirebaseExecutors;
 import com.google.firebase.firestore.AggregateField;
 import com.google.firebase.firestore.AggregateQuery;
 import com.google.firebase.firestore.AggregateQuerySnapshot;
@@ -1019,7 +1020,9 @@ public class FlutterFirebaseFirestorePlugin
                 PigeonParser.parsePigeonServerTimestampBehavior(
                     options.getServerTimestampBehavior()),
                 PigeonParser.parseListenSource(source),
-                cachedThreadPool)));
+                // One queue per listener: on the shared pool, two snapshots of one query
+                // could convert at the same time and reach Dart out of order.
+                FirebaseExecutors.newSequentialExecutor(cachedThreadPool))));
   }
 
   @Override
