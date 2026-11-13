@@ -184,10 +184,16 @@ class FlutterFirebaseAuthPlugin :
       password: String,
       callback: (Result<InternalUserCredential>) -> Unit
   ) {
-    getAuthFromPigeon(app).createUserWithEmailAndPassword(email, password).addOnCompleteListener {
-        task ->
-      completeAuthResult(task, callback)
-    }
+    val task =
+        try {
+          getAuthFromPigeon(app).createUserWithEmailAndPassword(email, password)
+        } catch (e: IllegalArgumentException) {
+          callback(
+              Result.failure(
+                  FlutterFirebaseAuthPluginException.emptyEmailOrPassword(e, email, password)))
+          return
+        }
+    task.addOnCompleteListener { completed -> completeAuthResult(completed, callback) }
   }
 
   override fun signInAnonymously(
@@ -230,10 +236,16 @@ class FlutterFirebaseAuthPlugin :
       password: String,
       callback: (Result<InternalUserCredential>) -> Unit
   ) {
-    getAuthFromPigeon(app).signInWithEmailAndPassword(email, password).addOnCompleteListener { task
-      ->
-      completeAuthResult(task, callback)
-    }
+    val task =
+        try {
+          getAuthFromPigeon(app).signInWithEmailAndPassword(email, password)
+        } catch (e: IllegalArgumentException) {
+          callback(
+              Result.failure(
+                  FlutterFirebaseAuthPluginException.emptyEmailOrPassword(e, email, password)))
+          return
+        }
+    task.addOnCompleteListener { completed -> completeAuthResult(completed, callback) }
   }
 
   override fun signInWithEmailLink(
@@ -308,11 +320,17 @@ class FlutterFirebaseAuthPlugin :
   ) {
     val firebaseAuth = getAuthFromPigeon(app)
     val task =
-        if (actionCodeSettings == null) {
-          firebaseAuth.sendPasswordResetEmail(email)
-        } else {
-          firebaseAuth.sendPasswordResetEmail(
-              email, PigeonParser.getActionCodeSettings(actionCodeSettings))
+        try {
+          if (actionCodeSettings == null) {
+            firebaseAuth.sendPasswordResetEmail(email)
+          } else {
+            firebaseAuth.sendPasswordResetEmail(
+                email, PigeonParser.getActionCodeSettings(actionCodeSettings))
+          }
+        } catch (e: IllegalArgumentException) {
+          callback(
+              Result.failure(FlutterFirebaseAuthPluginException.emptyEmailOrPassword(e, email)))
+          return
         }
     task.addOnCompleteListener { completed -> completeVoid(completed, callback) }
   }

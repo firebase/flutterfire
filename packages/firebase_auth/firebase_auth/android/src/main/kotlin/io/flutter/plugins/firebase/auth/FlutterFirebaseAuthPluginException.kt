@@ -102,6 +102,20 @@ object FlutterFirebaseAuthPluginException {
     return FlutterError(code, message, additionalData)
   }
 
+  fun emptyEmailOrPassword(
+      nativeException: IllegalArgumentException,
+      email: String,
+      password: String? = null
+  ): FlutterError {
+    if (email.isEmpty()) {
+      return FlutterError("ERROR_MISSING_EMAIL", "An email address must be provided.", null)
+    }
+    if (password?.isEmpty() == true) {
+      return FlutterError("ERROR_MISSING_PASSWORD", "A password must be provided.", null)
+    }
+    return parserExceptionToFlutter(nativeException)
+  }
+
   fun noUser(): FlutterError {
     return FlutterError("NO_CURRENT_USER", "No user currently signed in.", null)
   }
