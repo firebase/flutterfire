@@ -949,18 +949,24 @@ void main() {
         },
       );
 
-      test('throws when the object has neither token field', () {
-        final json = {'totalBillableCharacters': 100};
-        expect(
-          () => AgentPlatformSerialization().parseCountTokensResponse(json),
-          throwsA(
-            isA<FirebaseAISdkException>().having(
-              (e) => e.message,
-              'message',
-              contains('CountTokensResponse'),
-            ),
-          ),
+      test(
+        'defaults totalTokens to 0 when the object has other fields only',
+        () {
+          final json = {'totalBillableCharacters': 100};
+          final response = AgentPlatformSerialization()
+              .parseCountTokensResponse(json);
+          expect(response.totalTokens, 0);
+          expect(response.promptTokensDetails, isNull);
+        },
+      );
+
+      test('defaults an explicit null totalTokens to 0', () {
+        final json = {'totalTokens': null, 'totalBillableCharacters': 100};
+        final response = AgentPlatformSerialization().parseCountTokensResponse(
+          json,
         );
+        expect(response.totalTokens, 0);
+        expect(response.promptTokensDetails, isNull);
       });
 
       test('throws when totalTokens is not an integer', () {

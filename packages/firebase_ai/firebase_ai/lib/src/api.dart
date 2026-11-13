@@ -1567,27 +1567,24 @@ final class AgentPlatformSerialization implements SerializationStrategy {
     if (jsonObject is! Map) {
       throw unhandledFormat('CountTokensResponse', jsonObject);
     }
-    if (jsonObject.isEmpty) return CountTokensResponse(0);
 
     final totalTokens = switch (jsonObject) {
       {'totalTokens': final int totalTokens} => totalTokens,
-      {'totalTokens': final Object _} => throw unhandledFormat(
+      {'totalTokens': null} => 0,
+      {'totalTokens': _} => throw unhandledFormat(
         'CountTokensResponse',
         jsonObject,
       ),
-      _ => null,
+      _ => 0,
     };
     final promptTokensDetails = switch (jsonObject) {
       {'promptTokensDetails': final List<Object?> promptTokensDetails} =>
         promptTokensDetails.map(_parseModalityTokenCount).toList(),
       _ => null,
     };
-    if (totalTokens == null && promptTokensDetails == null) {
-      throw unhandledFormat('CountTokensResponse', jsonObject);
-    }
 
     return CountTokensResponse(
-      totalTokens ?? 0,
+      totalTokens,
       promptTokensDetails: promptTokensDetails,
     );
   }
