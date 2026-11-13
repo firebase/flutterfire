@@ -16,8 +16,7 @@ import 'dart:convert';
 
 import 'package:firebase_data_connect/src/cache/cache_provider.dart';
 import 'package:firebase_data_connect/src/common/common_library.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart' show kIsWeb, listEquals;
+import 'package:flutter/foundation.dart' show immutable, kIsWeb, listEquals;
 
 /// Type of storage to use for the cache
 enum CacheStorage { persistent, memory }

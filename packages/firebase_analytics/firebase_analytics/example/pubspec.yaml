@@ -3,8 +3,8 @@ description: Demonstrates how to use the firebase_analytics plugin.
 resolution: workspace
 
 environment:
-  sdk: '^3.10.0'
-  flutter: '>=3.38.0'
+  sdk: '^3.12.0'
+  flutter: '>=3.44.0'
 
 dependencies:
   firebase_analytics: ^13.0.1
@@ -12,6 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
   in_app_purchase: ^3.2.3
+  material_ui: ^1.3.0
 
 dev_dependencies:
   flutter_test:

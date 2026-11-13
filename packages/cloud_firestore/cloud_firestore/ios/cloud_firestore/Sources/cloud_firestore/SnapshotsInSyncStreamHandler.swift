@@ -14,6 +14,7 @@ import Foundation
 final class SnapshotsInSyncStreamHandler: NSObject, FlutterStreamHandler {
   private let firestore: Firestore
   private var listenerRegistration: ListenerRegistration?
+  private var eventSink: FlutterEventSink?
 
   init(firestore: Firestore) {
     self.firestore = firestore
@@ -22,17 +23,23 @@ final class SnapshotsInSyncStreamHandler: NSObject, FlutterStreamHandler {
   func onListen(withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink)
     -> FlutterError?
   {
-    listenerRegistration = firestore.addSnapshotsInSyncListener {
-      DispatchQueue.main.async {
-        events(nil)
-      }
+    eventSink = events
+    listenerRegistration = firestore.addSnapshotsInSyncListener { [weak self] in
+      self?.emit(nil)
     }
     return nil
   }
 
   func onCancel(withArguments arguments: Any?) -> FlutterError? {
+    eventSink = nil
     listenerRegistration?.remove()
     listenerRegistration = nil
     return nil
+  }
+
+  private func emit(_ event: Any?) {
+    DispatchQueue.main.async { [weak self] in
+      self?.eventSink?(event)
+    }
   }
 }
