@@ -368,8 +368,8 @@ class LiveSession {
   /// Receives messages from the server.
   ///
   /// Returns a [Stream] of [LiveServerResponse] objects representing the
-  /// messages received from the server. The stream will stops once the server
-  /// sends turn complete message.
+  /// messages received from the server. The stream remains open across turns
+  /// until the session is closed.
   Stream<LiveServerResponse> receive() async* {
     _checkWsStatus();
 
