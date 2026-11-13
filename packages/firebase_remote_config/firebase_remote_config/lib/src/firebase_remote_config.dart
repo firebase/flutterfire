@@ -191,6 +191,36 @@ class FirebaseRemoteConfig extends FirebasePlugin {
   /// If a connection to the Remote Config backend is not already open, calling this method will
   /// open it. Multiple listeners can be added by calling this method again, but subsequent calls
   /// reuse the same connection to the backend.
+  ///
+  /// Errors from the real-time connection are added to the stream as a [FirebaseException] with
+  /// one of these codes:
+  ///
+  /// * `config-update-stream-error`: the connection to the backend failed. The message includes
+  ///   the HTTP status, if there is one.
+  /// * `config-update-message-invalid`: an update message from the backend could not be parsed.
+  /// * `config-update-not-fetched`: an update was announced, but the new config could not be
+  ///   fetched.
+  /// * `config-update-unavailable`: the real-time service is temporarily unavailable.
+  /// * `unknown`: any other error.
+  ///
+  /// On iOS, a failed fetch of an announced update can instead be reported with the codes [fetch]
+  /// uses, such as `throttled`.
+  ///
+  /// The stream stays open after an error, and the SDK keeps retrying, so the same error can be
+  /// reported again, for example each time the app returns to the foreground. Always pass an
+  /// `onError` callback to [Stream.listen]: without one, an error is reported as uncaught, which
+  /// crash reporters such as Crashlytics record as a fatal crash.
+  ///
+  /// ```dart
+  /// remoteConfig.onConfigUpdated.listen(
+  ///   (update) async {
+  ///     await remoteConfig.activate();
+  ///   },
+  ///   onError: (Object error) {
+  ///     // The config keeps its last activated values.
+  ///   },
+  /// );
+  /// ```
   Stream<RemoteConfigUpdate> get onConfigUpdated {
     return _delegate.onConfigUpdated;
   }
