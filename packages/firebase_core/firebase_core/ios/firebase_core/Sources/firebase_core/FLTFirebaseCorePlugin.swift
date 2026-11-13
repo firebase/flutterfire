@@ -22,6 +22,22 @@ extension FlutterError: @retroactive Error {}
 private let kFLTFirebaseCoreChannelName =
   "dev.flutter.pigeon.FirebaseCoreHostApi.initializeApp"
 
+/// Lets firebase_app_check install its provider factory before
+/// `FirebaseApp.configure()`. The Apple SDK asks the factory for a provider
+/// during configure and ignores a factory set afterwards. Flutter registers
+/// firebase_core before firebase_app_check, so that plugin cannot do this from
+/// its own registration. Looked up by name because firebase_core cannot depend
+/// on firebase_app_check. Does nothing when firebase_app_check is not linked.
+private func installAppCheckProviderFactoryIfLinked() {
+  let selector = NSSelectorFromString("installProviderFactory")
+  guard let plugin = NSClassFromString("FirebaseAppCheckPlugin") as? NSObject.Type,
+    plugin.responds(to: selector)
+  else {
+    return
+  }
+  plugin.perform(selector)
+}
+
 @objc(FLTFirebaseCorePlugin)
 public class FLTFirebaseCorePlugin: NSObject, FlutterPlugin, FLTFirebasePluginProtocol,
   FirebaseCoreHostApi, FirebaseAppHostApi
@@ -43,6 +59,7 @@ public class FLTFirebaseCorePlugin: NSObject, FlutterPlugin, FLTFirebasePluginPr
     if FirebaseOptions.defaultOptions() != nil,
       FirebaseApp.allApps?["__FIRAPP_DEFAULT"] == nil
     {
+      installAppCheckProviderFactoryIfLinked()
       FirebaseApp.configure()
     }
 
