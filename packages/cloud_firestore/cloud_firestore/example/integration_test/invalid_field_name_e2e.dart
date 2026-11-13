@@ -6,22 +6,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-/// iOS and macOS abort on this exception. Android catches it, then reports
-/// code `unknown` because `IllegalArgumentException` is not a Firestore
-/// exception. The group asserts `invalid-argument`, which is the Windows
-/// contract.
+/// The assertions cover the Windows plugin. On web, [defaultTargetPlatform]
+/// follows the browser's operating system, so [kIsWeb] has to be checked too.
 String? _invalidFieldNameSkipReason() {
-  if (kIsWeb) {
+  if (!kIsWeb && defaultTargetPlatform == TargetPlatform.windows) {
     return null;
   }
-  if (defaultTargetPlatform == TargetPlatform.iOS ||
-      defaultTargetPlatform == TargetPlatform.macOS) {
-    return 'iOS and macOS do not catch FIRInvalidArgumentException';
-  }
-  if (defaultTargetPlatform == TargetPlatform.android) {
-    return 'Android reports IllegalArgumentException as unknown, not invalid-argument';
-  }
-  return null;
+  return 'This test covers the Windows plugin';
 }
 
 void runInvalidFieldNameTests() {
@@ -90,24 +81,18 @@ void runInvalidFieldNameTests() {
       expect(snapshot.exists, isFalse);
     });
 
-    test(
-      'set() rejects a field named __',
-      () async {
-        final reference = document('invalid-field-set-double-underscore');
-        await reference.delete();
+    test('set() rejects a field named __', () async {
+      final reference = document('invalid-field-set-double-underscore');
+      await reference.delete();
 
-        await expectLater(
-          reference.set(<String, dynamic>{'__': 1}),
-          throwsInvalidField('begin and end'),
-        );
+      await expectLater(
+        reference.set(<String, dynamic>{'__': 1}),
+        throwsInvalidField('begin and end'),
+      );
 
-        final snapshot = await reference.get();
-        expect(snapshot.exists, isFalse);
-      },
-      skip: kIsWeb
-          ? 'The JS SDK does not treat __ as a reserved field name'
-          : null,
-    );
+      final snapshot = await reference.get();
+      expect(snapshot.exists, isFalse);
+    });
 
     test('set() with merge rejects an empty field name', () async {
       final reference = document('invalid-field-set-merge-empty');
@@ -135,100 +120,75 @@ void runInvalidFieldNameTests() {
       expect(snapshot.data(), <String, dynamic>{'ok': 1});
     });
 
-    test(
-      'batch.set() rejects an empty field name',
-      () async {
-        final reference = document('invalid-field-batch-set-empty');
-        await reference.delete();
+    test('batch.set() rejects an empty field name', () async {
+      final reference = document('invalid-field-batch-set-empty');
+      await reference.delete();
 
-        await expectLater(() async {
-          final batch = firestore.batch();
-          batch.set(reference, <String, dynamic>{'': 1});
-          await batch.commit();
-        }(), throwsInvalidField('must not be empty'));
+      await expectLater(() async {
+        final batch = firestore.batch();
+        batch.set(reference, <String, dynamic>{'': 1});
+        await batch.commit();
+      }(), throwsInvalidField('must not be empty'));
 
-        final snapshot = await reference.get();
-        expect(snapshot.exists, isFalse);
-      },
-      skip: kIsWeb
-          ? 'The JS SDK throws from batch.set before commit, and that call is not converted to FirebaseException'
-          : null,
-    );
+      final snapshot = await reference.get();
+      expect(snapshot.exists, isFalse);
+    });
 
-    test(
-      'runTransaction set() rejects an empty field name',
-      () async {
-        final reference = document('invalid-field-transaction-set-empty');
-        await reference.set(<String, dynamic>{'ok': 1});
-        var attempts = 0;
+    test('runTransaction set() rejects an empty field name', () async {
+      final reference = document('invalid-field-transaction-set-empty');
+      await reference.set(<String, dynamic>{'ok': 1});
+      var attempts = 0;
 
-        await expectLater(
-          firestore.runTransaction((transaction) async {
-            attempts += 1;
-            transaction.set(reference, <String, dynamic>{'': 1});
-          }, maxAttempts: 2),
-          throwsInvalidField('must not be empty'),
-        );
-        expect(attempts, 1);
+      await expectLater(
+        firestore.runTransaction((transaction) async {
+          attempts += 1;
+          transaction.set(reference, <String, dynamic>{'': 1});
+        }, maxAttempts: 2),
+        throwsInvalidField('must not be empty'),
+      );
+      expect(attempts, 1);
 
-        final snapshot = await reference.get();
-        expect(snapshot.data(), <String, dynamic>{'ok': 1});
-      },
-      skip: kIsWeb
-          ? 'A JS error inside the transaction handler is rewrapped as a plain Error'
-          : null,
-    );
+      final snapshot = await reference.get();
+      expect(snapshot.data(), <String, dynamic>{'ok': 1});
+    });
 
-    test(
-      'runTransaction update() rejects a reserved field name',
-      () async {
-        final reference = document('invalid-field-transaction-update-reserved');
-        await reference.set(<String, dynamic>{'ok': 1});
-        var attempts = 0;
+    test('runTransaction update() rejects a reserved field name', () async {
+      final reference = document('invalid-field-transaction-update-reserved');
+      await reference.set(<String, dynamic>{'ok': 1});
+      var attempts = 0;
 
-        await expectLater(
-          firestore.runTransaction((transaction) async {
-            attempts += 1;
-            transaction.update(reference, <String, dynamic>{'__x__': 2});
-          }, maxAttempts: 2),
-          throwsInvalidField('begin and end'),
-        );
-        expect(attempts, 1);
+      await expectLater(
+        firestore.runTransaction((transaction) async {
+          attempts += 1;
+          transaction.update(reference, <String, dynamic>{'__x__': 2});
+        }, maxAttempts: 2),
+        throwsInvalidField('begin and end'),
+      );
+      expect(attempts, 1);
 
-        final snapshot = await reference.get();
-        expect(snapshot.data(), <String, dynamic>{'ok': 1});
-      },
-      skip: kIsWeb
-          ? 'A JS error inside the transaction handler is rewrapped as a plain Error'
-          : null,
-    );
+      final snapshot = await reference.get();
+      expect(snapshot.data(), <String, dynamic>{'ok': 1});
+    });
 
     test('a query value may use a reserved field name', () async {
-      final query = firestore
-          .collection('flutter-tests-invalid-field-query')
-          .where('m', isEqualTo: <String, dynamic>{'__x__': 1});
-
-      // Web accepts this value. The Windows client forwards it, and the
-      // emulator rejects the reserved key. The plugin does not validate it.
-      if (!kIsWeb && defaultTargetPlatform == TargetPlatform.windows) {
-        await expectLater(
-          query.get(),
-          throwsA(
-            isA<FirebaseException>()
-                .having((error) => error.plugin, 'plugin', 'cloud_firestore')
-                .having((error) => error.code, 'code', 'invalid-argument')
-                .having(
-                  (error) => error.message,
-                  'message',
-                  contains('is reserved'),
-                ),
-          ),
-        );
-        return;
-      }
-
-      final snapshot = await query.get();
-      expect(snapshot.docs, isEmpty);
+      // The plugin does not validate query values. The emulator rejects the
+      // reserved key.
+      await expectLater(
+        firestore
+            .collection('flutter-tests-invalid-field-query')
+            .where('m', isEqualTo: <String, dynamic>{'__x__': 1})
+            .get(),
+        throwsA(
+          isA<FirebaseException>()
+              .having((error) => error.plugin, 'plugin', 'cloud_firestore')
+              .having((error) => error.code, 'code', 'invalid-argument')
+              .having(
+                (error) => error.message,
+                'message',
+                contains('is reserved'),
+              ),
+        ),
+      );
     });
   }, skip: _invalidFieldNameSkipReason() ?? false);
 }
