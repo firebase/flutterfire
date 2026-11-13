@@ -227,6 +227,55 @@ void runInstanceTests() {
       skip: defaultTargetPlatform != TargetPlatform.windows,
     );
 
+    test(
+      'Settings() - persistenceEnabled: false on the DocumentReference codec path',
+      () async {
+        // Regression test for https://github.com/firebase/flutterfire/issues/18931
+        // The Windows settings codec runs only when a DocumentReference is
+        // decoded, and that decode is what first creates the native instance.
+        // A plain get() is created by GetFirestoreFromPigeon, which already
+        // forwards persistenceEnabled. The second open writes a different
+        // document so the one we read is not sitting in the memory cache.
+        const databaseId = 'codec-persistence-18931';
+        const storedPath = 'flutter-tests/codec-persistence-18931';
+        const openerPath = 'flutter-tests/codec-opener-18931';
+        const targetPath = 'flutter-tests/codec-target-18931';
+        const cacheGet = GetOptions(source: Source.cache);
+
+        final firestore = FirebaseFirestore.instanceFor(
+          app: Firebase.app(),
+          databaseId: databaseId,
+        );
+        firestore.settings = const Settings(persistenceEnabled: false);
+        firestore.useFirestoreEmulator('localhost', 8080);
+
+        Future<void> writeReference(String path) {
+          return firestore.doc(path).set({'ref': firestore.doc(targetPath)});
+        }
+
+        await writeReference(storedPath);
+        await firestore.waitForPendingWrites();
+        await firestore.terminate();
+
+        try {
+          await writeReference(openerPath);
+          await expectLater(
+            firestore.doc(storedPath).get(cacheGet),
+            throwsA(
+              isA<FirebaseException>().having(
+                (e) => e.code,
+                'code',
+                'unavailable',
+              ),
+            ),
+          );
+        } finally {
+          await firestore.terminate();
+        }
+      },
+      skip: defaultTargetPlatform != TargetPlatform.windows,
+    );
+
     test('setIndexConfigurationFromJSON()', () async {
       final json = jsonEncode({
         'indexes': [
