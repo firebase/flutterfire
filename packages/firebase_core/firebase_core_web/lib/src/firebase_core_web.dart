@@ -197,18 +197,29 @@ class FirebaseCoreWeb extends FirebasePlatform {
       web.document.head!.appendChild(script);
     }
 
-    Completer completer = Completer();
-
-    globalContext.callMethod(
+    // `ff_trigger_*` is an async function, so it returns a promise that
+    // rejects when `import()` fails (network error, blocked request, CDN
+    // outage). Awaiting that promise, instead of only waiting for the
+    // callback, turns a failed load into an error rather than a future that
+    // never completes, which left `initializeApp` hanging forever.
+    final JSPromise<JSAny?> trigger = globalContext.callMethod(
       'ff_trigger_$windowVar'.toJS,
       (JSAny module) {
         globalContext[windowVar] = module;
-        globalContext.delete('ff_trigger_$windowVar'.toJS);
-        completer.complete();
       }.toJS,
     );
 
-    await completer.future;
+    try {
+      await trigger.toDart;
+    } catch (e) {
+      throw FirebaseException(
+        plugin: 'core',
+        code: 'script-load-failed',
+        message: 'Failed to load the Firebase JS SDK script $src: $e',
+      );
+    } finally {
+      globalContext.delete('ff_trigger_$windowVar'.toJS);
+    }
   }
 
   /// Initializes the Firebase JS SDKs by injecting them into the `head` of the
