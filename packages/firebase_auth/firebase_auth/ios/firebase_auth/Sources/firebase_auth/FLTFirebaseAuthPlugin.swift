@@ -23,6 +23,12 @@ import Security
   import FlutterMacOS
 #endif
 
+enum AppleSignInMode {
+  case signIn(Auth)
+  case reauthenticate(User)
+  case link(User)
+}
+
 @objc(FLTFirebaseAuthPlugin)
 public class FLTFirebaseAuthPlugin: NSObject, FlutterPlugin, FLTFirebasePluginProtocol,
   FirebaseAuthHostApi, ASAuthorizationControllerDelegate,
@@ -30,9 +36,7 @@ public class FLTFirebaseAuthPlugin: NSObject, FlutterPlugin, FLTFirebasePluginPr
 {
   var messenger: FlutterBinaryMessenger
   var authProvider: OAuthProvider?
-  var linkWithAppleUser: User?
-  var signInWithAppleAuth: Auth?
-  var isReauthenticatingWithApple = false
+  var appleSignInMode: AppleSignInMode?
   var currentNonce: String?
   var appleCompletion: ((Result<InternalUserCredential, Error>) -> Void)?
   var appleArguments: AuthPigeonFirebaseApp?
@@ -371,9 +375,36 @@ public class FLTFirebaseAuthPlugin: NSObject, FlutterPlugin, FLTFirebasePluginPr
     }
   }
 
+  func finishAppleSignInRequest(_ error: Error) {
+    let completion = appleCompletion
+    appleCompletion = nil
+    appleSignInRequestInFlight = false
+    currentNonce = nil
+    appleSignInMode = nil
+    completion?(.failure(error))
+  }
+
+  func signedInAppleUser(matching user: User) -> Result<User, Error> {
+    guard let appleArguments,
+      FLTFirebasePlugin.firebaseAppNamed(appleArguments.appName) != nil,
+      let currentUser = getFIRAuthFromPigeon(appleArguments).currentUser
+    else {
+      return .failure(AuthErrors.noCurrentUser())
+    }
+    guard currentUser.uid == user.uid else {
+      return .failure(
+        FlutterError(
+          code: "user-mismatch",
+          message: "The supplied credentials do not correspond to the previously signed in user.",
+          details: nil))
+    }
+    return .success(currentUser)
+  }
+
   func launchAppleSignInRequest(
     app: AuthPigeonFirebaseApp,
     signInProvider: InternalSignInProvider,
+    mode: AppleSignInMode,
     completion: @escaping (Result<InternalUserCredential, Error>) -> Void
   ) {
     if appleSignInRequestInFlight {
@@ -385,6 +416,8 @@ public class FLTFirebaseAuthPlugin: NSObject, FlutterPlugin, FLTFirebasePluginPr
             details: nil)))
       return
     }
+
+    appleSignInMode = mode
 
     let nonce = randomNonce(32)
     currentNonce = nonce
@@ -442,22 +475,17 @@ public class FLTFirebaseAuthPlugin: NSObject, FlutterPlugin, FLTFirebasePluginPr
   ) {
     guard let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential
     else {
-      let completion = appleCompletion
-      appleCompletion = nil
-      appleSignInRequestInFlight = false
-      completion?(.failure(AuthErrors.invalidCredential()))
+      finishAppleSignInRequest(AuthErrors.invalidCredential())
       return
     }
 
     guard let rawNonce = currentNonce else {
+      finishAppleSignInRequest(AuthErrors.invalidCredential())
       return
     }
 
     guard let identityToken = appleIDCredential.identityToken else {
-      let completion = appleCompletion
-      appleCompletion = nil
-      appleSignInRequestInFlight = false
-      completion?(.failure(AuthErrors.invalidCredential()))
+      finishAppleSignInRequest(AuthErrors.invalidCredential())
       return
     }
 
@@ -467,68 +495,70 @@ public class FLTFirebaseAuthPlugin: NSObject, FlutterPlugin, FLTFirebasePluginPr
       authorizationCode = String(data: code, encoding: .utf8)
     }
 
-    guard let idToken else { return }
+    guard let idToken else {
+      finishAppleSignInRequest(AuthErrors.invalidCredential())
+      return
+    }
     let credential = OAuthProvider.appleCredential(
       withIDToken: idToken, rawNonce: rawNonce, fullName: appleIDCredential.fullName)
 
-    if isReauthenticatingWithApple {
-      isReauthenticatingWithApple = false
-      Auth.auth().currentUser?.reauthenticate(with: credential) { authResult, error in
+    let mode = appleSignInMode
+    appleSignInMode = nil
+
+    switch mode {
+    case .reauthenticate(let user):
+      switch signedInAppleUser(matching: user) {
+      case .failure(let error):
+        finishAppleSignInRequest(error)
+      case .success(let currentUser):
+        currentUser.reauthenticate(with: credential) { authResult, error in
+          self.handleSignInWithApple(
+            authResult: authResult, authorizationCode: authorizationCode, error: error)
+        }
+      }
+    case .link(let user):
+      switch signedInAppleUser(matching: user) {
+      case .failure(let error):
+        finishAppleSignInRequest(error)
+      case .success(let currentUser):
+        currentUser.link(with: credential) { authResult, error in
+          self.handleSignInWithApple(
+            authResult: authResult, authorizationCode: authorizationCode, error: error)
+        }
+      }
+    case .signIn(let auth):
+      auth.signIn(with: credential) { authResult, error in
         self.handleSignInWithApple(
           authResult: authResult, authorizationCode: authorizationCode, error: error)
       }
-    } else if let userToLink = linkWithAppleUser {
-      userToLink.link(with: credential) { authResult, error in
-        self.linkWithAppleUser = nil
-        self.handleSignInWithApple(
-          authResult: authResult, authorizationCode: authorizationCode, error: error)
-      }
-    } else {
-      let signInAuth = signInWithAppleAuth ?? Auth.auth()
-      signInAuth.signIn(with: credential) { authResult, error in
-        self.signInWithAppleAuth = nil
-        self.handleSignInWithApple(
-          authResult: authResult, authorizationCode: authorizationCode, error: error)
-      }
+    case nil:
+      finishAppleSignInRequest(AuthErrors.invalidCredential())
     }
   }
 
   public func authorizationController(
     controller: ASAuthorizationController, didCompleteWithError error: Error
   ) {
-    let completion = appleCompletion
-    appleCompletion = nil
-    appleSignInRequestInFlight = false
-    guard let completion else { return }
-
+    let flutterError: FlutterError
     let nsError = error as NSError
     switch nsError.code {
     case ASAuthorizationError.canceled.rawValue:
-      completion(
-        .failure(
-          FlutterError(
-            code: "canceled", message: "The user canceled the authorization attempt.", details: nil)
-        ))
+      flutterError = FlutterError(
+        code: "canceled", message: "The user canceled the authorization attempt.", details: nil)
     case ASAuthorizationError.invalidResponse.rawValue:
-      completion(
-        .failure(
-          FlutterError(
-            code: "invalid-response",
-            message: "The authorization request received an invalid response.", details: nil)))
+      flutterError = FlutterError(
+        code: "invalid-response",
+        message: "The authorization request received an invalid response.", details: nil)
     case ASAuthorizationError.notHandled.rawValue:
-      completion(
-        .failure(
-          FlutterError(
-            code: "not-handled", message: "The authorization request wasn’t handled.", details: nil)
-        ))
+      flutterError = FlutterError(
+        code: "not-handled", message: "The authorization request wasn’t handled.", details: nil)
     case ASAuthorizationError.failed.rawValue:
-      completion(
-        .failure(
-          FlutterError(
-            code: "failed", message: "The authorization attempt failed.", details: nil)))
+      flutterError = FlutterError(
+        code: "failed", message: "The authorization attempt failed.", details: nil)
     default:
-      completion(.failure(AuthErrors.convertAppleAuthorizationErrorToFlutterError(error)))
+      flutterError = AuthErrors.convertAppleAuthorizationErrorToFlutterError(error)
     }
+    finishAppleSignInRequest(flutterError)
   }
 
   func handleSignInWithApple(
@@ -949,8 +979,8 @@ public class FLTFirebaseAuthPlugin: NSObject, FlutterPlugin, FLTFirebasePluginPr
       return
     }
     if signInProvider.providerId == kSignInMethodApple {
-      signInWithAppleAuth = auth
-      launchAppleSignInRequest(app: app, signInProvider: signInProvider, completion: completion)
+      launchAppleSignInRequest(
+        app: app, signInProvider: signInProvider, mode: .signIn(auth), completion: completion)
       return
     }
     #if os(macOS)
