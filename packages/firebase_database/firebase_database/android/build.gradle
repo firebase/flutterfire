@@ -65,6 +65,7 @@ android {
                 srcDirs = ['src/main/kotlin']
             }
         }
+        test.java.srcDirs += "src/test/kotlin"
     }
 
     buildFeatures {
@@ -75,11 +76,16 @@ android {
         disable 'InvalidPackage'
     }
 
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
+
     dependencies {
         api firebaseCoreProject
         implementation platform("com.google.firebase:firebase-bom:${getRootProjectExtOrCoreProperty("FirebaseSDKVersion", firebaseCoreProject)}")
         implementation 'com.google.firebase:firebase-database'
         implementation 'androidx.annotation:annotation:1.7.0'
+        testImplementation 'junit:junit:4.13.2'
     }
 }
 
