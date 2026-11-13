@@ -5,6 +5,7 @@
 // ignore_for_file: do_not_use_environment
 
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -124,6 +125,28 @@ void main() {
       );
     }, skip: defaultTargetPlatform != TargetPlatform.iOS);
 
+    test('getToken uses the provider passed to activate', () async {
+      await FirebaseAppCheck.instance.activate(
+        providerApple: const AppleAppAttestProvider(),
+      );
+
+      // No simulator supports App Attest, so the error names App Attest
+      // only when the provider passed to activate() is the one asked for a
+      // token. The native SDK used to keep the provider it created while
+      // firebase_core configured Firebase, before activate() ran. On a
+      // simulator that is the debug provider, which fails differently.
+      await expectLater(
+        FirebaseAppCheck.instance.getToken(true),
+        throwsA(
+          isA<FirebaseException>().having(
+            (e) => e.message,
+            'message',
+            contains('AppAttestProvider'),
+          ),
+        ),
+      );
+    }, skip: _isIosSimulator ? null : 'iOS simulator only.');
+
     test(
       'appAttestWithDeviceCheckFallback falls back rather than erroring',
       () async {
@@ -199,6 +222,13 @@ void main() {
     );
   });
 }
+
+/// A simulator app runs out of the host's CoreSimulator directory. iOS gives
+/// Dart no environment variables to check instead.
+bool get _isIosSimulator =>
+    !kIsWeb &&
+    defaultTargetPlatform == TargetPlatform.iOS &&
+    Platform.resolvedExecutable.contains('CoreSimulator');
 
 /// The lifetime (`exp` - `iat`) of an App Check token, read from its JWT claims.
 Duration _tokenTtl(String token) {
