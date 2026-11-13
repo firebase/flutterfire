@@ -20,6 +20,7 @@
 - firebase_auth
 - firebase_auth/firebase_auth_platform_interface
 - firebase_auth/firebase_auth_web
+- firebase_common
 - firebase_core
 - firebase_core/firebase_core_platform_interface
 - firebase_core/firebase_core_web

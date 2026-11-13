@@ -98,6 +98,7 @@ jobs:
           filters: |
             shared: &shared
               - 'packages/firebase_core/**'
+              - 'packages/firebase_common/**'
               - '${{ inputs.package-path }}/lib/**'
               - '${{ inputs.package-path }}/pubspec.yaml'
               - '${{ inputs.platform-interface-package && format('packages/*/{0}/**', inputs.platform-interface-package) || 'packages/__none__/**' }}'

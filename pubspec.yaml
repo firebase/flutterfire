@@ -32,8 +32,11 @@ workspace:
   - packages/firebase_auth/firebase_auth/example
   - packages/firebase_auth/firebase_auth_platform_interface
   - packages/firebase_auth/firebase_auth_web
+  - packages/firebase_common
   - packages/firebase_core/firebase_core
   - packages/firebase_core/firebase_core/example
+  - packages/firebase_core/firebase_core_interface
+  - packages/firebase_core/firebase_core_js
   - packages/firebase_core/firebase_core_platform_interface
   - packages/firebase_core/firebase_core_web
   - packages/firebase_crashlytics/firebase_crashlytics
@@ -96,7 +99,7 @@ melos:
           dart run scripts/generate_dataconnect_version.dart && \
           dart run scripts/generate_versions_web.dart && \
           dart run scripts/generate_versions_spm.dart && \
-          git add packages/firebase_ai/firebase_ai/lib/src/firebaseai_version.dart && git add packages/firebase_data_connect/firebase_data_connect/lib/src/dataconnect_version.dart && git add packages/*/*_web/lib/src/*_version.dart && git add packages/*/*/ios/*/Package.swift packages/*/*/macos/*/Package.swift && git add packages/*/*/ios/*/Sources/*/Constants.swift
+          git add packages/firebase_ai/firebase_ai/lib/src/firebaseai_version.dart && git add packages/firebase_data_connect/firebase_data_connect/lib/src/dataconnect_version.dart && git add packages/*/*_web/lib/src/*_version.dart packages/firebase_core/firebase_core_js/lib/src/firebase_core_version.dart && git add packages/*/*/ios/*/Package.swift packages/*/*/macos/*/Package.swift && git add packages/*/*/ios/*/Sources/*/Constants.swift
 
     bootstrap:
       # It seems so that running "pub get" in parallel has some issues (like
@@ -210,6 +213,7 @@ melos:
         melos run test --no-select && \
         melos run test:web --no-select && \
         melos run test:web:wasm --no-select && \
+        melos run test:js --no-select && \
         melos run test:browser --no-select && \
         melos run test:e2e --no-select
       description: |
@@ -225,6 +229,7 @@ melos:
           - test
         ignore:
           - '*web*'
+          - '*_js'
           - '*example*'
 
     test:web:
@@ -249,6 +254,18 @@ melos:
         dirExists:
           - test
         scope: '*web*'
+
+    test:js:
+      # `*_js` packages do not depend on Flutter, and `flutter test --platform=chrome`
+      # hangs on them, so they use `dart test` on Chrome, compiled to JS and to Wasm.
+      run: |
+        melos exec -c 1 --fail-fast -- \
+          "dart test -p chrome && dart test -p chrome --compiler dart2wasm"
+      description: Run `dart test -p chrome` for a specific '*_js' package, compiled to JS and to Wasm.
+      packageFilters:
+        dirExists:
+          - test
+        scope: '*_js'
 
     test:browser:
       # Browser tests of the other packages live in test/web, so that their

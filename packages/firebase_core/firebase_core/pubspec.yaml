@@ -17,6 +17,7 @@ environment:
   flutter: '>=3.38.0'
 
 dependencies:
+  firebase_core_interface: ^1.0.0
   firebase_core_platform_interface: ^8.1.1
   firebase_core_web: ^4.1.0
   flutter:
@@ -30,19 +31,30 @@ dev_dependencies:
   plugin_platform_interface: ^2.1.3
 
 flutter:
+  # `dartPluginClass` registers the method channel implementation before `main`
+  # (and in background isolates the engine starts), as `firebase_core_interface`
+  # cannot default to it.
   plugin:
     platforms:
       android:
         package: io.flutter.plugins.firebase.core
         pluginClass: FlutterFirebaseCorePlugin
+        dartPluginClass: MethodChannelFirebase
+        dartFileName: src/method_channel_registrant.dart
       ios:
         pluginClass: FLTFirebaseCorePlugin
+        dartPluginClass: MethodChannelFirebase
+        dartFileName: src/method_channel_registrant.dart
       macos:
         pluginClass: FLTFirebaseCorePlugin
+        dartPluginClass: MethodChannelFirebase
+        dartFileName: src/method_channel_registrant.dart
       web:
         default_package: firebase_core_web
       windows:
         pluginClass: FirebaseCorePluginCApi
+        dartPluginClass: MethodChannelFirebase
+        dartFileName: src/method_channel_registrant.dart
 
 firebase:
   google_services_gradle_plugin_version: '4.4.4'

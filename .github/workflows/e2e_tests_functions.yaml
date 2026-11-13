@@ -17,6 +17,7 @@ on:
     paths:
       - 'packages/cloud_functions/**'
       - 'packages/firebase_core/**'
+      - 'packages/firebase_common/**'
       - '.github/workflows/e2e_tests_functions.yaml'
       - '.github/workflows/reusable_e2e_*.yaml'
       - '.github/actions/setup-flutterfire/**'
@@ -27,6 +28,7 @@ on:
     paths:
       - 'packages/cloud_functions/**'
       - 'packages/firebase_core/**'
+      - 'packages/firebase_common/**'
       - '.github/workflows/e2e_tests_functions.yaml'
       - '.github/workflows/reusable_e2e_*.yaml'
       - '.github/actions/setup-flutterfire/**'

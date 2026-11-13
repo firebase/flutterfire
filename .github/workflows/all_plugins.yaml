@@ -271,9 +271,55 @@ jobs:
       - name: 'Flutter Test - Web (Wasm)'
         if: ${{ !cancelled() }}
         run: melos run test:web:wasm --no-select
+      - name: 'Dart Test - JS packages'
+        if: ${{ !cancelled() }}
+        run: melos run test:js --no-select
       - name: 'Flutter Test - Browser'
         if: ${{ !cancelled() }}
         run: melos run test:browser --no-select
+
+  # `firebase_common`, `firebase_core_interface` and `firebase_core_js` must
+  # resolve and build for Dart apps that do not use Flutter (Jaspr,
+  # `dart compile js`/`wasm`), on their minimum Dart SDK rather than the one
+  # Flutter bundles. `firebase_common` also runs on the VM for the server SDKs.
+  pure_dart_common:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      # The lowest Dart SDK firebase_common supports, which is also the floor of
+      # the server SDKs (firebase_admin_sdk, google_cloud_firestore) it serves.
+      - uses: dart-lang/setup-dart@6afc89df92d6eb3834022f73cd65adc8cdfcb92d
+        with:
+          sdk: '3.9.0'
+      - name: 'Test firebase_common without Flutter'
+        run: |
+          # Inside the workspace, `pub get` resolves every member, Flutter ones included.
+          cp -r packages/firebase_common "$RUNNER_TEMP/firebase_common"
+          cd "$RUNNER_TEMP/firebase_common"
+          sed -i '/^resolution: workspace$/d' pubspec.yaml
+          dart pub get
+          dart test
+          dart test -p chrome
+
+  # A separate job: a second setup-dart in the same job fails because the first
+  # one's SDK download is still in RUNNER_TEMP.
+  pure_dart_web:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      # The lowest Dart SDK firebase_core_interface and firebase_core_js support.
+      - uses: dart-lang/setup-dart@6afc89df92d6eb3834022f73cd65adc8cdfcb92d
+        with:
+          sdk: '3.10.0'
+      - name: 'Build a Dart web app without Flutter'
+        # Outside `.github/workflows/scripts/`, so editing it does not start every e2e suite.
+        working-directory: .github/pure_dart_web
+        run: |
+          dart pub get
+          dart compile js -o build/main.js web/main.dart
+          dart compile wasm -o build/main.wasm web/main.dart
 
   # Ruby, not Dart: crashlytics_add_upload_symbols_test.rb checks the generated
   # Xcode Run Script. It only needs the xcodeproj gem, so it stays off the

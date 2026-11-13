@@ -12,6 +12,7 @@ environment:
 dependencies:
   collection: ^1.0.0
   firebase_core: ^5.1.0
+  firebase_core_js: ^1.0.0
   firebase_core_platform_interface: ^8.1.1
   flutter:
     sdk: flutter

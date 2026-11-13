@@ -45,8 +45,15 @@ Future<void> main() async {
   print('Generated version files for ${webPackages.length} web packages');
 }
 
+/// Packages whose version file lives in another package than `<name>_web`.
+///
+/// `firebase_core_web` is a thin Flutter plugin over `firebase_core_js`, which
+/// reports the `firebase_core` version.
+const _versionFilePackages = {'firebase_core': 'firebase_core_js'};
+
 Future<void> _generateVersionFile(String packageName) async {
-  final webPackageName = '${packageName}_web';
+  final webPackageName =
+      _versionFilePackages[packageName] ?? '${packageName}_web';
 
   // Path to the web package's pubspec.yaml
   final pubspecPath = joinAll([

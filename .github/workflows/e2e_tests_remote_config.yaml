@@ -19,6 +19,7 @@ on:
     paths:
       - 'packages/firebase_remote_config/**'
       - 'packages/firebase_core/**'
+      - 'packages/firebase_common/**'
       - '.github/workflows/e2e_tests_remote_config.yaml'
       - '.github/workflows/reusable_e2e_*.yaml'
       - '.github/actions/setup-flutterfire/**'
@@ -29,6 +30,7 @@ on:
     paths:
       - 'packages/firebase_remote_config/**'
       - 'packages/firebase_core/**'
+      - 'packages/firebase_common/**'
       - '.github/workflows/e2e_tests_remote_config.yaml'
       - '.github/workflows/reusable_e2e_*.yaml'
       - '.github/actions/setup-flutterfire/**'

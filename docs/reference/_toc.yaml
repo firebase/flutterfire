@@ -29,8 +29,17 @@ toc:
 - title: firebase_auth_web
   path: https://pub.dev/documentation/firebase_auth_web/latest/
   status: external
+- title: firebase_common
+  path: https://pub.dev/documentation/firebase_common/latest/
+  status: external
 - title: firebase_core
   path: https://pub.dev/documentation/firebase_core/latest/
+  status: external
+- title: firebase_core_interface
+  path: https://pub.dev/documentation/firebase_core_interface/latest/
+  status: external
+- title: firebase_core_js
+  path: https://pub.dev/documentation/firebase_core_js/latest/
   status: external
 - title: firebase_core_web
   path: https://pub.dev/documentation/firebase_core_web/latest/
