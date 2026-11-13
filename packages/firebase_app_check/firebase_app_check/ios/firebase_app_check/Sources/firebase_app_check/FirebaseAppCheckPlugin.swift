@@ -368,13 +368,10 @@ class AppCheckProviderWrapper: NSObject, AppCheckProvider {
           unsetenv("AppCheckDebugToken")
         }
       }
-      let debugProvider = AppCheckDebugProvider(app: app)
-      delegateProvider = debugProvider
-      #if DEBUG
-        if debugToken?.isEmpty ?? true, let debugProvider {
-          print("Firebase App Check Debug Token: \(debugProvider.currentDebugToken())")
-        }
-      #endif
+      // The debug token is not printed here. The native SDK logs a locally
+      // generated token with instructions for registering it, and does not log
+      // a token provisioned by the Firebase CLI.
+      delegateProvider = AppCheckDebugProvider(app: app)
     case "appAttest":
       if #available(iOS 14.0, macOS 14.0, macCatalyst 14.0, tvOS 15.0, watchOS 9.0, *) {
         delegateProvider = AppAttestProvider(app: app)
