@@ -18,7 +18,6 @@ import com.google.firebase.inappmessaging.FirebaseInAppMessagingDisplay
 import com.google.firebase.inappmessaging.FirebaseInAppMessagingDisplayCallbacks
 import com.google.firebase.inappmessaging.FirebaseInAppMessagingDisplayErrorListener
 import com.google.firebase.inappmessaging.FirebaseInAppMessagingImpressionListener
-import com.google.firebase.inappmessaging.display.FirebaseInAppMessagingDisplay as FirebaseInAppMessagingDefaultDisplay
 import com.google.firebase.inappmessaging.model.Action
 import com.google.firebase.inappmessaging.model.CardMessage
 import com.google.firebase.inappmessaging.model.InAppMessage
@@ -34,8 +33,15 @@ import java.util.concurrent.Executor
 import kotlin.jvm.Volatile
 
 /** FirebaseInAppMessagingPlugin */
-class FirebaseInAppMessagingPlugin :
-    FlutterFirebasePlugin, FlutterPlugin, FirebaseInAppMessagingHostApi {
+class FirebaseInAppMessagingPlugin
+internal constructor(
+    // Runs on the main thread, where events are sent to Dart and the SDK
+    // removes the listeners on activity pause.
+    private val mainExecutor: Executor,
+    private val sdk: InAppMessagingSdk,
+) : FlutterFirebasePlugin, FlutterPlugin, FirebaseInAppMessagingHostApi {
+  constructor() : this(MainThreadExecutor(), FirebaseInAppMessagingSdk)
+
   private var binaryMessenger: BinaryMessenger? = null
   private var flutterApi: FirebaseInAppMessagingFlutterApi? = null
   private var application: Application? = null
@@ -43,18 +49,11 @@ class FirebaseInAppMessagingPlugin :
   private var lifecycleRegistered = false
   private var lastActivity: WeakReference<Activity>? = null
   private val pendingDisplays = ConcurrentHashMap<String, PendingDisplay>()
-  private val mainHandler = Handler(Looper.getMainLooper())
 
   private data class PendingDisplay(
       val callbacks: FirebaseInAppMessagingDisplayCallbacks,
       val actions: Map<String, Action>,
   )
-
-  // The listeners below forward events to Dart, which has to happen on the main
-  // thread, so they are registered with a main thread executor.
-  private val mainThreadExecutor = Executor { command ->
-    Handler(Looper.getMainLooper()).post(command)
-  }
 
   private val clickListener = FirebaseInAppMessagingClickListener { inAppMessage, action ->
     flutterApi?.onMessageClicked(
@@ -77,7 +76,26 @@ class FirebaseInAppMessagingPlugin :
         flutterApi?.onMessageDisplayError(campaignMetadata(inAppMessage), errorReason.name) {}
       }
 
-  private var eventListenersAdded = false
+  private val eventListeners =
+      EventListenerRegistration(
+          addListeners = {
+            sdk.addListeners(
+                clickListener,
+                impressionListener,
+                dismissListener,
+                displayErrorListener,
+                mainExecutor,
+            )
+          },
+          removeListeners = {
+            sdk.removeListeners(
+                clickListener,
+                impressionListener,
+                dismissListener,
+                displayErrorListener,
+            )
+          },
+      )
 
   private val messageDisplay =
       object : FirebaseInAppMessagingDisplay {
@@ -92,7 +110,7 @@ class FirebaseInAppMessagingPlugin :
           val message = toDisplayMessage(inAppMessage)
           val actions = collectActions(inAppMessage)
 
-          mainHandler.post {
+          mainExecutor.execute {
             val api = flutterApi
             if (api != null && customDisplayEnabled) {
               pendingDisplays[message.campaignMetadata.campaignId] =
@@ -118,14 +136,17 @@ class FirebaseInAppMessagingPlugin :
         override fun onActivityResumed(activity: Activity) {
           lastActivity = WeakReference(activity)
           if (customDisplayEnabled) {
-            FirebaseInAppMessaging.getInstance().setMessageDisplayComponent(messageDisplay)
+            sdk.setMessageDisplayComponent(messageDisplay)
           }
+          eventListeners.restore()
         }
 
         override fun onActivityPaused(activity: Activity) {
           if (lastActivity?.get() === activity) {
             lastActivity = null
           }
+          // `firebase-inappmessaging-display` removes all listeners here.
+          eventListeners.onRemovedBySdk()
         }
 
         override fun onActivityStopped(activity: Activity) {}
@@ -143,16 +164,25 @@ class FirebaseInAppMessagingPlugin :
   }
 
   override fun onAttachedToEngine(binding: FlutterPluginBinding) {
-    application = binding.applicationContext as? Application
-    initInstance(binding.binaryMessenger)
+    onAttachedToEngine(binding.applicationContext as? Application, binding.binaryMessenger)
+  }
+
+  internal fun onAttachedToEngine(application: Application?, messenger: BinaryMessenger) {
+    this.application = application
+    initInstance(messenger)
   }
 
   override fun onDetachedFromEngine(binding: FlutterPluginBinding) {
+    onDetachedFromEngine(binding.binaryMessenger)
+  }
+
+  internal fun onDetachedFromEngine(messenger: BinaryMessenger) {
     setCustomDisplayEnabledInternal(false)
-    removeEventListeners()
+    eventListeners.remove()
+    updateLifecycleCallbacks()
     binaryMessenger = null
     flutterApi = null
-    FirebaseInAppMessagingHostApi.setUp(binding.binaryMessenger, null)
+    FirebaseInAppMessagingHostApi.setUp(messenger, null)
   }
 
   private fun campaignMetadata(inAppMessage: InAppMessage): FiamCampaignMetadata {
@@ -164,22 +194,12 @@ class FirebaseInAppMessagingPlugin :
     )
   }
 
-  private fun removeEventListeners() {
-    if (!eventListenersAdded) return
-    eventListenersAdded = false
-
-    FirebaseInAppMessaging.getInstance().apply {
-      removeClickListener(clickListener)
-      removeImpressionListener(impressionListener)
-      removeDismissListener(dismissListener)
-      removeDisplayErrorListener(displayErrorListener)
-    }
-  }
-
   override fun addEventListeners(appName: String, callback: (Result<Unit>) -> Unit) {
-    FlutterFirebasePlugin.cachedThreadPool.execute {
+    // On the main thread, where the SDK removes the listeners on pause.
+    mainExecutor.execute {
       try {
-        addEventListenersInternal()
+        eventListeners.add()
+        updateLifecycleCallbacks()
         callback(Result.success(Unit))
       } catch (exception: Exception) {
         handleFailure(callback, exception)
@@ -233,7 +253,7 @@ class FirebaseInAppMessagingPlugin :
       enabled: Boolean,
       callback: (Result<Unit>) -> Unit,
   ) {
-    mainHandler.post {
+    mainExecutor.execute {
       try {
         setCustomDisplayEnabledInternal(enabled)
         callback(Result.success(Unit))
@@ -312,51 +332,41 @@ class FirebaseInAppMessagingPlugin :
   }
 
   private fun setCustomDisplayEnabledInternal(enabled: Boolean) {
+    // The default display is already in place. Rebinding it would restart a
+    // message it shows, and drop every engine's listeners.
+    if (!enabled && !customDisplayEnabled) return
     customDisplayEnabled = enabled
-    val fiam = FirebaseInAppMessaging.getInstance()
+    updateLifecycleCallbacks()
     if (enabled) {
-      fiam.setMessageDisplayComponent(messageDisplay)
-      if (!lifecycleRegistered) {
-        application?.registerActivityLifecycleCallbacks(lifecycleCallbacks)
-        lifecycleRegistered = true
-      }
+      sdk.setMessageDisplayComponent(messageDisplay)
     } else {
-      if (lifecycleRegistered) {
-        application?.unregisterActivityLifecycleCallbacks(lifecycleCallbacks)
-        lifecycleRegistered = false
-      }
       dismissAllPending()
       restoreDefaultDisplay()
     }
   }
 
-  /// Hands rendering back to `firebase-inappmessaging-display`. That SDK
-  /// overwrites the display component on activity resume, so we force a
-  /// rebind; `onActivityPaused` also calls `removeAllListeners()`, so any
-  /// lifecycle listeners attached by this plugin are registered again.
-  private fun restoreDefaultDisplay() {
-    val activity = lastActivity?.get() ?: return
-    val defaultDisplay = FirebaseInAppMessagingDefaultDisplay.getInstance()
-    val shouldRestoreListeners = eventListenersAdded
-    defaultDisplay.onActivityPaused(activity)
-    defaultDisplay.onActivityResumed(activity)
-    if (shouldRestoreListeners) {
-      eventListenersAdded = false
-      addEventListenersInternal()
+  /// Registered only once Dart uses the plugin, so they run after the ones
+  /// `firebase-inappmessaging-display` registers when Firebase initializes.
+  private fun updateLifecycleCallbacks() {
+    val needed = customDisplayEnabled || eventListeners.isWanted
+    if (needed && !lifecycleRegistered) {
+      application?.registerActivityLifecycleCallbacks(lifecycleCallbacks)
+      lifecycleRegistered = true
+    } else if (!needed && lifecycleRegistered) {
+      application?.unregisterActivityLifecycleCallbacks(lifecycleCallbacks)
+      lifecycleRegistered = false
     }
   }
 
-  private fun addEventListenersInternal() {
-    if (eventListenersAdded) {
-      return
-    }
-    FirebaseInAppMessaging.getInstance().apply {
-      addClickListener(clickListener, mainThreadExecutor)
-      addImpressionListener(impressionListener, mainThreadExecutor)
-      addDismissListener(dismissListener, mainThreadExecutor)
-      addDisplayErrorListener(displayErrorListener, mainThreadExecutor)
-    }
-    eventListenersAdded = true
+  /// Hands rendering back to `firebase-inappmessaging-display`. That SDK
+  /// overwrites the display component on activity resume, so we force a
+  /// rebind; `onActivityPaused` also calls `removeAllListeners()`, so the
+  /// lifecycle listeners are registered again.
+  private fun restoreDefaultDisplay() {
+    val activity = lastActivity?.get() ?: return
+    sdk.rebindDefaultDisplay(activity)
+    eventListeners.onRemovedBySdk()
+    eventListeners.restore()
   }
 
   private fun dismissAllPending() {
@@ -506,6 +516,14 @@ class FirebaseInAppMessagingPlugin :
     }
 
     return taskCompletionSource.task
+  }
+
+  private class MainThreadExecutor : Executor {
+    private val handler = Handler(Looper.getMainLooper())
+
+    override fun execute(command: Runnable) {
+      handler.post(command)
+    }
   }
 
   companion object {
