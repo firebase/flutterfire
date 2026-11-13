@@ -12,7 +12,18 @@ enum IndexMode {
 
 /// Options for executing a pipeline
 class ExecuteOptions {
+  /// Which indexes the backend may use.
   final IndexMode indexMode;
 
-  const ExecuteOptions({this.indexMode = IndexMode.recommended});
+  /// When true, data-manipulation stages commit in one transaction.
+  ///
+  /// When false, each document write is applied on its own and a pipeline
+  /// can partially succeed. Some writes, such as [PipelineSource.literals]
+  /// followed by [Pipeline.upsert], are rejected unless this is true.
+  final bool atomic;
+
+  const ExecuteOptions({
+    this.indexMode = IndexMode.recommended,
+    this.atomic = false,
+  });
 }

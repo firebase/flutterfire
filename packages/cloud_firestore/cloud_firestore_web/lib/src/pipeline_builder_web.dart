@@ -19,6 +19,7 @@ interop.PipelineJsImpl buildPipelineFromStages(
   final source = jsFirestore.pipeline();
   final first = stages.first;
   final stageName = first['stage'] as String?;
+  final converter = PipelineExpressionParserWeb(interop.pipelines, jsFirestore);
 
   // Build source stage
   interop.PipelineJsImpl pipeline = _applySourceStage(
@@ -26,9 +27,8 @@ interop.PipelineJsImpl buildPipelineFromStages(
     jsFirestore,
     stageName,
     first,
+    converter,
   );
-
-  final converter = PipelineExpressionParserWeb(interop.pipelines, jsFirestore);
 
   // Apply remaining stages
   for (var i = 1; i < stages.length; i++) {
@@ -42,6 +42,7 @@ interop.PipelineJsImpl _applySourceStage(
   interop.FirestoreJsImpl jsFirestore,
   String? stageName,
   Map<String, dynamic> first,
+  PipelineExpressionParserWeb converter,
 ) {
   final args = first['args'];
   return switch (stageName) {
@@ -58,6 +59,11 @@ interop.PipelineJsImpl _applySourceStage(
           .map((p) => interop.doc(jsFirestore as JSAny, p.toJS))
           .toList()
           .toJS,
+    ),
+    'literals' => source.literals(
+      converter.toLiteralsDocuments(
+        (args as Map<String, dynamic>)['documents']! as List<dynamic>,
+      ),
     ),
     _ => throw UnsupportedError(
       'Pipeline source stage "$stageName" is not supported on web.',
@@ -141,6 +147,14 @@ interop.PipelineJsImpl _applyStage(
         pipelineStages,
       );
       return pipeline.union(otherPipeline);
+    case 'delete':
+      return pipeline.delete(interop.DeleteStageOptionsJsImpl());
+    case 'update':
+      return pipeline.update(converter.toUpdateOptions(map));
+    case 'insert':
+      return pipeline.insert(converter.toInsertOptions(map));
+    case 'upsert':
+      return pipeline.upsert(converter.toUpsertOptions(map));
     default:
       throw FirebaseException(
         plugin: 'cloud_firestore',

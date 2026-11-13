@@ -574,5 +574,97 @@ void main() {
         expect(pipeline.stages[4]['stage'], 'offset');
       });
     });
+
+    group('data manipulation stages', () {
+      test('serializes delete with empty args', () {
+        final pipeline = firestore.pipeline().collection('books').delete();
+        expect(pipeline.stages.last, {
+          'stage': 'delete',
+          'args': <String, dynamic>{},
+        });
+      });
+
+      test('serializes update with no transformed fields', () {
+        final pipeline = firestore.pipeline().collection('books').update();
+        expect(pipeline.stages.last, {
+          'stage': 'update',
+          'args': {'expressions': <Map<String, dynamic>>[]},
+        });
+      });
+
+      test('serializes update transformed fields', () {
+        final pipeline = firestore.pipeline().collection('books').update([
+          Expression.field('rating').as('score'),
+        ]);
+        expect(pipeline.stages.last['stage'], 'update');
+        expect(pipeline.stages.last['args']['expressions'], [
+          {
+            'name': 'alias',
+            'args': {
+              'alias': 'score',
+              'expression': {
+                'name': 'field',
+                'args': {'field': 'rating'},
+              },
+            },
+          },
+        ]);
+      });
+
+      test(
+        'serializes insert with a collection and document id expression',
+        () {
+          final pipeline = firestore
+              .pipeline()
+              .literals([
+                {'title': 'Dune'},
+              ])
+              .insert(
+                collectionPath: 'books',
+                documentId: Expression.constant('dune'),
+              );
+          expect(pipeline.stages.last, {
+            'stage': 'insert',
+            'args': {
+              'collection': 'books',
+              'document_id': {
+                'name': 'constant',
+                'args': {'value': 'dune'},
+              },
+            },
+          });
+        },
+      );
+
+      test('serializes upsert additional fields', () {
+        final pipeline = firestore
+            .pipeline()
+            .collection('books')
+            .upsert(additionalFields: [Expression.field('title').as('name')]);
+        expect(pipeline.stages.last['stage'], 'upsert');
+        expect(pipeline.stages.last['args']['additional_fields'], [
+          {
+            'name': 'alias',
+            'args': {
+              'alias': 'name',
+              'expression': {
+                'name': 'field',
+                'args': {'field': 'title'},
+              },
+            },
+          },
+        ]);
+      });
+
+      test('throws when insert collection path is empty', () {
+        expect(
+          () => firestore
+              .pipeline()
+              .collection('books')
+              .insert(collectionPath: ''),
+          throwsArgumentError,
+        );
+      });
+    });
   });
 }

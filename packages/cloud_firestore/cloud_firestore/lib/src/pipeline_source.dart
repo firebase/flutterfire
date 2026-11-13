@@ -64,4 +64,27 @@ class PipelineSource {
     final delegate = _firestore._delegate.pipeline([stage.toMap()]);
     return Pipeline._(_firestore, delegate);
   }
+
+  /// Creates a pipeline from literal documents.
+  ///
+  /// Each map is one document. A field value may be a plain value or an
+  /// [Expression]. Expressions are only supported as top-level fields.
+  /// Nested maps and lists are plain values.
+  ///
+  /// Example:
+  /// ```dart
+  /// firestore.pipeline().literals([
+  ///   {'name': 'Alice', 'score': 50},
+  ///   {'name': 'Bob', 'score': Expression.constant(70)},
+  /// ]);
+  /// ```
+  Pipeline literals(List<Map<String, Object?>> documents) {
+    if (documents.isEmpty) {
+      throw ArgumentError('Documents list must not be empty.');
+    }
+
+    final stage = _LiteralsPipelineStage(documents);
+    final delegate = _firestore._delegate.pipeline([stage.toMap()]);
+    return Pipeline._(_firestore, delegate);
+  }
 }

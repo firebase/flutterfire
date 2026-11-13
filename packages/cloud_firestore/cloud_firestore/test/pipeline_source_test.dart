@@ -131,6 +131,52 @@ void main() {
       });
     });
 
+    group('literals()', () {
+      test('serializes a plain value and an expression', () {
+        final pipeline = firestore.pipeline().literals([
+          {
+            'name': 'Alice',
+            'score': Expression.constant(50),
+            'address': {'city': 'Accra'},
+          },
+        ]);
+        expect(pipeline.stages, hasLength(1));
+        expect(pipeline.stages.first['stage'], 'literals');
+        final documents =
+            pipeline.stages.first['args']['documents'] as List<dynamic>;
+        expect(documents, hasLength(1));
+        expect(documents.first, {
+          'name': {'kind': 'value', 'value': 'Alice'},
+          'score': {
+            'kind': 'expression',
+            'expression': {
+              'name': 'constant',
+              'args': {'value': 50},
+            },
+          },
+          'address': {
+            'kind': 'value',
+            'value': {'city': 'Accra'},
+          },
+        });
+      });
+
+      test('throws on an empty list', () {
+        expect(() => firestore.pipeline().literals([]), throwsArgumentError);
+      });
+
+      test('throws when an expression is nested', () {
+        expect(
+          () => firestore.pipeline().literals([
+            {
+              'address': {'city': Expression.constant('Accra')},
+            },
+          ]),
+          throwsArgumentError,
+        );
+      });
+    });
+
     group('chaining from source', () {
       test('returned pipeline accepts stage methods', () {
         final pipeline = firestore
