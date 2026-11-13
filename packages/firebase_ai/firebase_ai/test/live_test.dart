@@ -13,6 +13,7 @@
 // limitations under the License.
 import 'dart:convert';
 
+import 'package:firebase_ai/firebase_ai.dart' as public_api;
 import 'package:firebase_ai/src/api.dart';
 import 'package:firebase_ai/src/content.dart';
 import 'package:firebase_ai/src/error.dart';
@@ -594,6 +595,73 @@ void main() {
       expect(stopMessage.toJson(), {
         'realtime_input': {'activity_end': {}},
       });
+    });
+
+    test('parseServerResponse parses usage metadata', () {
+      final response = parseServerResponse({
+        'serverContent': {'turnComplete': true},
+        'usageMetadata': {
+          'promptTokenCount': 10,
+          'candidatesTokenCount': 25,
+          'totalTokenCount': 35,
+          'promptTokensDetails': [
+            {'modality': 'TEXT', 'tokenCount': 10},
+          ],
+        },
+      });
+
+      final usageMetadata = response.usageMetadata;
+      expect(usageMetadata, isNotNull);
+      expect(usageMetadata?.promptTokenCount, 10);
+      expect(usageMetadata?.candidatesTokenCount, 25);
+      expect(usageMetadata?.totalTokenCount, 35);
+      expect(
+        usageMetadata?.promptTokensDetails?.single.modality,
+        ContentModality.text,
+      );
+      expect(usageMetadata?.promptTokensDetails?.single.tokenCount, 10);
+    });
+
+    test('usage metadata is optional', () {
+      final response = parseServerResponse({'setupComplete': {}});
+      expect(response.message, isA<LiveServerSetupComplete>());
+      expect(response.usageMetadata, isNull);
+    });
+
+    test('usage metadata survives an unrecognized server message', () {
+      final response = parseServerResponse({
+        'unknown': {},
+        'usageMetadata': {'totalTokenCount': 35},
+      });
+      expect(response.usageMetadata?.totalTokenCount, 35);
+    });
+
+    test('usage metadata can arrive without a server message', () {
+      final response = parseServerResponse({
+        'usageMetadata': {'totalTokenCount': 35},
+      });
+      expect(response.usageMetadata?.totalTokenCount, 35);
+    });
+
+    test('explicitly null usage metadata is optional', () {
+      final response = parseServerResponse({
+        'serverContent': {'turnComplete': true},
+        'usageMetadata': null,
+      });
+      expect(response.message, isA<LiveServerContent>());
+      expect(response.usageMetadata, isNull);
+    });
+
+    test('usage metadata defaults to null for constructed responses', () {
+      final response = LiveServerResponse(message: LiveServerContent());
+      expect(response.usageMetadata, isNull);
+    });
+
+    test('usage metadata modality types are publicly exported', () {
+      final public_api.ModalityTokenCount tokenCount =
+          public_api.ModalityTokenCount(public_api.ContentModality.text, 1);
+      expect(tokenCount.modality, public_api.ContentModality.text);
+      expect(tokenCount.tokenCount, 1);
     });
   });
 }
