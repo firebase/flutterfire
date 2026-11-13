@@ -30,12 +30,17 @@ class FlutterFirebaseStoragePlugin : FlutterFirebasePlugin, FlutterPlugin, Fireb
   private var channel: MethodChannel? = null
   private var messenger: BinaryMessenger? = null
 
+  // Per instance, as each engine attaches its own plugin instance and numbers its tasks from 0.
+  private val inProgressTasks = FlutterFirebaseStorageTaskRegistry<FlutterFirebaseStorageTask>()
+  private val eventChannels: MutableMap<String, EventChannel> = HashMap()
+  private val streamHandlers: MutableMap<String, StreamHandler> = HashMap()
+
   override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
     initInstance(binding.binaryMessenger)
   }
 
   override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
-    FlutterFirebaseStorageTask.cancelInProgressTasks()
+    cancelInProgressTasks()
     channel?.setMethodCallHandler(null)
     checkNotNull(messenger)
     FirebaseStorageHostApi.setUp(messenger!!, null)
@@ -51,6 +56,11 @@ class FlutterFirebaseStoragePlugin : FlutterFirebasePlugin, FlutterPlugin, Fireb
     this.messenger = messenger
   }
 
+  private fun cancelInProgressTasks() {
+    inProgressTasks.removeAll().forEach { it.destroy() }
+  }
+
+  @Synchronized
   private fun registerEventChannel(
       prefix: String,
       identifier: String,
@@ -62,6 +72,12 @@ class FlutterFirebaseStoragePlugin : FlutterFirebasePlugin, FlutterPlugin, Fireb
     eventChannels[identifier] = channel
     streamHandlers[identifier] = handler
     return identifier
+  }
+
+  @Synchronized
+  private fun removeEventChannel(identifier: String) {
+    eventChannels.remove(identifier)?.setStreamHandler(null)
+    streamHandlers.remove(identifier)
   }
 
   @Synchronized
@@ -284,10 +300,11 @@ class FlutterFirebaseStoragePlugin : FlutterFirebasePlugin, FlutterPlugin, Fireb
     val androidMetaData = getMetaDataFromPigeon(settableMetaData)
     val storageTask =
         FlutterFirebaseStorageTask.uploadBytes(
-            handle.toInt(), androidReference, data, androidMetaData)
+            handle.toInt(), androidReference, data, androidMetaData, inProgressTasks)
     try {
       val identifier = UUID.randomUUID().toString().lowercase(Locale.US)
-      val handler = storageTask.startTaskWithMethodChannel(channel!!, identifier)
+      val handler =
+          storageTask.startTaskWithMethodChannel(channel!!, identifier, ::removeEventChannel)
       callback(
           Result.success(
               registerEventChannel(
@@ -311,10 +328,11 @@ class FlutterFirebaseStoragePlugin : FlutterFirebasePlugin, FlutterPlugin, Fireb
     val bytes = stringToByteData(data, format.toInt())
     val storageTask =
         FlutterFirebaseStorageTask.uploadBytes(
-            handle.toInt(), androidReference, bytes!!, androidMetaData)
+            handle.toInt(), androidReference, bytes!!, androidMetaData, inProgressTasks)
     try {
       val identifier = UUID.randomUUID().toString().lowercase(Locale.US)
-      val handler = storageTask.startTaskWithMethodChannel(channel!!, identifier)
+      val handler =
+          storageTask.startTaskWithMethodChannel(channel!!, identifier, ::removeEventChannel)
       callback(
           Result.success(
               registerEventChannel(
@@ -338,10 +356,12 @@ class FlutterFirebaseStoragePlugin : FlutterFirebasePlugin, FlutterPlugin, Fireb
             handle.toInt(),
             androidReference,
             Uri.fromFile(File(filePath)),
-            settableMetaData?.let { getMetaDataFromPigeon(it) })
+            settableMetaData?.let { getMetaDataFromPigeon(it) },
+            inProgressTasks)
     try {
       val identifier = UUID.randomUUID().toString().lowercase(Locale.US)
-      val handler = storageTask.startTaskWithMethodChannel(channel!!, identifier)
+      val handler =
+          storageTask.startTaskWithMethodChannel(channel!!, identifier, ::removeEventChannel)
       callback(
           Result.success(
               registerEventChannel(
@@ -360,10 +380,12 @@ class FlutterFirebaseStoragePlugin : FlutterFirebasePlugin, FlutterPlugin, Fireb
   ) {
     val androidReference = getReferenceFromPigeon(app, reference)
     val storageTask =
-        FlutterFirebaseStorageTask.downloadFile(handle.toInt(), androidReference, File(filePath))
+        FlutterFirebaseStorageTask.downloadFile(
+            handle.toInt(), androidReference, File(filePath), inProgressTasks)
     try {
       val identifier = UUID.randomUUID().toString().lowercase(Locale.US)
-      val handler = storageTask.startTaskWithMethodChannel(channel!!, identifier)
+      val handler =
+          storageTask.startTaskWithMethodChannel(channel!!, identifier, ::removeEventChannel)
       callback(
           Result.success(
               registerEventChannel(
@@ -378,7 +400,7 @@ class FlutterFirebaseStoragePlugin : FlutterFirebasePlugin, FlutterPlugin, Fireb
       handle: Long,
       callback: (Result<Map<String, Any>>) -> Unit
   ) {
-    val storageTask = FlutterFirebaseStorageTask.getInProgressTaskForHandle(handle.toInt())
+    val storageTask = inProgressTasks.get(handle.toInt())
     if (storageTask == null) {
       val statusMap = HashMap<String, Any>()
       statusMap["status"] = false
@@ -407,7 +429,7 @@ class FlutterFirebaseStoragePlugin : FlutterFirebasePlugin, FlutterPlugin, Fireb
       handle: Long,
       callback: (Result<Map<String, Any>>) -> Unit
   ) {
-    val storageTask = FlutterFirebaseStorageTask.getInProgressTaskForHandle(handle.toInt())
+    val storageTask = inProgressTasks.get(handle.toInt())
     if (storageTask == null) {
       val statusMap = HashMap<String, Any>()
       statusMap["status"] = false
@@ -436,7 +458,7 @@ class FlutterFirebaseStoragePlugin : FlutterFirebasePlugin, FlutterPlugin, Fireb
       handle: Long,
       callback: (Result<Map<String, Any>>) -> Unit
   ) {
-    val storageTask = FlutterFirebaseStorageTask.getInProgressTaskForHandle(handle.toInt())
+    val storageTask = inProgressTasks.get(handle.toInt())
     if (storageTask == null) {
       val statusMap = HashMap<String, Any>()
       statusMap["status"] = false
@@ -501,7 +523,7 @@ class FlutterFirebaseStoragePlugin : FlutterFirebasePlugin, FlutterPlugin, Fireb
   override fun didReinitializeFirebaseCore(): Task<Void> {
     val taskCompletionSource = TaskCompletionSource<Void>()
     cachedThreadPool.execute {
-      FlutterFirebaseStorageTask.cancelInProgressTasks()
+      cancelInProgressTasks()
       taskCompletionSource.setResult(null)
       removeEventListeners()
     }
@@ -512,9 +534,6 @@ class FlutterFirebaseStoragePlugin : FlutterFirebasePlugin, FlutterPlugin, Fireb
     const val STORAGE_METHOD_CHANNEL_NAME = "plugins.flutter.io/firebase_storage"
     const val STORAGE_TASK_EVENT_NAME = "taskEvent"
     const val DEFAULT_ERROR_CODE = "firebase_storage"
-
-    val eventChannels: MutableMap<String, EventChannel> = HashMap()
-    val streamHandlers: MutableMap<String, StreamHandler> = HashMap()
 
     fun getExceptionDetails(exception: Exception): Map<String, String> {
       val storageException = FlutterFirebaseStorageException.parserExceptionToFlutter(exception)

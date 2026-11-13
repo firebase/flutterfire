@@ -6,7 +6,6 @@
 package io.flutter.plugins.firebase.storage
 
 import android.net.Uri
-import android.util.SparseArray
 import androidx.annotation.NonNull
 import com.google.firebase.storage.FileDownloadTask
 import com.google.firebase.storage.StorageMetadata
@@ -24,7 +23,8 @@ private constructor(
     private val reference: StorageReference,
     private val bytes: ByteArray?,
     private val fileUri: Uri?,
-    private val metadata: StorageMetadata?
+    private val metadata: StorageMetadata?,
+    private val inProgressTasks: FlutterFirebaseStorageTaskRegistry<FlutterFirebaseStorageTask>
 ) {
   private val pauseSyncObject = Object()
   private val resumeSyncObject = Object()
@@ -33,12 +33,13 @@ private constructor(
   private var destroyed: Boolean = false
 
   init {
-    synchronized(inProgressTasks) { inProgressTasks.put(handle, this) }
+    inProgressTasks.put(handle, this)
   }
 
   fun startTaskWithMethodChannel(
       @NonNull channel: MethodChannel,
-      @NonNull identifier: String
+      @NonNull identifier: String,
+      onCancelled: (String) -> Unit
   ): TaskStateChannelStreamHandler {
     storageTask =
         when (type) {
@@ -51,7 +52,8 @@ private constructor(
           FlutterFirebaseStorageTaskType.DOWNLOAD -> reference.getFile(fileUri!!)
         }
 
-    return TaskStateChannelStreamHandler(this, reference.storage, storageTask as Any, identifier)
+    return TaskStateChannelStreamHandler(
+        this, reference.storage, storageTask as Any, identifier, onCancelled)
   }
 
   fun getSnapshot(): Any = storageTask.snapshot
@@ -88,12 +90,10 @@ private constructor(
     if (destroyed) return
     destroyed = true
 
-    synchronized(inProgressTasks) {
-      if (storageTask.isInProgress || storageTask.isPaused) {
-        storageTask.cancel()
-      }
-      inProgressTasks.remove(handle)
+    if (storageTask.isInProgress || storageTask.isPaused) {
+      storageTask.cancel()
     }
+    inProgressTasks.remove(handle, this)
 
     synchronized(cancelSyncObject) { cancelSyncObject.notifyAll() }
     synchronized(pauseSyncObject) { pauseSyncObject.notifyAll() }
@@ -101,37 +101,22 @@ private constructor(
   }
 
   companion object {
-    val inProgressTasks: SparseArray<FlutterFirebaseStorageTask> = SparseArray()
-
-    @JvmStatic
-    fun getInProgressTaskForHandle(handle: Int): FlutterFirebaseStorageTask? {
-      synchronized(inProgressTasks) {
-        return inProgressTasks.get(handle)
-      }
-    }
-
-    @JvmStatic
-    fun cancelInProgressTasks() {
-      synchronized(inProgressTasks) {
-        val tasks = ArrayList<FlutterFirebaseStorageTask>(inProgressTasks.size())
-        for (i in 0 until inProgressTasks.size()) {
-          val task: FlutterFirebaseStorageTask? = inProgressTasks.valueAt(i)
-          task?.let { tasks.add(it) }
-        }
-        inProgressTasks.clear()
-        tasks.forEach { it.destroy() }
-      }
-    }
-
     @JvmStatic
     fun uploadBytes(
         handle: Int,
         reference: StorageReference,
         data: ByteArray,
-        metadata: StorageMetadata?
+        metadata: StorageMetadata?,
+        inProgressTasks: FlutterFirebaseStorageTaskRegistry<FlutterFirebaseStorageTask>
     ): FlutterFirebaseStorageTask {
       return FlutterFirebaseStorageTask(
-          FlutterFirebaseStorageTaskType.BYTES, handle, reference, data, null, metadata)
+          FlutterFirebaseStorageTaskType.BYTES,
+          handle,
+          reference,
+          data,
+          null,
+          metadata,
+          inProgressTasks)
     }
 
     @JvmStatic
@@ -139,17 +124,25 @@ private constructor(
         handle: Int,
         reference: StorageReference,
         fileUri: Uri,
-        metadata: StorageMetadata?
+        metadata: StorageMetadata?,
+        inProgressTasks: FlutterFirebaseStorageTaskRegistry<FlutterFirebaseStorageTask>
     ): FlutterFirebaseStorageTask {
       return FlutterFirebaseStorageTask(
-          FlutterFirebaseStorageTaskType.FILE, handle, reference, null, fileUri, metadata)
+          FlutterFirebaseStorageTaskType.FILE,
+          handle,
+          reference,
+          null,
+          fileUri,
+          metadata,
+          inProgressTasks)
     }
 
     @JvmStatic
     fun downloadFile(
         handle: Int,
         reference: StorageReference,
-        file: File
+        file: File,
+        inProgressTasks: FlutterFirebaseStorageTaskRegistry<FlutterFirebaseStorageTask>
     ): FlutterFirebaseStorageTask {
       return FlutterFirebaseStorageTask(
           FlutterFirebaseStorageTaskType.DOWNLOAD,
@@ -157,7 +150,8 @@ private constructor(
           reference,
           null,
           Uri.fromFile(file),
-          null)
+          null,
+          inProgressTasks)
     }
 
     @JvmStatic
