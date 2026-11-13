@@ -631,7 +631,7 @@ void main() {
       });
 
       test('throws unhandledFormat on invalid JSON', () {
-        final json = {'wrongKey': 123};
+        final json = {'totalTokens': '123'};
         expect(
           () => DeveloperSerialization().parseCountTokensResponse(json),
           throwsA(isA<FirebaseAISdkException>()),

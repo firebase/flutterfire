@@ -920,12 +920,12 @@ void main() {
         );
       });
 
-      test('throws if totalTokens is missing', () {
+      test('reads a missing totalTokens as 0', () {
         final json = {'totalBillableCharacters': 100};
-        expect(
-          () => AgentPlatformSerialization().parseCountTokensResponse(json),
-          throwsA(anything),
-        ); // More specific error expected
+        final response = AgentPlatformSerialization().parseCountTokensResponse(
+          json,
+        );
+        expect(response.totalTokens, 0);
       });
     });
 
