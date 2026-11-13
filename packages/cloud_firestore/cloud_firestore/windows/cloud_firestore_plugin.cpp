@@ -20,8 +20,10 @@
 #include <future>
 #include <memory>
 #include <mutex>
+#include <optional>
 #include <queue>
 #include <sstream>
+#include <typeinfo>
 #include <vector>
 
 #include "cloud_firestore/plugin_version.h"
@@ -695,6 +697,110 @@ std::vector<firebase::firestore::FieldValue> ConvertToFieldValueList(
   return convertedList;
 }
 
+std::optional<std::string> RejectedFieldSegment(const std::string& segment) {
+  if (segment.empty()) {
+    return "Invalid data. Document fields must not be empty";
+  }
+  if (segment.size() >= 2 && segment.compare(0, 2, "__") == 0 &&
+      segment.compare(segment.size() - 2, 2, "__") == 0) {
+    return "Invalid data. Document fields cannot begin and end with \"__\"";
+  }
+  return std::nullopt;
+}
+
+std::optional<std::string> RejectedWriteValue(const EncodableValue& value);
+
+// The SDK leaves its array parse path null, so names inside arrays are not
+// validated.
+std::optional<std::string> RejectedWriteMap(const EncodableMap& map) {
+  for (const auto& entry : map) {
+    if (const auto* key = std::get_if<std::string>(&entry.first)) {
+      if (auto message = RejectedFieldSegment(*key)) {
+        return message;
+      }
+    }
+    if (auto message = RejectedWriteValue(entry.second)) {
+      return message;
+    }
+  }
+  return std::nullopt;
+}
+
+std::optional<std::string> RejectedWriteValue(const EncodableValue& value) {
+  if (const auto* nested = std::get_if<EncodableMap>(&value)) {
+    return RejectedWriteMap(*nested);
+  }
+  return std::nullopt;
+}
+
+std::optional<std::string> RejectedUpdateMap(const EncodableMap& map) {
+  for (const auto& entry : map) {
+    if (const auto* key = std::get_if<std::string>(&entry.first)) {
+      if (auto message = RejectedFieldSegment(*key)) {
+        return message;
+      }
+    } else if (const auto* custom =
+                   std::get_if<CustomEncodableValue>(&entry.first)) {
+      if (custom->type() == typeid(DecodedFieldPath)) {
+        const DecodedFieldPath decoded =
+            std::any_cast<DecodedFieldPath>(*custom);
+        for (const std::string& segment : decoded.segments) {
+          if (auto message = RejectedFieldSegment(segment)) {
+            return message;
+          }
+        }
+      }
+    }
+    if (auto message = RejectedWriteValue(entry.second)) {
+      return message;
+    }
+  }
+  return std::nullopt;
+}
+
+std::optional<std::string> RejectedMergeFields(const EncodableList& fields) {
+  for (const auto& field : fields) {
+    const auto& segments = std::get<EncodableList>(field);
+    for (const auto& segment : segments) {
+      if (auto message = RejectedFieldSegment(std::get<std::string>(segment))) {
+        return message;
+      }
+    }
+  }
+  return std::nullopt;
+}
+
+std::optional<std::string> RejectedWriteCommand(
+    InternalTransactionType type, const EncodableMap* data,
+    const InternalDocumentOption* option) {
+  if (data != nullptr) {
+    std::optional<std::string> message;
+    if (type == InternalTransactionType::kUpdate) {
+      message = RejectedUpdateMap(*data);
+    } else if (type == InternalTransactionType::kSet) {
+      message = RejectedWriteMap(*data);
+    }
+    if (message.has_value()) {
+      return message;
+    }
+  }
+  if (option != nullptr && option->merge_fields() != nullptr) {
+    return RejectedMergeFields(*option->merge_fields());
+  }
+  return std::nullopt;
+}
+
+FlutterError InvalidDocumentField(const std::string& message) {
+  EncodableMap details;
+  details[EncodableValue("code")] = EncodableValue("invalid-argument");
+  details[EncodableValue("message")] = EncodableValue(message);
+  return FlutterError("firebase_firestore", message, details);
+}
+
+DecodedFieldPath DecodedFieldPathFrom(const EncodableValue& value) {
+  return std::any_cast<DecodedFieldPath>(std::get<CustomEncodableValue>(value));
+}
+
 firebase::firestore::MapFieldValue ConvertToMapFieldValue(
     const EncodableMap& originalMap) {
   firebase::firestore::MapFieldValue convertedMap;
@@ -731,11 +837,10 @@ firebase::firestore::MapFieldPathValue ConvertToMapFieldPathValue(
           CloudFirestorePlugin::ConvertToFieldValue(kv.second);
       convertedMap[FieldPath(convertedList)] = value;
     } else if (std::holds_alternative<CustomEncodableValue>(kv.first)) {
-      const FieldPath& fieldPath =
-          std::any_cast<FieldPath>(std::get<CustomEncodableValue>(kv.first));
+      const DecodedFieldPath decoded = DecodedFieldPathFrom(kv.first);
       firebase::firestore::FieldValue value =
           CloudFirestorePlugin::ConvertToFieldValue(kv.second);
-      convertedMap[fieldPath] = value;
+      convertedMap[decoded.path] = value;
     } else {
       // Handle or skip non-string keys
       // You may throw an exception or handle this some other way
@@ -1111,6 +1216,12 @@ class TransactionStreamHandler
               if (commands.empty()) return Error::kErrorOk;
 
               for (InternalTransactionCommand& command : commands) {
+                if (auto message = RejectedWriteCommand(
+                        command.type(), command.data(), command.option())) {
+                  str = *message;
+                  return Error::kErrorInvalidArgument;
+                }
+
                 std::string path = command.path();
                 InternalTransactionType type = command.type();
                 if (path.empty() /* or some other invalid condition */) {
@@ -1377,6 +1488,12 @@ void CloudFirestorePlugin::DocumentReferenceSet(
     const FirestorePigeonFirebaseApp& app,
     const DocumentReferenceRequest& request,
     std::function<void(std::optional<FlutterError> reply)> result) {
+  if (auto message = RejectedWriteCommand(InternalTransactionType::kSet,
+                                          request.data(), request.option())) {
+    result(InvalidDocumentField(*message));
+    return;
+  }
+
   Firestore* firestore = GetFirestoreFromPigeon(app);
   DocumentReference document_reference = firestore->Document(request.path());
 
@@ -1409,6 +1526,12 @@ void CloudFirestorePlugin::DocumentReferenceUpdate(
     const FirestorePigeonFirebaseApp& app,
     const DocumentReferenceRequest& request,
     std::function<void(std::optional<FlutterError> reply)> result) {
+  if (auto message = RejectedWriteCommand(InternalTransactionType::kUpdate,
+                                          request.data(), nullptr)) {
+    result(InvalidDocumentField(*message));
+    return;
+  }
+
   Firestore* firestore = GetFirestoreFromPigeon(app);
   DocumentReference document_reference = firestore->Document(request.path());
 
@@ -1495,8 +1618,9 @@ firebase::firestore::Filter filterFromJson(const EncodableMap& map) {
   if (map.find(EncodableValue("fieldPath")) != map.end()) {
     // Deserialize a FilterQuery
     std::string op = std::get<std::string>(map.at(EncodableValue("op")));
-    const FieldPath& fieldPath = std::any_cast<FieldPath>(
-        std::get<CustomEncodableValue>(map.at(EncodableValue("fieldPath"))));
+    const DecodedFieldPath decoded_field_path =
+        DecodedFieldPathFrom(map.at(EncodableValue("fieldPath")));
+    const FieldPath& fieldPath = decoded_field_path.path;
 
     auto value = map.at(EncodableValue("value"));
 
@@ -1585,8 +1709,9 @@ firebase::firestore::Query ParseQuery(
         ConvertToConditions(*parameters.where());
 
     for (const auto& condition : conditions) {
-      const FieldPath& fieldPath = std::any_cast<FieldPath>(
-          std::get<CustomEncodableValue>(condition[0]));
+      const DecodedFieldPath decoded_field_path =
+          DecodedFieldPathFrom(condition[0]);
+      const FieldPath& fieldPath = decoded_field_path.path;
       const std::string& op = std::get<std::string>(condition[1]);
 
       auto value = condition[2];
@@ -1645,8 +1770,9 @@ firebase::firestore::Query ParseQuery(
         ConvertToConditions(*parameters.order_by());
 
     for (const auto& order_by : order_bys) {
-      const FieldPath& fieldPath =
-          std::any_cast<FieldPath>(std::get<CustomEncodableValue>(order_by[0]));
+      const DecodedFieldPath decoded_field_path =
+          DecodedFieldPathFrom(order_by[0]);
+      const FieldPath& fieldPath = decoded_field_path.path;
       const bool& direction = std::get<bool>(order_by[1]);
 
       if (direction) {
@@ -1803,6 +1929,12 @@ void CloudFirestorePlugin::WriteBatchCommit(
       const InternalTransactionCommand& transaction =
           std::any_cast<InternalTransactionCommand>(
               std::get<CustomEncodableValue>(write));
+
+      if (auto message = RejectedWriteCommand(
+              transaction.type(), transaction.data(), transaction.option())) {
+        result(InvalidDocumentField(*message));
+        return;
+      }
 
       InternalTransactionType type = transaction.type();
       std::string path = transaction.path();

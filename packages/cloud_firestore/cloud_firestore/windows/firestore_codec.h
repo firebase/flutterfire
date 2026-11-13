@@ -16,10 +16,19 @@
 #include <memory>
 #include <optional>
 #include <string>
+#include <vector>
 
+#include "firebase/firestore/field_path.h"
 #include "firebase/firestore/field_value.h"
 
 namespace cloud_firestore_windows {
+
+// firebase::firestore::FieldPath does not expose its segments.
+struct DecodedFieldPath {
+  firebase::firestore::FieldPath path;
+  std::vector<std::string> segments;
+};
+
 class FirestoreCodec : public flutter::StandardCodecSerializer {
  public:
   static const uint8_t DATA_TYPE_DATE_TIME = 180;
