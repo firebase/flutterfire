@@ -7,7 +7,6 @@ library firebase_storage;
 
 import 'dart:async';
 import 'dart:convert' show utf8, base64;
-import 'dart:io' show File;
 
 // import 'package:flutter/foundation.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -17,6 +16,8 @@ import 'package:firebase_storage_platform_interface/firebase_storage_platform_in
 import 'package:flutter/foundation.dart';
 import 'package:mime/mime.dart';
 
+import 'src/io_helper.dart'
+    if (dart.library.js_interop) 'src/io_helper_web.dart';
 import 'src/utils.dart';
 
 export 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart'

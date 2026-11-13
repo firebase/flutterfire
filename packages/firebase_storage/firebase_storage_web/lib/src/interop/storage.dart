@@ -218,7 +218,8 @@ class StorageReference
 /// See: <https://firebase.google.com/docs/reference/js/firebase.storage.FullMetadata>
 class FullMetadata
     extends _UploadMetadataBase<storage_interop.FullMetadataJsImpl> {
-  FullMetadata._fromJsObject(jsObject) : super.fromJsObject(jsObject);
+  FullMetadata._fromJsObject(storage_interop.FullMetadataJsImpl jsObject)
+    : super.fromJsObject(jsObject);
 
   static final _expando = Expando<FullMetadata>();
 
