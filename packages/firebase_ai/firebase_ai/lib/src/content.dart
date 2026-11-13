@@ -223,8 +223,7 @@ Part parsePart(Object? jsonObject) {
 /// A datatype containing media that is part of a multi-part [Content] message.
 sealed class Part {
   // ignore: public_member_api_docs
-  const Part({this.isThought, String? thoughtSignature})
-    : _thoughtSignature = thoughtSignature;
+  const Part({this.isThought, this._thoughtSignature});
   // ignore: public_member_api_docs
   final bool? isThought;
 

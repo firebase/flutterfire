@@ -42,20 +42,14 @@ class LiveSession {
   // ignore: public_member_api_docs
   LiveSession._(
     this._ws, {
-    required String uri,
-    required LiveHeadersProvider headersProvider,
-    required String modelString,
-    Content? systemInstruction,
-    List<Tool>? tools,
-    LiveGenerationConfig? liveGenerationConfig,
+    required this._uri,
+    required this._headersProvider,
+    required this._modelString,
+    this._systemInstruction,
+    this._tools,
+    this._liveGenerationConfig,
     LiveWebSocketConnector? connector,
-  }) : _uri = uri,
-       _headersProvider = headersProvider,
-       _modelString = modelString,
-       _systemInstruction = systemInstruction,
-       _tools = tools,
-       _liveGenerationConfig = liveGenerationConfig,
-       _connector = connector ?? connectWebSocket,
+  }) : _connector = connector ?? connectWebSocket,
        _messageController = StreamController<LiveServerResponse>.broadcast() {
     _listenToWebSocket();
   }
