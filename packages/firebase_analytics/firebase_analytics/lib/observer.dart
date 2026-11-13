@@ -72,8 +72,8 @@ class FirebaseAnalyticsObserver extends RouteObserver<ModalRoute<dynamic>> {
     required this.analytics,
     this.nameExtractor = defaultNameExtractor,
     this.routeFilter = defaultRouteFilter,
-    Function(PlatformException error)? onError,
-  }) : _onError = onError;
+    this._onError,
+  });
 
   final FirebaseAnalytics analytics;
   final ScreenNameExtractor nameExtractor;

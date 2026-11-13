@@ -20,22 +20,15 @@ final class SearchStage implements PipelineSerializable {
   final int? _retrievalDepth;
 
   SearchStage._({
-    required _SearchQueryType queryType,
-    required Object query,
-    List<Ordering>? sort,
-    List<Selectable>? addFields,
-    String? languageCode,
-    int? limit,
-    int? offset,
-    int? retrievalDepth,
-  }) : _queryType = queryType,
-       _query = query,
-       _sort = sort,
-       _addFields = addFields,
-       _languageCode = languageCode,
-       _limit = limit,
-       _offset = offset,
-       _retrievalDepth = retrievalDepth;
+    required this._queryType,
+    required this._query,
+    this._sort,
+    this._addFields,
+    this._languageCode,
+    this._limit,
+    this._offset,
+    this._retrievalDepth,
+  });
 
   /// Creates a search stage from a raw query string.
   SearchStage.withQuery(
