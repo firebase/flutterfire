@@ -4,8 +4,10 @@ import android.app.ActivityManager
 import android.app.KeyguardManager
 import android.app.Notification
 import android.app.PendingIntent
+import android.app.job.JobScheduler
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -110,6 +112,43 @@ class MainActivity : FlutterActivity() {
               secondEngine = null
               result.success(null)
             }
+            "backgroundHandlerEnabled" -> result.success(!backgroundHandlerDisabled())
+            "probeBackgroundDelivery" -> {
+              val messageId = call.argument<String>("messageId")
+              if (messageId.isNullOrEmpty()) {
+                result.error("INVALID_ARG", "messageId is required", null)
+                return@setMethodCallHandler
+              }
+              val hasPlugin = call.hasArgument("pluginHandle")
+              val hasUser = call.hasArgument("userHandle")
+              if (hasPlugin != hasUser) {
+                result.error(
+                    "INVALID_ARG",
+                    "pluginHandle and userHandle are set together",
+                    null,
+                )
+                return@setMethodCallHandler
+              }
+              val pluginHandle = call.argument<Number>("pluginHandle")?.toLong()
+              val userHandle = call.argument<Number>("userHandle")?.toLong()
+              // Home is delivered after this handler returns, so the probe waits
+              // on another thread until the process is no longer in the foreground.
+              Thread {
+                    try {
+                      result.success(
+                          probeBackgroundDelivery(messageId, pluginHandle, userHandle),
+                      )
+                    } catch (e: Exception) {
+                      result.error("PROBE_FAILED", errorMessage(e), null)
+                    }
+                  }
+                  .start()
+              try {
+                executeShell("input keyevent 3")
+              } catch (_: Exception) {
+                // The probe reports background=false when the app stays in front.
+              }
+            }
             else -> result.notImplemented()
           }
         }
@@ -178,6 +217,100 @@ class MainActivity : FlutterActivity() {
             else -> result.notImplemented()
           }
         }
+  }
+
+  private fun probeBackgroundDelivery(
+      messageId: String,
+      pluginHandle: Long?,
+      userHandle: Long?,
+  ): Map<String, Any?> {
+    if (pluginHandle != null && userHandle != null) {
+      callbackPreferences()
+          .edit()
+          .putLong(CALLBACK_HANDLE_KEY, pluginHandle)
+          .putLong(USER_CALLBACK_HANDLE_KEY, userHandle)
+          .commit()
+    } else {
+      callbackPreferences().edit().clear().commit()
+    }
+    try {
+      executeShell("logcat -c")
+    } catch (_: Exception) {
+      // A missing clear shows up as receiverRan=false.
+    }
+    val background = waitUntil { !isAppInForeground() }
+    if (background) {
+      val intent =
+          Intent("com.google.android.c2dm.intent.RECEIVE").apply {
+            putExtra("google.message_id", messageId)
+            putExtra("from", "e2e")
+            putExtra("test", "background-handler-gate")
+          }
+      FlutterFirebaseMessagingReceiver().onReceive(applicationContext, intent)
+      Thread.sleep(500)
+    }
+    val log =
+        try {
+          captureHostAdbShell(
+              "logcat -d -s FLTFireMsgReceiver:D FLTFireMsgService:V",
+          )
+        } catch (_: Exception) {
+          ""
+        }
+    val report =
+        mapOf(
+            "background" to background,
+            "receiverRan" to log.contains("broadcast received for message"),
+            "serviceRan" to log.contains("FLTFireMsgService"),
+            "jobScheduled" to backgroundJobPending(),
+            "serviceRunning" to backgroundServiceRunning(),
+            "pluginHandle" to callbackPreferences().getLong(CALLBACK_HANDLE_KEY, 0L),
+            "userHandle" to callbackPreferences().getLong(USER_CALLBACK_HANDLE_KEY, 0L),
+            "handlerEnabled" to !backgroundHandlerDisabled(),
+        )
+    try {
+      executeShell(
+          "am start -n $packageName/io.flutter.plugins.firebase.messaging.example.MainActivity",
+      )
+      waitUntil { isAppInForeground() }
+    } catch (_: Exception) {
+      // The Dart side still receives the report.
+    }
+    return report
+  }
+
+  private fun callbackPreferences() =
+      getSharedPreferences(CALLBACK_PREFERENCES, Context.MODE_PRIVATE)
+
+  private fun backgroundHandlerDisabled(): Boolean {
+    val info = packageManager.getApplicationInfo(packageName, PackageManager.GET_META_DATA)
+    val raw = info.metaData?.get(BACKGROUND_HANDLER_METADATA_KEY) ?: return false
+    return when (raw) {
+      is Boolean -> !raw
+      is String -> raw.equals("false", ignoreCase = true)
+      else -> false
+    }
+  }
+
+  private fun backgroundJobPending(): Boolean {
+    val scheduler = getSystemService(JobScheduler::class.java) ?: return false
+    return scheduler.allPendingJobs.any { it.id == BACKGROUND_JOB_ID }
+  }
+
+  private fun backgroundServiceRunning(): Boolean {
+    val manager = getSystemService(ActivityManager::class.java) ?: return false
+    @Suppress("DEPRECATION")
+    return manager.getRunningServices(Integer.MAX_VALUE).any {
+      it.service.className == BACKGROUND_SERVICE_CLASS
+    }
+  }
+
+  private fun waitUntil(condition: () -> Boolean): Boolean {
+    repeat(50) {
+      if (condition()) return true
+      Thread.sleep(100)
+    }
+    return condition()
   }
 
   /// Dismisses the lock screen if needed: the receiver only sends messages to
@@ -354,10 +487,15 @@ class MainActivity : FlutterActivity() {
   /// [android.os.NetworkOnMainThreadException] for socket I/O on the main
   /// thread, and that exception has a null message.
   private fun executeHostAdbShell(command: String) {
+    captureHostAdbShell(command)
+  }
+
+  private fun captureHostAdbShell(command: String): String {
+    val output = arrayOfNulls<String>(1)
     val error = arrayOfNulls<Exception>(1)
     val thread = Thread {
       try {
-        executeHostAdbShellBlocking(command)
+        output[0] = executeHostAdbShellBlocking(command)
       } catch (e: Exception) {
         error[0] = e
       }
@@ -368,9 +506,10 @@ class MainActivity : FlutterActivity() {
       throw IllegalStateException("adb shell timed out: $command")
     }
     error[0]?.let { throw it }
+    return output[0] ?: ""
   }
 
-  private fun executeHostAdbShellBlocking(command: String) {
+  private fun executeHostAdbShellBlocking(command: String): String {
     val socket = Socket()
     try {
       socket.connect(InetSocketAddress(EMULATOR_HOST_LOOPBACK, ADB_SERVER_PORT), ADB_TIMEOUT_MS)
@@ -382,10 +521,16 @@ class MainActivity : FlutterActivity() {
       sendAdb(out, "shell:$command")
       readAdbStatus(input)
       // Drain command output so adbd does not see a premature close.
+      val captured = StringBuilder()
       val buffer = ByteArray(1024)
-      while (input.read(buffer) != -1) {
-        // discard
+      while (true) {
+        val read = input.read(buffer)
+        if (read < 0) {
+          break
+        }
+        captured.append(String(buffer, 0, read, StandardCharsets.UTF_8))
       }
+      return captured.toString()
     } finally {
       socket.close()
     }
@@ -453,5 +598,12 @@ class MainActivity : FlutterActivity() {
     const val EMULATOR_HOST_LOOPBACK = "10.0.2.2"
     const val ADB_SERVER_PORT = 5037
     const val ADB_TIMEOUT_MS = 5000
+    const val CALLBACK_PREFERENCES = "io.flutter.firebase.messaging.callback"
+    const val CALLBACK_HANDLE_KEY = "callback_handle"
+    const val USER_CALLBACK_HANDLE_KEY = "user_callback_handle"
+    const val BACKGROUND_HANDLER_METADATA_KEY = "firebase_messaging_background_handler_enabled"
+    const val BACKGROUND_JOB_ID = 2020
+    const val BACKGROUND_SERVICE_CLASS =
+        "io.flutter.plugins.firebase.messaging.FlutterFirebaseMessagingBackgroundService"
   }
 }
