@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import 'dart:typed_data';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:firebase_ai/firebase_ai.dart';
 
 import '../constants.dart';

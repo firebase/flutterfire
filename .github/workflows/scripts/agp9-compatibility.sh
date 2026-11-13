@@ -1,8 +1,8 @@
 #!/bin/bash
 set -euo pipefail
 
-AGP_VERSION="${AGP_VERSION:-9.0.1}"
-GRADLE_VERSION="${GRADLE_VERSION:-9.1.0}"
+AGP_VERSION="${AGP_VERSION:-9.3.1}"
+GRADLE_VERSION="${GRADLE_VERSION:-9.5.0}"
 
 TEST_ANDROID_DIR="tests/android"
 

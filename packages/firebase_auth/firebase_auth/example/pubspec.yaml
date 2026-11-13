@@ -13,6 +13,7 @@ dependencies:
   firebase_messaging: ^17.0.1
   flutter:
     sdk: flutter
+  material_ui: ^1.3.0
 
 dev_dependencies:
   # `test_utils.dart` reaches for IterableExtension when scanning the emulator's

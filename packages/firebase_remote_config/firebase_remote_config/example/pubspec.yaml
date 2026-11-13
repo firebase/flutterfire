@@ -13,6 +13,7 @@ dependencies:
   firebase_remote_config: ^7.0.1
   flutter:
     sdk: flutter
+  material_ui: ^1.3.0
 
 dev_dependencies:
   flutter_test:
