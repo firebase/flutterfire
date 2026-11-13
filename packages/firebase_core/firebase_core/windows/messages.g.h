@@ -53,6 +53,7 @@ class ErrorOr {
  private:
   friend class FirebaseCoreHostApi;
   friend class FirebaseAppHostApi;
+  friend class FirebaseTokenHostApi;
   ErrorOr() = default;
   T TakeValue() && { return std::get<T>(std::move(v_)); }
 
@@ -143,6 +144,7 @@ class CoreFirebaseOptions {
   friend class CoreInitializeResponse;
   friend class FirebaseCoreHostApi;
   friend class FirebaseAppHostApi;
+  friend class FirebaseTokenHostApi;
   friend class PigeonInternalCodecSerializer;
   std::string api_key_;
   std::string app_id_;
@@ -205,11 +207,51 @@ class CoreInitializeResponse {
   ::flutter::EncodableList ToEncodableList() const;
   friend class FirebaseCoreHostApi;
   friend class FirebaseAppHostApi;
+  friend class FirebaseTokenHostApi;
   friend class PigeonInternalCodecSerializer;
   std::string name_;
   std::unique_ptr<CoreFirebaseOptions> options_;
   std::optional<bool> is_automatic_data_collection_enabled_;
   ::flutter::EncodableMap plugin_constants_;
+};
+
+// The App Check SDK's answer to a token request, as the native SDKs report
+// it: when the SDK can't produce a token, [token] is its placeholder and
+// [error] the reason.
+//
+// Generated class from Pigeon that represents data sent in messages.
+class CoreAppCheckInteropToken {
+ public:
+  // Constructs an object setting all non-nullable fields.
+  explicit CoreAppCheckInteropToken(const std::string& token);
+
+  // Constructs an object setting all fields.
+  explicit CoreAppCheckInteropToken(const std::string& token,
+                                    const std::string* error);
+
+  const std::string& token() const;
+  void set_token(std::string_view value_arg);
+
+  const std::string* error() const;
+  void set_error(const std::string_view* value_arg);
+  void set_error(std::string_view value_arg);
+
+  bool operator==(const CoreAppCheckInteropToken& other) const;
+  bool operator!=(const CoreAppCheckInteropToken& other) const;
+  /// Returns a hash code value for the object. This method is supported for the
+  /// benefit of hash tables.
+  size_t Hash() const;
+
+ private:
+  static CoreAppCheckInteropToken FromEncodableList(
+      const ::flutter::EncodableList& list);
+  ::flutter::EncodableList ToEncodableList() const;
+  friend class FirebaseCoreHostApi;
+  friend class FirebaseAppHostApi;
+  friend class FirebaseTokenHostApi;
+  friend class PigeonInternalCodecSerializer;
+  std::string token_;
+  std::optional<std::string> error_;
 };
 
 class PigeonInternalCodecSerializer
@@ -291,6 +333,47 @@ class FirebaseAppHostApi {
 
  protected:
   FirebaseAppHostApi() = default;
+};
+// Tokens from whichever Auth, App Check and Messaging SDKs the app links,
+// looked up through the Firebase component container the way the Functions
+// SDKs do. A null result means the SDK isn't linked or has nothing to give;
+// it never means failure.
+//
+// Generated interface from Pigeon that represents a handler of messages from
+// Flutter.
+class FirebaseTokenHostApi {
+ public:
+  FirebaseTokenHostApi(const FirebaseTokenHostApi&) = delete;
+  FirebaseTokenHostApi& operator=(const FirebaseTokenHostApi&) = delete;
+  virtual ~FirebaseTokenHostApi() {}
+  virtual void GetAuthIdToken(
+      const std::string& app_name,
+      std::function<void(ErrorOr<std::optional<std::string>> reply)>
+          result) = 0;
+  virtual void GetAppCheckToken(
+      const std::string& app_name, bool limited_use,
+      std::function<
+          void(ErrorOr<std::optional<CoreAppCheckInteropToken>> reply)>
+          result) = 0;
+  virtual void GetMessagingToken(
+      const std::string& app_name,
+      std::function<void(ErrorOr<std::optional<std::string>> reply)>
+          result) = 0;
+
+  // The codec used by FirebaseTokenHostApi.
+  static const ::flutter::StandardMessageCodec& GetCodec();
+  // Sets up an instance of `FirebaseTokenHostApi` to handle messages through
+  // the `binary_messenger`.
+  static void SetUp(::flutter::BinaryMessenger* binary_messenger,
+                    FirebaseTokenHostApi* api);
+  static void SetUp(::flutter::BinaryMessenger* binary_messenger,
+                    FirebaseTokenHostApi* api,
+                    const std::string& message_channel_suffix);
+  static ::flutter::EncodableValue WrapError(std::string_view error_message);
+  static ::flutter::EncodableValue WrapError(const FlutterError& error);
+
+ protected:
+  FirebaseTokenHostApi() = default;
 };
 }  // namespace firebase_core_windows
 #endif  // PIGEON_MESSAGES_G_H_

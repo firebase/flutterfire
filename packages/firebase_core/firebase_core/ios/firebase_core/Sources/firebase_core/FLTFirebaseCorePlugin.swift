@@ -24,7 +24,7 @@ private let kFLTFirebaseCoreChannelName =
 
 @objc(FLTFirebaseCorePlugin)
 public class FLTFirebaseCorePlugin: NSObject, FlutterPlugin, FLTFirebasePluginProtocol,
-  FirebaseCoreHostApi, FirebaseAppHostApi
+  FirebaseCoreHostApi, FirebaseAppHostApi, FirebaseTokenHostApi
 {
   private var coreInitialized = false
 
@@ -64,6 +64,7 @@ public class FLTFirebaseCorePlugin: NSObject, FlutterPlugin, FLTFirebasePluginPr
     #endif
     FirebaseCoreHostApiSetup.setUp(binaryMessenger: binaryMessenger, api: instance)
     FirebaseAppHostApiSetup.setUp(binaryMessenger: binaryMessenger, api: instance)
+    FirebaseTokenHostApiSetup.setUp(binaryMessenger: binaryMessenger, api: instance)
   }
 
   public func didReinitializeFirebaseCore(_ completion: @escaping () -> Void) {
@@ -258,5 +259,69 @@ public class FLTFirebaseCorePlugin: NSObject, FlutterPlugin, FLTFirebasePluginPr
   ) {
     // Unsupported on iOS/macOS.
     completion(.success(()))
+  }
+
+  func getAuthIdToken(
+    appName: String,
+    completion: @escaping (Result<String?, Error>) -> Void
+  ) {
+    respondWithToken(appName: appName, failureCode: "auth-token-failed", completion: completion) {
+      provider, done in
+      provider.getAuthIdToken(completion: done)
+    }
+  }
+
+  func getAppCheckToken(
+    appName: String,
+    limitedUse: Bool,
+    completion: @escaping (Result<CoreAppCheckInteropToken?, Error>) -> Void
+  ) {
+    respondWithToken(
+      appName: appName, failureCode: "app-check-token-failed", completion: completion
+    ) { provider, done in
+      provider.getAppCheckToken(limitedUse: limitedUse, completion: done)
+    }
+  }
+
+  func getMessagingToken(
+    appName: String,
+    completion: @escaping (Result<String?, Error>) -> Void
+  ) {
+    respondWithToken(
+      appName: appName, failureCode: "messaging-token-failed", completion: completion
+    ) { provider, done in
+      done(.success(provider.getMessagingToken()))
+    }
+  }
+
+  /// Reports an SDK failure as a FlutterError under `failureCode` and replies on the main thread,
+  /// since the SDKs call back on their own queues.
+  private func respondWithToken<T>(
+    appName: String,
+    failureCode: String,
+    completion: @escaping (Result<T, Error>) -> Void,
+    fetch: (InteropTokenProvider, @escaping (Result<T, Error>) -> Void) -> Void
+  ) {
+    guard let firebaseApp = FLTFirebasePlugin.firebaseAppNamed(appName) else {
+      completion(
+        .failure(
+          FlutterError(
+            code: "no-app",
+            message:
+              "No Firebase App '\(appName)' has been created - call Firebase.initializeApp()",
+            details: nil
+          )
+        )
+      )
+      return
+    }
+    fetch(InteropTokenProvider.forApp(firebaseApp)) { result in
+      let reply = result.mapError { error -> Error in
+        FlutterError(code: failureCode, message: error.localizedDescription, details: nil)
+      }
+      DispatchQueue.main.async {
+        completion(reply)
+      }
+    }
   }
 }

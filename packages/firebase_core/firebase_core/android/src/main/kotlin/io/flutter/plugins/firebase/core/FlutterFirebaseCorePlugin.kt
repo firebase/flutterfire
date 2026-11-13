@@ -13,19 +13,22 @@ import com.google.firebase.FirebaseOptions
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin.cachedThreadPool
+import java.util.concurrent.ExecutionException
 
 /**
  * Flutter plugin implementation controlling the entrypoint for the Firebase SDK.
  *
  * Instantiate this in an add to app scenario to gracefully handle activity and context changes.
  */
-class FlutterFirebaseCorePlugin : FlutterPlugin, FirebaseCoreHostApi, FirebaseAppHostApi {
+class FlutterFirebaseCorePlugin :
+    FlutterPlugin, FirebaseCoreHostApi, FirebaseAppHostApi, FirebaseTokenHostApi {
   private var applicationContext: Context? = null
   private var coreInitialized = false
 
   override fun onAttachedToEngine(binding: FlutterPluginBinding) {
     FirebaseCoreHostApi.setUp(binding.binaryMessenger, this)
     FirebaseAppHostApi.setUp(binding.binaryMessenger, this)
+    FirebaseTokenHostApi.setUp(binding.binaryMessenger, this)
     applicationContext = binding.applicationContext
   }
 
@@ -33,6 +36,7 @@ class FlutterFirebaseCorePlugin : FlutterPlugin, FirebaseCoreHostApi, FirebaseAp
     applicationContext = null
     FirebaseCoreHostApi.setUp(binding.binaryMessenger, null)
     FirebaseAppHostApi.setUp(binding.binaryMessenger, null)
+    FirebaseTokenHostApi.setUp(binding.binaryMessenger, null)
   }
 
   private fun firebaseOptionsToPigeon(options: FirebaseOptions): CoreFirebaseOptions {
@@ -245,6 +249,58 @@ class FlutterFirebaseCorePlugin : FlutterPlugin, FirebaseCoreHostApi, FirebaseAp
       } catch (_: IllegalStateException) {
         // Ignore app not found exceptions.
         taskCompletionSource.setResult(Unit)
+      } catch (e: Exception) {
+        taskCompletionSource.setException(e)
+      }
+    }
+
+    listenToResponse(taskCompletionSource, callback)
+  }
+
+  override fun getAuthIdToken(appName: String, callback: (Result<String?>) -> Unit) {
+    respondWithToken("auth-token-failed", callback) {
+      InteropTokenProvider.forApp(appName, cachedThreadPool).getAuthIdToken()
+    }
+  }
+
+  override fun getAppCheckToken(
+      appName: String,
+      limitedUse: Boolean,
+      callback: (Result<CoreAppCheckInteropToken?>) -> Unit
+  ) {
+    respondWithToken("app-check-token-failed", callback) {
+      InteropTokenProvider.forApp(appName, cachedThreadPool).getAppCheckToken(limitedUse)
+    }
+  }
+
+  override fun getMessagingToken(appName: String, callback: (Result<String?>) -> Unit) {
+    respondWithToken("messaging-token-failed", callback) {
+      InteropTokenProvider.forApp(appName, cachedThreadPool).getMessagingToken()
+    }
+  }
+
+  /**
+   * Runs a token lookup off the main thread and reports an SDK failure as a FlutterError under
+   * [failureCode].
+   */
+  private fun <T> respondWithToken(
+      failureCode: String,
+      callback: (Result<T>) -> Unit,
+      fetch: () -> Task<T>
+  ) {
+    val taskCompletionSource = TaskCompletionSource<T>()
+
+    cachedThreadPool.execute {
+      try {
+        taskCompletionSource.setResult(Tasks.await(fetch()))
+      } catch (e: ExecutionException) {
+        // Tasks.await wraps the token task's own failure.
+        val cause = e.cause ?: e
+        taskCompletionSource.setException(
+            FlutterError(failureCode, cause.message ?: cause.toString(), null))
+      } catch (e: IllegalStateException) {
+        // FirebaseApp.getInstance / FirebaseApp.get: no app with that name, or a deleted one.
+        taskCompletionSource.setException(FlutterError("no-app", e.message, null))
       } catch (e: Exception) {
         taskCompletionSource.setException(e)
       }

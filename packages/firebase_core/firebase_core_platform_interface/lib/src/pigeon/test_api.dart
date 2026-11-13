@@ -26,6 +26,9 @@ class _PigeonCodec extends StandardMessageCodec {
     } else if (value is CoreInitializeResponse) {
       buffer.putUint8(130);
       writeValue(buffer, value.encode());
+    } else if (value is CoreAppCheckInteropToken) {
+      buffer.putUint8(131);
+      writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
     }
@@ -38,6 +41,8 @@ class _PigeonCodec extends StandardMessageCodec {
         return CoreFirebaseOptions.decode(readValue(buffer)!);
       case 130:
         return CoreInitializeResponse.decode(readValue(buffer)!);
+      case 131:
+        return CoreAppCheckInteropToken.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
     }
@@ -281,6 +286,133 @@ abstract class TestFirebaseAppHostApi {
               try {
                 await api.delete(arg_appName);
                 return wrapResponse(empty: true);
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
+      }
+    }
+  }
+}
+
+/// Tokens from whichever Auth, App Check and Messaging SDKs the app links,
+/// looked up through the Firebase component container the way the Functions
+/// SDKs do. A null result means the SDK isn't linked or has nothing to give;
+/// it never means failure.
+abstract class TestFirebaseTokenHostApi {
+  static TestDefaultBinaryMessengerBinding? get _testBinaryMessengerBinding =>
+      TestDefaultBinaryMessengerBinding.instance;
+  static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
+
+  Future<String?> getAuthIdToken(String appName);
+
+  Future<CoreAppCheckInteropToken?> getAppCheckToken(
+    String appName,
+    bool limitedUse,
+  );
+
+  Future<String?> getMessagingToken(String appName);
+
+  static void setUp(
+    TestFirebaseTokenHostApi? api, {
+    BinaryMessenger? binaryMessenger,
+    String messageChannelSuffix = '',
+  }) {
+    messageChannelSuffix = messageChannelSuffix.isNotEmpty
+        ? '.$messageChannelSuffix'
+        : '';
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.firebase_core_platform_interface.FirebaseTokenHostApi.getAuthIdToken$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+      } else {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final String arg_appName = args[0]! as String;
+              try {
+                final String? output = await api.getAuthIdToken(arg_appName);
+                return <Object?>[output];
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.firebase_core_platform_interface.FirebaseTokenHostApi.getAppCheckToken$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+      } else {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final String arg_appName = args[0]! as String;
+              final bool arg_limitedUse = args[1]! as bool;
+              try {
+                final CoreAppCheckInteropToken? output = await api
+                    .getAppCheckToken(arg_appName, arg_limitedUse);
+                return <Object?>[output];
+              } on PlatformException catch (e) {
+                return wrapResponse(error: e);
+              } catch (e) {
+                return wrapResponse(
+                  error: PlatformException(
+                    code: 'error',
+                    message: e.toString(),
+                  ),
+                );
+              }
+            });
+      }
+    }
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.firebase_core_platform_interface.FirebaseTokenHostApi.getMessagingToken$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
+      if (api == null) {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
+      } else {
+        _testBinaryMessengerBinding!.defaultBinaryMessenger
+            .setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (
+              Object? message,
+            ) async {
+              final List<Object?> args = message! as List<Object?>;
+              final String arg_appName = args[0]! as String;
+              try {
+                final String? output = await api.getMessagingToken(arg_appName);
+                return <Object?>[output];
               } on PlatformException catch (e) {
                 return wrapResponse(error: e);
               } catch (e) {

@@ -111,3 +111,29 @@ abstract class FirebaseAppHostApi {
   @async
   void delete(String appName);
 }
+
+/// The App Check SDK's answer to a token request, as the native SDKs report
+/// it: when the SDK can't produce a token, [token] is its placeholder and
+/// [error] the reason.
+class CoreAppCheckInteropToken {
+  CoreAppCheckInteropToken({required this.token, required this.error});
+
+  String token;
+  String? error;
+}
+
+/// Tokens from whichever Auth, App Check and Messaging SDKs the app links,
+/// looked up through the Firebase component container the way the Functions
+/// SDKs do. A null result means the SDK isn't linked or has nothing to give;
+/// it never means failure.
+@HostApi(dartHostTestHandler: 'TestFirebaseTokenHostApi')
+abstract class FirebaseTokenHostApi {
+  @async
+  String? getAuthIdToken(String appName);
+
+  @async
+  CoreAppCheckInteropToken? getAppCheckToken(String appName, bool limitedUse);
+
+  @async
+  String? getMessagingToken(String appName);
+}

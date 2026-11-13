@@ -364,6 +364,48 @@ data class CoreInitializeResponse(
   }
 }
 
+/**
+ * The App Check SDK's answer to a token request, as the native SDKs report it: when the SDK can't
+ * produce a token, [token] is its placeholder and [error] the reason.
+ *
+ * Generated class from Pigeon that represents data sent in messages.
+ */
+data class CoreAppCheckInteropToken(val token: String, val error: String? = null) {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): CoreAppCheckInteropToken {
+      val token = pigeonVar_list[0] as String
+      val error = pigeonVar_list[1] as String?
+      return CoreAppCheckInteropToken(token, error)
+    }
+  }
+
+  fun toList(): List<Any?> {
+    return listOf(
+        token,
+        error,
+    )
+  }
+
+  override fun equals(other: Any?): Boolean {
+    if (other == null || other.javaClass != javaClass) {
+      return false
+    }
+    if (this === other) {
+      return true
+    }
+    val other = other as CoreAppCheckInteropToken
+    return GeneratedAndroidFirebaseCorePigeonUtils.deepEquals(this.token, other.token) &&
+        GeneratedAndroidFirebaseCorePigeonUtils.deepEquals(this.error, other.error)
+  }
+
+  override fun hashCode(): Int {
+    var result = javaClass.hashCode()
+    result = 31 * result + GeneratedAndroidFirebaseCorePigeonUtils.deepHash(this.token)
+    result = 31 * result + GeneratedAndroidFirebaseCorePigeonUtils.deepHash(this.error)
+    return result
+  }
+}
+
 private open class GeneratedAndroidFirebaseCorePigeonCodec : StandardMessageCodec() {
   override fun readValueOfType(type: Byte, buffer: ByteBuffer): Any? {
     return when (type) {
@@ -372,6 +414,9 @@ private open class GeneratedAndroidFirebaseCorePigeonCodec : StandardMessageCode
       }
       130.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let { CoreInitializeResponse.fromList(it) }
+      }
+      131.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let { CoreAppCheckInteropToken.fromList(it) }
       }
       else -> super.readValueOfType(type, buffer)
     }
@@ -385,6 +430,10 @@ private open class GeneratedAndroidFirebaseCorePigeonCodec : StandardMessageCode
       }
       is CoreInitializeResponse -> {
         stream.write(130)
+        writeValue(stream, value.toList())
+      }
+      is CoreAppCheckInteropToken -> {
+        stream.write(131)
         writeValue(stream, value.toList())
       }
       else -> super.writeValue(stream, value)
@@ -587,6 +636,116 @@ interface FirebaseAppHostApi {
                 reply.reply(GeneratedAndroidFirebaseCorePigeonUtils.wrapError(error))
               } else {
                 reply.reply(GeneratedAndroidFirebaseCorePigeonUtils.wrapResult(null))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+    }
+  }
+}
+/**
+ * Tokens from whichever Auth, App Check and Messaging SDKs the app links, looked up through the
+ * Firebase component container the way the Functions SDKs do. A null result means the SDK isn't
+ * linked or has nothing to give; it never means failure.
+ *
+ * Generated interface from Pigeon that represents a handler of messages from Flutter.
+ */
+interface FirebaseTokenHostApi {
+  fun getAuthIdToken(appName: String, callback: (Result<String?>) -> Unit)
+
+  fun getAppCheckToken(
+      appName: String,
+      limitedUse: Boolean,
+      callback: (Result<CoreAppCheckInteropToken?>) -> Unit
+  )
+
+  fun getMessagingToken(appName: String, callback: (Result<String?>) -> Unit)
+
+  companion object {
+    /** The codec used by FirebaseTokenHostApi. */
+    val codec: MessageCodec<Any?> by lazy { GeneratedAndroidFirebaseCorePigeonCodec() }
+    /**
+     * Sets up an instance of `FirebaseTokenHostApi` to handle messages through the
+     * `binaryMessenger`.
+     */
+    @JvmOverloads
+    fun setUp(
+        binaryMessenger: BinaryMessenger,
+        api: FirebaseTokenHostApi?,
+        messageChannelSuffix: String = ""
+    ) {
+      val separatedMessageChannelSuffix =
+          if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+      run {
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_core_platform_interface.FirebaseTokenHostApi.getAuthIdToken$separatedMessageChannelSuffix",
+                codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val appNameArg = args[0] as String
+            api.getAuthIdToken(appNameArg) { result: Result<String?> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(GeneratedAndroidFirebaseCorePigeonUtils.wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(GeneratedAndroidFirebaseCorePigeonUtils.wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_core_platform_interface.FirebaseTokenHostApi.getAppCheckToken$separatedMessageChannelSuffix",
+                codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val appNameArg = args[0] as String
+            val limitedUseArg = args[1] as Boolean
+            api.getAppCheckToken(appNameArg, limitedUseArg) {
+                result: Result<CoreAppCheckInteropToken?> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(GeneratedAndroidFirebaseCorePigeonUtils.wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(GeneratedAndroidFirebaseCorePigeonUtils.wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel =
+            BasicMessageChannel<Any?>(
+                binaryMessenger,
+                "dev.flutter.pigeon.firebase_core_platform_interface.FirebaseTokenHostApi.getMessagingToken$separatedMessageChannelSuffix",
+                codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val appNameArg = args[0] as String
+            api.getMessagingToken(appNameArg) { result: Result<String?> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(GeneratedAndroidFirebaseCorePigeonUtils.wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(GeneratedAndroidFirebaseCorePigeonUtils.wrapResult(data))
               }
             }
           }

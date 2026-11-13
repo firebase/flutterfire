@@ -57,6 +57,56 @@ class FirebaseAppPlatform extends PlatformInterface {
     );
   }
 
+  /// The signed-in user's ID token, or `null` when the Auth SDK isn't linked
+  /// into the app or nobody is signed in.
+  ///
+  /// Throws a [FirebaseException] for plugin `core` when the Auth SDK fails to
+  /// produce a token; its message is the SDK's and its code is
+  /// `auth-token-failed`.
+  ///
+  /// For Firebase packages that attach the token to their own requests, as the
+  /// native Functions SDK does; not for app code.
+  Future<String?> getAuthIdToken() async {
+    throw UnimplementedError('getAuthIdToken() has not been implemented.');
+  }
+
+  /// The App Check SDK's answer, or `null` when it isn't linked into the app.
+  ///
+  /// Asking before App Check is activated returns the SDK's placeholder token
+  /// with [AppCheckInteropToken.error] set on Android and Apple. On web, App
+  /// Check has no token service until it's activated, so the answer is `null`
+  /// until then.
+  /// With [limitedUse], the SDK issues a limited-use token instead of a cached
+  /// one. If the SDK's call fails instead of answering, as a web limited-use
+  /// request can, throws a [FirebaseException] for plugin `core` with code
+  /// `app-check-token-failed`.
+  ///
+  /// For Firebase packages that attach the token to their own requests, as the
+  /// native Functions SDK does; not for app code.
+  Future<AppCheckInteropToken?> getAppCheckToken({
+    bool limitedUse = false,
+  }) async {
+    throw UnimplementedError('getAppCheckToken() has not been implemented.');
+  }
+
+  /// The FCM registration token, or `null` when Messaging isn't linked into
+  /// the app or has no token.
+  ///
+  /// Never prompts the user. On Apple, returns only a token Messaging already
+  /// holds, and only for the default app. On web, asks Messaging only if the
+  /// user already allowed notifications; Messaging may then create a token,
+  /// as it does for the JS Functions SDK. On Android and web, other apps can
+  /// get a token too.
+  /// On Android, where fetching may hit the network, a failure throws a
+  /// [FirebaseException] for plugin `core` with code `messaging-token-failed`.
+  /// On web, a failure returns `null`, as the JS Functions SDK ignores it.
+  ///
+  /// For Firebase packages that attach the token to their own requests, as the
+  /// native Functions SDK does; not for app code.
+  Future<String?> getMessagingToken() async {
+    throw UnimplementedError('getMessagingToken() has not been implemented.');
+  }
+
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object other) {
