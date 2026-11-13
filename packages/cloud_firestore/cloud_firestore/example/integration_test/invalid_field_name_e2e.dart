@@ -90,18 +90,24 @@ void runInvalidFieldNameTests() {
       expect(snapshot.exists, isFalse);
     });
 
-    test('set() rejects a field named __', () async {
-      final reference = document('invalid-field-set-double-underscore');
-      await reference.delete();
+    test(
+      'set() rejects a field named __',
+      () async {
+        final reference = document('invalid-field-set-double-underscore');
+        await reference.delete();
 
-      await expectLater(
-        reference.set(<String, dynamic>{'__': 1}),
-        throwsInvalidField('begin and end'),
-      );
+        await expectLater(
+          reference.set(<String, dynamic>{'__': 1}),
+          throwsInvalidField('begin and end'),
+        );
 
-      final snapshot = await reference.get();
-      expect(snapshot.exists, isFalse);
-    }, skip: kIsWeb);
+        final snapshot = await reference.get();
+        expect(snapshot.exists, isFalse);
+      },
+      skip: kIsWeb
+          ? 'The JS SDK does not treat __ as a reserved field name'
+          : null,
+    );
 
     test('set() with merge rejects an empty field name', () async {
       final reference = document('invalid-field-set-merge-empty');
@@ -146,7 +152,7 @@ void runInvalidFieldNameTests() {
       },
       skip: kIsWeb
           ? 'The JS SDK throws from batch.set before commit, and that call is not converted to FirebaseException'
-          : false,
+          : null,
     );
 
     test(
@@ -170,7 +176,7 @@ void runInvalidFieldNameTests() {
       },
       skip: kIsWeb
           ? 'A JS error inside the transaction handler is rewrapped as a plain Error'
-          : false,
+          : null,
     );
 
     test(
@@ -194,15 +200,34 @@ void runInvalidFieldNameTests() {
       },
       skip: kIsWeb
           ? 'A JS error inside the transaction handler is rewrapped as a plain Error'
-          : false,
+          : null,
     );
 
     test('a query value may use a reserved field name', () async {
-      final snapshot = await firestore
+      final query = firestore
           .collection('flutter-tests-invalid-field-query')
-          .where('m', isEqualTo: <String, dynamic>{'__x__': 1})
-          .get();
+          .where('m', isEqualTo: <String, dynamic>{'__x__': 1});
 
+      // Web accepts this value. The Windows client forwards it, and the
+      // emulator rejects the reserved key. The plugin does not validate it.
+      if (!kIsWeb && defaultTargetPlatform == TargetPlatform.windows) {
+        await expectLater(
+          query.get(),
+          throwsA(
+            isA<FirebaseException>()
+                .having((error) => error.plugin, 'plugin', 'cloud_firestore')
+                .having((error) => error.code, 'code', 'invalid-argument')
+                .having(
+                  (error) => error.message,
+                  'message',
+                  contains('is reserved'),
+                ),
+          ),
+        );
+        return;
+      }
+
+      final snapshot = await query.get();
       expect(snapshot.docs, isEmpty);
     });
   }, skip: _invalidFieldNameSkipReason() ?? false);
