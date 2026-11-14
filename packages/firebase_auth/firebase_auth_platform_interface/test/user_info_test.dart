@@ -43,6 +43,23 @@ void main() {
       });
     });
 
+    test('fromJson reads photoUrl, not photoURL', () {
+      final fromIosKey = UserInfo.fromJson(<String, Object?>{
+        'providerId': kMockProviderId,
+        'uid': kMockUid,
+        'displayName': kMockDisplayName,
+        'photoURL': kMockPhotoURL,
+        'email': kMockEmail,
+        'phoneNumber': kMockPhoneNumber,
+        'isAnonymous': false,
+        'isEmailVerified': false,
+      });
+      expect(fromIosKey.photoURL, isNull);
+
+      final fromDartKey = UserInfo.fromJson(kMockData);
+      expect(fromDartKey.photoURL, equals(kMockPhotoURL));
+    });
+
     test('toString()', () {
       expect(
         userInfo.toString(),
