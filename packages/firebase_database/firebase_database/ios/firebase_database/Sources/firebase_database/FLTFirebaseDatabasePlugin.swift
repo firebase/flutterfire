@@ -31,6 +31,10 @@ public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePlug
   private var streamHandlers: [String: FLTFirebaseDatabaseObserveStreamHandler] = [:]
   private var listenerCount: Int = 0
   private var transactionResults: [Int64: [String: Any?]] = [:]
+  private let pendingTransactionLock = NSLock()
+  private var pendingTransactionSemaphores: [DispatchSemaphore] = []
+  private var isDetached = false
+  private static let transactionHandlerTimeoutSeconds = 30
 
   /// Wraps a native error so that its Realtime Database code reaches Dart.
   ///
@@ -77,7 +81,7 @@ public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePlug
   }
 
   func cleanup(completion: (() -> Void)? = nil) {
-    // No-op cleanup for now
+    releasePendingTransactionWaits()
     completion?()
   }
 
@@ -88,7 +92,15 @@ public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePlug
   // MARK: - FLTFirebasePlugin
 
   public func didReinitializeFirebaseCore(_ completion: @escaping () -> Void) {
-    cleanup()
+    pendingTransactionLock.lock()
+    isDetached = true
+    let semaphores = pendingTransactionSemaphores
+    pendingTransactionSemaphores.removeAll()
+    isDetached = false
+    pendingTransactionLock.unlock()
+    for semaphore in semaphores {
+      semaphore.signal()
+    }
     completion()
   }
 
@@ -291,33 +303,65 @@ public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePlug
     let database = getDatabaseFromPigeonApp(app)
     let reference = database.reference(withPath: request.path)
 
+    var transactionError: PigeonError?
+
     reference.runTransactionBlock(
       { currentData in
         let semaphore = DispatchSemaphore(value: 0)
         var transactionResult: TransactionHandlerResult?
 
+        self.pendingTransactionLock.lock()
+        self.pendingTransactionSemaphores.append(semaphore)
+        let detached = self.isDetached
+        self.pendingTransactionLock.unlock()
+
+        if detached {
+          _ = self.removePendingTransactionSemaphore(semaphore)
+          transactionError = Self.transactionCancelledError()
+          return TransactionResult.abort()
+        }
+
         DispatchQueue.main.async {
+          self.pendingTransactionLock.lock()
+          let pending =
+            !self.isDetached && self.pendingTransactionSemaphores.contains { $0 === semaphore }
+          self.pendingTransactionLock.unlock()
+          if !pending {
+            return
+          }
+
           let flutterApi = FirebaseDatabaseFlutterApi(binaryMessenger: self.binaryMessenger)
           flutterApi.callTransactionHandler(
             transactionKey: request.transactionKey,
             snapshotValue: currentData.value
           ) { result in
+            let handlerResult: TransactionHandlerResult
             switch result {
-            case .success(let handlerResult):
-              transactionResult = handlerResult
+            case .success(let value):
+              handlerResult = value
             case .failure(let error):
               print("Transaction handler error: \(error)")
-              transactionResult = TransactionHandlerResult(
+              handlerResult = TransactionHandlerResult(
                 value: nil, aborted: true, exception: true
               )
             }
+            self.pendingTransactionLock.lock()
+            transactionResult = handlerResult
+            self.pendingTransactionLock.unlock()
             semaphore.signal()
           }
         }
 
-        semaphore.wait()
+        _ = semaphore.wait(timeout: .now() + .seconds(Self.transactionHandlerTimeoutSeconds))
+        let cancelled = self.removePendingTransactionSemaphore(semaphore)
 
-        guard let result = transactionResult else {
+        self.pendingTransactionLock.lock()
+        let handlerResult = transactionResult
+        self.pendingTransactionLock.unlock()
+
+        guard let result = handlerResult, !cancelled else {
+          transactionError =
+            cancelled ? Self.transactionCancelledError() : Self.transactionTimeoutError()
           return TransactionResult.abort()
         }
 
@@ -329,6 +373,11 @@ public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePlug
         return TransactionResult.success(withValue: currentData)
       },
       andCompletionBlock: { error, committed, snapshot in
+        if let transactionError {
+          completion(.failure(transactionError))
+          return
+        }
+
         if let error {
           completion(.failure(self.createFlutterError(error)))
           return
@@ -743,6 +792,50 @@ public class FLTFirebaseDatabasePlugin: NSObject, FlutterPlugin, FLTFirebasePlug
   }
 
   // MARK: - Helper Methods
+
+  private func releasePendingTransactionWaits() {
+    pendingTransactionLock.lock()
+    isDetached = true
+    let semaphores = pendingTransactionSemaphores
+    pendingTransactionSemaphores.removeAll()
+    pendingTransactionLock.unlock()
+    for semaphore in semaphores {
+      semaphore.signal()
+    }
+  }
+
+  private func removePendingTransactionSemaphore(_ semaphore: DispatchSemaphore) -> Bool {
+    pendingTransactionLock.lock()
+    let released = !pendingTransactionSemaphores.contains { $0 === semaphore }
+    pendingTransactionSemaphores.removeAll { $0 === semaphore }
+    let cancelled = released || isDetached
+    pendingTransactionLock.unlock()
+    return cancelled
+  }
+
+  private static func transactionTimeoutError() -> PigeonError {
+    transactionError(
+      code: "deadline-exceeded",
+      message:
+        "The transaction handler did not reply within \(transactionHandlerTimeoutSeconds) s."
+    )
+  }
+
+  private static func transactionCancelledError() -> PigeonError {
+    transactionError(
+      code: "cancelled",
+      message:
+        "The transaction was cancelled because the Flutter engine was detached before its handler replied."
+    )
+  }
+
+  private static func transactionError(code: String, message: String) -> PigeonError {
+    PigeonError(
+      code: code,
+      message: message,
+      details: ["code": code, "message": message]
+    )
+  }
 
   private func databaseInstanceKey(_ app: DatabasePigeonFirebaseApp) -> String {
     app.appName + (app.databaseURL ?? "")
