@@ -21,7 +21,7 @@ public final class FLTFirebaseStoragePlugin: NSObject, FlutterPlugin, FirebaseSt
   private var channel: FlutterMethodChannel?
   private var messenger: FlutterBinaryMessenger?
   private var eventChannels: [String: FlutterEventChannel] = [:]
-  private var streamHandlers: [String: FlutterStreamHandler] = [:]
+  private var streamHandlers: [String: TaskStateChannelStreamHandler] = [:]
   private var handleToTask: [Int64: AnyObject] = [:]
   private var handleToPath: [Int64: String] = [:]
   private var handleToIdentifier: [Int64: String] = [:]
@@ -48,8 +48,19 @@ public final class FLTFirebaseStoragePlugin: NSObject, FlutterPlugin, FirebaseSt
     instance.channel = channel
     instance.messenger = resolvedMessenger
     registrar.addMethodCallDelegate(instance, channel: channel)
+    #if os(iOS)
+      // Published so the engine calls detachFromEngine(for:), which releases
+      // every task still registered on this engine.
+      registrar.publish(instance)
+    #endif
     FirebaseStorageHostApiSetup.setUp(binaryMessenger: resolvedMessenger, api: instance)
   }
+
+  #if os(iOS)
+    public func detachFromEngine(for registrar: FlutterPluginRegistrar) {
+      releaseAllTasks()
+    }
+  #endif
 
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
     result(FlutterMethodNotImplemented)
@@ -429,22 +440,87 @@ public final class FLTFirebaseStoragePlugin: NSObject, FlutterPlugin, FirebaseSt
     task: StorageObservableTask, appName: String, handle: Int64,
     path: String
   ) -> String {
+    // A task whose event stream nobody ever listened to cannot be released
+    // through onCancel; drop the long-finished ones before adding a new task so
+    // the registries stay bounded.
+    sweepAbandonedTasks()
     let uuid = UUID().uuidString
     let channelName = "plugins.flutter.io/firebase_storage/taskEvent/\(uuid)"
     let channel = FlutterEventChannel(name: channelName, binaryMessenger: messenger!)
     let storageInstance = Storage.storage(app: FLTFirebasePlugin.firebaseAppNamed(appName)!)
-    channel.setStreamHandler(
-      TaskStateChannelStreamHandler(
-        task: task,
-        storage: storageInstance,
-        identifier: channelName
-      )
-    )
+    let handler = TaskStateChannelStreamHandler(
+      task: task,
+      storage: storageInstance,
+      identifier: channelName
+    ) { [weak self] identifier in
+      self?.releaseTask(identifier: identifier)
+    }
+    handler.armFinishWatch()
+    channel.setStreamHandler(handler)
+    streamHandlers[channelName] = handler
     eventChannels[channelName] = channel
     handleToTask[handle] = task as AnyObject
     handleToPath[handle] = path
     handleToIdentifier[handle] = channelName
     return uuid
+  }
+
+  /// Forgets one task: its stream handler, its event channel and every handle
+  /// map entry. Runs when the Dart side cancels the task's event stream (which
+  /// it does right after the terminal event), from the sweep of finished tasks
+  /// nobody listened to, and on engine detach. Without it the plugin kept every
+  /// task — and, through `StorageUploadTask.uploadData`, every uploaded payload
+  /// — for the life of the process. Mirrors the ObjC plugin's
+  /// `cleanUpTask:handle:` (≤ 13.0.3) and Android's
+  /// `FlutterFirebaseStorageTask.destroy()`. Idempotent; main thread only.
+  private func releaseTask(identifier: String) {
+    if !Thread.isMainThread {
+      DispatchQueue.main.async { self.releaseTask(identifier: identifier) }
+      return
+    }
+    streamHandlers.removeValue(forKey: identifier)
+    FLTFirebaseStoragePlugin.canceledIdentifiers.remove(identifier)
+    let handles = handleToIdentifier.filter { $0.value == identifier }.map(\.key)
+    for handle in handles {
+      handleToTask.removeValue(forKey: handle)
+      handleToPath.removeValue(forKey: handle)
+      handleToIdentifier.removeValue(forKey: handle)
+    }
+    if let channel = eventChannels.removeValue(forKey: identifier) {
+      // One run-loop turn later: when this runs from the handler's onCancel the
+      // Dart `cancel` call that triggered it is still being dispatched on this
+      // channel, and a channel without a handler would answer it with a
+      // MissingPluginException report on the Dart side.
+      DispatchQueue.main.async {
+        channel.setStreamHandler(nil)
+      }
+    }
+  }
+
+  /// Releases tasks that finished without any Dart listener at least
+  /// `TaskStateChannelStreamHandler.unlistenedGraceInterval` ago; a listener
+  /// that attaches within the grace period still gets the terminal event
+  /// replayed by the SDK.
+  private func sweepAbandonedTasks() {
+    let abandoned = streamHandlers.filter { $0.value.isAbandoned }.map(\.key)
+    for identifier in abandoned {
+      releaseTask(identifier: identifier)
+    }
+  }
+
+  private func releaseAllTasks() {
+    for handler in streamHandlers.values {
+      handler.cleanupObservers()
+    }
+    for channel in eventChannels.values {
+      channel.setStreamHandler(nil)
+    }
+    streamHandlers.removeAll()
+    eventChannels.removeAll()
+    handleToTask.removeAll()
+    handleToPath.removeAll()
+    handleToIdentifier.removeAll()
+    FLTFirebaseStoragePlugin.canceledIdentifiers.removeAll()
   }
 
   private func currentSnapshot(handle: Int64) -> [String: Any] {

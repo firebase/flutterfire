@@ -12,25 +12,80 @@ import Foundation
 #endif
 
 final class TaskStateChannelStreamHandler: NSObject, FlutterStreamHandler {
+  /// How long a task that finished without any Dart listener is kept before the
+  /// plugin sweeps it. Dart subscribes within milliseconds of the `put*` call
+  /// returning, so this only has to outlast that round trip generously.
+  static let unlistenedGraceInterval: TimeInterval = 30
+
   private let task: StorageObservableTask
   private let storage: Storage
   private let identifier: String
+  /// Invoked with `identifier` once the Dart side has cancelled its event
+  /// subscription, so the plugin can drop every reference it holds for the
+  /// task (the SDK's `StorageUploadTask` keeps the uploaded `Data` alive for as
+  /// long as the task object lives).
+  private let onRelease: (String) -> Void
+
+  /// Set on the first `onListen`. A task that finishes while this is still
+  /// false has no Dart subscription that could ever cancel it, so the plugin
+  /// sweeps it after `unlistenedGraceInterval` (see `isAbandoned`).
+  private(set) var hasListened = false
+  /// Stamped (main thread) by the finish watch armed in `armFinishWatch`.
+  private var finishedAt: Date?
+  private var finishWatchHandles: [String] = []
 
   private var successHandle: String?
   private var failureHandle: String?
   private var pausedHandle: String?
   private var progressHandle: String?
 
-  init(task: StorageObservableTask, storage: Storage, identifier: String) {
+  init(
+    task: StorageObservableTask, storage: Storage, identifier: String,
+    onRelease: @escaping (String) -> Void
+  ) {
     self.task = task
     self.storage = storage
     self.identifier = identifier
+    self.onRelease = onRelease
+  }
+
+  /// Observes the task's terminal state independently of any Dart listener so
+  /// a task nobody ever subscribed to can still be recognised as finished. The
+  /// SDK reports a cancelled task as `.failure`, so both observers cover every
+  /// terminal state.
+  func armFinishWatch() {
+    let stamp: (StorageTaskSnapshot) -> Void = { [weak self] _ in
+      if Thread.isMainThread {
+        self?.markFinished()
+      } else {
+        DispatchQueue.main.async { self?.markFinished() }
+      }
+    }
+    finishWatchHandles = [
+      task.observe(.success, handler: stamp),
+      task.observe(.failure, handler: stamp),
+    ]
+  }
+
+  /// True for a task that finished without any Dart listener longer than
+  /// `unlistenedGraceInterval` ago: nothing will ever cancel its stream, so the
+  /// plugin releases it itself. Main thread only.
+  var isAbandoned: Bool {
+    guard !hasListened, let finishedAt else { return false }
+    return Date().timeIntervalSince(finishedAt) >= Self.unlistenedGraceInterval
+  }
+
+  private func markFinished() {
+    if finishedAt == nil {
+      finishedAt = Date()
+    }
   }
 
   func onListen(
     withArguments arguments: Any?,
     eventSink events: @escaping FlutterEventSink
   ) -> FlutterError? {
+    hasListened = true
     successHandle = task.observe(.success) { snapshot in
       events([
         "taskState": 2,  // success
@@ -68,18 +123,26 @@ final class TaskStateChannelStreamHandler: NSObject, FlutterStreamHandler {
 
   func onCancel(withArguments arguments: Any?) -> FlutterError? {
     cleanupObservers()
+    // The Dart task stream cancels right after the terminal event (or earlier
+    // when the app stops listening); either way nothing will be delivered on
+    // this channel again, so let the plugin forget the task.
+    onRelease(identifier)
     return nil
   }
 
-  private func cleanupObservers() {
+  /// Removes every observer this handler registered, including the finish
+  /// watch, so the task holds no closure that references this handler.
+  func cleanupObservers() {
     if let h = successHandle { task.removeObserver(withHandle: h) }
     if let h = failureHandle { task.removeObserver(withHandle: h) }
     if let h = pausedHandle { task.removeObserver(withHandle: h) }
     if let h = progressHandle { task.removeObserver(withHandle: h) }
+    for h in finishWatchHandles { task.removeObserver(withHandle: h) }
     successHandle = nil
     failureHandle = nil
     pausedHandle = nil
     progressHandle = nil
+    finishWatchHandles = []
   }
 
   private func parseTaskSnapshot(_ snapshot: StorageTaskSnapshot) -> [String: Any] {
