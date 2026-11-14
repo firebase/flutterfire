@@ -156,7 +156,7 @@ Situation | Android | Apple | Web | Windows
 ----------|---------|-------|-----|--------
 Wrong email or password, with email enumeration protection enabled | `invalid-credential` | `invalid-credential` | `invalid-credential` | `unknown-error`
 Error without a more specific code | `unknown` | `unknown` or `internal-error` | `unknown` or `internal-error` | `unknown-error`
-A blocking function rejected the operation | `blocking-function-error-response` | `blocking-cloud-function-returned-error` | `internal-error` | `unknown-error`
+A blocking function rejected the operation | `blocking-cloud-function-returned-error` | `blocking-cloud-function-returned-error` | `internal-error` | `unknown-error`
 Password does not meet the password policy | `unknown` | `password-does-not-meet-requirements` | `password-does-not-meet-requirements` | `unknown-error`
 SMS quota exceeded | `too-many-requests` | `quota-exceeded` | `quota-exceeded` | Not supported
 No user signed in | `no-current-user` | `no-current-user` | `no-current-user` | `no-signed-in-user`
@@ -286,8 +286,7 @@ Code | Description | Platforms
 
 Code | Description | Platforms
 -----|-------------|----------
-`blocking-function-error-response` | A blocking function (such as `beforeUserCreated` or `beforeUserSignedIn`) rejected the operation. `message` contains the error returned by the function. | Android
-`blocking-cloud-function-returned-error` | A blocking function rejected the operation. `message` contains the error returned by the function. | Apple
+`blocking-cloud-function-returned-error` | A blocking function (such as `beforeUserCreated` or `beforeUserSignedIn`) rejected the operation. `message` contains the error returned by the function. | Android, Apple
 
 ### Email actions and links
 
