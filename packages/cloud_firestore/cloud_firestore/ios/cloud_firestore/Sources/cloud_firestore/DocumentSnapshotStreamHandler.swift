@@ -24,6 +24,7 @@ final class DocumentSnapshotStreamHandler: NSObject, FlutterStreamHandler {
   private let serverTimestampBehavior: FirebaseFirestore.ServerTimestampBehavior
   private let source: FirebaseFirestore.ListenSource
   private var listenerRegistration: ListenerRegistration?
+  private var eventSink: FlutterEventSink?
 
   init(
     firestore: Firestore,
@@ -46,36 +47,44 @@ final class DocumentSnapshotStreamHandler: NSObject, FlutterStreamHandler {
       .withIncludeMetadataChanges(includeMetadataChanges)
       .withSource(source)
 
+    eventSink = events
     listenerRegistration = reference.addSnapshotListener(options: options) {
-      [serverTimestampBehavior] snapshot, error in
+      [weak self] snapshot, error in
+      guard let self else {
+        return
+      }
       if let error {
         let (code, message) = FirebaseFirestoreUtils.errorCodeAndMessage(from: error)
-        DispatchQueue.main.async {
-          events(
-            FLTFirebasePlugin.createFlutterError(
-              fromCode: code,
-              message: message,
-              optionalDetails: ["code": code, "message": message],
-              andOptionalNSError: error as NSError
-            )
+        self.emit(
+          FLTFirebasePlugin.createFlutterError(
+            fromCode: code,
+            message: message,
+            optionalDetails: ["code": code, "message": message],
+            andOptionalNSError: error as NSError
           )
-        }
+        )
       } else if let snapshot {
-        DispatchQueue.main.async {
-          events(
-            PigeonParser.toPigeonDocumentSnapshot(
-              snapshot, serverTimestampBehavior: serverTimestampBehavior
-            )
+        let serverTimestampBehavior = self.serverTimestampBehavior
+        self.emit(
+          PigeonParser.toPigeonDocumentSnapshot(
+            snapshot, serverTimestampBehavior: serverTimestampBehavior
           )
-        }
+        )
       }
     }
     return nil
   }
 
   func onCancel(withArguments arguments: Any?) -> FlutterError? {
+    eventSink = nil
     listenerRegistration?.remove()
     listenerRegistration = nil
     return nil
+  }
+
+  private func emit(_ event: Any?) {
+    DispatchQueue.main.async { [weak self] in
+      self?.eventSink?(event)
+    }
   }
 }

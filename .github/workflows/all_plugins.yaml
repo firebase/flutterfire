@@ -154,6 +154,9 @@ jobs:
           swiftformat --version
       - name: 'Dart, Java, Objective-C and Swift'
         run: |
+          # See prime_format_package_config.dart. Without this, Flutter 3.50
+          # makes the formatter pub-get every package and the job times out.
+          dart .github/workflows/scripts/prime_format_package_config.dart
           flutter pub global run flutter_plugin_tools format --base-branch=origin/main
           ./.github/workflows/scripts/validate-formatting.sh
 

@@ -10,8 +10,7 @@ import 'package:meta/meta.dart';
 class ActionCodeInfo {
   // ignore: public_member_api_docs
   @protected
-  ActionCodeInfo({required this.operation, required ActionCodeInfoData data})
-    : _data = data;
+  ActionCodeInfo({required this.operation, required this._data});
 
   ActionCodeInfoOperation operation;
 

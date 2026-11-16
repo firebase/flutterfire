@@ -14,7 +14,7 @@
 import 'dart:async';
 import 'dart:developer' as developer;
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:firebase_ai/firebase_ai.dart';
 import 'package:waveform_flutter/waveform_flutter.dart';
 

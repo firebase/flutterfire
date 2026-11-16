@@ -43,14 +43,12 @@ final _utf8Json = json.fuse(utf8);
 final class HttpApiClient implements ApiClient {
   ///Constructor
   HttpApiClient({
-    required String apiKey,
+    required this._apiKey,
     http.Client? httpClient,
-    FutureOr<Map<String, String>> Function()? requestHeaders,
-  }) : _apiKey = apiKey,
-       // package:http top-level helpers (http.post, Request.send) create and
+    this._requestHeaders,
+  }) : // package:http top-level helpers (http.post, Request.send) create and
        // close a Client per call, which prevents TCP/TLS connection reuse.
-       _httpClient = httpClient ?? http.Client(),
-       _requestHeaders = requestHeaders;
+       _httpClient = httpClient ?? http.Client();
   final String _apiKey;
   final http.Client _httpClient;
 

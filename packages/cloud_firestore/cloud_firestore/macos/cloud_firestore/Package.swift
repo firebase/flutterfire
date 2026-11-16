@@ -52,5 +52,13 @@ let package = Package(
         .define("FLT_FIREBASE_SDK_13")
       ]
     ),
+    .testTarget(
+      name: "cloud_firestoreTests",
+      dependencies: [
+        "cloud_firestore",
+        .product(name: "FirebaseFirestore", package: "firebase-ios-sdk"),
+      ],
+      path: "Tests/cloud_firestoreTests"
+    ),
   ]
 )
