@@ -1168,6 +1168,41 @@ void main() {
       );
       expect(generateContentResponse.text, 'The answer is 2.');
     });
+
+    test('with usage metadata omitting modality', () {
+      const response = '''
+{
+  "candidates": [
+    {
+      "content": {
+        "role": "model",
+        "parts": [{"text": "Some text"}]
+      },
+      "finishReason": "STOP"
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 5,
+    "promptTokensDetails": [{"tokenCount": 5}]
+  }
+}
+''';
+      final decoded = jsonDecode(response) as Object;
+      final generateContentResponse = DeveloperSerialization()
+          .parseGenerateContentResponse(decoded);
+      expect(generateContentResponse.text, 'Some text');
+      final details =
+          generateContentResponse.usageMetadata!.promptTokensDetails!.single;
+      expect(details.modality, ContentModality.unspecified);
+      expect(details.tokenCount, 5);
+    });
+
+    test('countTokens omitting totalTokens', () {
+      final decoded = jsonDecode('{}') as Object;
+      final countTokensResponse = DeveloperSerialization()
+          .parseCountTokensResponse(decoded);
+      expect(countTokensResponse.totalTokens, 0);
+    });
   });
 
   group('parses and throws error responses', () {

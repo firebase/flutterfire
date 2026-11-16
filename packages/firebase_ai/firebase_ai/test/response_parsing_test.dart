@@ -182,6 +182,41 @@ void main() {
         ),
       );
     });
+
+    test('with a blocked prompt whose safety rating omits probability', () {
+      const response = '''
+{
+  "promptFeedback": {
+    "blockReason": "SAFETY",
+    "safetyRatings": [
+      {
+        "category": "HARM_CATEGORY_DANGEROUS_CONTENT",
+        "blocked": true
+      }
+    ]
+  }
+}
+''';
+      final decoded = jsonDecode(response) as Object;
+      final generateContentResponse = AgentPlatformSerialization()
+          .parseGenerateContentResponse(decoded);
+      final rating =
+          generateContentResponse.promptFeedback!.safetyRatings.single;
+      expect(rating.category, HarmCategory.dangerousContent);
+      expect(rating.probability, HarmProbability.unknown);
+      expect(rating.isBlocked, isTrue);
+      expect(
+        () => generateContentResponse.text,
+        throwsA(
+          isA<FirebaseAIException>().having(
+            (e) => e.message,
+            'message',
+            startsWith('Response was blocked due to safety'),
+          ),
+        ),
+      );
+    });
+
     test('with service api not enabled', () {
       const response = '''
 {
@@ -1506,6 +1541,70 @@ void main() {
         ),
       );
       expect(generateContentResponse.text, 'The answer is 2.');
+    });
+
+    test('with safety ratings omitting category or probability', () {
+      const response = '''
+{
+  "candidates": [
+    {
+      "content": {
+        "role": "model",
+        "parts": [{"text": "Some text"}]
+      },
+      "finishReason": "STOP",
+      "safetyRatings": [
+        {"category": "HARM_CATEGORY_HATE_SPEECH"},
+        {"probability": "NEGLIGIBLE"}
+      ]
+    }
+  ]
+}
+''';
+      final decoded = jsonDecode(response) as Object;
+      final generateContentResponse = AgentPlatformSerialization()
+          .parseGenerateContentResponse(decoded);
+      expect(generateContentResponse.text, 'Some text');
+      final ratings = generateContentResponse.candidates.single.safetyRatings!;
+      expect(ratings[0].category, HarmCategory.hateSpeech);
+      expect(ratings[0].probability, HarmProbability.unknown);
+      expect(ratings[1].category, HarmCategory.unknown);
+      expect(ratings[1].probability, HarmProbability.negligible);
+    });
+
+    test('with usage metadata omitting modality', () {
+      const response = '''
+{
+  "candidates": [
+    {
+      "content": {
+        "role": "model",
+        "parts": [{"text": "Some text"}]
+      },
+      "finishReason": "STOP"
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 5,
+    "promptTokensDetails": [{"tokenCount": 5}]
+  }
+}
+''';
+      final decoded = jsonDecode(response) as Object;
+      final generateContentResponse = AgentPlatformSerialization()
+          .parseGenerateContentResponse(decoded);
+      expect(generateContentResponse.text, 'Some text');
+      final details =
+          generateContentResponse.usageMetadata!.promptTokensDetails!.single;
+      expect(details.modality, ContentModality.unspecified);
+      expect(details.tokenCount, 5);
+    });
+
+    test('countTokens omitting totalTokens', () {
+      final decoded = jsonDecode('{}') as Object;
+      final countTokensResponse = AgentPlatformSerialization()
+          .parseCountTokensResponse(decoded);
+      expect(countTokensResponse.totalTokens, 0);
     });
   });
 

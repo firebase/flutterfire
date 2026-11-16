@@ -100,8 +100,10 @@ final class DeveloperSerialization implements SerializationStrategy {
   @override
   CountTokensResponse parseCountTokensResponse(Object jsonObject) {
     if (jsonObject case {'error': final Object error}) throw parseError(error);
-    if (jsonObject case {'totalTokens': final int totalTokens}) {
-      return CountTokensResponse(totalTokens);
+    if (jsonObject is Map) {
+      // Proto3 JSON leaves out a count of zero.
+      final totalTokens = jsonObject['totalTokens'] ?? 0;
+      if (totalTokens is int) return CountTokensResponse(totalTokens);
     }
     throw unhandledFormat('CountTokensResponse', jsonObject);
   }
