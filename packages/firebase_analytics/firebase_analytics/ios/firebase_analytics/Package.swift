@@ -8,7 +8,7 @@
 import Foundation
 import PackageDescription
 
-let firebaseSdkVersion: Version = "13.1.1"
+let firebaseSdkVersion: Version = "13.2.0"
 
 // Set FIREBASE_ANALYTICS_WITHOUT_ADID=true to use FirebaseAnalyticsCore.
 // e.g. FIREBASE_ANALYTICS_WITHOUT_ADID=true flutter build ios
