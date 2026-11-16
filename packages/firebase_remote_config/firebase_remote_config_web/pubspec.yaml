@@ -3,7 +3,7 @@ description: The web implementation of firebase_remote_config
 homepage: https://github.com/firebase/flutterfire/tree/main/packages/firebase_remote_config/firebase_remote_config_web
 repository: https://github.com/firebase/flutterfire/tree/main/packages/firebase_remote_config/firebase_remote_config_web
 
-version: 1.10.16
+version: 1.11.0
 resolution: workspace
 
 environment:

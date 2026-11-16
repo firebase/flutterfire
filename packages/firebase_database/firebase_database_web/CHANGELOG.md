@@ -1,3 +1,7 @@
+## 0.2.10+17
+
+ - **FEAT**(android): migrate plugins to built-in Kotlin on Flutter 3.44 ([#18922](https://github.com/firebase/flutterfire/issues/18922)). ([1abe0561](https://github.com/firebase/flutterfire/commit/1abe05614d03f22782f597f847c1fc9c8c57f016))
+
 ## 0.2.9+16
 
  - **FIX**(firebase_database_web): point DataSnapshot.child() ref at the child ([#18822](https://github.com/firebase/flutterfire/issues/18822)). ([63e8560c](https://github.com/firebase/flutterfire/commit/63e8560c353708b270f7946c9a27cf1b0e5be7a7))

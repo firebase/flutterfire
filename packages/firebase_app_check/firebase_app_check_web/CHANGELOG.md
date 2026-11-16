@@ -1,3 +1,8 @@
+## 0.3.2+4
+
+ - **FIX**(core,appcheck,web): start when the browser blocks web storage ([#18946](https://github.com/firebase/flutterfire/issues/18946)). ([229e08e8](https://github.com/firebase/flutterfire/commit/229e08e8f0b197c1eef240db73a716d7f948c2a1))
+ - **FEAT**(android): migrate plugins to built-in Kotlin on Flutter 3.44 ([#18922](https://github.com/firebase/flutterfire/issues/18922)). ([1abe0561](https://github.com/firebase/flutterfire/commit/1abe05614d03f22782f597f847c1fc9c8c57f016))
+
 ## 0.3.1+3
 
  - Update a dependency to the latest release.

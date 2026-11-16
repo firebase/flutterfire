@@ -1,3 +1,14 @@
+## 5.2.0
+
+ - **FIX**(firebase_ai): default an omitted Vertex countTokens total to zero ([#18952](https://github.com/firebase/flutterfire/issues/18952)). ([4ce01987](https://github.com/firebase/flutterfire/commit/4ce0198712f2dfad06817bf0575dc0dc0b13ee8f))
+ - **FIX**: pass analyze and format on Flutter 3.50 ([#18950](https://github.com/firebase/flutterfire/issues/18950)). ([e5339880](https://github.com/firebase/flutterfire/commit/e53398808f6d78b293d4ac1455f296b9257a096d))
+ - **FIX**(firebase_ai): keep parsing when a URL retrieval status is omitted ([#18933](https://github.com/firebase/flutterfire/issues/18933)). ([8829ed7d](https://github.com/firebase/flutterfire/commit/8829ed7dad23b1d6916b29bed7b974848d56b279))
+ - **FIX**(firebase_ai): parse code execution results that omit output ([#18882](https://github.com/firebase/flutterfire/issues/18882)). ([0307fa2e](https://github.com/firebase/flutterfire/commit/0307fa2e9173fdd7ff03b9fec8aae76f2e4eeb69))
+ - **FIX**: make firebase_ai and firebase_data_connect Wasm-ready, and check is:wasm-ready in CI ([#18853](https://github.com/firebase/flutterfire/issues/18853)). ([b41a8b08](https://github.com/firebase/flutterfire/commit/b41a8b087292a6b236e8bd74e923f6a0f45119b7))
+ - **FEAT**(android): detect built-in Kotlin instead of checking the AGP version ([#18355](https://github.com/firebase/flutterfire/issues/18355)). ([4376b824](https://github.com/firebase/flutterfire/commit/4376b824405005092630aef97a5b7f31a394aaa7))
+ - **FEAT**(android): migrate plugins to built-in Kotlin on Flutter 3.44 ([#18922](https://github.com/firebase/flutterfire/issues/18922)). ([1abe0561](https://github.com/firebase/flutterfire/commit/1abe05614d03f22782f597f847c1fc9c8c57f016))
+ - **FEAT**(firebase_ai): expose Live API voice activity ([#18929](https://github.com/firebase/flutterfire/issues/18929)). ([8ce0ffa4](https://github.com/firebase/flutterfire/commit/8ce0ffa420b0d48b7ab3f7ad9c6cf9f552b691fd))
+
 ## 5.1.0
 
  - **FIX**(firebaseai): add useLimitedUseAppCheckTokens flag to instance cache keys ([#18826](https://github.com/firebase/flutterfire/issues/18826)). ([91b00a03](https://github.com/firebase/flutterfire/commit/91b00a0399fe8282ff984029af350ccb67ab580e))

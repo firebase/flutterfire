@@ -1,3 +1,8 @@
+## 5.2.0
+
+ - **FIX**(auth,functions,web): rethrow non-Firebase errors instead of crashing in the error mappers ([#18923](https://github.com/firebase/flutterfire/issues/18923)). ([77ebf863](https://github.com/firebase/flutterfire/commit/77ebf863877bf576c2b1b0f3e120a1164b27eb7a))
+ - **FEAT**(android): migrate plugins to built-in Kotlin on Flutter 3.44 ([#18922](https://github.com/firebase/flutterfire/issues/18922)). ([1abe0561](https://github.com/firebase/flutterfire/commit/1abe05614d03f22782f597f847c1fc9c8c57f016))
+
 ## 5.1.15
 
  - Update a dependency to the latest release.
