@@ -115,7 +115,10 @@ void main() {
                     email: generateRandomEmail(),
                     password: testPassword,
                   );
-              final user = userCredential.user!;
+              final user = userCredential.user;
+              if (user == null) {
+                fail('User should not be null');
+              }
 
               await emulatorDisableUser(user.uid);
 
