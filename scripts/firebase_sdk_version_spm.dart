@@ -9,4 +9,4 @@
 /// Firebase stops publishing new Apple SDK versions to CocoaPods in
 /// October 2026. Podspecs must keep using the last version that was
 /// published as a pod.
-const String firebaseSpmSdkVersion = '13.1.1';
+const String firebaseSpmSdkVersion = '13.2.0';
