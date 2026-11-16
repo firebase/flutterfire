@@ -74,7 +74,11 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
             emulatorOrigin != null) {
           try {
             authDelegate.useAuthEmulator(emulatorOrigin);
-            _rememberAuthEmulatorOrigin(firebaseApp.name, emulatorOrigin);
+            _rememberAuthEmulatorOrigin(
+              firebaseApp.name,
+              emulatorOrigin,
+              reachedEmulator: true,
+            );
             // ignore: avoid_print
             print(
               'Using previously configured Auth emulator at $emulatorOrigin for ${firebaseApp.name}.\n'
@@ -83,16 +87,12 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
             );
           } catch (e) {
             if (e.toString().contains('sooner')) {
-              final String? connectedOrigin = authDelegate.emulatorOrigin;
-              if (connectedOrigin == emulatorOrigin) {
-                _rememberAuthEmulatorOrigin(firebaseApp.name, emulatorOrigin);
-              }
               // ignore: avoid_print
               print(
                 authEmulatorConnectTooLateMessage(
                   appName: firebaseApp.name,
                   requestedOrigin: emulatorOrigin,
-                  connectedOrigin: connectedOrigin,
+                  connectedOrigin: authDelegate.emulatorOrigin,
                 ),
               );
             } else {
@@ -530,12 +530,20 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
         requestedOrigin: origin,
         connectedEmulatorOrigin: delegate.emulatorOrigin,
       )) {
-        _rememberAuthEmulatorOrigin(delegate.app.name, origin);
+        _rememberAuthEmulatorOrigin(
+          delegate.app.name,
+          origin,
+          reachedEmulator: true,
+        );
         return;
       }
 
       delegate.useAuthEmulator(origin);
-      _rememberAuthEmulatorOrigin(delegate.app.name, origin);
+      _rememberAuthEmulatorOrigin(
+        delegate.app.name,
+        origin,
+        reachedEmulator: true,
+      );
     } catch (e) {
       // `is AuthError` would match any JS object, so check for one directly.
       // `is JSObject` is false for Dart objects on both dart2js and dart2wasm.
@@ -554,18 +562,24 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
         requestedOrigin: origin,
         connectedOrigin: delegate.emulatorOrigin,
       )) {
-        _rememberAuthEmulatorOrigin(delegate.app.name, origin);
+        _rememberAuthEmulatorOrigin(
+          delegate.app.name,
+          origin,
+          reachedEmulator: false,
+        );
       }
+      final String? connectedOrigin = delegate.emulatorOrigin;
       if (shouldThrowDebugEmulatorConnectFailure(
         isDebugMode: kDebugMode,
-        connectedOrigin: delegate.emulatorOrigin,
+        requestedOrigin: origin,
+        connectedOrigin: connectedOrigin,
       )) {
         throw FirebaseAuthException(
           code: 'emulator-config-failed',
           message: authEmulatorConnectTooLateMessage(
             appName: delegate.app.name,
             requestedOrigin: origin,
-            connectedOrigin: null,
+            connectedOrigin: connectedOrigin,
           ),
         );
       }
@@ -653,14 +667,21 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   }
 }
 
-void _rememberAuthEmulatorOrigin(String appName, String origin) {
+void _rememberAuthEmulatorOrigin(
+  String appName,
+  String origin, {
+  required bool reachedEmulator,
+}) {
   rememberDebugAuthEmulatorOrigin(
     isDebugMode: kDebugMode,
     write: () {
-      web.window.localStorage.setItem(
-        authEmulatorOriginStorageKey(appName),
-        origin,
-      );
+      final String storageKey = authEmulatorOriginStorageKey(appName);
+      if (!reachedEmulator) {
+        web.window.sessionStorage.setItem(storageKey, origin);
+        return;
+      }
+      web.window.localStorage.setItem(storageKey, origin);
+      web.window.sessionStorage.removeItem(storageKey);
     },
   );
 }

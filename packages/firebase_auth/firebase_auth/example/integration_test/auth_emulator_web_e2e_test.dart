@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'dart:async';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth_example/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -137,18 +135,7 @@ void main() {
           options: DefaultFirebaseOptions.currentPlatform,
         );
         final auth = FirebaseAuth.instanceFor(app: app);
-        try {
-          await auth
-              .signInWithEmailAndPassword(
-                email: testEmail,
-                password: testPassword,
-              )
-              .timeout(const Duration(seconds: 20));
-        } on FirebaseAuthException {
-          // The request locks this instance before the response arrives.
-        } on TimeoutException {
-          // Same lock. The call was already sent.
-        }
+        lockAuthInstanceOnProduction(appName);
 
         await expectLater(
           auth.useAuthEmulator(testEmulatorHost, testEmulatorPort),
@@ -163,15 +150,17 @@ void main() {
                 ),
           ),
         );
-        expect(getAuthEmulatorOriginLocal(appName), origin);
+        expect(getAuthEmulatorOrigin(appName), origin);
+        expect(getAuthEmulatorOriginLocal(appName), isNull);
       },
     );
 
     test(
-      'keeps a different emulator connection when connect is too late',
+      'throws in debug when this instance is on a different emulator',
       () async {
         final appName =
             'auth-emulator-other-origin-${DateTime.now().microsecondsSinceEpoch}';
+        final origin = 'http://$testEmulatorHost:$testEmulatorPort';
         const otherHost = '127.0.0.1';
         const otherOrigin = 'http://$otherHost:$testEmulatorPort';
         FirebaseApp? app;
@@ -205,9 +194,22 @@ void main() {
         );
         expect(credential.user, isNotNull);
 
-        await auth.useAuthEmulator(otherHost, testEmulatorPort);
+        await expectLater(
+          auth.useAuthEmulator(otherHost, testEmulatorPort),
+          throwsA(
+            isA<FirebaseAuthException>()
+                .having((e) => e.code, 'code', 'emulator-config-failed')
+                .having((e) => e.message, 'message', contains(origin))
+                .having(
+                  (e) => e.message,
+                  'message',
+                  contains('full page reload'),
+                ),
+          ),
+        );
 
-        expect(getAuthEmulatorOriginLocal(appName), otherOrigin);
+        expect(getAuthEmulatorOriginLocal(appName), origin);
+        expect(getAuthEmulatorOrigin(appName), otherOrigin);
         expect(await credential.user!.getIdToken(true), isNotEmpty);
       },
     );

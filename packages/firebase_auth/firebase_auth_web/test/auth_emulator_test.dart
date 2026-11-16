@@ -166,14 +166,14 @@ void main() {
       );
     });
 
-    test('reads localStorage before sessionStorage in debug', () {
+    test('reads a refused connect from sessionStorage before localStorage', () {
       expect(
         debugAuthEmulatorOrigin(
           isDebugMode: true,
           readLocal: () => 'http://localhost:9099',
           readSession: () => 'http://127.0.0.1:9099',
         ),
-        'http://localhost:9099',
+        'http://127.0.0.1:9099',
       );
     });
   });
@@ -203,17 +203,27 @@ void main() {
   });
 
   group('persistedAuthEmulatorOrigin', () {
-    test('uses localStorage when both stores have a value', () {
+    test('uses a refused connect from sessionStorage before localStorage', () {
       expect(
         persistedAuthEmulatorOrigin(
           localOrigin: 'http://localhost:9099',
           sessionOrigin: 'http://127.0.0.1:9099',
         ),
+        'http://127.0.0.1:9099',
+      );
+    });
+
+    test('uses localStorage when this tab has no pending connect', () {
+      expect(
+        persistedAuthEmulatorOrigin(
+          localOrigin: 'http://localhost:9099',
+          sessionOrigin: null,
+        ),
         'http://localhost:9099',
       );
     });
 
-    test('falls back to sessionStorage when localStorage is empty', () {
+    test('uses sessionStorage when localStorage is empty', () {
       expect(
         persistedAuthEmulatorOrigin(
           localOrigin: null,
@@ -264,17 +274,6 @@ void main() {
   });
 
   group('authEmulatorConnectTooLateMessage', () {
-    test('keeps the hot reload message when this instance matches', () {
-      expect(
-        authEmulatorConnectTooLateMessage(
-          appName: '[DEFAULT]',
-          requestedOrigin: 'http://localhost:9099',
-          connectedOrigin: 'http://localhost:9099',
-        ),
-        contains('kept across hot reload'),
-      );
-    });
-
     test('says production and asks for a full page reload', () {
       final message = authEmulatorConnectTooLateMessage(
         appName: '[DEFAULT]',
@@ -303,7 +302,19 @@ void main() {
       expect(
         shouldThrowDebugEmulatorConnectFailure(
           isDebugMode: true,
+          requestedOrigin: 'http://localhost:9099',
           connectedOrigin: null,
+        ),
+        isTrue,
+      );
+    });
+
+    test('throws in debug when this instance is on a different emulator', () {
+      expect(
+        shouldThrowDebugEmulatorConnectFailure(
+          isDebugMode: true,
+          requestedOrigin: 'http://127.0.0.1:9100',
+          connectedOrigin: 'http://localhost:9099',
         ),
         isTrue,
       );
@@ -313,16 +324,18 @@ void main() {
       expect(
         shouldThrowDebugEmulatorConnectFailure(
           isDebugMode: false,
+          requestedOrigin: 'http://localhost:9099',
           connectedOrigin: null,
         ),
         isFalse,
       );
     });
 
-    test('does not throw when this instance is on an emulator', () {
+    test('does not throw when this instance is already on that origin', () {
       expect(
         shouldThrowDebugEmulatorConnectFailure(
           isDebugMode: true,
+          requestedOrigin: 'http://localhost:9099',
           connectedOrigin: 'http://localhost:9099',
         ),
         isFalse,

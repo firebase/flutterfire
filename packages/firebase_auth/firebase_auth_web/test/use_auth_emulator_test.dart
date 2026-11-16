@@ -12,13 +12,25 @@ import 'package:firebase_auth_platform_interface/firebase_auth_platform_interfac
 import 'package:firebase_auth_web/firebase_auth_web.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:web/web.dart' as web;
 
 import 'fake_auth_js_sdk.dart';
+
+const _originKey = '[DEFAULT]-firebaseEmulatorOrigin';
+
+void _clearStoredOrigin() {
+  web.window.localStorage.removeItem(_originKey);
+  web.window.sessionStorage.removeItem(_originKey);
+}
 
 void main() {
   setUpAll(() {
     FirebasePlatform.instance = FakeFirebase();
   });
+
+  setUp(_clearStoredOrigin);
+
+  tearDown(_clearStoredOrigin);
 
   /// Stubs the JS SDK so that `connectAuthEmulator()` throws [error].
   void connectAuthEmulatorThrows(Object error) {
@@ -44,31 +56,74 @@ void main() {
         ),
       ),
     );
+    expect(
+      web.window.sessionStorage.getItem(_originKey),
+      'http://localhost:9099',
+    );
+    expect(web.window.localStorage.getItem(_originKey), isNull);
   });
 
-  test('keeps a different emulator when emulator-config-failed', () async {
+  test('stores a successful connect in localStorage', () async {
     final auth = stubFirebaseAuthJsSdk();
-    final config = JSObject();
-    config['protocol'] = 'http'.toJS;
-    config['host'] = 'localhost'.toJS;
-    config['port'] = 9099.toJS;
-    final authApp = JSObject();
-    authApp['name'] = '[DEFAULT]'.toJS;
-    final instance = JSObject();
-    instance['app'] = authApp;
-    instance['emulatorConfig'] = config;
-    auth['initializeAuth'] = ((JSAny? _, JSAny? _) => instance).toJS;
-    void connectAuthEmulator(JSAny? auth, JSAny? origin) {
-      throw jsError(
-        'Firebase: Error (auth/emulator-config-failed).',
-        code: 'auth/emulator-config-failed',
-      );
-    }
+    auth['connectAuthEmulator'] = ((JSAny? _, JSAny? _) {}).toJS;
+    web.window.sessionStorage.setItem(_originKey, 'http://127.0.0.1:9099');
 
-    auth['connectAuthEmulator'] = connectAuthEmulator.toJS;
+    await FirebaseAuthWeb.instance.useAuthEmulator('localhost', 9099);
 
-    await FirebaseAuthWeb.instance.useAuthEmulator('127.0.0.1', 9100);
+    expect(
+      web.window.localStorage.getItem(_originKey),
+      'http://localhost:9099',
+    );
+    expect(web.window.sessionStorage.getItem(_originKey), isNull);
   });
+
+  test(
+    'throws in debug when emulator-config-failed on a different origin',
+    () async {
+      final auth = stubFirebaseAuthJsSdk();
+      final config = JSObject();
+      config['protocol'] = 'http'.toJS;
+      config['host'] = 'localhost'.toJS;
+      config['port'] = 9099.toJS;
+      final authApp = JSObject();
+      authApp['name'] = '[DEFAULT]'.toJS;
+      final instance = JSObject();
+      instance['app'] = authApp;
+      instance['emulatorConfig'] = config;
+      auth['initializeAuth'] = ((JSAny? _, JSAny? _) => instance).toJS;
+      void connectAuthEmulator(JSAny? auth, JSAny? origin) {
+        throw jsError(
+          'Firebase: Error (auth/emulator-config-failed).',
+          code: 'auth/emulator-config-failed',
+        );
+      }
+
+      auth['connectAuthEmulator'] = connectAuthEmulator.toJS;
+
+      await expectLater(
+        FirebaseAuthWeb.instance.useAuthEmulator('127.0.0.1', 9100),
+        throwsA(
+          isA<FirebaseAuthException>()
+              .having((e) => e.code, 'code', 'emulator-config-failed')
+              .having(
+                (e) => e.message,
+                'message',
+                contains('http://localhost:9099'),
+              )
+              .having(
+                (e) => e.message,
+                'message',
+                contains('http://127.0.0.1:9100'),
+              ),
+        ),
+      );
+      expect(
+        web.window.sessionStorage.getItem(_originKey),
+        'http://127.0.0.1:9100',
+      );
+      expect(web.window.localStorage.getItem(_originKey), isNull);
+    },
+  );
 
   test('maps a Firebase Auth error to FirebaseAuthException', () async {
     connectAuthEmulatorThrows(
