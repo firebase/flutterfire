@@ -290,3 +290,36 @@ jobs:
           mkdir -p "$GEM_HOME"
           gem install xcodeproj --no-document
           ruby packages/firebase_crashlytics/firebase_crashlytics/ios/crashlytics_add_upload_symbols_test.rb
+
+  oss-exit-gate-release:
+    name: Publish to pub.dev via OSS Exit Gate
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - uses: dart-lang/setup-dart@e51d8e571e22473a2ddebf0ef8a2123f0ab2c02c # v1.7.1
+      - name: Authenticate to Google Cloud (OSS Exit Gate)
+        uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # v3.0.0
+        with:
+          workload_identity_provider: 'projects/305452601764/locations/global/workloadIdentityPools/builders/providers/github'
+      - name: Stage package archive and upload manifest to OSS Exit Gate
+        env:
+          TAG_NAME: ${{ github.ref_name }}
+        run: |
+          VERSION="${TAG_NAME#v}"
+          ARCHIVE="firebase_core-${VERSION}.tar.gz"
+          git archive --format=tar.gz -o "$ARCHIVE" HEAD
+          gcloud artifacts generic upload \
+            --project=oss-exit-gate-prod \
+            --location=us \
+            --repository=flutterfire--pubdev \
+            --package=firebase_core \
+            --version="$VERSION" \
+            --source="$ARCHIVE"
+          printf '{"package":"firebase_core","version":"%s"}\n' "$VERSION" > manifest.json
+          gcloud storage cp manifest.json "gs://oss-exit-gate-prod-flutterfire--pubdev-manifests/firebase_core/${VERSION}/manifest.json"
