@@ -1,6 +1,6 @@
 name: firebase_storage_platform_interface
 description: A common platform interface for the firebase_storage plugin.
-version: 6.0.9
+version: 6.1.0
 resolution: workspace
 homepage: https://github.com/firebase/flutterfire/tree/main/packages/firebase_storage/firebase_storage_platform_interface
 repository: https://github.com/firebase/flutterfire/tree/main/packages/firebase_storage/firebase_storage_platform_interface

@@ -1,3 +1,13 @@
+## 17.1.0
+
+ - **FIX**(messaging,android): skip the background service when no handler is registered ([#18942](https://github.com/firebase/flutterfire/issues/18942)). ([e519caa7](https://github.com/firebase/flutterfire/commit/e519caa7710ba26b33a6cc71485bb198e31d2d84))
+ - **FIX**: pass analyze and format on Flutter 3.50 ([#18950](https://github.com/firebase/flutterfire/issues/18950)). ([e5339880](https://github.com/firebase/flutterfire/commit/e53398808f6d78b293d4ac1455f296b9257a096d))
+ - **FIX**(messaging,ios): read the APNs token type from the provisioning profile ([#18937](https://github.com/firebase/flutterfire/issues/18937)). ([37107eec](https://github.com/firebase/flutterfire/commit/37107eec1b53875c134d41893d94a9cd9acf414c))
+ - **FIX**(messaging,android): release the FCM run wake lock off the main thread ([#18867](https://github.com/firebase/flutterfire/issues/18867)). ([3bd8f6a1](https://github.com/firebase/flutterfire/commit/3bd8f6a1523dd779e98376dddd7768e13e02b4d6))
+ - **FIX**(messaging,android): ignore broadcasts that carry no message ([#18907](https://github.com/firebase/flutterfire/issues/18907)). ([1fb0a588](https://github.com/firebase/flutterfire/commit/1fb0a5888a538ab0930ee2ef143c88f39967dedf))
+ - **FIX**(messaging,android): deliver every foreground message to onMessage exactly once ([#18831](https://github.com/firebase/flutterfire/issues/18831)). ([9d457a5d](https://github.com/firebase/flutterfire/commit/9d457a5d18568004b288ed245678da9881168b5b))
+ - **FEAT**(android): migrate plugins to built-in Kotlin on Flutter 3.44 ([#18922](https://github.com/firebase/flutterfire/issues/18922)). ([1abe0561](https://github.com/firebase/flutterfire/commit/1abe05614d03f22782f597f847c1fc9c8c57f016))
+
 ## 17.0.1
 
  - **FIX**(android): replace Groovy space-assignment in plugin build.gradle files ([#18837](https://github.com/firebase/flutterfire/issues/18837)). ([09e913ac](https://github.com/firebase/flutterfire/commit/09e913acd98fa25ea6ff547141e7caf421b7b02d))

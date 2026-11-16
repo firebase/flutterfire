@@ -13,4 +13,4 @@
 // limitations under the License.
 
 /// Auto-generated file. Do not edit.
-public let versionNumber = "5.1.0"
+public let versionNumber = "5.2.0"

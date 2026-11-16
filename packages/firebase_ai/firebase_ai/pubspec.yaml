@@ -1,6 +1,6 @@
 name: firebase_ai
 description: Firebase AI Logic SDK.
-version: 5.1.0
+version: 5.2.0
 resolution: workspace
 homepage: https://firebase.google.com/docs/vertex-ai/get-started?platform=flutter
 topics:

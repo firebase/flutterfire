@@ -1,6 +1,6 @@
 name: firebase_app_installations_web
 description: The web implementation of firebase_app_installations.
-version: 0.1.9+15
+version: 0.1.10+16
 resolution: workspace
 homepage: https://github.com/firebase/flutterfire/tree/main/packages/firebase_app_installations/firebase_app_installations_web
 repository: https://github.com/firebase/flutterfire/tree/main/packages/firebase_app_installations/firebase_app_installations_web
