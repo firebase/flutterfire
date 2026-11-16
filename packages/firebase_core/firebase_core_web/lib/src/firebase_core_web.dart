@@ -77,11 +77,15 @@ class FirebaseCoreWeb extends FirebasePlatform {
     String packageVersion,
   ) {
     final sessionKey = 'flutterfire-$libraryName-$packageVersion';
-    final sessionItem = web.window.sessionStorage.getItem(sessionKey);
-    if (sessionItem == null) {
+    try {
+      if (web.window.sessionStorage.getItem(sessionKey) != null) return;
       web.window.sessionStorage.setItem(sessionKey, packageVersion);
-      firebase.registerVersion(libraryName, packageVersion);
+    } catch (_) {
+      // Accessing `window.sessionStorage` throws a SecurityError when the user
+      // blocks site data. The cache only avoids duplicate registrations, so
+      // register anyway instead of failing `initializeApp`.
     }
+    firebase.registerVersion(libraryName, packageVersion);
   }
 
   static void registerLibraryVersion(String libraryName, String version) {
