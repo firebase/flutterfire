@@ -149,8 +149,7 @@ cloud_firestore_windows::FirestoreCodec::ReadValueOfType(
             std::get<std::string>(FirestoreCodec::ReadValue(stream)));
       }
 
-      return CustomEncodableValue(
-          DecodedFieldPath{FieldPath(array), std::move(array)});
+      return CustomEncodableValue(DecodedFieldPath{std::move(array)});
     }
 
     case DATA_TYPE_BLOB: {
@@ -220,8 +219,7 @@ cloud_firestore_windows::FirestoreCodec::ReadValueOfType(
     }
 
     case DATA_TYPE_DOCUMENT_ID: {
-      return CustomEncodableValue(DecodedFieldPath{
-          FieldPath::DocumentId(), std::vector<std::string>{"__name__"}});
+      return CustomEncodableValue(FieldPath::DocumentId());
     }
 
     case DATA_TYPE_FIRESTORE_INSTANCE: {

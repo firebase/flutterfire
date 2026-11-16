@@ -18,14 +18,13 @@
 #include <string>
 #include <vector>
 
-#include "firebase/firestore/field_path.h"
 #include "firebase/firestore/field_value.h"
 
 namespace cloud_firestore_windows {
 
-// firebase::firestore::FieldPath does not expose its segments.
+// FieldPath's constructor validates segments and throws. That runs while the
+// message is still being decoded, before any write check can see them.
 struct DecodedFieldPath {
-  firebase::firestore::FieldPath path;
   std::vector<std::string> segments;
 };
 

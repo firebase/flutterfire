@@ -2,6 +2,11 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// This target is built with _HAS_EXCEPTIONS=0. That makes std::exception here
+// a different type from the std::invalid_argument the Firebase C++ SDK throws,
+// so a catch in this file would not match. messages.g.cpp undefines it first.
+#undef _HAS_EXCEPTIONS
+
 #pragma comment(lib, \
                 "rpcrt4.lib")  // UuidCreate - Minimum supported OS Win 2000
 
@@ -23,6 +28,7 @@
 #include <optional>
 #include <queue>
 #include <sstream>
+#include <stdexcept>
 #include <typeinfo>
 #include <vector>
 
@@ -710,8 +716,8 @@ std::optional<std::string> RejectedFieldSegment(const std::string& segment) {
 
 std::optional<std::string> RejectedWriteValue(const EncodableValue& value);
 
-// The SDK leaves its array parse path null, so names inside arrays are not
-// validated.
+// A FieldValue sentinel is already a FieldValue here, so this cannot see
+// inside arrayUnion or arrayRemove.
 std::optional<std::string> RejectedWriteMap(const EncodableMap& map) {
   for (const auto& entry : map) {
     if (const auto* key = std::get_if<std::string>(&entry.first)) {
@@ -730,6 +736,13 @@ std::optional<std::string> RejectedWriteValue(const EncodableValue& value) {
   if (const auto* nested = std::get_if<EncodableMap>(&value)) {
     return RejectedWriteMap(*nested);
   }
+  if (const auto* list = std::get_if<EncodableList>(&value)) {
+    for (const EncodableValue& element : *list) {
+      if (auto message = RejectedWriteValue(element)) {
+        return message;
+      }
+    }
+  }
   return std::nullopt;
 }
 
@@ -742,8 +755,8 @@ std::optional<std::string> RejectedUpdateMap(const EncodableMap& map) {
     } else if (const auto* custom =
                    std::get_if<CustomEncodableValue>(&entry.first)) {
       if (custom->type() == typeid(DecodedFieldPath)) {
-        const DecodedFieldPath decoded =
-            std::any_cast<DecodedFieldPath>(*custom);
+        const DecodedFieldPath& decoded =
+            std::any_cast<const DecodedFieldPath&>(*custom);
         for (const std::string& segment : decoded.segments) {
           if (auto message = RejectedFieldSegment(segment)) {
             return message;
@@ -797,8 +810,22 @@ FlutterError InvalidDocumentField(const std::string& message) {
   return FlutterError("firebase_firestore", message, details);
 }
 
-DecodedFieldPath DecodedFieldPathFrom(const EncodableValue& value) {
-  return std::any_cast<DecodedFieldPath>(std::get<CustomEncodableValue>(value));
+firebase::firestore::FieldPath FieldPathFromEncodable(
+    const EncodableValue& value) {
+  const CustomEncodableValue& custom = std::get<CustomEncodableValue>(value);
+  if (custom.type() == typeid(firebase::firestore::FieldPath)) {
+    return std::any_cast<const firebase::firestore::FieldPath&>(custom);
+  }
+
+  const DecodedFieldPath& decoded =
+      std::any_cast<const DecodedFieldPath&>(custom);
+  for (const std::string& segment : decoded.segments) {
+    if (segment.empty()) {
+      throw std::invalid_argument(
+          "Invalid data. Document fields must not be empty");
+    }
+  }
+  return firebase::firestore::FieldPath(decoded.segments);
 }
 
 firebase::firestore::MapFieldValue ConvertToMapFieldValue(
@@ -837,10 +864,11 @@ firebase::firestore::MapFieldPathValue ConvertToMapFieldPathValue(
           CloudFirestorePlugin::ConvertToFieldValue(kv.second);
       convertedMap[FieldPath(convertedList)] = value;
     } else if (std::holds_alternative<CustomEncodableValue>(kv.first)) {
-      const DecodedFieldPath decoded = DecodedFieldPathFrom(kv.first);
+      const firebase::firestore::FieldPath field_path =
+          FieldPathFromEncodable(kv.first);
       firebase::firestore::FieldValue value =
           CloudFirestorePlugin::ConvertToFieldValue(kv.second);
-      convertedMap[decoded.path] = value;
+      convertedMap[field_path] = value;
     } else {
       // Handle or skip non-string keys
       // You may throw an exception or handle this some other way
@@ -1215,61 +1243,67 @@ class TransactionStreamHandler
               }
               if (commands.empty()) return Error::kErrorOk;
 
-              for (InternalTransactionCommand& command : commands) {
-                if (auto message = RejectedWriteCommand(
-                        command.type(), command.data(), command.option())) {
-                  str = *message;
-                  return Error::kErrorInvalidArgument;
+              try {
+                for (InternalTransactionCommand& command : commands) {
+                  if (auto message = RejectedWriteCommand(
+                          command.type(), command.data(), command.option())) {
+                    str = *message;
+                    return Error::kErrorInvalidArgument;
+                  }
+
+                  std::string path = command.path();
+                  InternalTransactionType type = command.type();
+                  if (path.empty() /* or some other invalid condition */) {
+                    std::cerr << "Path is invalid: " << path << std::endl;
+                    continue;  // Skip this iteration.
+                  }
+
+                  std::cout << "Before: " << path << std::endl;  // Debug print.
+
+                  DocumentReference reference = firestore_->Document(path);
+                  std::cout << "After: " << command.path()
+                            << std::endl;  // debug print
+
+                  switch (type) {
+                    case InternalTransactionType::kSet:
+                      std::cout << "Transaction set" << path
+                                << std::endl;  // Debug print.
+
+                      if (command.option()->merge() != nullptr &&
+                          command.option()->merge()) {
+                        transaction.Set(reference,
+                                        ConvertToMapFieldValue(*command.data()),
+                                        SetOptions::Merge());
+                      } else if (command.option()->merge_fields()) {
+                        transaction.Set(
+                            reference, ConvertToMapFieldValue(*command.data()),
+                            SetOptions::MergeFieldPaths(
+                                ConvertToFieldPathVector(
+                                    *command.option()->merge_fields())));
+                      } else {
+                        transaction.Set(
+                            reference, ConvertToMapFieldValue(*command.data()));
+                      }
+
+                      break;
+                    case InternalTransactionType::kUpdate:
+                      std::cout << "Transaction update" << path
+                                << std::endl;  // Debug print.
+
+                      transaction.Update(reference, ConvertToMapFieldPathValue(
+                                                        *command.data()));
+                      break;
+                    case InternalTransactionType::kDeleteType:
+                      std::cout << "Transaction delete" << path
+                                << std::endl;  // Debug print.
+
+                      transaction.Delete(reference);
+                      break;
+                  }
                 }
-
-                std::string path = command.path();
-                InternalTransactionType type = command.type();
-                if (path.empty() /* or some other invalid condition */) {
-                  std::cerr << "Path is invalid: " << path << std::endl;
-                  continue;  // Skip this iteration.
-                }
-
-                std::cout << "Before: " << path << std::endl;  // Debug print.
-
-                DocumentReference reference = firestore_->Document(path);
-                std::cout << "After: " << command.path()
-                          << std::endl;  // debug print
-
-                switch (type) {
-                  case InternalTransactionType::kSet:
-                    std::cout << "Transaction set" << path
-                              << std::endl;  // Debug print.
-
-                    if (command.option()->merge() != nullptr &&
-                        command.option()->merge()) {
-                      transaction.Set(reference,
-                                      ConvertToMapFieldValue(*command.data()),
-                                      SetOptions::Merge());
-                    } else if (command.option()->merge_fields()) {
-                      transaction.Set(
-                          reference, ConvertToMapFieldValue(*command.data()),
-                          SetOptions::MergeFieldPaths(ConvertToFieldPathVector(
-                              *command.option()->merge_fields())));
-                    } else {
-                      transaction.Set(reference,
-                                      ConvertToMapFieldValue(*command.data()));
-                    }
-
-                    break;
-                  case InternalTransactionType::kUpdate:
-                    std::cout << "Transaction update" << path
-                              << std::endl;  // Debug print.
-
-                    transaction.Update(
-                        reference, ConvertToMapFieldPathValue(*command.data()));
-                    break;
-                  case InternalTransactionType::kDeleteType:
-                    std::cout << "Transaction delete" << path
-                              << std::endl;  // Debug print.
-
-                    transaction.Delete(reference);
-                    break;
-                }
+              } catch (const std::exception& error) {
+                str = error.what();
+                return Error::kErrorInvalidArgument;
               }
               return Error::kErrorOk;
             })
@@ -1494,32 +1528,36 @@ void CloudFirestorePlugin::DocumentReferenceSet(
     return;
   }
 
-  Firestore* firestore = GetFirestoreFromPigeon(app);
-  DocumentReference document_reference = firestore->Document(request.path());
+  try {
+    Firestore* firestore = GetFirestoreFromPigeon(app);
+    DocumentReference document_reference = firestore->Document(request.path());
 
-  // Get the data
-  Future<void> future;
+    // Get the data
+    Future<void> future;
 
-  if (request.option()->merge() != nullptr && request.option()->merge()) {
-    future = document_reference.Set(ConvertToMapFieldValue(*request.data()),
-                                    SetOptions::Merge());
-  } else if (request.option()->merge_fields()) {
-    future = document_reference.Set(
-        ConvertToMapFieldValue(*request.data()),
-        SetOptions::MergeFieldPaths(
-            ConvertToFieldPathVector(*request.option()->merge_fields())));
-  } else {
-    future = document_reference.Set(ConvertToMapFieldValue(*request.data()));
-  }
-
-  future.OnCompletion([result](const Future<void>& completed_future) {
-    if (completed_future.error() == firebase::firestore::kErrorOk) {
-      result(std::nullopt);
+    if (request.option()->merge() != nullptr && request.option()->merge()) {
+      future = document_reference.Set(ConvertToMapFieldValue(*request.data()),
+                                      SetOptions::Merge());
+    } else if (request.option()->merge_fields()) {
+      future = document_reference.Set(
+          ConvertToMapFieldValue(*request.data()),
+          SetOptions::MergeFieldPaths(
+              ConvertToFieldPathVector(*request.option()->merge_fields())));
     } else {
-      result(CloudFirestorePlugin::ParseError(completed_future));
-      return;
+      future = document_reference.Set(ConvertToMapFieldValue(*request.data()));
     }
-  });
+
+    future.OnCompletion([result](const Future<void>& completed_future) {
+      if (completed_future.error() == firebase::firestore::kErrorOk) {
+        result(std::nullopt);
+      } else {
+        result(CloudFirestorePlugin::ParseError(completed_future));
+        return;
+      }
+    });
+  } catch (const std::exception& error) {
+    result(InvalidDocumentField(error.what()));
+  }
 }
 
 void CloudFirestorePlugin::DocumentReferenceUpdate(
@@ -1532,21 +1570,25 @@ void CloudFirestorePlugin::DocumentReferenceUpdate(
     return;
   }
 
-  Firestore* firestore = GetFirestoreFromPigeon(app);
-  DocumentReference document_reference = firestore->Document(request.path());
+  try {
+    Firestore* firestore = GetFirestoreFromPigeon(app);
+    DocumentReference document_reference = firestore->Document(request.path());
 
-  // Get the data
-  MapFieldPathValue data = ConvertToMapFieldPathValue(*request.data());
-  Future<void> future = document_reference.Update(data);
+    // Get the data
+    MapFieldPathValue data = ConvertToMapFieldPathValue(*request.data());
+    Future<void> future = document_reference.Update(data);
 
-  future.OnCompletion([result](const Future<void>& completed_future) {
-    if (completed_future.error() == firebase::firestore::kErrorOk) {
-      result(std::nullopt);
-    } else {
-      result(CloudFirestorePlugin::ParseError(completed_future));
-      return;
-    }
-  });
+    future.OnCompletion([result](const Future<void>& completed_future) {
+      if (completed_future.error() == firebase::firestore::kErrorOk) {
+        result(std::nullopt);
+      } else {
+        result(CloudFirestorePlugin::ParseError(completed_future));
+        return;
+      }
+    });
+  } catch (const std::exception& error) {
+    result(InvalidDocumentField(error.what()));
+  }
 }
 
 void CloudFirestorePlugin::DocumentReferenceGet(
@@ -1618,9 +1660,8 @@ firebase::firestore::Filter filterFromJson(const EncodableMap& map) {
   if (map.find(EncodableValue("fieldPath")) != map.end()) {
     // Deserialize a FilterQuery
     std::string op = std::get<std::string>(map.at(EncodableValue("op")));
-    const DecodedFieldPath decoded_field_path =
-        DecodedFieldPathFrom(map.at(EncodableValue("fieldPath")));
-    const FieldPath& fieldPath = decoded_field_path.path;
+    const firebase::firestore::FieldPath fieldPath =
+        FieldPathFromEncodable(map.at(EncodableValue("fieldPath")));
 
     auto value = map.at(EncodableValue("value"));
 
@@ -1709,9 +1750,8 @@ firebase::firestore::Query ParseQuery(
         ConvertToConditions(*parameters.where());
 
     for (const auto& condition : conditions) {
-      const DecodedFieldPath decoded_field_path =
-          DecodedFieldPathFrom(condition[0]);
-      const FieldPath& fieldPath = decoded_field_path.path;
+      const firebase::firestore::FieldPath fieldPath =
+          FieldPathFromEncodable(condition[0]);
       const std::string& op = std::get<std::string>(condition[1]);
 
       auto value = condition[2];
@@ -1770,9 +1810,8 @@ firebase::firestore::Query ParseQuery(
         ConvertToConditions(*parameters.order_by());
 
     for (const auto& order_by : order_bys) {
-      const DecodedFieldPath decoded_field_path =
-          DecodedFieldPathFrom(order_by[0]);
-      const FieldPath& fieldPath = decoded_field_path.path;
+      const firebase::firestore::FieldPath fieldPath =
+          FieldPathFromEncodable(order_by[0]);
       const bool& direction = std::get<bool>(order_by[1]);
 
       if (direction) {
@@ -1802,8 +1841,7 @@ firebase::firestore::Query ParseQuery(
     return query;
   } catch (const std::exception& e) {
     std::cerr << "Error: " << e.what() << std::endl;
-    // Return a 'null' or 'empty' query based on your C++ Firestore API
-    return firebase::firestore::Query();
+    throw;
   }
 }
 
@@ -1813,7 +1851,16 @@ void CloudFirestorePlugin::QueryGet(
     const InternalGetOptions& options,
     std::function<void(ErrorOr<InternalQuerySnapshot> reply)> result) {
   Firestore* firestore = GetFirestoreFromPigeon(app);
-  Query query = ParseQuery(firestore, path, is_collection_group, parameters);
+  firebase::firestore::Query query;
+  try {
+    query = ParseQuery(firestore, path, is_collection_group, parameters);
+  } catch (const std::invalid_argument& error) {
+    result(InvalidDocumentField(error.what()));
+    return;
+  } catch (const std::exception& error) {
+    result(FlutterError("unknown", error.what()));
+    return;
+  }
 
   firebase::firestore::Source source = GetSourceFromPigeon(options.source());
 
@@ -1852,7 +1899,16 @@ void CloudFirestorePlugin::AggregateQuery(
     const flutter::EncodableList& queries, bool is_collection_group,
     std::function<void(ErrorOr<flutter::EncodableList> reply)> result) {
   Firestore* firestore = GetFirestoreFromPigeon(app);
-  Query query = ParseQuery(firestore, path, is_collection_group, parameters);
+  firebase::firestore::Query query;
+  try {
+    query = ParseQuery(firestore, path, is_collection_group, parameters);
+  } catch (const std::invalid_argument& error) {
+    result(InvalidDocumentField(error.what()));
+    return;
+  } catch (const std::exception& error) {
+    result(FlutterError("unknown", error.what()));
+    return;
+  }
 
   firebase::firestore::AggregateQuery aggregate_query;
 
@@ -1977,7 +2033,7 @@ void CloudFirestorePlugin::WriteBatchCommit(
 
   } catch (const std::exception& e) {
     std::cerr << "Error: " << e.what() << std::endl;
-    result(FlutterError(e.what()));
+    result(InvalidDocumentField(e.what()));
   }
 }
 
@@ -2074,8 +2130,17 @@ void CloudFirestorePlugin::QuerySnapshot(
   }
 
   Firestore* firestore = GetFirestoreFromPigeon(app);
-  std::unique_ptr<Query> query_ptr = std::make_unique<Query>(
-      ParseQuery(firestore, path, is_collection_group, parameters));
+  std::unique_ptr<Query> query_ptr;
+  try {
+    query_ptr = std::make_unique<Query>(
+        ParseQuery(firestore, path, is_collection_group, parameters));
+  } catch (const std::invalid_argument& error) {
+    result(InvalidDocumentField(error.what()));
+    return;
+  } catch (const std::exception& error) {
+    result(FlutterError("unknown", error.what()));
+    return;
+  }
 
   auto query_snapshot_handler = std::make_unique<QuerySnapshotStreamHandler>(
       std::move(query_ptr), include_metadata_changes,
