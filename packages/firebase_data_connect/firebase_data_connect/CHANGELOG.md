@@ -1,3 +1,10 @@
+## 0.4.2
+
+ - **FIX**: pass analyze and format on Flutter 3.50 ([#18950](https://github.com/firebase/flutterfire/issues/18950)). ([e5339880](https://github.com/firebase/flutterfire/commit/e53398808f6d78b293d4ac1455f296b9257a096d))
+ - **FIX**: make firebase_ai and firebase_data_connect Wasm-ready, and check is:wasm-ready in CI ([#18853](https://github.com/firebase/flutterfire/issues/18853)). ([b41a8b08](https://github.com/firebase/flutterfire/commit/b41a8b087292a6b236e8bd74e923f6a0f45119b7))
+ - **FEAT**(android): migrate plugins to built-in Kotlin on Flutter 3.44 ([#18922](https://github.com/firebase/flutterfire/issues/18922)). ([1abe0561](https://github.com/firebase/flutterfire/commit/1abe05614d03f22782f597f847c1fc9c8c57f016))
+ - **DOCS**(data_connect): declare supported platforms ([#18927](https://github.com/firebase/flutterfire/issues/18927)). ([13420bec](https://github.com/firebase/flutterfire/commit/13420beccd0f11aa120343a22420ef7bb27f06c2))
+
 ## 0.4.1
 
  - **FIX**(data_connect): send the current result to a new subscriber of a live query ([#18833](https://github.com/firebase/flutterfire/issues/18833)). ([094c3b80](https://github.com/firebase/flutterfire/commit/094c3b80ddfdd97ed8888548c21a335def53e9dd))

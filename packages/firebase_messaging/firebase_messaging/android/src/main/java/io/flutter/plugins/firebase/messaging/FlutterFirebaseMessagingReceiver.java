@@ -15,8 +15,10 @@ import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 import com.google.firebase.messaging.RemoteMessage;
 import java.util.HashMap;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class FlutterFirebaseMessagingReceiver extends BroadcastReceiver {
   private static final String TAG = "FLTFireMsgReceiver";
@@ -76,6 +78,24 @@ public class FlutterFirebaseMessagingReceiver extends BroadcastReceiver {
             //  |-> ---------------------
             //    App in Background/Quit
             //   ------------------------
+            BackgroundHandlerStartDecision.Action action =
+                FlutterFirebaseMessagingBackgroundGate.decide(context);
+            if (action == BackgroundHandlerStartDecision.Action.SKIP_AND_CLEAR) {
+              FlutterFirebaseMessagingBackgroundGate.clearHandles(context);
+              Log.d(
+                  TAG,
+                  "A background message was ignored because"
+                      + " firebase_messaging_background_handler_enabled is false.");
+            } else if (action == BackgroundHandlerStartDecision.Action.SKIP) {
+              Log.d(
+                  TAG,
+                  "A background message could not be handled in Dart as no onBackgroundMessage"
+                      + " handler has been registered.");
+            }
+            if (action != BackgroundHandlerStartDecision.Action.START) {
+              return;
+            }
+
             Intent onBackgroundMessageIntent =
                 new Intent(context, FlutterFirebaseMessagingBackgroundService.class);
 
@@ -150,5 +170,14 @@ public class FlutterFirebaseMessagingReceiver extends BroadcastReceiver {
     }
 
     return new RemoteMessage(extras);
+  }
+
+  @VisibleForTesting
+  static void awaitBackgroundWorkForTests() throws InterruptedException {
+    CountDownLatch latch = new CountDownLatch(1);
+    backgroundExecutor.execute(latch::countDown);
+    if (!latch.await(5, TimeUnit.SECONDS)) {
+      throw new AssertionError("background message work did not finish");
+    }
   }
 }

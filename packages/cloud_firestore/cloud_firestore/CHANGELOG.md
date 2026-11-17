@@ -1,3 +1,13 @@
+## 7.2.0
+
+ - **REFACTOR**(firestore,apple): migrate iOS/macOS plugin implementation to Swift ([#18607](https://github.com/firebase/flutterfire/issues/18607)). ([899ff091](https://github.com/firebase/flutterfire/commit/899ff091c3c7fe93668ba6d464042250eb4acb50))
+ - **FIX**(cloud_firestore): deliver query snapshots before snapshotsInSync ([#18921](https://github.com/firebase/flutterfire/issues/18921)). ([1c4cf490](https://github.com/firebase/flutterfire/commit/1c4cf490017939dbf10d36e377491029d02fa232))
+ - **FIX**(cloud_firestore,windows): forward persistenceEnabled on the Windows codec ([#18936](https://github.com/firebase/flutterfire/issues/18936)). ([99d0e9ed](https://github.com/firebase/flutterfire/commit/99d0e9ed94e0c9313c515b190c151b56cfdf3ac3))
+ - **FIX**: pass analyze and format on Flutter 3.50 ([#18950](https://github.com/firebase/flutterfire/issues/18950)). ([e5339880](https://github.com/firebase/flutterfire/commit/e53398808f6d78b293d4ac1455f296b9257a096d))
+ - **FIX**(firestore): drop Apple snapshot events queued after cancel ([#18935](https://github.com/firebase/flutterfire/issues/18935)). ([b2114885](https://github.com/firebase/flutterfire/commit/b2114885f2557393cd6495d5d07f59dc08721b63))
+ - **FIX**(firestore,windows): fail a timed-out transaction instead of using a destroyed object ([#18884](https://github.com/firebase/flutterfire/issues/18884)). ([4f2b11cb](https://github.com/firebase/flutterfire/commit/4f2b11cba67e26c441efcb34de1b047d78fbad02))
+ - **FEAT**(android): migrate plugins to built-in Kotlin on Flutter 3.44 ([#18922](https://github.com/firebase/flutterfire/issues/18922)). ([1abe0561](https://github.com/firebase/flutterfire/commit/1abe05614d03f22782f597f847c1fc9c8c57f016))
+
 ## 7.1.0
 
  - **FIX**(iOS): **Security Update:** Removed root certificates associated with compromised eMudhra intermediate CAs from the embedded trust store. ([#16933](//github.com/firebase/firebase-ios-sdk/issues/16933))

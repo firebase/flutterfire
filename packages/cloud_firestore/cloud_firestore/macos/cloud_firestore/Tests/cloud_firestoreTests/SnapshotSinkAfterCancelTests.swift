@@ -47,7 +47,8 @@ final class SnapshotSinkAfterCancelTests: XCTestCase {
       query: query,
       includeMetadataChanges: false,
       serverTimestampBehavior: FirebaseFirestore.ServerTimestampBehavior.none,
-      source: FirebaseFirestore.ListenSource.default
+      source: FirebaseFirestore.ListenSource.default,
+      snapshotQueue: DispatchQueue(label: "test.query.snapshot")
     )
     let selector = NSSelectorFromString("addSnapshotListenerWithOptions:listener:")
     installSwizzle(on: query, selector: selector, argumentCount: 2)
@@ -115,7 +116,11 @@ final class SnapshotSinkAfterCancelTests: XCTestCase {
 
   func testSnapshotsInSyncHandlerDropsSinkCallQueuedBeforeCancel() {
     let firestore = Firestore.firestore()
-    let handler = SnapshotsInSyncStreamHandler(firestore: firestore)
+    let snapshotQueue = DispatchQueue(label: "test.snapshots.in.sync")
+    let handler = SnapshotsInSyncStreamHandler(
+      firestore: firestore,
+      snapshotQueue: snapshotQueue
+    )
     let selector = NSSelectorFromString("addSnapshotsInSyncListener:")
     installSwizzle(on: firestore, selector: selector, argumentCount: 1)
 
@@ -137,9 +142,18 @@ final class SnapshotSinkAfterCancelTests: XCTestCase {
     listener()
     cancelled = true
     XCTAssertNil(handler.onCancel(withArguments: nil))
+    drain(snapshotQueue)
     drainMainQueue()
 
     XCTAssertEqual(afterCancel, 0)
+  }
+
+  private func drain(_ queue: DispatchQueue) {
+    let done = expectation(description: "queue drained")
+    queue.async {
+      done.fulfill()
+    }
+    wait(for: [done], timeout: 2)
   }
 
   private func drainMainQueue() {

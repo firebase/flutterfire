@@ -1,3 +1,10 @@
+## 4.2.0
+
+ - **FIX**(core,appcheck,web): start when the browser blocks web storage ([#18946](https://github.com/firebase/flutterfire/issues/18946)). ([229e08e8](https://github.com/firebase/flutterfire/commit/229e08e8f0b197c1eef240db73a716d7f948c2a1))
+ - **FEAT**(core): bump Firebase JS SDK to 13.3.0 ([#18961](https://github.com/firebase/flutterfire/issues/18961)). ([38d67566](https://github.com/firebase/flutterfire/commit/38d67566319392c4cda3563bbb5aca4c41491589))
+ - **FEAT**(android): migrate plugins to built-in Kotlin on Flutter 3.44 ([#18922](https://github.com/firebase/flutterfire/issues/18922)). ([1abe0561](https://github.com/firebase/flutterfire/commit/1abe05614d03f22782f597f847c1fc9c8c57f016))
+ - **FEAT**(core): bump Firebase JS SDK to 13.2.0 ([#18903](https://github.com/firebase/flutterfire/issues/18903)). ([c07bff58](https://github.com/firebase/flutterfire/commit/c07bff5834a3cdd101c51ee022202f3b3644e597))
+
 ## 4.1.0
 
  - **FIX**(core,web): honour flutterfire_ignore_scripts under dart2wasm ([#18806](https://github.com/firebase/flutterfire/issues/18806)). ([41a95ba2](https://github.com/firebase/flutterfire/commit/41a95ba26cf9e9c13738292a96ee627d06e18c43))
