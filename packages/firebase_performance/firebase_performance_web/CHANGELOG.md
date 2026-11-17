@@ -1,3 +1,9 @@
+## 0.1.11+16
+
+ - **FIX**: pass analyze and format on Flutter 3.50 ([#18950](https://github.com/firebase/flutterfire/issues/18950)). ([e5339880](https://github.com/firebase/flutterfire/commit/e53398808f6d78b293d4ac1455f296b9257a096d))
+ - **FIX**(web): properly cast Map from JSAny?.dartify() ([#18855](https://github.com/firebase/flutterfire/issues/18855)). ([24ff83a3](https://github.com/firebase/flutterfire/commit/24ff83a3a9ca4e4e62130cb5e5f89edbc4351c7f))
+ - **FEAT**(android): migrate plugins to built-in Kotlin on Flutter 3.44 ([#18922](https://github.com/firebase/flutterfire/issues/18922)). ([1abe0561](https://github.com/firebase/flutterfire/commit/1abe05614d03f22782f597f847c1fc9c8c57f016))
+
 ## 0.1.10+15
 
  - Update a dependency to the latest release.

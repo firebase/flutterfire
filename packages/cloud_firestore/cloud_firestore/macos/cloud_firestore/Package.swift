@@ -7,8 +7,8 @@
 
 import PackageDescription
 
-let libraryVersion = "7.1.0"
-let firebaseSdkVersion: Version = "13.1.1"
+let libraryVersion = "7.2.0"
+let firebaseSdkVersion: Version = "13.2.0"
 
 let package = Package(
   name: "cloud_firestore",
@@ -51,6 +51,14 @@ let package = Package(
       swiftSettings: [
         .define("FLT_FIREBASE_SDK_13")
       ]
+    ),
+    .testTarget(
+      name: "cloud_firestoreTests",
+      dependencies: [
+        "cloud_firestore",
+        .product(name: "FirebaseFirestore", package: "firebase-ios-sdk"),
+      ],
+      path: "Tests/cloud_firestoreTests"
     ),
   ]
 )

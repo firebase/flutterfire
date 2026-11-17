@@ -7,7 +7,7 @@ import 'package:firebase_core_web/firebase_core_web.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
 import 'package:firebase_performance_platform_interface/firebase_performance_platform_interface.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 

@@ -1,3 +1,7 @@
+## 1.4.0
+
+ - **FEAT**(android): migrate plugins to built-in Kotlin on Flutter 3.44 ([#18922](https://github.com/firebase/flutterfire/issues/18922)). ([1abe0561](https://github.com/firebase/flutterfire/commit/1abe05614d03f22782f597f847c1fc9c8c57f016))
+
 ## 1.3.79
 
  - **FIX**(_flutterfire_internals): tolerate null and non-string values in PlatformException.details (CORE-1) ([#18815](https://github.com/firebase/flutterfire/issues/18815)). ([be29a18d](https://github.com/firebase/flutterfire/commit/be29a18de7ad2de226ac30a26fbaa8c3d7f8212f))

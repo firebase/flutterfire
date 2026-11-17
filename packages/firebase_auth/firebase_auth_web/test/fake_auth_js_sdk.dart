@@ -80,7 +80,13 @@ JSObject stubFirebaseAuthJsSdk() {
     auth[name] = JSObject();
   }
   auth['OAuthProvider'] = oauthProvider;
-  auth['initializeAuth'] = ((JSAny? app, JSAny? options) => JSObject()).toJS;
+  auth['initializeAuth'] = ((JSAny? app, JSAny? options) {
+    final authApp = JSObject();
+    authApp['name'] = '[DEFAULT]'.toJS;
+    final instance = JSObject();
+    instance['app'] = authApp;
+    return instance;
+  }).toJS;
   globalContext['firebase_auth'] = auth;
   return auth;
 }

@@ -41,15 +41,12 @@ final class GenerativeModel extends BaseApiClientModel {
     FirebaseAppCheck? appCheck,
     FirebaseAuth? auth,
     List<SafetySetting>? safetySettings,
-    GenerationConfig? generationConfig,
+    this._generationConfig,
     this.tools,
-    ToolConfig? toolConfig,
-    Content? systemInstruction,
+    this._toolConfig,
+    this._systemInstruction,
     http.Client? httpClient,
   }) : _safetySettings = safetySettings ?? [],
-       _generationConfig = generationConfig,
-       _toolConfig = toolConfig,
-       _systemInstruction = systemInstruction,
        super(
          serializationStrategy: useAgentPlatform
              ? AgentPlatformSerialization()
@@ -78,15 +75,12 @@ final class GenerativeModel extends BaseApiClientModel {
     FirebaseAppCheck? appCheck,
     FirebaseAuth? auth,
     List<SafetySetting>? safetySettings,
-    GenerationConfig? generationConfig,
+    this._generationConfig,
     this.tools,
-    ToolConfig? toolConfig,
-    Content? systemInstruction,
+    this._toolConfig,
+    this._systemInstruction,
     ApiClient? apiClient,
   }) : _safetySettings = safetySettings ?? [],
-       _generationConfig = generationConfig,
-       _toolConfig = toolConfig,
-       _systemInstruction = systemInstruction,
        super(
          serializationStrategy: useAgentPlatform
              ? AgentPlatformSerialization()

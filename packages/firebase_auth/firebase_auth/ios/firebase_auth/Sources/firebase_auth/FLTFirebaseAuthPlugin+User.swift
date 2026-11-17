@@ -82,8 +82,8 @@ extension FLTFirebaseAuthPlugin: FirebaseAuthUserHostApi {
       return
     }
     if signInProvider.providerId == kSignInMethodApple {
-      linkWithAppleUser = currentUser
-      launchAppleSignInRequest(app: app, signInProvider: signInProvider, completion: completion)
+      launchAppleSignInRequest(
+        app: app, signInProvider: signInProvider, mode: .link(currentUser), completion: completion)
       return
     }
     #if os(macOS)
@@ -147,8 +147,9 @@ extension FLTFirebaseAuthPlugin: FirebaseAuthUserHostApi {
       return
     }
     if signInProvider.providerId == kSignInMethodApple {
-      isReauthenticatingWithApple = true
-      launchAppleSignInRequest(app: app, signInProvider: signInProvider, completion: completion)
+      launchAppleSignInRequest(
+        app: app, signInProvider: signInProvider, mode: .reauthenticate(currentUser),
+        completion: completion)
       return
     }
     #if os(macOS)
