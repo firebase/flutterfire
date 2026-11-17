@@ -326,6 +326,11 @@ firebase::firestore::FieldValue CloudFirestorePlugin::ConvertToFieldValue(
       return firebase::firestore::FieldValue::Double(number);
     }
 
+    if (custom_value.type() == typeid(InvalidWriteData)) {
+      throw std::invalid_argument(
+          std::any_cast<const InvalidWriteData&>(custom_value).message);
+    }
+
     const firebase::firestore::FieldValue& anyField =
         std::any_cast<firebase::firestore::FieldValue>(custom_value);
     return anyField;
@@ -714,33 +719,94 @@ std::optional<std::string> RejectedFieldSegment(const std::string& segment) {
   return std::nullopt;
 }
 
-std::optional<std::string> RejectedWriteValue(const EncodableValue& value);
+std::optional<std::string> RejectedWriteValue(const EncodableValue& value,
+                                              bool inside_array,
+                                              bool parent_is_array);
 
-// A FieldValue sentinel is already a FieldValue here, so this cannot see
-// inside arrayUnion or arrayRemove.
-std::optional<std::string> RejectedWriteMap(const EncodableMap& map) {
+std::optional<std::string> RejectedFieldValue(const FieldValue& field,
+                                              bool inside_array,
+                                              bool parent_is_array) {
+  switch (field.type()) {
+    case FieldValue::Type::kServerTimestamp:
+    case FieldValue::Type::kDelete:
+    case FieldValue::Type::kIncrementInteger:
+    case FieldValue::Type::kIncrementDouble:
+    case FieldValue::Type::kArrayUnion:
+    case FieldValue::Type::kArrayRemove:
+      if (inside_array) {
+        return "Invalid data. Field values are not supported inside arrays";
+      }
+      return std::nullopt;
+    case FieldValue::Type::kArray:
+      if (parent_is_array) {
+        return "Invalid data. Nested arrays are not supported";
+      }
+      for (const FieldValue& element : field.array_value()) {
+        if (auto message = RejectedFieldValue(element, true, true)) {
+          return message;
+        }
+      }
+      return std::nullopt;
+    case FieldValue::Type::kMap:
+      for (const auto& entry : field.map_value()) {
+        if (auto message = RejectedFieldSegment(entry.first)) {
+          return message;
+        }
+        if (auto message =
+                RejectedFieldValue(entry.second, inside_array, false)) {
+          return message;
+        }
+      }
+      return std::nullopt;
+    default:
+      return std::nullopt;
+  }
+}
+
+std::optional<std::string> RejectedWriteMap(const EncodableMap& map,
+                                            bool inside_array) {
   for (const auto& entry : map) {
     if (const auto* key = std::get_if<std::string>(&entry.first)) {
       if (auto message = RejectedFieldSegment(*key)) {
         return message;
       }
     }
-    if (auto message = RejectedWriteValue(entry.second)) {
+    if (auto message = RejectedWriteValue(entry.second, inside_array, false)) {
       return message;
     }
   }
   return std::nullopt;
 }
 
-std::optional<std::string> RejectedWriteValue(const EncodableValue& value) {
+std::optional<std::string> RejectedWriteValue(const EncodableValue& value,
+                                              bool inside_array,
+                                              bool parent_is_array) {
   if (const auto* nested = std::get_if<EncodableMap>(&value)) {
-    return RejectedWriteMap(*nested);
+    return RejectedWriteMap(*nested, inside_array);
   }
   if (const auto* list = std::get_if<EncodableList>(&value)) {
-    for (const EncodableValue& element : *list) {
-      if (auto message = RejectedWriteValue(element)) {
-        return message;
-      }
+    if (parent_is_array) {
+      return "Invalid data. Nested arrays are not supported";
+    }
+    return RejectedArrayElements(*list);
+  }
+  if (const auto* custom = std::get_if<CustomEncodableValue>(&value)) {
+    if (custom->type() == typeid(InvalidWriteData)) {
+      return std::any_cast<const InvalidWriteData&>(*custom).message;
+    }
+    if (custom->type() == typeid(FieldValue)) {
+      return RejectedFieldValue(std::any_cast<const FieldValue&>(*custom),
+                                inside_array, parent_is_array);
+    }
+  }
+  return std::nullopt;
+}
+
+std::optional<std::string> RejectedArrayElements(
+    const EncodableList& elements) {
+  for (const EncodableValue& element : elements) {
+    if (auto message = RejectedWriteValue(element, true, true)) {
+      return message;
     }
   }
   return std::nullopt;
@@ -764,7 +830,7 @@ std::optional<std::string> RejectedUpdateMap(const EncodableMap& map) {
         }
       }
     }
-    if (auto message = RejectedWriteValue(entry.second)) {
+    if (auto message = RejectedWriteValue(entry.second, false, false)) {
       return message;
     }
   }
@@ -791,7 +857,7 @@ std::optional<std::string> RejectedWriteCommand(
     if (type == InternalTransactionType::kUpdate) {
       message = RejectedUpdateMap(*data);
     } else if (type == InternalTransactionType::kSet) {
-      message = RejectedWriteMap(*data);
+      message = RejectedWriteMap(*data, false);
     }
     if (message.has_value()) {
       return message;

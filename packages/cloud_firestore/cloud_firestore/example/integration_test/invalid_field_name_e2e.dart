@@ -174,6 +174,50 @@ void runInvalidFieldNameTests() {
       expect(snapshot.data(), <String, dynamic>{'ok': 1});
     });
 
+    test('set() allows an array inside a map inside an array', () async {
+      final reference = document('valid-array-in-map-in-array');
+      await reference.delete();
+
+      await reference.set(<String, dynamic>{
+        'rows': <dynamic>[
+          <String, dynamic>{
+            'tags': <dynamic>['a'],
+          },
+        ],
+      });
+
+      final snapshot = await reference.get();
+      expect(snapshot.data(), <String, dynamic>{
+        'rows': <dynamic>[
+          <String, dynamic>{
+            'tags': <dynamic>['a'],
+          },
+        ],
+      });
+    });
+
+    test('set() allows an array inside a map inside arrayUnion', () async {
+      final reference = document('valid-array-in-map-in-array-union');
+      await reference.delete();
+
+      await reference.set(<String, dynamic>{
+        'rows': FieldValue.arrayUnion(<dynamic>[
+          <String, dynamic>{
+            'tags': <dynamic>['a'],
+          },
+        ]),
+      });
+
+      final snapshot = await reference.get();
+      expect(snapshot.data(), <String, dynamic>{
+        'rows': <dynamic>[
+          <String, dynamic>{
+            'tags': <dynamic>['a'],
+          },
+        ],
+      });
+    });
+
     test('set() rejects a field named __', () async {
       final reference = document('invalid-field-set-double-underscore');
       await reference.delete();

@@ -28,6 +28,17 @@ struct DecodedFieldPath {
   std::vector<std::string> segments;
 };
 
+// A write rejected while the message is decoded. Decoding runs before the
+// write check's try block, so throwing here would close the process.
+struct InvalidWriteData {
+  std::string message;
+};
+
+// Elements of an array transform are still encodable here. ArrayUnion hides
+// them, and FieldValue cannot read them back.
+std::optional<std::string> RejectedArrayElements(
+    const flutter::EncodableList& elements);
+
 class FirestoreCodec : public flutter::StandardCodecSerializer {
  public:
   static const uint8_t DATA_TYPE_DATE_TIME = 180;
