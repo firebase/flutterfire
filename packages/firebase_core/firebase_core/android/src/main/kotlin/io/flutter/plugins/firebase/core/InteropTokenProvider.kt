@@ -37,7 +37,7 @@ class InteropTokenProvider(
     val auth = get<InternalAuthProvider>() ?: return Tasks.forResult(null)
     return auth.getAccessToken(false).continueWith(executor) { task ->
       if (task.isSuccessful) {
-        task.result.token
+        task.result?.token
       } else {
         when (val exception = task.exception) {
           // Signed out is an answer, not a failure.
@@ -56,10 +56,12 @@ class InteropTokenProvider(
     val appCheck = get<InteropAppCheckTokenProvider>() ?: return Tasks.forResult(null)
     val tokenTask = if (limitedUse) appCheck.limitedUseToken else appCheck.getToken(false)
     return tokenTask.onSuccessTask(executor) { result ->
+      // A result without a token means the SDK changed shape; that's a failure, not "not linked".
+      val answer = result ?: throw IllegalStateException("App Check returned no token result")
       Tasks.forResult(
           CoreAppCheckInteropToken(
-              token = result.token,
-              error = result.error?.let { it.message ?: it.toString() },
+              token = answer.token,
+              error = answer.error?.let { it.message ?: it.toString() },
           ))
     }
   }

@@ -18,10 +18,9 @@ class InteropTokenProvider {
   /// Creates a provider over [getComponent]; [notificationsGranted] gates the
   /// Messaging lookup.
   InteropTokenProvider({
-    required JSObject? Function(String name) getComponent,
-    required bool Function() notificationsGranted,
-  }) : _getComponent = getComponent,
-       _notificationsGranted = notificationsGranted;
+    required this._getComponent,
+    required this._notificationsGranted,
+  });
 
   /// Throws [noAppExists] when there is no app named [appName].
   factory InteropTokenProvider.forApp(String appName) {
@@ -118,7 +117,8 @@ bool _browserNotificationsGranted() =>
 
 /// The message of a JS error thrown by an SDK, or the error itself otherwise.
 String _messageOf(Object error) {
-  // isA on Object requires Dart 3.12; this package supports 3.10.
+  // JSError is a @staticInterop class, so `is` matches any JS object. That is
+  // the intent here; the lint can't tell.
   // ignore: invalid_runtime_check_with_js_interop_types
   if (error is JSError) {
     final message = error.message?.toDart;
