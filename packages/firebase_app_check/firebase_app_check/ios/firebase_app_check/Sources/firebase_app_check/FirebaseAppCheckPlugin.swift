@@ -400,12 +400,21 @@ class AppCheckProviderWrapper: NSObject, AppCheckProvider {
       delegateProvider = appAttestProvider ?? DeviceCheckProvider(app: app)
     case "recaptcha":
       #if os(iOS)
-        if let recaptchaSiteKey {
+        // The reCAPTCHA Enterprise SDK can be left out of the build (CocoaPods,
+        // or FIREBASE_APP_CHECK_WITHOUT_RECAPTCHA with Swift Package Manager).
+        // RecaptchaProvider then raises an Objective-C exception, so look up the
+        // class the Firebase SDK uses to detect it first.
+        let recaptchaLinked = NSClassFromString("RecaptchaEnterprise.RCARecaptcha") != nil
+        if recaptchaLinked, let recaptchaSiteKey {
           delegateProvider = RecaptchaProvider(app: app, siteKey: recaptchaSiteKey)
         } else {
           delegateProvider = nil
         }
-        if delegateProvider == nil {
+        if !recaptchaLinked {
+          print(
+            "Firebase App Check: failed to initialize RecaptchaProvider. Link the reCAPTCHA Enterprise SDK."
+          )
+        } else if delegateProvider == nil {
           print(
             "Firebase App Check: failed to initialize RecaptchaProvider. Ensure site key is provided."
           )
