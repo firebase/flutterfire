@@ -52,7 +52,7 @@ FirebaseException platformExceptionToFirebaseFunctionsException(
 
   return FirebaseFunctionsException(
     code: code,
-    message: message ?? code,
+    message: message ?? '',
     details: additionalData,
     stackTrace: stackTrace,
   );
