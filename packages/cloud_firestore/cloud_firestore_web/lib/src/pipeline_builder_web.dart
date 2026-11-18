@@ -62,7 +62,8 @@ interop.PipelineJsImpl _applySourceStage(
     ),
     'literals' => source.literals(
       converter.toLiteralsDocuments(
-        (args as Map<String, dynamic>)['documents']! as List<dynamic>,
+        ((args as Map<String, dynamic>)['documents'] ?? const <dynamic>[])
+            as List<dynamic>,
       ),
     ),
     _ => throw UnsupportedError(
