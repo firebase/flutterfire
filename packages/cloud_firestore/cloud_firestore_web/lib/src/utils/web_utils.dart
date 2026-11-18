@@ -22,30 +22,35 @@ String getServerTimestampBehaviorString(
   return switch (serverTimestampBehavior) {
     ServerTimestampBehavior.none => 'none',
     ServerTimestampBehavior.estimate => 'estimate',
-    ServerTimestampBehavior.previous => 'previous'
+    ServerTimestampBehavior.previous => 'previous',
   };
 }
 
 /// Converts a [web.QuerySnapshot] to a [QuerySnapshotPlatform].
 QuerySnapshotPlatform convertWebQuerySnapshot(
-    FirebaseFirestorePlatform firestore,
-    firestore_interop.QuerySnapshot webQuerySnapshot,
-    ServerTimestampBehavior serverTimestampBehavior) {
+  FirebaseFirestorePlatform firestore,
+  firestore_interop.QuerySnapshot webQuerySnapshot,
+  ServerTimestampBehavior serverTimestampBehavior,
+) {
   return QuerySnapshotPlatform(
     webQuerySnapshot.docs
-        .map((webDocumentSnapshot) => convertWebDocumentSnapshot(
-              firestore,
-              webDocumentSnapshot!,
-              serverTimestampBehavior,
-            ))
+        .map(
+          (webDocumentSnapshot) => convertWebDocumentSnapshot(
+            firestore,
+            webDocumentSnapshot!,
+            serverTimestampBehavior,
+          ),
+        )
         .toList(),
     webQuerySnapshot
         .docChanges()
-        .map((webDocumentChange) => convertWebDocumentChange(
-              firestore,
-              webDocumentChange,
-              serverTimestampBehavior,
-            ))
+        .map(
+          (webDocumentChange) => convertWebDocumentChange(
+            firestore,
+            webDocumentChange,
+            serverTimestampBehavior,
+          ),
+        )
         .toList(),
     convertWebSnapshotMetadata(webQuerySnapshot.metadata),
   );
@@ -61,10 +66,13 @@ DocumentSnapshotPlatform convertWebDocumentSnapshot(
     firestore,
     webSnapshot.ref!.path,
     DecodeUtility.decodeMapData(
-      webSnapshot.data(SnapshotOptions(
-        serverTimestamps:
-            getServerTimestampBehaviorString(serverTimestampBehavior).toJS,
-      )),
+      webSnapshot.data(
+        SnapshotOptions(
+          serverTimestamps: getServerTimestampBehaviorString(
+            serverTimestampBehavior,
+          ).toJS,
+        ),
+      ),
       firestore,
     ),
     InternalSnapshotMetadata(
@@ -81,14 +89,15 @@ DocumentChangePlatform convertWebDocumentChange(
   ServerTimestampBehavior serverTimestampBehavior,
 ) {
   return DocumentChangePlatform(
-      convertWebDocumentChangeType(webDocumentChange.type),
-      webDocumentChange.oldIndex.toInt(),
-      webDocumentChange.newIndex.toInt(),
-      convertWebDocumentSnapshot(
-        firestore,
-        webDocumentChange.doc!,
-        serverTimestampBehavior,
-      ));
+    convertWebDocumentChangeType(webDocumentChange.type),
+    webDocumentChange.oldIndex.toInt(),
+    webDocumentChange.newIndex.toInt(),
+    convertWebDocumentSnapshot(
+      firestore,
+      webDocumentChange.doc!,
+      serverTimestampBehavior,
+    ),
+  );
 }
 
 /// Converts a [web.DocumentChange] type into a [DocumentChangeType].
@@ -97,15 +106,18 @@ DocumentChangeType convertWebDocumentChangeType(String changeType) {
     _kChangeTypeAdded => DocumentChangeType.added,
     _kChangeTypeModified => DocumentChangeType.modified,
     _kChangeTypeRemoved => DocumentChangeType.removed,
-    _ => throw UnsupportedError('Unknown DocumentChangeType: $changeType.')
+    _ => throw UnsupportedError('Unknown DocumentChangeType: $changeType.'),
   };
 }
 
 /// Converts a [web.SnapshotMetadata] to a [SnapshotMetadataPlatform].
 SnapshotMetadataPlatform convertWebSnapshotMetadata(
-    firestore_interop.SnapshotMetadata webSnapshotMetadata) {
-  return SnapshotMetadataPlatform(webSnapshotMetadata.hasPendingWrites.toDart,
-      webSnapshotMetadata.fromCache.toDart);
+  firestore_interop.SnapshotMetadata webSnapshotMetadata,
+) {
+  return SnapshotMetadataPlatform(
+    webSnapshotMetadata.hasPendingWrites.toDart,
+    webSnapshotMetadata.fromCache.toDart,
+  );
 }
 
 /// Converts a [GetOptions] to a [web.GetOptions].
@@ -115,7 +127,7 @@ firestore_interop.GetOptions? convertGetOptions(GetOptions? options) {
   final source = switch (options.source) {
     Source.serverAndCache => 'default',
     Source.cache => 'cache',
-    Source.server => 'server'
+    Source.server => 'server',
   };
 
   return firestore_interop.GetOptions(source: source.toJS);
@@ -143,5 +155,6 @@ firestore_interop.SetOptions? convertSetOptions(SetOptions? options) {
 /// Converts a [FieldPath] to a [web.FieldPath].
 firestore_interop.FieldPath convertFieldPath(FieldPath fieldPath) {
   return firestore_interop.FieldPath(
-      fieldPath.components.toList().join('.').toJS);
+    fieldPath.components.toList().join('.').toJS,
+  );
 }

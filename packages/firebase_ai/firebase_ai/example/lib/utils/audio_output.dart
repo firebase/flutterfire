@@ -19,7 +19,8 @@ import 'package:flutter_soloud/flutter_soloud.dart';
 class AudioOutput {
   bool initialized = false;
   AudioSource? stream;
-  SoundHandle? handle;
+  SoundHandle? streamHandle;
+  SoundHandle? fileHandle;
   final int sampleRate = 24000;
   final Channels channels = Channels.mono;
   final BufferType format = BufferType.s16le; // pcm16bits
@@ -69,7 +70,7 @@ class AudioOutput {
       return null;
     }
     // Play audio stream
-    handle = SoLoud.instance.play(myStream);
+    streamHandle = SoLoud.instance.play(myStream);
     return stream = myStream;
   }
 
@@ -82,7 +83,7 @@ class AudioOutput {
 
   Future<void> stopStream() async {
     var currentStream = stream;
-    var currentHandle = handle;
+    var currentHandle = streamHandle;
 
     // Stream doesn't exist or handle is not valid - so nothing to stop.
     if (currentStream == null ||
@@ -99,6 +100,52 @@ class AudioOutput {
     var currentStream = stream;
     if (currentStream != null) {
       SoLoud.instance.setDataIsEnded(currentStream);
+    }
+  }
+
+  /// Whether [mimeType] is raw PCM, such as `audio/l16; rate=24000`, which the
+  /// buffer stream can play directly.
+  static bool isRawPcm(String mimeType) {
+    final type = mimeType.toLowerCase();
+    return type.startsWith('audio/l16') || type.startsWith('audio/pcm');
+  }
+
+  /// Plays one complete clip and returns how long it lasts.
+  ///
+  /// Raw PCM goes through the buffer stream, like streamed audio. Anything else
+  /// (such as the `audio/wav` some TTS models return from `generateContent`)
+  /// is a complete file with headers, so SoLoud decodes it rather than the
+  /// buffer stream playing those headers as noise.
+  Future<Duration?> playClip(Uint8List bytes, String mimeType) async {
+    if (!isRawPcm(mimeType)) return _playFile(bytes);
+    if (await playStream() == null) return null;
+    addDataToAudioStream(bytes);
+    finishStream();
+    // 16-bit mono PCM is 2 bytes per sample.
+    final bytesPerSecond = sampleRate * 2;
+    return Duration(microseconds: bytes.length * 1000000 ~/ bytesPerSecond);
+  }
+
+  Future<Duration?> _playFile(Uint8List bytes) async {
+    if (!SoLoud.instance.isInitialized) return null;
+    // The path only labels the clip; a unique one avoids clashing with a clip
+    // that's still loaded. autoDispose frees it once it finishes or is stopped.
+    final source = await SoLoud.instance.loadMem(
+      'clip-${DateTime.now().microsecondsSinceEpoch}',
+      bytes,
+      autoDispose: true,
+    );
+    fileHandle = SoLoud.instance.play(source);
+    return SoLoud.instance.getLength(source);
+  }
+
+  /// Stops the buffer stream and any clip started by [playClip].
+  Future<void> stop() async {
+    await stopStream();
+    final currentFileHandle = fileHandle;
+    if (currentFileHandle != null &&
+        SoLoud.instance.getIsValidVoiceHandle(currentFileHandle)) {
+      await SoLoud.instance.stop(currentFileHandle);
     }
   }
 }

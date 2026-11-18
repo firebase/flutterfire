@@ -54,8 +54,9 @@ void main() {
         final Map<String, String> kCustomOAuthParameters = {
           'allow_signup': 'false',
         };
-        final result =
-            githubAuthProvider.setCustomParameters(kCustomOAuthParameters);
+        final result = githubAuthProvider.setCustomParameters(
+          kCustomOAuthParameters,
+        );
         expect(result, isA<GithubAuthProvider>());
         expect(result.parameters['allow_signup'], isA<String>());
         expect(result.parameters['allow_signup'], equals('false'));

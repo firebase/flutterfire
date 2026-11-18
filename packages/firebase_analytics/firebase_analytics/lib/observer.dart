@@ -72,8 +72,8 @@ class FirebaseAnalyticsObserver extends RouteObserver<ModalRoute<dynamic>> {
     required this.analytics,
     this.nameExtractor = defaultNameExtractor,
     this.routeFilter = defaultRouteFilter,
-    Function(PlatformException error)? onError,
-  }) : _onError = onError;
+    this._onError,
+  });
 
   final FirebaseAnalytics analytics;
   final ScreenNameExtractor nameExtractor;
@@ -83,17 +83,16 @@ class FirebaseAnalyticsObserver extends RouteObserver<ModalRoute<dynamic>> {
   void _sendScreenView(Route<dynamic> route) {
     final String? screenName = nameExtractor(route.settings);
     if (screenName != null) {
-      analytics.logScreenView(screenName: screenName).catchError(
-        (Object error) {
-          final _onError = this._onError;
-          if (_onError == null) {
-            debugPrint('$FirebaseAnalyticsObserver: $error');
-          } else {
-            _onError(error as PlatformException);
-          }
-        },
-        test: (Object error) => error is PlatformException,
-      );
+      analytics.logScreenView(screenName: screenName).catchError((
+        Object error,
+      ) {
+        final _onError = this._onError;
+        if (_onError == null) {
+          debugPrint('$FirebaseAnalyticsObserver: $error');
+        } else {
+          _onError(error as PlatformException);
+        }
+      }, test: (Object error) => error is PlatformException);
     }
   }
 

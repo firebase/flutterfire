@@ -26,8 +26,8 @@ class MockFirebaseAppWithCollectionEnabled implements TestFirebaseCoreHostApi {
       ),
       pluginConstants: {
         'plugins.flutter.io/firebase_crashlytics': {
-          'isCrashlyticsCollectionEnabled': true
-        }
+          'isCrashlyticsCollectionEnabled': true,
+        },
       },
     );
   }
@@ -45,10 +45,10 @@ class MockFirebaseAppWithCollectionEnabled implements TestFirebaseCoreHostApi {
         ),
         pluginConstants: {
           'plugins.flutter.io/firebase_crashlytics': {
-            'isCrashlyticsCollectionEnabled': true
-          }
+            'isCrashlyticsCollectionEnabled': true,
+          },
         },
-      )
+      ),
     ];
   }
 

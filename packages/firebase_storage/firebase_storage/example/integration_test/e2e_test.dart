@@ -35,8 +35,10 @@ void main() {
           rethrow;
         }
       }
-      await FirebaseStorage.instance
-          .useStorageEmulator(testEmulatorHost, testEmulatorPort);
+      await FirebaseStorage.instance.useStorageEmulator(
+        testEmulatorHost,
+        testEmulatorPort,
+      );
 
       // Add a write only file
       await FirebaseStorage.instance

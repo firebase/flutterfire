@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 
 class TabsPage extends StatefulWidget {
@@ -64,10 +64,7 @@ class _TabsPageState extends State<TabsPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        bottom: TabBar(
-          controller: _controller,
-          tabs: tabs,
-        ),
+        bottom: TabBar(controller: _controller, tabs: tabs),
       ),
       body: TabBarView(
         controller: _controller,

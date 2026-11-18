@@ -15,22 +15,26 @@ void main() {
     final PhoneVerificationFailed verificationFailed =
         (FirebaseAuthException authException) {};
 
-    final PhoneCodeSent codeSent = (
-      String verificationId, [
-      int? forceResendingToken,
-    ]) async {};
+    final PhoneCodeSent codeSent =
+        (String verificationId, [int? forceResendingToken]) async {};
 
     final PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout =
         (String verificationId) {};
 
-    final callbacks = PhoneAuthCallbacks(verificationCompleted,
-        verificationFailed, codeSent, codeAutoRetrievalTimeout);
+    final callbacks = PhoneAuthCallbacks(
+      verificationCompleted,
+      verificationFailed,
+      codeSent,
+      codeAutoRetrievalTimeout,
+    );
 
     expect(callbacks, isA<PhoneAuthCallbacks>());
     expect(callbacks.verificationCompleted, isA<PhoneVerificationCompleted>());
     expect(callbacks.verificationFailed, isA<PhoneVerificationFailed>());
     expect(callbacks.codeSent, isA<PhoneCodeSent>());
-    expect(callbacks.codeAutoRetrievalTimeout,
-        isA<PhoneCodeAutoRetrievalTimeout>());
+    expect(
+      callbacks.codeAutoRetrievalTimeout,
+      isA<PhoneCodeAutoRetrievalTimeout>(),
+    );
   });
 }

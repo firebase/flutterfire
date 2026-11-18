@@ -15,7 +15,7 @@ const String testString = 'Hello World.';
 const int testBytesTransferred = 11;
 const int testTotalBytes = 20;
 const Map<String, dynamic> testMetadata = <String, dynamic>{
-  'contentType': 'gif'
+  'contentType': 'gif',
 };
 
 MockReferencePlatform mockReferencePlatform = MockReferencePlatform();
@@ -35,10 +35,12 @@ void main() {
       await Firebase.initializeApp();
       storage = FirebaseStorage.instance;
       when(kMockStoragePlatform.ref(any)).thenReturn(mockReferencePlatform);
-      when(mockReferencePlatform.putString(any, any, any))
-          .thenReturn(mockUploadTaskPlatform);
-      when(mockUploadTaskPlatform.snapshot)
-          .thenReturn(mockTaskSnapshotPlatform);
+      when(
+        mockReferencePlatform.putString(any, any, any),
+      ).thenReturn(mockUploadTaskPlatform);
+      when(
+        mockUploadTaskPlatform.snapshot,
+      ).thenReturn(mockTaskSnapshotPlatform);
 
       UploadTask uploadTask = storage.ref().putString(testString);
       taskSnapshot = uploadTask.snapshot;
@@ -46,8 +48,9 @@ void main() {
 
     group('.bytesTransferred', () {
       test('verify delegate method is called', () {
-        when(mockTaskSnapshotPlatform.bytesTransferred)
-            .thenReturn(testBytesTransferred);
+        when(
+          mockTaskSnapshotPlatform.bytesTransferred,
+        ).thenReturn(testBytesTransferred);
 
         expect(taskSnapshot.bytesTransferred, testBytesTransferred);
         verify(mockTaskSnapshotPlatform.bytesTransferred);

@@ -37,9 +37,7 @@ class FirebaseAppPlatform extends PlatformInterface {
 
   /// Deletes the current FirebaseApp.
   Future<void> delete() async {
-    throw UnimplementedError(
-      'delete() has not been implemented.',
-    );
+    throw UnimplementedError('delete() has not been implemented.');
   }
 
   /// Sets whether automatic data collection is enabled or disabled for this app.

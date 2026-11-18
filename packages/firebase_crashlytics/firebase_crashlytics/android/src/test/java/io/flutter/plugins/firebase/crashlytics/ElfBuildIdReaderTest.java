@@ -401,7 +401,7 @@ public class ElfBuildIdReaderTest {
     return () -> new ByteArrayInputStream(image);
   }
 
-  private static byte[] elfWithBuildId(byte first) {
+  static byte[] elfWithBuildId(byte first) {
     byte[] buildId = BUILD_ID.clone();
     buildId[0] = first;
     byte[] image = new byte[512];
@@ -411,7 +411,7 @@ public class ElfBuildIdReaderTest {
     return image;
   }
 
-  private static String hexWithFirstByte(byte first) {
+  static String hexWithFirstByte(byte first) {
     return String.format("%02x", first & 0xff) + BUILD_ID_HEX.substring(2);
   }
 

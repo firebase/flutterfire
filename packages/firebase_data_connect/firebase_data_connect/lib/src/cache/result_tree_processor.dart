@@ -30,29 +30,37 @@ class ResultTreeProcessor {
   /// Takes a server response, traverses the data, creates or updates `EntityDataObject`s,
   /// and builds a dehydrated `EntityNode` tree.
   Future<DehydrationResult> dehydrateResults(
-      String queryId,
-      Map<String, dynamic> serverResponse,
-      CacheProvider cacheProvider,
-      Map<DataConnectPath, PathMetadata> paths) async {
+    String queryId,
+    Map<String, dynamic> serverResponse,
+    CacheProvider cacheProvider,
+    Map<DataConnectPath, PathMetadata> paths,
+  ) async {
     final impactedQueryIds = <String>{};
 
     Map<String, dynamic> jsonData = serverResponse;
     if (serverResponse.containsKey('data')) {
       jsonData = serverResponse['data'];
     }
-    final rootNode = _dehydrateNode(queryId, jsonData, cacheProvider,
-        impactedQueryIds, DataConnectPath(), paths);
+    final rootNode = _dehydrateNode(
+      queryId,
+      jsonData,
+      cacheProvider,
+      impactedQueryIds,
+      DataConnectPath(),
+      paths,
+    );
 
     return DehydrationResult(rootNode, impactedQueryIds);
   }
 
   EntityNode _dehydrateNode(
-      String queryId,
-      dynamic data,
-      CacheProvider cacheProvider,
-      Set<String> impactedQueryIds,
-      DataConnectPath path,
-      Map<DataConnectPath, PathMetadata> paths) {
+    String queryId,
+    dynamic data,
+    CacheProvider cacheProvider,
+    Set<String> impactedQueryIds,
+    DataConnectPath path,
+    Map<DataConnectPath, PathMetadata> paths,
+  ) {
     if (data is Map<String, dynamic>) {
       // Look up entityId for current path
       String? guid;
@@ -70,12 +78,13 @@ class ResultTreeProcessor {
         if (value is Map<String, dynamic>) {
           //developer.log('detected Map for $key');
           EntityNode en = _dehydrateNode(
-              queryId,
-              value,
-              cacheProvider,
-              impactedQueryIds,
-              path.appending(DataConnectFieldPathSegment(key)),
-              paths);
+            queryId,
+            value,
+            cacheProvider,
+            impactedQueryIds,
+            path.appending(DataConnectFieldPathSegment(key)),
+            paths,
+          );
           nestedObjects[key] = en;
         } else if (value is List) {
           //developer.log('detected List for $key');
@@ -84,7 +93,8 @@ class ResultTreeProcessor {
           for (var i = 0; i < value.length; i++) {
             final item = value[i];
             if (item is Map<String, dynamic>) {
-              nodeList.add(_dehydrateNode(
+              nodeList.add(
+                _dehydrateNode(
                   queryId,
                   item,
                   cacheProvider,
@@ -92,7 +102,9 @@ class ResultTreeProcessor {
                   path
                       .appending(DataConnectFieldPathSegment(key))
                       .appending(DataConnectListIndexPathSegment(i)),
-                  paths));
+                  paths,
+                ),
+              );
             } else {
               // assuming scalar - we don't handle array of arrays
               scalarValueList.add(item);
@@ -102,8 +114,9 @@ class ResultTreeProcessor {
           // we don't normalize mixed lists. We store them as-is for reconstruction from cache.
           if (nodeList.isNotEmpty && scalarValueList.isNotEmpty) {
             // mixed type array - we directly store the json as-is
-            developer
-                .log('detected mixed type array for key $key. storing as-is');
+            developer.log(
+              'detected mixed type array for key $key. storing as-is',
+            );
             scalarValues[key] = value;
           } else if (nodeList.isNotEmpty) {
             nestedObjectLists[key] = nodeList;
@@ -126,25 +139,31 @@ class ResultTreeProcessor {
         cacheProvider.updateEntityData(existingEdo);
         impactedQueryIds.addAll(existingEdo.referencedFrom);
         return EntityNode(
-            entity: existingEdo,
-            nestedObjects: nestedObjects,
-            nestedObjectLists: nestedObjectLists);
+          entity: existingEdo,
+          nestedObjects: nestedObjects,
+          nestedObjectLists: nestedObjectLists,
+        );
       } else {
         return EntityNode(
-            scalarValues: scalarValues,
-            nestedObjects: nestedObjects,
-            nestedObjectLists: nestedObjectLists);
+          scalarValues: scalarValues,
+          nestedObjects: nestedObjects,
+          nestedObjectLists: nestedObjectLists,
+        );
       }
     } else {
-      throw DataConnectError(DataConnectErrorCode.codecFailed,
-          'Unexpected object type while caching');
+      throw DataConnectError(
+        DataConnectErrorCode.codecFailed,
+        'Unexpected object type while caching',
+      );
     }
   }
 
   /// Takes a dehydrated `EntityNode` tree, fetches the corresponding `EntityDataObject`s
   /// from the `CacheProvider`, and reconstructs the original data structure.
   Future<Map<String, dynamic>> hydrateResults(
-      EntityNode dehydratedTree, CacheProvider cacheProvider) async {
+    EntityNode dehydratedTree,
+    CacheProvider cacheProvider,
+  ) async {
     return dehydratedTree.toJson(); //default mode for toJson is hydrate
   }
 }

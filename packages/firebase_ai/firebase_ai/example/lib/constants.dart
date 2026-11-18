@@ -12,17 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/// Whether `FirebaseAI` instances should request limited-use App Check tokens.
-///
-/// Limited-use tokens are rejected on replay, which makes it easy to verify
-/// that `LiveSession.resumeSession` fetches fresh headers on every reconnect
-/// (https://github.com/firebase/flutterfire/pull/18814).
-///
-/// `FirebaseAI.googleAI()` / `FirebaseAI.agentPlatform()` cache their instances
-/// and ignore this flag after the first call, so it is applied once at startup
-/// in `main()` rather than being toggled at runtime.
-const bool kUseLimitedUseAppCheckTokens = true;
-
 /// Centralized model identifiers used across the example app.
 abstract final class ExampleModels {
   /// Default fast multimodal model.
@@ -31,8 +20,14 @@ abstract final class ExampleModels {
   /// Multimodal text and image generation model.
   static const String flashImage = 'gemini-3.1-flash-image';
 
-  /// Text-to-speech audio model preview.
-  static const String flashTTS = 'gemini-3.1-flash-tts-preview';
+  /// Gemini 3.1 Flash text-to-speech audio model preview.
+  static const String flashTts31 = 'gemini-3.1-flash-tts-preview';
+
+  /// Gemini 3.8 Flash text-to-speech audio model preview.
+  static const String flashTts38 = 'gemini-3.8-flash-tts';
+
+  /// Gemini 3.8 Flash-Lite text-to-speech audio model preview.
+  static const String flashLiteTts38 = 'gemini-3.8-flash-lite-tts';
 
   /// Live bidirectional audio streaming model for Agent Platform.
   static const String liveAgentPlatform =

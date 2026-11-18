@@ -77,6 +77,9 @@ jobs:
       - name: 'Validate Workspace'
         if: always()
         run: melos run validate:workspace
+      - name: 'Validate Wasm Imports'
+        if: always()
+        run: melos run validate:wasm-imports
       # Note `pubspec_overrides.yaml` is not taken into account by
       # `pub publish --dry-run`, which is why this used to live in its own job -
       # the setup is identical either way, so the split bought nothing.
@@ -137,7 +140,7 @@ jobs:
       - uses: bluefireteam/melos-action@b79b63bcd183f823740a7976cbdb4b0fc95a0eb8
         with:
           melos-version: '5.3.0'
-      - uses: Homebrew/actions/setup-homebrew@e99025eb970cfa124b8284a35463d87426917478
+      - uses: Homebrew/actions/setup-homebrew@d482da0e602890d3160aade42e72c8556103bf04
       - name: 'Install Tools'
         run: |
           alias python=python3
@@ -151,6 +154,9 @@ jobs:
           swiftformat --version
       - name: 'Dart, Java, Objective-C and Swift'
         run: |
+          # See prime_format_package_config.dart. Without this, Flutter 3.50
+          # makes the formatter pub-get every package and the job times out.
+          dart .github/workflows/scripts/prime_format_package_config.dart
           flutter pub global run flutter_plugin_tools format --base-branch=origin/main
           ./.github/workflows/scripts/validate-formatting.sh
 
@@ -207,7 +213,9 @@ jobs:
           flutter pub add $FLUTTER_DEPENDENCIES
           cd ../../../..
       - name: 'Swift Integration Setup'
-        run: flutter config --enable-swift-package-manager
+        run: |
+          flutter config --enable-swift-package-manager
+          ./.github/workflows/scripts/link-example-plugin-package-deps.sh packages/firebase_core/firebase_core/example ios
       - name: 'Build iOS App with Swift Package Manager'
         run: |
           dart ./.github/workflows/scripts/generate-dummy-firebase-configs.dart
@@ -236,11 +244,10 @@ jobs:
           flutter pub add $FLUTTER_DEPENDENCIES
           cd ../../../..
       - name: 'Swift Integration Setup'
-        run: flutter config --enable-swift-package-manager
+        run: |
+          flutter config --enable-swift-package-manager
+          ./.github/workflows/scripts/link-example-plugin-package-deps.sh packages/firebase_core/firebase_core/example macos
       - name: 'Build macOS App with Swift Package Manager'
-        # The script drops firebase_messaging from the example app before the
-        # macOS build; with iOS in its own job that no longer has to happen
-        # after a successful iOS build in the same checkout.
         run: |
           dart ./.github/workflows/scripts/generate-dummy-firebase-configs.dart
           dart ./.github/workflows/scripts/swift-integration.dart --platform=macos $FLUTTER_DEPENDENCIES
@@ -259,7 +266,14 @@ jobs:
       - name: 'Flutter Test'
         run: melos run test --no-select
       - name: 'Flutter Test - Web'
+        if: ${{ !cancelled() }}
         run: melos run test:web --no-select
+      - name: 'Flutter Test - Web (Wasm)'
+        if: ${{ !cancelled() }}
+        run: melos run test:web:wasm --no-select
+      - name: 'Flutter Test - Browser'
+        if: ${{ !cancelled() }}
+        run: melos run test:browser --no-select
 
   # Ruby, not Dart: crashlytics_add_upload_symbols_test.rb checks the generated
   # Xcode Run Script. It only needs the xcodeproj gem, so it stays off the

@@ -22,8 +22,9 @@ void main() {
   late FirebasePerformance performance;
 
   group('$FirebasePerformance', () {
-    when(mockPerformancePlatform.delegateFor(app: anyNamed('app')))
-        .thenReturn(mockPerformancePlatform);
+    when(
+      mockPerformancePlatform.delegateFor(app: anyNamed('app')),
+    ).thenReturn(mockPerformancePlatform);
 
     setUpAll(() async {
       await Firebase.initializeApp();
@@ -43,26 +44,31 @@ void main() {
 
     group('performanceCollectionEnabled', () {
       test('getter should call delegate method', () async {
-        when(mockPerformancePlatform.isPerformanceCollectionEnabled())
-            .thenAnswer((_) => Future.value(true));
+        when(
+          mockPerformancePlatform.isPerformanceCollectionEnabled(),
+        ).thenAnswer((_) => Future.value(true));
         await performance.isPerformanceCollectionEnabled();
         verify(mockPerformancePlatform.isPerformanceCollectionEnabled());
       });
       test('setter should call delegate method', () async {
-        when(mockPerformancePlatform.setPerformanceCollectionEnabled(true))
-            .thenAnswer((_) => Future.value());
+        when(
+          mockPerformancePlatform.setPerformanceCollectionEnabled(true),
+        ).thenAnswer((_) => Future.value());
         await performance.setPerformanceCollectionEnabled(true);
         verify(mockPerformancePlatform.setPerformanceCollectionEnabled(true));
       });
     });
 
     group('trace', () {
-      when(mockPerformancePlatform.newTrace('foo'))
-          .thenReturn(mockTracePlatform);
-      when(mockTracePlatform.start())
-          .thenAnswer((realInvocation) => Future.value());
-      when(mockTracePlatform.incrementMetric('bar', 8))
-          .thenAnswer((realInvocation) => Future.value());
+      when(
+        mockPerformancePlatform.newTrace('foo'),
+      ).thenReturn(mockTracePlatform);
+      when(
+        mockTracePlatform.start(),
+      ).thenAnswer((realInvocation) => Future.value());
+      when(
+        mockTracePlatform.incrementMetric('bar', 8),
+      ).thenAnswer((realInvocation) => Future.value());
 
       test('newTrace should call delegate method', () async {
         performance.newTrace('foo');
@@ -97,8 +103,9 @@ void main() {
     });
 
     group('http metric', () {
-      when(mockPerformancePlatform.newHttpMetric(mockUrl, HttpMethod.Get))
-          .thenReturn(mockHttpMetricPlatform);
+      when(
+        mockPerformancePlatform.newHttpMetric(mockUrl, HttpMethod.Get),
+      ).thenReturn(mockHttpMetricPlatform);
 
       test('newHttpMetric should call delegate method', () async {
         performance.newHttpMetric(mockUrl, HttpMethod.Get);
@@ -136,29 +143,37 @@ void main() {
         verify(mockHttpMetricPlatform.httpResponseCode = 8080);
       });
 
-      test('set requestPayloadSize setter should call delegate setter',
-          () async {
-        final httpMetric = performance.newHttpMetric(mockUrl, HttpMethod.Get);
-        when(mockHttpMetricPlatform.requestPayloadSize = 8).thenReturn(0);
-        httpMetric.requestPayloadSize = 8;
-        verify(mockHttpMetricPlatform.requestPayloadSize = 8);
-      });
+      test(
+        'set requestPayloadSize setter should call delegate setter',
+        () async {
+          final httpMetric = performance.newHttpMetric(mockUrl, HttpMethod.Get);
+          when(mockHttpMetricPlatform.requestPayloadSize = 8).thenReturn(0);
+          httpMetric.requestPayloadSize = 8;
+          verify(mockHttpMetricPlatform.requestPayloadSize = 8);
+        },
+      );
 
-      test('setResponsePayloadSize setter should call delegate setter',
-          () async {
-        final httpMetric = performance.newHttpMetric(mockUrl, HttpMethod.Get);
-        when(mockHttpMetricPlatform.responsePayloadSize = 99).thenReturn(0);
-        httpMetric.responsePayloadSize = 99;
-        verify(mockHttpMetricPlatform.responsePayloadSize = 99);
-      });
+      test(
+        'setResponsePayloadSize setter should call delegate setter',
+        () async {
+          final httpMetric = performance.newHttpMetric(mockUrl, HttpMethod.Get);
+          when(mockHttpMetricPlatform.responsePayloadSize = 99).thenReturn(0);
+          httpMetric.responsePayloadSize = 99;
+          verify(mockHttpMetricPlatform.responsePayloadSize = 99);
+        },
+      );
 
-      test('set responseContentType setter should call delegate setter',
-          () async {
-        final httpMetric = performance.newHttpMetric(mockUrl, HttpMethod.Get);
-        when(mockHttpMetricPlatform.responseContentType = 'foo').thenReturn('');
-        httpMetric.responseContentType = 'foo';
-        verify(mockHttpMetricPlatform.responseContentType = 'foo');
-      });
+      test(
+        'set responseContentType setter should call delegate setter',
+        () async {
+          final httpMetric = performance.newHttpMetric(mockUrl, HttpMethod.Get);
+          when(
+            mockHttpMetricPlatform.responseContentType = 'foo',
+          ).thenReturn('');
+          httpMetric.responseContentType = 'foo';
+          verify(mockHttpMetricPlatform.responseContentType = 'foo');
+        },
+      );
 
       test('start should call delegate', () async {
         final httpMetric = performance.newHttpMetric(mockUrl, HttpMethod.Get);

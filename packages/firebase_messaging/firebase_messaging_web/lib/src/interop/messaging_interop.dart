@@ -24,12 +24,16 @@ external JSPromise<JSBoolean> deleteToken(MessagingJsImpl messaging);
 @JS()
 @staticInterop
 external JSPromise<JSString> getToken(
-    MessagingJsImpl messaging, GetTokenOptions? getTokenOptions);
+  MessagingJsImpl messaging,
+  GetTokenOptions? getTokenOptions,
+);
 
 @JS()
 @staticInterop
 external JSPromise<JSAny?> register(
-    MessagingJsImpl messaging, RegisterOptions? registerOptions);
+  MessagingJsImpl messaging,
+  RegisterOptions? registerOptions,
+);
 
 @JS()
 @staticInterop
@@ -41,17 +45,11 @@ external JSPromise<JSBoolean> isSupported();
 
 @JS()
 @staticInterop
-external JSFunction onMessage(
-  MessagingJsImpl messaging,
-  Observer observer,
-);
+external JSFunction onMessage(MessagingJsImpl messaging, Observer observer);
 
 @JS()
 @staticInterop
-external JSFunction onRegistered(
-  MessagingJsImpl messaging,
-  Observer observer,
-);
+external JSFunction onRegistered(MessagingJsImpl messaging, Observer observer);
 
 @JS()
 @staticInterop

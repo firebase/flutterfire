@@ -31,9 +31,7 @@ void main() {
         ),
       );
 
-      firebaseAuthPlatform = TestFirebaseAuthPlatform(
-        app,
-      );
+      firebaseAuthPlatform = TestFirebaseAuthPlatform(app);
       handleMethodCall((call) async {
         switch (call.method) {
           case 'Auth#registerIdTokenListener':
@@ -57,8 +55,10 @@ void main() {
 
     test('get.instance', () {
       expect(FirebaseAuthPlatform.instance, isA<FirebaseAuthPlatform>());
-      expect(FirebaseAuthPlatform.instance.app.name,
-          equals(defaultFirebaseAppName));
+      expect(
+        FirebaseAuthPlatform.instance.app.name,
+        equals(defaultFirebaseAppName),
+      );
     });
 
     group('set.instance', () {
@@ -85,16 +85,15 @@ void main() {
     });
 
     test('throws if get.currentUser', () {
-      expect(
-        () => firebaseAuthPlatform.currentUser,
-        throwsUnimplementedError,
-      );
+      expect(() => firebaseAuthPlatform.currentUser, throwsUnimplementedError);
     });
 
     test('throws if set.currentUser', () {
       expect(
         () => firebaseAuthPlatform.sendAuthChangesEvent(
-            defaultFirebaseAppName, null),
+          defaultFirebaseAppName,
+          null,
+        ),
         throwsUnimplementedError,
       );
       try {
@@ -107,10 +106,7 @@ void main() {
     });
 
     test('throws if languageCode', () {
-      expect(
-        () => firebaseAuthPlatform.languageCode,
-        throwsUnimplementedError,
-      );
+      expect(() => firebaseAuthPlatform.languageCode, throwsUnimplementedError);
     });
 
     test('throws if sendAuthChangesEvent()', () {
@@ -267,10 +263,7 @@ void main() {
     test('throws if signInWithCredential()', () async {
       await expectLater(
         () => firebaseAuthPlatform.signInWithCredential(
-          const AuthCredential(
-            providerId: 'provider',
-            signInMethod: 'method',
-          ),
+          const AuthCredential(providerId: 'provider', signInMethod: 'method'),
         ),
         throwsUnimplementedError,
       );

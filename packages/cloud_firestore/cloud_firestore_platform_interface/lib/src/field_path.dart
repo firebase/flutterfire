@@ -20,11 +20,11 @@ class FieldPath {
 
   /// Creates a new [FieldPath].
   FieldPath(this.components)
-      : assert(components.isNotEmpty),
-        assert(
-          components.where((component) => component.isEmpty).isEmpty,
-          'Expected all FieldPath components to be non-null or non-empty strings.',
-        );
+    : assert(components.isNotEmpty),
+      assert(
+        components.where((component) => component.isEmpty).isEmpty,
+        'Expected all FieldPath components to be non-null or non-empty strings.',
+      );
 
   /// Returns a special sentinel `FieldPath` to refer to the ID of a document.
   ///
@@ -40,16 +40,16 @@ class FieldPath {
   /// field contains a '.', construct a new [FieldPath] instance and provide
   /// the field as a [List] element.
   FieldPath.fromString(String path)
-      : components = path.split('.'),
-        assert(path.isNotEmpty),
-        assert(!path.startsWith('.')),
-        assert(!path.endsWith('.')),
-        assert(!path.contains('..')),
-        assert(!path.contains('~'), _reserved),
-        assert(!path.contains('*'), _reserved),
-        assert(!path.contains('/'), _reserved),
-        assert(!path.contains('['), _reserved),
-        assert(!path.contains(']'), _reserved);
+    : components = path.split('.'),
+      assert(path.isNotEmpty),
+      assert(!path.startsWith('.')),
+      assert(!path.endsWith('.')),
+      assert(!path.contains('..')),
+      assert(!path.contains('~'), _reserved),
+      assert(!path.contains('*'), _reserved),
+      assert(!path.contains('/'), _reserved),
+      assert(!path.contains('['), _reserved),
+      assert(!path.contains(']'), _reserved);
 
   @override
   bool operator ==(Object other) =>

@@ -18,8 +18,8 @@ class DefaultFirebaseOptions {
       TargetPlatform.macOS => macos,
       TargetPlatform.windows => windows,
       _ => throw UnsupportedError(
-          'DefaultFirebaseOptions are not supported for this platform.',
-        ),
+        'DefaultFirebaseOptions are not supported for this platform.',
+      ),
     };
   }
 

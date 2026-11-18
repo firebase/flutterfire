@@ -13,10 +13,11 @@ import 'utils/task.dart';
 class TaskSnapshotWeb extends TaskSnapshotPlatform {
   /// Create a TaskSnapshotWeb from its [ReferencePlatform] and a native [fb.UploadTaskSnapshot]
   TaskSnapshotWeb(
-      ReferencePlatform ref, storage_interop.UploadTaskSnapshot snapshot)
-      : _reference = ref,
-        _snapshot = snapshot,
-        super(fbTaskStateToTaskState(snapshot.state), {});
+    ReferencePlatform ref,
+    storage_interop.UploadTaskSnapshot snapshot,
+  ) : _reference = ref,
+      _snapshot = snapshot,
+      super(fbTaskStateToTaskState(snapshot.state), {});
 
   /// The [FirebaseStoragePlatform] used to create the task.
   final ReferencePlatform _reference;
