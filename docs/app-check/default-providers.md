@@ -138,7 +138,7 @@ With Swift Package Manager, the iOS plugin adds the
 [reCAPTCHA Enterprise SDK](https://github.com/GoogleCloudPlatform/recaptcha-enterprise-mobile-sdk)
 so that `AppleReCaptchaProvider` works without extra setup. If your app uses
 another Apple provider, set the `FIREBASE_APP_CHECK_WITHOUT_RECAPTCHA`
-environment variable when building to leave the SDK out of the app:
+environment variable to `true` when building to leave the SDK out of the app:
 
 ```bash
 FIREBASE_APP_CHECK_WITHOUT_RECAPTCHA=true flutter build ios
