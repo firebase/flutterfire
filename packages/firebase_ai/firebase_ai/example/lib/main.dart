@@ -14,22 +14,26 @@
 
 import 'package:firebase_ai/firebase_ai.dart';
 
+import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 // Import after file is generated through flutterfire_cli.
 // import 'package:firebase_ai_example/firebase_options.dart';
 
+import 'constants.dart';
 import 'pages/bidi_page.dart';
+import 'pages/capabilities_page.dart';
 import 'pages/chat_page.dart';
 import 'pages/function_calling_page.dart';
-import 'pages/image_generation_page.dart';
-import 'pages/capabilities_page.dart';
-import 'pages/server_template_page.dart';
 import 'pages/grounding_page.dart';
+import 'pages/image_generation_page.dart';
 import 'pages/integration_test_page.dart';
+import 'pages/server_template_page.dart';
 import 'pages/tts_page.dart';
+
+export 'constants.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -38,6 +42,15 @@ void main() async {
   // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await Firebase.initializeApp();
   await FirebaseAuth.instance.signInAnonymously();
+  // App Check is required to exercise the Live API `resumeSession` header
+  // refresh (https://github.com/firebase/flutterfire/pull/18814). The debug
+  // providers print a debug token to the device logs on first launch; register
+  // it in the Firebase console under App Check > Manage debug tokens.
+  await FirebaseAppCheck.instance.activate(
+    providerWeb: WebDebugProvider(),
+    providerAndroid: const AndroidDebugProvider(),
+    providerApple: const AppleDebugProvider(),
+  );
   runApp(const GenerativeAISample());
 }
 
@@ -69,13 +82,15 @@ class _GenerativeAISampleState extends State<GenerativeAISample> {
 
   void _initializeModel(bool useVertexBackend) {
     if (useVertexBackend) {
-      final agentPlatformInstance =
-          FirebaseAI.agentPlatform(location: 'global');
-      _currentModel =
-          agentPlatformInstance.generativeModel(model: 'gemini-3.1-flash-lite');
+      final agentPlatformInstance = FirebaseAI.agentPlatform(
+        location: 'global',
+      );
+      _currentModel = agentPlatformInstance.generativeModel(
+        model: ExampleModels.flashLite,
+      );
     } else {
       final googleAI = FirebaseAI.googleAI();
-      _currentModel = googleAI.generativeModel(model: 'gemini-3.1-flash-lite');
+      _currentModel = googleAI.generativeModel(model: ExampleModels.flashLite);
     }
   }
 
@@ -94,9 +109,7 @@ class _GenerativeAISampleState extends State<GenerativeAISample> {
       themeMode: ThemeMode.dark,
       theme: _darkTheme,
       home: HomeScreen(
-        key: ValueKey(
-          '${_useAgentPlatform}_${_currentModel.hashCode}',
-        ),
+        key: ValueKey('${_useAgentPlatform}_${_currentModel.hashCode}'),
         model: _currentModel,
         useAgentPlatform: _useAgentPlatform,
         onBackendChanged: _toggleBackend,
@@ -130,7 +143,7 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-// Method to build the selected page on demand
+  // Method to build the selected page on demand
   Widget _buildSelectedPage(
     int index,
     GenerativeModel currentModel,
@@ -138,15 +151,9 @@ class _HomeScreenState extends State<HomeScreen> {
   ) {
     switch (index) {
       case 0:
-        return ChatPage(
-          title: 'Chat',
-          useAgentPlatform: useAgentPlatform,
-        );
+        return ChatPage(title: 'Chat', useAgentPlatform: useAgentPlatform);
       case 1:
-        return CapabilitiesPage(
-          title: 'Capabilities',
-          model: currentModel,
-        );
+        return CapabilitiesPage(title: 'Capabilities', model: currentModel);
       case 2:
         // FunctionCallingPage initializes its own model as per original design
         return FunctionCallingPage(
@@ -175,17 +182,11 @@ class _HomeScreenState extends State<HomeScreen> {
           useAgentPlatform: useAgentPlatform,
         );
       case 7:
-        return TTSPage(
-          title: 'TTS Test',
-          useAgentPlatform: useAgentPlatform,
-        );
+        return TTSPage(title: 'TTS Test', useAgentPlatform: useAgentPlatform);
 
       default:
         // Fallback to the first page in case of an unexpected index
-        return ChatPage(
-          title: 'Chat',
-          useAgentPlatform: useAgentPlatform,
-        );
+        return ChatPage(title: 'Chat', useAgentPlatform: useAgentPlatform);
     }
   }
 
@@ -237,10 +238,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     fontSize: 12,
                     color: widget.useAgentPlatform
                         ? Theme.of(context).colorScheme.primary
-                        : Theme.of(context)
-                            .colorScheme
-                            .onSurface
-                            .withAlpha(180),
+                        : Theme.of(
+                            context,
+                          ).colorScheme.onSurface.withAlpha(180),
                   ),
                 ),
               ],
@@ -285,30 +285,22 @@ class _HomeScreenState extends State<HomeScreen> {
             tooltip: 'Image Generation',
           ),
           BottomNavigationBarItem(
-            icon: Icon(
-              Icons.stream,
-            ),
+            icon: Icon(Icons.stream),
             label: 'Live',
             tooltip: 'Live Stream',
           ),
           BottomNavigationBarItem(
-            icon: Icon(
-              Icons.storage,
-            ),
+            icon: Icon(Icons.storage),
             label: 'Server',
             tooltip: 'Server Template',
           ),
           BottomNavigationBarItem(
-            icon: Icon(
-              Icons.location_on,
-            ),
+            icon: Icon(Icons.location_on),
             label: 'Grounding',
             tooltip: 'Search & Maps Grounding',
           ),
           BottomNavigationBarItem(
-            icon: Icon(
-              Icons.record_voice_over,
-            ),
+            icon: Icon(Icons.record_voice_over),
             label: 'TTS',
             tooltip: 'Text to Speech',
           ),

@@ -6,7 +6,6 @@
 import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
@@ -19,12 +18,13 @@ import '../method_channel/method_channel_crashlytics.dart';
 abstract class FirebaseCrashlyticsPlatform extends PlatformInterface {
   /// The [FirebaseApp] this instance was initialized with.
   FirebaseCrashlyticsPlatform({required this.appInstance})
-      : super(token: _token);
+    : super(token: _token);
 
   /// Create an instance using [app] using the existing implementation
-  factory FirebaseCrashlyticsPlatform.instanceFor(
-      {required FirebaseApp app,
-      required Map<dynamic, dynamic> pluginConstants}) {
+  factory FirebaseCrashlyticsPlatform.instanceFor({
+    required FirebaseApp app,
+    required Map<dynamic, dynamic> pluginConstants,
+  }) {
     // Only the default app is supported on Crashlytics.
     assert(app.name == defaultFirebaseAppName);
     // Must have bool collection enabled constant.
@@ -70,7 +70,8 @@ abstract class FirebaseCrashlyticsPlatform extends PlatformInterface {
   /// See [setCrashlyticsCollectionEnabled] for toggling collection status.
   bool get isCrashlyticsCollectionEnabled {
     throw UnimplementedError(
-        'isCrashlyticsCollectionEnabled is not implemented');
+      'isCrashlyticsCollectionEnabled is not implemented',
+    );
   }
 
   /// Checks a device for any fatal or non-fatal crash reports that haven't yet
@@ -104,7 +105,8 @@ abstract class FirebaseCrashlyticsPlatform extends PlatformInterface {
   /// Checks whether the app crashed on its previous run.
   Future<bool> didCrashOnPreviousExecution() {
     throw UnimplementedError(
-        'didCrashOnPreviousExecution() is not implemented');
+      'didCrashOnPreviousExecution() is not implemented',
+    );
   }
 
   /// Submits a Crashlytics report of a caught error.
@@ -150,7 +152,8 @@ abstract class FirebaseCrashlyticsPlatform extends PlatformInterface {
   /// stored on the device without sending them to Crashlytics.
   Future<void> setCrashlyticsCollectionEnabled(bool enabled) {
     throw UnimplementedError(
-        'setCrashlyticsCollectionEnabled() is not implemented');
+      'setCrashlyticsCollectionEnabled() is not implemented',
+    );
   }
 
   /// Records a user ID (identifier) that's associated with subsequent fatal and

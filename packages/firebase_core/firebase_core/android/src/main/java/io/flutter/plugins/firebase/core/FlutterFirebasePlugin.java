@@ -6,6 +6,7 @@ package io.flutter.plugins.firebase.core;
 import androidx.annotation.Keep;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -14,6 +15,12 @@ import java.util.concurrent.Executors;
 public interface FlutterFirebasePlugin {
   // A shared ExecutorService used by all FlutterFire Plugins for their GMS Tasks.
   ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
+
+  /**
+   * Custom auth domains keyed by Dart Firebase app name, set from {@code
+   * FirebaseOptions.authDomain} during initializeApp. Read by firebase_auth.
+   */
+  Map<String, String> customAuthDomain = new HashMap<>();
 
   /**
    * FlutterFire plugins implementing FlutterFirebasePlugin must provide this method to provide it's

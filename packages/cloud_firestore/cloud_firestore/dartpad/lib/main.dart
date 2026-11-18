@@ -5,6 +5,8 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
+// DartPad provides package:flutter, not package:material_ui.
+// ignore: deprecated_member_use
 import 'package:flutter/material.dart';
 
 Future<void> main() async {
@@ -24,14 +26,7 @@ final moviesRef = FirebaseFirestore.instance
     );
 
 /// The different ways that we can filter/sort movies.
-enum MovieQuery {
-  year,
-  likesAsc,
-  likesDesc,
-  score,
-  sciFi,
-  fantasy,
-}
+enum MovieQuery { year, likesAsc, likesDesc, score, sciFi, fantasy }
 
 extension on Query<Movie> {
   /// Create a firebase query from a [MovieQuery]
@@ -39,11 +34,12 @@ extension on Query<Movie> {
     return switch (query) {
       MovieQuery.fantasy => where('genre', arrayContainsAny: ['Fantasy']),
       MovieQuery.sciFi => where('genre', arrayContainsAny: ['Sci-Fi']),
-      MovieQuery.likesAsc ||
-      MovieQuery.likesDesc =>
-        orderBy('likes', descending: query == MovieQuery.likesDesc),
+      MovieQuery.likesAsc || MovieQuery.likesDesc => orderBy(
+        'likes',
+        descending: query == MovieQuery.likesDesc,
+      ),
       MovieQuery.year => orderBy('year', descending: true),
-      MovieQuery.score => orderBy('score', descending: true)
+      MovieQuery.score => orderBy('score', descending: true),
     };
   }
 }
@@ -57,9 +53,7 @@ class FirestoreExampleApp extends StatelessWidget {
     return MaterialApp(
       title: 'Firestore Example App',
       theme: ThemeData.dark(),
-      home: const Scaffold(
-        body: Center(child: FilmList()),
-      ),
+      home: const Scaffold(body: Center(child: FilmList())),
     );
   }
 }
@@ -148,9 +142,7 @@ class _FilmListState extends State<FilmList> {
         stream: moviesRef.queryBy(query).snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return Center(
-              child: Text(snapshot.error.toString()),
-            );
+            return Center(child: Text(snapshot.error.toString()));
           }
 
           if (!snapshot.hasData) {
@@ -193,10 +185,7 @@ class _MovieItem extends StatelessWidget {
 
   /// Returns the movie poster.
   Widget get poster {
-    return SizedBox(
-      width: 100,
-      child: Image.network(movie.poster),
-    );
+    return SizedBox(width: 100, child: Image.network(movie.poster));
   }
 
   /// Returns movie details.
@@ -209,10 +198,7 @@ class _MovieItem extends StatelessWidget {
           title,
           metadata,
           genres,
-          Likes(
-            reference: reference,
-            currentLikes: movie.likes,
-          ),
+          Likes(reference: reference, currentLikes: movie.likes),
         ],
       ),
     );
@@ -251,10 +237,7 @@ class _MovieItem extends StatelessWidget {
           padding: const EdgeInsets.only(right: 2),
           child: Chip(
             backgroundColor: Colors.lightBlue,
-            label: Text(
-              genre,
-              style: const TextStyle(color: Colors.white),
-            ),
+            label: Text(genre, style: const TextStyle(color: Colors.white)),
           ),
         ),
     ];
@@ -264,9 +247,7 @@ class _MovieItem extends StatelessWidget {
   Widget get genres {
     return Padding(
       padding: const EdgeInsets.only(top: 8),
-      child: Wrap(
-        children: genreItems,
-      ),
+      child: Wrap(children: genreItems),
     );
   }
 
@@ -289,11 +270,8 @@ class _MovieItem extends StatelessWidget {
 class Likes extends StatefulWidget {
   /// Constructs a new [Likes] instance with a given [DocumentReference] and
   /// current like count.
-  Likes({
-    Key? key,
-    required this.reference,
-    required this.currentLikes,
-  }) : super(key: key);
+  Likes({Key? key, required this.reference, required this.currentLikes})
+    : super(key: key);
 
   /// The reference relating to the counter.
   final DocumentReference<Movie> reference;
@@ -323,10 +301,12 @@ class _LikesState extends State<Likes> {
       // We use a transaction because multiple users could update the likes count
       // simultaneously. As such, our likes count may be different from the likes
       // count on the server.
-      int newLikes = await FirebaseFirestore.instance
-          .runTransaction<int>((transaction) async {
-        DocumentSnapshot<Movie> movie =
-            await transaction.get<Movie>(widget.reference);
+      int newLikes = await FirebaseFirestore.instance.runTransaction<int>((
+        transaction,
+      ) async {
+        DocumentSnapshot<Movie> movie = await transaction.get<Movie>(
+          widget.reference,
+        );
 
         if (!movie.exists) {
           throw Exception('Document does not exist!');
@@ -387,15 +367,15 @@ class Movie {
   });
 
   Movie.fromJson(Map<String, Object?> json)
-      : this(
-          genre: (json['genre']! as List).cast<String>(),
-          likes: json['likes']! as int,
-          poster: json['poster']! as String,
-          rated: json['rated']! as String,
-          runtime: json['runtime']! as String,
-          title: json['title']! as String,
-          year: json['year']! as int,
-        );
+    : this(
+        genre: (json['genre']! as List).cast<String>(),
+        likes: json['likes']! as int,
+        poster: json['poster']! as String,
+        rated: json['rated']! as String,
+        runtime: json['runtime']! as String,
+        title: json['title']! as String,
+        year: json['year']! as int,
+      );
 
   final String poster;
   final int likes;

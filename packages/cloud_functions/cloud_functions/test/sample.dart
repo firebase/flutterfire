@@ -13,12 +13,6 @@ Map<String, dynamic> map = <String, dynamic>{
 
 List<dynamic> list = ['1', 2, true, false];
 
-Map<String, dynamic> deepMap = <String, dynamic>{
-  'list': list,
-  'map': map,
-};
+Map<String, dynamic> deepMap = <String, dynamic>{'list': list, 'map': map};
 
-List<dynamic> deepList = [
-  list,
-  map,
-];
+List<dynamic> deepList = [list, map];

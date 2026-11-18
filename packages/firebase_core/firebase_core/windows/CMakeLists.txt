@@ -4,7 +4,7 @@
 # customers of the plugin.
 cmake_minimum_required(VERSION 3.14)
 
-set(FIREBASE_SDK_VERSION "13.9.0")
+set(FIREBASE_SDK_VERSION "14.1.0")
 
 if (EXISTS $ENV{FIREBASE_CPP_SDK_DIR}/include/firebase/version.h)
     file(READ "$ENV{FIREBASE_CPP_SDK_DIR}/include/firebase/version.h" existing_version)
@@ -73,7 +73,7 @@ list(APPEND PLUGIN_SOURCES
 file(STRINGS "../pubspec.yaml" pubspec_content)
 foreach(line ${pubspec_content})
   string(FIND ${line} "version: " has_version)
-  
+
   if("${has_version}" STREQUAL "0")
     string(FIND ${line} ": " version_start_pos)
     math(EXPR version_start_pos "${version_start_pos} + 2")

@@ -145,9 +145,7 @@ class _JsonDocumentReference
   ]) async {
     return _JsonDocumentSnapshot(
       firestore,
-      await _delegate.get(
-        options ?? const GetOptions(),
-      ),
+      await _delegate.get(options ?? const GetOptions()),
     );
   }
 
@@ -184,8 +182,9 @@ class _JsonDocumentReference
 
   @override
   Future<void> update(Map<Object, Object?> data) {
-    return _delegate
-        .update(_CodecUtility.replaceValueWithDelegatesInMapFieldPath(data)!);
+    return _delegate.update(
+      _CodecUtility.replaceValueWithDelegatesInMapFieldPath(data)!,
+    );
   }
 
   @override
@@ -273,10 +272,7 @@ class _WithConverterDocumentReference<T extends Object?>
 
   @override
   Future<void> set(T data, [SetOptions? options]) {
-    return _originalDocumentReference.set(
-      _toFirestore(data, options),
-      options,
-    );
+    return _originalDocumentReference.set(_toFirestore(data, options), options);
   }
 
   @override
@@ -286,16 +282,16 @@ class _WithConverterDocumentReference<T extends Object?>
   }) {
     return _originalDocumentReference
         .snapshots(
-      includeMetadataChanges: includeMetadataChanges,
-      source: source,
-    )
+          includeMetadataChanges: includeMetadataChanges,
+          source: source,
+        )
         .map((snapshot) {
-      return _WithConverterDocumentSnapshot<T>(
-        snapshot,
-        _fromFirestore,
-        _toFirestore,
-      );
-    });
+          return _WithConverterDocumentSnapshot<T>(
+            snapshot,
+            _fromFirestore,
+            _toFirestore,
+          );
+        });
   }
 
   @override
@@ -325,11 +321,11 @@ class _WithConverterDocumentReference<T extends Object?>
 
   @override
   int get hashCode => Object.hash(
-        runtimeType,
-        _originalDocumentReference,
-        _fromFirestore,
-        _toFirestore,
-      );
+    runtimeType,
+    _originalDocumentReference,
+    _fromFirestore,
+    _toFirestore,
+  );
 
   @override
   String toString() => 'DocumentReference<$T>($path)';

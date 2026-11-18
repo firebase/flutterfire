@@ -20,8 +20,9 @@ abstract class FirebaseAppInstallationsPlatform extends PlatformInterface {
   final FirebaseApp? app;
 
   /// Create an instance using [app] using the existing implementation
-  factory FirebaseAppInstallationsPlatform.instanceFor(
-      {required FirebaseApp app}) {
+  factory FirebaseAppInstallationsPlatform.instanceFor({
+    required FirebaseApp app,
+  }) {
     return FirebaseAppInstallationsPlatform.instance.delegateFor(app: app);
   }
 

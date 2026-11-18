@@ -69,9 +69,9 @@ class Firebase {
       // for backwards compatibility and simply override the user-provided
       // options.
       resolvedOptions = FirebaseOptions(
-        apiKey: '12345',
+        apiKey: 'ADemoProjectApiKey000000000000000000000',
         appId: '1:1:$platformString:1',
-        messagingSenderId: '',
+        messagingSenderId: '1',
         projectId: demoProjectId,
       );
       // Now fall through to the normal initialization logic.

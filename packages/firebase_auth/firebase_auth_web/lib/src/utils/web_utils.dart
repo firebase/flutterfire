@@ -3,7 +3,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:io';
 import 'dart:js_interop';
 
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
@@ -12,6 +11,7 @@ import 'package:firebase_auth_web/src/firebase_auth_web_multi_factor.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
+import 'package:http_parser/http_parser.dart';
 
 import '../interop/auth.dart' as auth_interop;
 import '../interop/multi_factor.dart' as multi_factor_interop;
@@ -28,28 +28,40 @@ bool _hasFirebaseAuthErrorCodeAndMessage(JSError e) {
   }
 }
 
-R guardAuthExceptions<R>(
-  R Function() cb, {
-  auth_interop.Auth? auth,
-}) {
+/// Whether [error] is a JS object, as opposed to a Dart error.
+///
+/// `@staticInterop` types such as [JSError] match any JS object at runtime, so
+/// this is the check to make before casting a caught error to one. Callers
+/// should rethrow anything else unchanged.
+bool isJSObject(Object? error) {
+  // `is JSObject` is false for Dart objects on both dart2js and dart2wasm.
+  // ignore: invalid_runtime_check_with_js_interop_types
+  return error is JSObject;
+}
+
+R guardAuthExceptions<R>(R Function() cb, {auth_interop.Auth? auth}) {
   try {
     final value = cb();
     if (value is Future) {
-      return value.catchError((err, stack) {
-        final exception = getFirebaseAuthException(err, auth);
-        return Error.throwWithStackTrace(exception, stack);
-      }) as R;
+      return value.catchError(
+            (Object err, StackTrace stack) => Error.throwWithStackTrace(
+              getFirebaseAuthException(err, auth),
+              stack,
+            ),
+            // Dart errors are rethrown as they are, with their stack trace.
+            test: isJSObject,
+          )
+          as R;
     }
 
     return value;
   } catch (e, stackTrace) {
-    final exception = e as JSError;
-    if (!_hasFirebaseAuthErrorCodeAndMessage(e)) {
+    if (!isJSObject(e) || !_hasFirebaseAuthErrorCodeAndMessage(e as JSError)) {
       // Not a firebase auth exception, rethrow & make sure to preserve the stacktrace
       rethrow;
     }
 
-    final error = getFirebaseAuthException(exception, auth);
+    final error = getFirebaseAuthException(e, auth);
 
     Error.throwWithStackTrace(error, stackTrace);
   }
@@ -63,9 +75,17 @@ FirebaseAuthException getFirebaseAuthException(
   Object objectException, [
   auth_interop.Auth? auth,
 ]) {
+  if (!isJSObject(objectException)) {
+    return FirebaseAuthException(
+      code: 'unknown',
+      message: 'An unknown error occurred: $objectException',
+    );
+  }
+
   final exception = objectException as JSError;
-  final authJsCredential =
-      auth_interop.OAuthProviderJsImpl.credentialFromError(exception);
+  final authJsCredential = auth_interop.OAuthProviderJsImpl.credentialFromError(
+    exception,
+  );
 
   OAuthCredential? credential;
 
@@ -92,7 +112,8 @@ FirebaseAuthException getFirebaseAuthException(
       .replaceFirst('Firebase: ', '');
 
   // "customData" - see Firebase AuthError docs: https://firebase.google.com/docs/reference/js/auth.autherror
-  final customData = exception.customData as auth_interop.AuthErrorCustomData;
+  // Some Auth error shapes omit customData; casting a missing value throws TypeError.
+  final customData = exception.customData as auth_interop.AuthErrorCustomData?;
 
   if (code == 'multi-factor-auth-required') {
     final _auth = auth;
@@ -111,9 +132,9 @@ FirebaseAuthException getFirebaseAuthException(
     return FirebaseAuthMultiFactorExceptionPlatform(
       code: code,
       message: message,
-      email: customData.email?.toDart,
-      phoneNumber: customData.phoneNumber?.toDart,
-      tenantId: customData.tenantId?.toDart,
+      email: customData?.email?.toDart,
+      phoneNumber: customData?.phoneNumber?.toDart,
+      tenantId: customData?.tenantId?.toDart,
       resolver: MultiFactorResolverWeb(
         resolverWeb.hints.map(fromInteropMultiFactorInfo).toList(),
         MultiFactorSessionWeb('web', resolverWeb.session),
@@ -127,9 +148,9 @@ FirebaseAuthException getFirebaseAuthException(
   return FirebaseAuthException(
     code: code,
     message: message,
-    email: customData.email?.toDart,
-    phoneNumber: customData.phoneNumber?.toDart,
-    tenantId: customData.tenantId?.toDart,
+    email: customData?.email?.toDart,
+    phoneNumber: customData?.phoneNumber?.toDart,
+    tenantId: customData?.tenantId?.toDart,
     credential: credential,
   );
 }
@@ -142,7 +163,7 @@ MultiFactorInfo fromInteropMultiFactorInfo(
       displayName: e.displayName,
       factorId: e.factorId,
       enrollmentTimestamp:
-          HttpDate.parse(e.enrollmentTime).millisecondsSinceEpoch / 1000,
+          parseHttpDate(e.enrollmentTime).millisecondsSinceEpoch / 1000,
       uid: e.uid,
       phoneNumber: e.phoneNumber,
     );
@@ -151,7 +172,7 @@ MultiFactorInfo fromInteropMultiFactorInfo(
       displayName: e.displayName,
       factorId: e.factorId,
       enrollmentTimestamp:
-          HttpDate.parse(e.enrollmentTime).millisecondsSinceEpoch / 1000,
+          parseHttpDate(e.enrollmentTime).millisecondsSinceEpoch / 1000,
       uid: e.uid,
     );
   }
@@ -159,21 +180,23 @@ MultiFactorInfo fromInteropMultiFactorInfo(
     displayName: e.displayName,
     factorId: e.factorId,
     enrollmentTimestamp:
-        HttpDate.parse(e.enrollmentTime).millisecondsSinceEpoch / 1000,
+        parseHttpDate(e.enrollmentTime).millisecondsSinceEpoch / 1000,
     uid: e.uid,
   );
 }
 
 /// Converts a [auth_interop.ActionCodeInfo] into a [ActionCodeInfo].
 ActionCodeInfo? convertWebActionCodeInfo(
-    auth_interop.ActionCodeInfo? webActionCodeInfo) {
+  auth_interop.ActionCodeInfo? webActionCodeInfo,
+) {
   if (webActionCodeInfo == null) {
     return null;
   }
 
   return ActionCodeInfo(
-    operation:
-        _convertWebActionCodeOperation(webActionCodeInfo.operation.toDart),
+    operation: _convertWebActionCodeOperation(
+      webActionCodeInfo.operation.toDart,
+    ),
     data: ActionCodeInfoData(
       email: webActionCodeInfo.data.email?.toDart,
       previousEmail: webActionCodeInfo.data.previousEmail?.toDart,
@@ -235,7 +258,8 @@ IdTokenResult convertWebIdTokenResult(
 
 /// Converts a [ActionCodeSettings] into a [auth_interop.ActionCodeSettings].
 auth_interop.ActionCodeSettings? convertPlatformActionCodeSettings(
-    ActionCodeSettings? actionCodeSettings) {
+  ActionCodeSettings? actionCodeSettings,
+) {
   if (actionCodeSettings == null) {
     return null;
   }
@@ -290,8 +314,9 @@ auth_interop.AuthProvider convertPlatformAuthProvider(
   }
 
   if (authProvider is AppleAuthProvider) {
-    auth_interop.OAuthProvider oAuthProvider =
-        auth_interop.OAuthProvider(authProvider.providerId);
+    auth_interop.OAuthProvider oAuthProvider = auth_interop.OAuthProvider(
+      authProvider.providerId,
+    );
 
     authProvider.scopes.forEach(oAuthProvider.addScope);
     oAuthProvider.setCustomParameters(authProvider.parameters);
@@ -317,8 +342,9 @@ auth_interop.AuthProvider convertPlatformAuthProvider(
   }
 
   if (authProvider is MicrosoftAuthProvider) {
-    auth_interop.OAuthProvider oAuthProvider =
-        auth_interop.OAuthProvider(authProvider.providerId);
+    auth_interop.OAuthProvider oAuthProvider = auth_interop.OAuthProvider(
+      authProvider.providerId,
+    );
 
     authProvider.scopes.forEach(oAuthProvider.addScope);
     oAuthProvider.setCustomParameters(authProvider.parameters);
@@ -326,8 +352,9 @@ auth_interop.AuthProvider convertPlatformAuthProvider(
   }
 
   if (authProvider is YahooAuthProvider) {
-    auth_interop.OAuthProvider oAuthProvider =
-        auth_interop.OAuthProvider(authProvider.providerId);
+    auth_interop.OAuthProvider oAuthProvider = auth_interop.OAuthProvider(
+      authProvider.providerId,
+    );
 
     authProvider.scopes.forEach(oAuthProvider.addScope);
     oAuthProvider.setCustomParameters(authProvider.parameters);
@@ -347,8 +374,9 @@ auth_interop.AuthProvider convertPlatformAuthProvider(
   }
 
   if (authProvider is OAuthProvider) {
-    auth_interop.OAuthProvider oAuthProvider =
-        auth_interop.OAuthProvider(authProvider.providerId);
+    auth_interop.OAuthProvider oAuthProvider = auth_interop.OAuthProvider(
+      authProvider.providerId,
+    );
 
     authProvider.scopes.forEach(oAuthProvider.addScope);
     oAuthProvider.setCustomParameters(authProvider.parameters);
@@ -364,7 +392,8 @@ auth_interop.AuthProvider convertPlatformAuthProvider(
 
 /// Converts a [auth_interop.AuthCredential] into a [AuthCredential].
 AuthCredential? convertWebAuthCredential(
-    auth_interop.AuthCredential? authCredential) {
+  auth_interop.AuthCredential? authCredential,
+) {
   if (authCredential == null) {
     return null;
   }
@@ -418,7 +447,8 @@ auth_interop.OAuthCredential? convertPlatformCredential(
 
   if (credential is FacebookAuthCredential) {
     return auth_interop.FacebookAuthProvider.credential(
-        credential.accessToken!);
+      credential.accessToken!,
+    );
   }
 
   if (credential is GithubAuthCredential) {
@@ -441,20 +471,22 @@ auth_interop.OAuthCredential? convertPlatformCredential(
 
   if (credential is PhoneAuthCredential) {
     return auth_interop.PhoneAuthProvider.credential(
-      credential.verificationId!,
-      credential.smsCode!,
-    ) as auth_interop.OAuthCredential;
+          credential.verificationId!,
+          credential.smsCode!,
+        )
+        as auth_interop.OAuthCredential;
   }
 
   if (credential is OAuthCredential) {
     auth_interop.OAuthCredentialOptions credentialOptions =
         auth_interop.OAuthCredentialOptions(
-      accessToken: credential.accessToken?.toJS,
-      rawNonce: credential.rawNonce?.toJS,
-      idToken: credential.idToken?.toJS,
-    );
-    return auth_interop.OAuthProvider(credential.providerId)
-        .credential(credentialOptions);
+          accessToken: credential.accessToken?.toJS,
+          rawNonce: credential.rawNonce?.toJS,
+          idToken: credential.idToken?.toJS,
+        );
+    return auth_interop.OAuthProvider(
+      credential.providerId,
+    ).credential(credentialOptions);
   }
 
   return null;
@@ -482,6 +514,7 @@ String convertRecaptchaVerifierTheme(RecaptchaVerifierTheme theme) {
 
 /// Converts a [multi_factor_interop.MultiFactorSession] into a [MultiFactorSession].
 MultiFactorSession convertMultiFactorSession(
-    multi_factor_interop.MultiFactorSession multiFactorSession) {
+  multi_factor_interop.MultiFactorSession multiFactorSession,
+) {
   return MultiFactorSessionWeb('web', multiFactorSession);
 }

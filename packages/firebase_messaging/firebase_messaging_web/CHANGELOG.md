@@ -1,3 +1,19 @@
+## 4.4.0
+
+ - **FEAT**(android): migrate plugins to built-in Kotlin on Flutter 3.44 ([#18922](https://github.com/firebase/flutterfire/issues/18922)). ([1abe0561](https://github.com/firebase/flutterfire/commit/1abe05614d03f22782f597f847c1fc9c8c57f016))
+
+## 4.3.1
+
+ - Update a dependency to the latest release.
+
+## 4.3.0
+
+ - **FEAT**(messaging): add FID registration APIs ([#18482](https://github.com/firebase/flutterfire/issues/18482)). ([ff6da47e](https://github.com/firebase/flutterfire/commit/ff6da47ea85fd62e4a2c267603d39f2077c6fdb3))
+
+## 4.2.5
+
+ - Update a dependency to the latest release.
+
 ## 4.2.4
 
  - Update a dependency to the latest release.

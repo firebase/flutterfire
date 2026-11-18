@@ -3,22 +3,23 @@ description: Demonstrates how to use the firebase_storage plugin.
 resolution: workspace
 
 environment:
-  sdk: '^3.6.0'
-  flutter: '>=3.27.0'
+  sdk: '^3.12.0'
+  flutter: '>=3.44.0'
 
 dependencies:
-  firebase_core: ^4.13.0
-  firebase_storage: ^13.4.6
+  firebase_core: ^5.1.0
+  firebase_storage: ^14.0.1
   flutter:
     sdk: flutter
   image_picker: ^1.1.2
   image_picker_for_web: ^3.0.5
+  material_ui: ^1.3.0
   web: ^1.0.0
 
 dev_dependencies:
   # The e2e suite reaches for MethodChannelFirebase, which firebase_core
   # deliberately hides from its own re-export.
-  firebase_core_platform_interface: ^8.1.0
+  firebase_core_platform_interface: ^8.1.1
   flutter_test:
     sdk: flutter
   integration_test:
@@ -31,3 +32,6 @@ flutter:
   uses-material-design: true
   assets:
     - assets/hello.txt
+  config:
+    # iOS and macOS build with Swift Package Manager only (no Podfile).
+    enable-swift-package-manager: true

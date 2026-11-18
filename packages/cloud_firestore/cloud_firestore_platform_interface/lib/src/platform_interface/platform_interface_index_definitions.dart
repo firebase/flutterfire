@@ -58,8 +58,9 @@ class FieldOverrides {
     return <String, dynamic>{
       'collectionGroup': collectionGroup,
       'fieldPath': fieldPath,
-      'indexes':
-          indexes.map((FieldOverrideIndex index) => index.toMap()).toList(),
+      'indexes': indexes
+          .map((FieldOverrideIndex index) => index.toMap())
+          .toList(),
     };
   }
 }
@@ -81,16 +82,8 @@ class FieldOverrideIndex {
   }
 }
 
-enum Order {
-  ascending,
-  descending,
-}
+enum Order { ascending, descending }
 
-enum ArrayConfig {
-  contains,
-}
+enum ArrayConfig { contains }
 
-enum QueryScope {
-  collection,
-  collectionGroup,
-}
+enum QueryScope { collection, collectionGroup }

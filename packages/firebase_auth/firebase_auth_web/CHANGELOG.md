@@ -1,3 +1,30 @@
+## 6.4.0
+
+ - **FIX**(core,appcheck,web): start when the browser blocks web storage ([#18946](https://github.com/firebase/flutterfire/issues/18946)). ([229e08e8](https://github.com/firebase/flutterfire/commit/229e08e8f0b197c1eef240db73a716d7f948c2a1))
+ - **FIX**(auth): keep the web Auth emulator across a browser restart ([#18926](https://github.com/firebase/flutterfire/issues/18926)). ([cbf2ab9d](https://github.com/firebase/flutterfire/commit/cbf2ab9dad338c6076e8d214df963c00693d0bd1))
+ - **FIX**(auth,functions,web): rethrow non-Firebase errors instead of crashing in the error mappers ([#18923](https://github.com/firebase/flutterfire/issues/18923)). ([77ebf863](https://github.com/firebase/flutterfire/commit/77ebf863877bf576c2b1b0f3e120a1164b27eb7a))
+ - **FIX**(web): properly cast Map from JSAny?.dartify() ([#18855](https://github.com/firebase/flutterfire/issues/18855)). ([24ff83a3](https://github.com/firebase/flutterfire/commit/24ff83a3a9ca4e4e62130cb5e5f89edbc4351c7f))
+ - **FEAT**(android): migrate plugins to built-in Kotlin on Flutter 3.44 ([#18922](https://github.com/firebase/flutterfire/issues/18922)). ([1abe0561](https://github.com/firebase/flutterfire/commit/1abe05614d03f22782f597f847c1fc9c8c57f016))
+
+## 6.3.2
+
+ - **FIX**(firebase_auth_web): fix Wasm string list cast and dart:io import ([#18847](https://github.com/firebase/flutterfire/issues/18847)). ([0f72c66b](https://github.com/firebase/flutterfire/commit/0f72c66bd23cd98a5b8031400390d7e203d729d6))
+ - **FIX**(firebase_auth): stop dropping profile, provider and action code fields ([#18820](https://github.com/firebase/flutterfire/issues/18820)). ([2572d82b](https://github.com/firebase/flutterfire/commit/2572d82b760b2800dd53c454474381d3ddbe6d9f))
+
+## 6.3.1
+
+ - **FIX**(auth,web): fail onWaitInitState instead of hanging when the first auth state is an error ([#18705](https://github.com/firebase/flutterfire/issues/18705)). ([05c4bac8](https://github.com/firebase/flutterfire/commit/05c4bac803b2f55b02ddc5b87ea6aa4ef654ddca))
+ - **FIX**(auth,web): connect Auth emulator after reload when sessionStorage already has the origin ([#18690](https://github.com/firebase/flutterfire/issues/18690)). ([3740a2da](https://github.com/firebase/flutterfire/commit/3740a2da18d1b119fb897dd4f2c8951127f03ea6))
+
+## 6.3.0
+
+ - **FIX**(auth,web): convert Auth errors that omit customData without throwing ([#18686](https://github.com/firebase/flutterfire/issues/18686)). ([5e518361](https://github.com/firebase/flutterfire/commit/5e518361ce7f94923437d8b0e41add7ca75083ef))
+ - **FEAT**(auth,ios): add support for `migrateCurrentUser` ([#18460](https://github.com/firebase/flutterfire/issues/18460)). ([b4eeafba](https://github.com/firebase/flutterfire/commit/b4eeafba347abed13e5410263556e9a4bff1b96e))
+
+## 6.2.7
+
+ - Update a dependency to the latest release.
+
 ## 6.2.6
 
  - Update a dependency to the latest release.

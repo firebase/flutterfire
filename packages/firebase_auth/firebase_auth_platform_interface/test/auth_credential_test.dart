@@ -15,9 +15,10 @@ void main() {
 
     setUpAll(() {
       authCredential = const AuthCredential(
-          providerId: kMockProviderId,
-          signInMethod: kMockSignInMethod,
-          token: kMockToken);
+        providerId: kMockProviderId,
+        signInMethod: kMockSignInMethod,
+        token: kMockToken,
+      );
     });
 
     group('Constructor', () {

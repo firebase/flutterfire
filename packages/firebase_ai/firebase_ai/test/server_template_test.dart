@@ -38,17 +38,6 @@ final _arbitraryGenerateContentResponse = {
   ],
 };
 
-// A response for Imagen's generateImages.
-final _arbitraryImagenResponse = {
-  'predictions': [
-    {
-      'mimeType': 'image/png',
-      'bytesBase64Encoded':
-          'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='
-    }
-  ]
-};
-
 void main() {
   setupFirebaseVertexAIMocks();
   late FirebaseApp app;
@@ -60,8 +49,10 @@ void main() {
     const templateId = 'my-template';
     const location = 'us-central1';
 
-    TemplateGenerativeModel createModel(http.Client client,
-        {bool useAgentPlatform = true}) {
+    TemplateGenerativeModel createModel(
+      http.Client client, {
+      bool useAgentPlatform = true,
+    }) {
       // ignore: invalid_use_of_internal_member
       return createTestTemplateGenerativeModel(
         app: app,
@@ -74,16 +65,23 @@ void main() {
     test('generateContent can make successful request', () async {
       final mockHttp = MockClient((request) async {
         final body = jsonDecode(request.body) as Map<String, Object?>;
-        expect(request.url.path,
-            endsWith('/templates/$templateId:templateGenerateContent'));
+        expect(
+          request.url.path,
+          endsWith('/templates/$templateId:templateGenerateContent'),
+        );
         expect(body['inputs'], {'prompt': 'Some prompt'});
-        return http.Response(jsonEncode(_arbitraryGenerateContentResponse), 200,
-            headers: {'content-type': 'application/json'});
+        return http.Response(
+          jsonEncode(_arbitraryGenerateContentResponse),
+          200,
+          headers: {'content-type': 'application/json'},
+        );
       });
 
       final model = createModel(mockHttp);
-      final response = await model
-          .generateContent(templateId, inputs: {'prompt': 'Some prompt'});
+      final response = await model.generateContent(
+        templateId,
+        inputs: {'prompt': 'Some prompt'},
+      );
       expect(response.text, 'Some response');
     });
 
@@ -97,8 +95,11 @@ void main() {
             'contents': base64Encode([1, 2, 3]),
           },
         });
-        return http.Response(jsonEncode(_arbitraryGenerateContentResponse), 200,
-            headers: {'content-type': 'application/json'});
+        return http.Response(
+          jsonEncode(_arbitraryGenerateContentResponse),
+          200,
+          headers: {'content-type': 'application/json'},
+        );
       });
 
       final model = createModel(mockHttp);
@@ -114,74 +115,59 @@ void main() {
       expect(response.text, 'Some response');
     });
 
-    test('generateContent with TemplateToolConfig passes retrievalConfig',
-        () async {
-      final mockHttp = MockClient((request) async {
-        final body = jsonDecode(request.body) as Map<String, Object?>;
-        expect(request.url.path,
-            endsWith('/templates/$templateId:templateGenerateContent'));
-        expect(body['inputs'], {'prompt': 'Some prompt'});
-        expect(body['toolConfig'], {
-          'retrievalConfig': {
-            'latLng': {'latitude': 1.0, 'longitude': 2.0},
-            'languageCode': 'en'
-          }
+    test(
+      'generateContent with TemplateToolConfig passes retrievalConfig',
+      () async {
+        final mockHttp = MockClient((request) async {
+          final body = jsonDecode(request.body) as Map<String, Object?>;
+          expect(
+            request.url.path,
+            endsWith('/templates/$templateId:templateGenerateContent'),
+          );
+          expect(body['inputs'], {'prompt': 'Some prompt'});
+          expect(body['toolConfig'], {
+            'retrievalConfig': {
+              'latLng': {'latitude': 1.0, 'longitude': 2.0},
+              'languageCode': 'en',
+            },
+          });
+          return http.Response(
+            jsonEncode(_arbitraryGenerateContentResponse),
+            200,
+            headers: {'content-type': 'application/json'},
+          );
         });
-        return http.Response(jsonEncode(_arbitraryGenerateContentResponse), 200,
-            headers: {'content-type': 'application/json'});
-      });
 
-      final model = createModel(mockHttp);
-      final response = await model.generateContent(
-        templateId,
-        inputs: {'prompt': 'Some prompt'},
-        toolConfig: TemplateToolConfig(
-          retrievalConfig: RetrievalConfig(
-            latLng: LatLng(latitude: 1, longitude: 2),
-            languageCode: 'en',
+        final model = createModel(mockHttp);
+        final response = await model.generateContent(
+          templateId,
+          inputs: {'prompt': 'Some prompt'},
+          toolConfig: TemplateToolConfig(
+            retrievalConfig: RetrievalConfig(
+              latLng: LatLng(latitude: 1, longitude: 2),
+              languageCode: 'en',
+            ),
           ),
-        ),
-      );
-      expect(response.text, 'Some response');
-    });
+        );
+        expect(response.text, 'Some response');
+      },
+    );
 
     test('generateContentStream can make successful request', () async {
       final mockHttp = MockClient((request) async {
         final body = jsonDecode(request.body) as Map<String, Object?>;
-        expect(request.url.path,
-            endsWith('/templates/$templateId:templateStreamGenerateContent'));
+        expect(
+          request.url.path,
+          endsWith('/templates/$templateId:templateStreamGenerateContent'),
+        );
         expect(body['inputs'], {'prompt': 'Some prompt'});
         final responsePayload = jsonEncode(_arbitraryGenerateContentResponse);
         final stream = Stream.value(utf8.encode('data: $responsePayload'));
-        final streamedResponse = http.StreamedResponse(stream, 200,
-            headers: {'content-type': 'application/json'});
-        return http.Response.fromStream(streamedResponse);
-      });
-
-      final model = createModel(mockHttp);
-      final responseStream = model
-          .generateContentStream(templateId, inputs: {'prompt': 'Some prompt'});
-      final response = await responseStream.first;
-      expect(response.text, 'Some response');
-    });
-
-    test('generateContentStream with TemplateToolConfig passes retrievalConfig',
-        () async {
-      final mockHttp = MockClient((request) async {
-        final body = jsonDecode(request.body) as Map<String, Object?>;
-        expect(request.url.path,
-            endsWith('/templates/$templateId:templateStreamGenerateContent'));
-        expect(body['inputs'], {'prompt': 'Some prompt'});
-        expect(body['toolConfig'], {
-          'retrievalConfig': {
-            'latLng': {'latitude': 1.0, 'longitude': 2.0},
-            'languageCode': 'en'
-          }
-        });
-        final responsePayload = jsonEncode(_arbitraryGenerateContentResponse);
-        final stream = Stream.value(utf8.encode('data: $responsePayload'));
-        final streamedResponse = http.StreamedResponse(stream, 200,
-            headers: {'content-type': 'application/json'});
+        final streamedResponse = http.StreamedResponse(
+          stream,
+          200,
+          headers: {'content-type': 'application/json'},
+        );
         return http.Response.fromStream(streamedResponse);
       });
 
@@ -189,46 +175,117 @@ void main() {
       final responseStream = model.generateContentStream(
         templateId,
         inputs: {'prompt': 'Some prompt'},
-        toolConfig: TemplateToolConfig(
-          retrievalConfig: RetrievalConfig(
-            latLng: LatLng(latitude: 1, longitude: 2),
-            languageCode: 'en',
-          ),
-        ),
       );
       final response = await responseStream.first;
       expect(response.text, 'Some response');
     });
-  });
 
-  group('TemplateImagenModel', () {
-    const templateId = 'my-imagen-template';
-    const location = 'us-central1';
+    test(
+      'generateContentStream with TemplateToolConfig passes retrievalConfig',
+      () async {
+        final mockHttp = MockClient((request) async {
+          final body = jsonDecode(request.body) as Map<String, Object?>;
+          expect(
+            request.url.path,
+            endsWith('/templates/$templateId:templateStreamGenerateContent'),
+          );
+          expect(body['inputs'], {'prompt': 'Some prompt'});
+          expect(body['toolConfig'], {
+            'retrievalConfig': {
+              'latLng': {'latitude': 1.0, 'longitude': 2.0},
+              'languageCode': 'en',
+            },
+          });
+          final responsePayload = jsonEncode(_arbitraryGenerateContentResponse);
+          final stream = Stream.value(utf8.encode('data: $responsePayload'));
+          final streamedResponse = http.StreamedResponse(
+            stream,
+            200,
+            headers: {'content-type': 'application/json'},
+          );
+          return http.Response.fromStream(streamedResponse);
+        });
 
-    TemplateImagenModel createModel(http.Client client,
-        {bool useVertexBackend = true}) {
-      // ignore: invalid_use_of_internal_member
-      return createTestTemplateImagenModel(
-          app: app,
-          location: location,
-          useVertexBackend: useVertexBackend,
-          client: client);
-    }
+        final model = createModel(mockHttp);
+        final responseStream = model.generateContentStream(
+          templateId,
+          inputs: {'prompt': 'Some prompt'},
+          toolConfig: TemplateToolConfig(
+            retrievalConfig: RetrievalConfig(
+              latLng: LatLng(latitude: 1, longitude: 2),
+              languageCode: 'en',
+            ),
+          ),
+        );
+        final response = await responseStream.first;
+        expect(response.text, 'Some response');
+      },
+    );
 
-    test('generateImages can make successful request', () async {
-      final mockHttp = MockClient((request) async {
-        final body = jsonDecode(request.body) as Map<String, Object?>;
-        expect(request.url.path,
-            endsWith('/templates/$templateId:templatePredict'));
-        expect(body['inputs'], {'prompt': 'A cat'});
-        return http.Response(jsonEncode(_arbitraryImagenResponse), 200,
-            headers: {'content-type': 'application/json'});
-      });
-      final model = createModel(mockHttp);
-      final response =
-          await model.generateImages(templateId, inputs: {'prompt': 'A cat'});
-      expect(response.images, hasLength(1));
-      expect(response.images.first, isA<ImagenInlineImage>());
-    });
+    test(
+      'sendMessage retains auto-executed function turns in history',
+      () async {
+        var requestCount = 0;
+        final mockHttp = MockClient((request) async {
+          requestCount++;
+          final body = requestCount == 1
+              ? {
+                  'candidates': [
+                    {
+                      'content': {
+                        'role': 'model',
+                        'parts': [
+                          {
+                            'functionCall': {'name': 'getValue', 'args': {}},
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                }
+              : _arbitraryGenerateContentResponse;
+          return http.Response(
+            jsonEncode(body),
+            200,
+            headers: {'content-type': 'application/json'},
+          );
+        });
+
+        final model = createModel(mockHttp);
+        final chat = model.startChat(
+          templateId,
+          inputs: {'prompt': 'Some prompt'},
+          tools: [
+            TemplateTool.functionDeclarations([
+              TemplateAutoFunctionDeclaration(
+                name: 'getValue',
+                callable: (args) async => {'value': 42},
+              ),
+            ]),
+          ],
+        );
+
+        await chat.sendMessage(Content.text('Call getValue.'));
+
+        final history = chat.history.toList();
+        expect(history, hasLength(4));
+        expect(
+          history[0].parts.whereType<TextPart>().single.text,
+          'Call getValue.',
+        );
+        expect(
+          history[1].parts.whereType<FunctionCall>().single.name,
+          'getValue',
+        );
+        expect(
+          history[2].parts.whereType<FunctionResponse>().single.name,
+          'getValue',
+        );
+        expect(
+          history[3].parts.whereType<TextPart>().single.text,
+          'Some response',
+        );
+      },
+    );
   });
 }

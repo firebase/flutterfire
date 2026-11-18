@@ -8,14 +8,14 @@ import 'package:pigeon/pigeon.dart';
   PigeonOptions(
     dartOut: 'lib/src/pigeon/messages.pigeon.dart',
     // We export in the lib folder to expose the class to other packages.
+    // `melos run generate:pigeon` rewrites the generated `flutter_test` import
+    // to `package:firebase_core_platform_interface/test_binding.dart`, because
+    // `flutter_test` cannot be a dependency of a published package.
     dartTestOut: 'lib/src/pigeon/test_api.dart',
     dartPackageName: 'firebase_core_platform_interface',
-    javaOut:
-        '../firebase_core/android/src/main/java/io/flutter/plugins/firebase/core/GeneratedAndroidFirebaseCore.java',
-    javaOptions: JavaOptions(
-      package: 'io.flutter.plugins.firebase.core',
-      className: 'GeneratedAndroidFirebaseCore',
-    ),
+    kotlinOut:
+        '../firebase_core/android/src/main/kotlin/io/flutter/plugins/firebase/core/GeneratedAndroidFirebaseCore.g.kt',
+    kotlinOptions: KotlinOptions(package: 'io.flutter.plugins.firebase.core'),
     swiftOut:
         '../firebase_core/ios/firebase_core/Sources/firebase_core/FirebaseCoreMessages.g.swift',
     cppHeaderOut: '../firebase_core/windows/messages.g.h',
@@ -103,19 +103,11 @@ abstract class FirebaseCoreHostApi {
 @HostApi(dartHostTestHandler: 'TestFirebaseAppHostApi')
 abstract class FirebaseAppHostApi {
   @async
-  void setAutomaticDataCollectionEnabled(
-    String appName,
-    bool enabled,
-  );
+  void setAutomaticDataCollectionEnabled(String appName, bool enabled);
 
   @async
-  void setAutomaticResourceManagementEnabled(
-    String appName,
-    bool enabled,
-  );
+  void setAutomaticResourceManagementEnabled(String appName, bool enabled);
 
   @async
-  void delete(
-    String appName,
-  );
+  void delete(String appName);
 }

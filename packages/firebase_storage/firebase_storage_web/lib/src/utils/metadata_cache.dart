@@ -5,7 +5,8 @@
 
 import 'package:firebase_storage_platform_interface/firebase_storage_platform_interface.dart';
 
-/// This class remembers what SettableMetadata has already been set, so it can't be overwritten.
+/// This class remembers what SettableMetadata has already been set, so values
+/// left out of a later call are not lost.
 class SettableMetadataCache {
   SettableMetadata _cache = SettableMetadata();
 
@@ -13,10 +14,11 @@ class SettableMetadataCache {
   ///
   /// If `overwrite` is set to true, it'll replace the whole contents of the
   /// cache with the `incoming` object (this can delete data).
-  /// If `overwrite` is set to false (default), it'll only write values that
-  /// are not already present in the cache.
+  /// If `overwrite` is set to false (default), non-null values of `incoming`
+  /// replace the cached ones, and cached values are kept for the rest.
   ///
-  /// The `customMetadata` property is also merged. Older values are preserved.
+  /// The `customMetadata` property is also merged. New values win over older
+  /// ones.
   ///
   /// Returns an updated SettableMetadata object, after merging the current cache
   /// with `incoming`.
@@ -32,17 +34,17 @@ class SettableMetadataCache {
     }
 
     final newMetadata = <String, String>{
-      ...?incoming.customMetadata,
       ...?_cache.customMetadata,
+      ...?incoming.customMetadata,
     };
 
     return _cache = SettableMetadata(
-      cacheControl: _cache.cacheControl ?? incoming.cacheControl,
+      cacheControl: incoming.cacheControl ?? _cache.cacheControl,
       contentDisposition:
-          _cache.contentDisposition ?? incoming.contentDisposition,
-      contentEncoding: _cache.contentEncoding ?? incoming.contentEncoding,
-      contentLanguage: _cache.contentLanguage ?? incoming.contentLanguage,
-      contentType: _cache.contentType ?? incoming.contentType,
+          incoming.contentDisposition ?? _cache.contentDisposition,
+      contentEncoding: incoming.contentEncoding ?? _cache.contentEncoding,
+      contentLanguage: incoming.contentLanguage ?? _cache.contentLanguage,
+      contentType: incoming.contentType ?? _cache.contentType,
       customMetadata: newMetadata.isEmpty ? null : newMetadata,
     );
   }

@@ -3,7 +3,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:flutter/material.dart';
+import 'package:meta/meta.dart';
 
 /// A helper class to handle Firestore paths.
 ///
@@ -14,8 +14,10 @@ import 'package:flutter/material.dart';
 class Pointer {
   /// Create instance of [Pointer]
   Pointer(String path)
-      : components =
-            path.split('/').where((element) => element.isNotEmpty).toList();
+    : components = path
+          .split('/')
+          .where((element) => element.isNotEmpty)
+          .toList();
 
   /// The Firestore normalized path of the [Pointer].
   String get path {

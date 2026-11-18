@@ -15,7 +15,8 @@
 // ignore_for_file: avoid_print
 
 /// Validates that all packages in the repository are listed in the root
-/// pubspec.yaml workspace.
+/// pubspec.yaml workspace, and that no package declares `flutter_test` as a
+/// regular dependency.
 library;
 
 import 'dart:io';
@@ -94,6 +95,26 @@ void main() {
     hasError = true;
   }
 
+  final flutterTestDependents = foundPackages
+      .where((path) => _dependsOnFlutterTest(p.join(rootDir, path)))
+      .toList();
+
+  if (flutterTestDependents.isNotEmpty) {
+    print(
+      '\nDeclaring `flutter_test` in `dependencies` pins `test_api` for every '
+      'consumer of the package, which breaks version solving for apps that use '
+      '`package:test` (https://github.com/firebase/flutterfire/issues/17001).\n'
+      'Move it to `dev_dependencies`. If a generated Pigeon test API in `lib/` '
+      'needs it, import '
+      '`package:firebase_core_platform_interface/test_binding.dart` instead.\n'
+      '\n`flutter_test` declared as a regular dependency:',
+    );
+    for (final path in flutterTestDependents) {
+      print(' - $path');
+    }
+    hasError = true;
+  }
+
   if (hasError) {
     exitCode = 1;
   } else {
@@ -101,15 +122,36 @@ void main() {
   }
 }
 
+/// Whether the published package at [packageDir] lists `flutter_test` in
+/// `dependencies`.
+///
+/// Unpublished packages (example apps, test fixtures) are skipped: their
+/// dependencies never reach a consumer's version solving.
+bool _dependsOnFlutterTest(String packageDir) {
+  final yaml =
+      loadYaml(File(p.join(packageDir, 'pubspec.yaml')).readAsStringSync());
+  if (yaml is! YamlMap) return false;
+  if (yaml['publish_to'] == 'none') return false;
+  final dependencies = yaml['dependencies'];
+  return dependencies is YamlMap && dependencies.containsKey('flutter_test');
+}
+
+/// Walks [dir] for package pubspecs, pruning [_ignoredDirectories] as it
+/// descends rather than filtering them out afterwards, so generated build
+/// output is never entered.
+///
+/// Symlinks are not followed: the `.symlinks` directories that CocoaPods
+/// creates in example apps point back into `packages`, so following them turns
+/// the walk into a cycle.
 Iterable<String> _findPackages(Directory dir, String rootDir) sync* {
-  for (final entity in dir.listSync(recursive: true)) {
-    if (entity is File && p.basename(entity.path) == 'pubspec.yaml') {
-      final path = entity.path;
-      final components = p.split(path);
-      if (components.any(_ignoredDirectories.contains)) {
+  for (final entity in dir.listSync(followLinks: false)) {
+    if (entity is Directory) {
+      if (_ignoredDirectories.contains(p.basename(entity.path))) {
         continue;
       }
-      final relPath = p.relative(p.dirname(path), from: rootDir);
+      yield* _findPackages(entity, rootDir);
+    } else if (entity is File && p.basename(entity.path) == 'pubspec.yaml') {
+      final relPath = p.relative(p.dirname(entity.path), from: rootDir);
       if (relPath != '.') {
         yield relPath;
       }

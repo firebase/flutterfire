@@ -7,13 +7,13 @@
 
 import PackageDescription
 
-let libraryVersion = "13.4.6"
-let firebaseSdkVersion: Version = "12.17.0"
+let libraryVersion = "14.1.0"
+let firebaseSdkVersion: Version = "13.2.0"
 
 let package = Package(
   name: "firebase_storage",
   platforms: [
-    .macOS("10.15")
+    .macOS("11.0")
   ],
   products: [
     .library(name: "firebase-storage", targets: ["firebase_storage"])

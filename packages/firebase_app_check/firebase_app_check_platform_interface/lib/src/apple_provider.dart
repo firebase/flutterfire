@@ -16,5 +16,5 @@ enum AppleProvider {
 
   /// appAttest provider is only available on iOS 14.0+, macOS 14.0+ so this will fall back to deviceCheck provider if appAtest provider
   /// is not available
-  appAttestWithDeviceCheckFallback
+  appAttestWithDeviceCheckFallback,
 }

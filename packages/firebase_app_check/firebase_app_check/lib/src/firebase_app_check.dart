@@ -9,7 +9,7 @@ class FirebaseAppCheck extends FirebasePlugin implements FirebaseService {
   static Map<String, FirebaseAppCheck> _firebaseAppCheckInstances = {};
 
   FirebaseAppCheck._({required this.app})
-      : super(app.name, 'plugins.flutter.io/firebase_app_check');
+    : super(app.name, 'plugins.flutter.io/firebase_app_check');
 
   /// The [FirebaseApp] for this current [FirebaseAppCheck] instance.
   FirebaseApp app;
@@ -24,9 +24,7 @@ class FirebaseAppCheck extends FirebasePlugin implements FirebaseService {
   /// If called and no [_delegatePackingProperty] exists, it will first be
   /// created and assigned before returning the delegate.
   FirebaseAppCheckPlatform get _delegate {
-    _delegatePackingProperty ??= FirebaseAppCheckPlatform.instanceFor(
-      app: app,
-    );
+    _delegatePackingProperty ??= FirebaseAppCheckPlatform.instanceFor(app: app);
 
     return _delegatePackingProperty!;
   }
@@ -61,7 +59,7 @@ class FirebaseAppCheck extends FirebasePlugin implements FirebaseService {
   ///
   /// ## Platform Configuration
   ///
-  /// **Web**: Provide the reCAPTCHA v3 Site Key using `webProvider`, which can be
+  /// **Web**: Provide the reCAPTCHA v3 Site Key using `providerWeb`, which can be
   /// found in the Firebase Console.
   ///
   /// **Android**: The default provider is "play integrity". Use `providerAndroid`
@@ -73,49 +71,31 @@ class FirebaseAppCheck extends FirebasePlugin implements FirebaseService {
   /// "app attest with fallback to device check" via `AppleAppCheckProvider`.
   /// Note: App Attest is only available on iOS 14.0+ and macOS 14.0+.
   ///
+  /// Do not call `FirebaseApp.configure()` in `AppDelegate` unless you also
+  /// call `AppCheck.setAppCheckProviderFactory` first; otherwise
+  /// `providerApple` is ignored on physical Apple devices. Prefer
+  /// `Firebase.initializeApp()` only.
+  /// See https://github.com/firebase/flutterfire/issues/18613.
+  ///
   /// **Windows**: Use `providerWindows` to configure either
   /// [WindowsCustomProvider] for production token minting or
   /// [WindowsDebugProvider] for development. The desktop C++ SDK does not
   /// auto-generate debug tokens. Either pass a registered token via
   /// `providerWindows: WindowsDebugProvider(debugToken: 'your-token')` or set
-  /// the `APP_CHECK_DEBUG_TOKEN` environment variable.
-  ///
-  /// ## Migration Notice
-  ///
-  /// The `androidProvider` and `appleProvider` parameters will be deprecated
-  /// in a future release. Use `providerAndroid` and `providerApple` instead,
-  /// which support the new provider classes including `AndroidDebugProvider`
-  /// and `AppleDebugProvider` for passing debug tokens directly.
+  /// the `APP_CHECK_DEBUG_TOKEN` environment variable. The token must
+  /// first be registered in the Firebase Console under
+  /// *App Check → Apps → Manage debug tokens*.
   ///
   /// For more information, see [the Firebase Documentation](https://firebase.google.com/docs/app-check)
   Future<void> activate({
-    @Deprecated(
-      'Use providerWeb instead. '
-      'This parameter will be removed in a future major release.',
-    )
-    WebProvider? webProvider,
     WebProvider? providerWeb,
-    @Deprecated(
-      'Use providerAndroid instead. '
-      'This parameter will be removed in a future major release.',
-    )
-    AndroidProvider androidProvider = AndroidProvider.playIntegrity,
-    @Deprecated(
-      'Use providerApple instead. '
-      'This parameter will be removed in a future major release.',
-    )
-    AppleProvider appleProvider = AppleProvider.deviceCheck,
     AndroidAppCheckProvider providerAndroid =
         const AndroidPlayIntegrityProvider(),
     AppleAppCheckProvider providerApple = const AppleDeviceCheckProvider(),
     WindowsAppCheckProvider providerWindows = const WindowsDebugProvider(),
   }) {
     return _delegate.activate(
-      webProvider: providerWeb ?? webProvider,
-      // ignore: deprecated_member_use
-      androidProvider: androidProvider,
-      // ignore: deprecated_member_use
-      appleProvider: appleProvider,
+      providerWeb: providerWeb,
       providerAndroid: providerAndroid,
       providerApple: providerApple,
       providerWindows: providerWindows,

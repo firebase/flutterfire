@@ -7,10 +7,7 @@
 import 'package:pigeon/pigeon.dart';
 
 class InternalAppCheckTokenResult {
-  InternalAppCheckTokenResult({
-    required this.token,
-    this.expirationTimestamp,
-  });
+  InternalAppCheckTokenResult({required this.token, this.expirationTimestamp});
 
   String token;
 
@@ -74,10 +71,7 @@ abstract class FirebaseAppCheckHostApi {
 /// security posture, longer TTLs for fewer round-trips) without the plugin
 /// hardcoding a refresh window.
 class CustomAppCheckToken {
-  CustomAppCheckToken({
-    required this.token,
-    required this.expireTimeMillis,
-  });
+  CustomAppCheckToken({required this.token, required this.expireTimeMillis});
 
   /// The App Check token string to send with Firebase requests.
   final String token;

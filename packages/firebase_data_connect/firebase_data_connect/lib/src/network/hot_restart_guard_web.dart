@@ -48,3 +48,26 @@ void releaseDataConnectWebSocketTransport(String key, String? token) {
     globalContext.delete(key.toJS);
   }
 }
+
+bool _registered = false;
+
+void registerWebLibraryVersion(String libraryName, String version) {
+  if (_registered) return;
+  try {
+    final core = globalContext.getProperty('firebase_core'.toJS) as JSObject?;
+    if (core != null && core.hasProperty('registerVersion'.toJS).toDart) {
+      final storage =
+          globalContext.getProperty('sessionStorage'.toJS) as JSObject?;
+      final key = 'flutterfire-$libraryName-$version'.toJS;
+      if (storage?.callMethod<JSAny?>('getItem'.toJS, key) == null) {
+        storage?.callMethod<JSAny?>('setItem'.toJS, key, version.toJS);
+        core.callMethod<JSAny?>(
+          'registerVersion'.toJS,
+          libraryName.toJS,
+          version.toJS,
+        );
+      }
+      _registered = true;
+    }
+  } catch (_) {}
+}

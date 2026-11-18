@@ -40,10 +40,7 @@ void main() {
       });
 
       test('throws on empty path', () {
-        expect(
-          () => firestore.pipeline().collection(''),
-          throwsArgumentError,
-        );
+        expect(() => firestore.pipeline().collection(''), throwsArgumentError);
       });
 
       test('throws on path containing double slash', () {
@@ -66,12 +63,12 @@ void main() {
       });
 
       test('uses path from nested collection reference', () {
-        final colRef =
-            firestore.collection('users').doc('u1').collection('posts');
+        final colRef = firestore
+            .collection('users')
+            .doc('u1')
+            .collection('posts');
         final pipeline = firestore.pipeline().collectionReference(colRef);
-        expect(pipeline.stages.first['args'], {
-          'path': 'users/u1/posts',
-        });
+        expect(pipeline.stages.first['args'], {'path': 'users/u1/posts'});
       });
     });
 
@@ -106,10 +103,9 @@ void main() {
         final pipeline = firestore.pipeline().documents([docRef]);
         expect(pipeline.stages, hasLength(1));
         expect(pipeline.stages.first['stage'], 'documents');
-        expect(
-          (pipeline.stages.first['args'] as List).first,
-          {'path': 'users/123'},
-        );
+        expect((pipeline.stages.first['args'] as List).first, {
+          'path': 'users/123',
+        });
       });
 
       test('supports multiple document references', () {
@@ -123,10 +119,7 @@ void main() {
       });
 
       test('throws on empty list', () {
-        expect(
-          () => firestore.pipeline().documents([]),
-          throwsArgumentError,
-        );
+        expect(() => firestore.pipeline().documents([]), throwsArgumentError);
       });
     });
 

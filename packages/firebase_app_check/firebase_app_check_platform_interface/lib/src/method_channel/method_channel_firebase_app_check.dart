@@ -41,7 +41,7 @@ class _WindowsCustomProviderFlutterApi
 class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
   /// Create an instance of [MethodChannelFirebaseAppCheck].
   MethodChannelFirebaseAppCheck({required FirebaseApp app})
-      : super(appInstance: app) {
+    : super(appInstance: app) {
     final flutterApi = _windowsCustomProviderFlutterApis.putIfAbsent(
       app.name,
       () => _WindowsCustomProviderFlutterApi(app.name),
@@ -65,13 +65,13 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
       _subscription = events
           .receiveGuardedBroadcastStream(onError: convertPlatformException)
           .listen((arguments) {
-        // ignore: close_sinks
-        final controller = _tokenChangesListeners[app.name];
-        if (!_isDisposed && controller != null) {
-          Map<dynamic, dynamic> result = arguments;
-          controller.add(result['token'] as String?);
-        }
-      });
+            // ignore: close_sinks
+            final controller = _tokenChangesListeners[app.name];
+            if (!_isDisposed && controller != null) {
+              Map<dynamic, dynamic> result = arguments;
+              controller.add(result['token'] as String?);
+            }
+          });
       // ignore: avoid_catches_without_on_clauses
     } catch (_) {
       // Silently ignore errors during token listener registration.
@@ -83,14 +83,14 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
       {};
 
   static Map<String, MethodChannelFirebaseAppCheck>
-      _methodChannelFirebaseAppCheckInstances =
+  _methodChannelFirebaseAppCheckInstances =
       <String, MethodChannelFirebaseAppCheck>{};
 
   /// The Pigeon API used for platform communication.
   final pigeon.FirebaseAppCheckHostApi _pigeonApi =
       pigeon.FirebaseAppCheckHostApi();
   static final Map<String, _WindowsCustomProviderFlutterApi>
-      _windowsCustomProviderFlutterApis = {};
+  _windowsCustomProviderFlutterApis = {};
   static final Map<String, WindowsCustomProvider> _windowsCustomProviders = {};
   late final Future<void> _listenerRegistration;
   StreamSubscription<dynamic>? _subscription;
@@ -139,17 +139,7 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
 
   @override
   Future<void> activate({
-    WebProvider? webProvider,
-    @Deprecated(
-      'Use providerAndroid instead. '
-      'This parameter will be removed in a future major release.',
-    )
-    AndroidProvider? androidProvider,
-    @Deprecated(
-      'Use providerApple instead. '
-      'This parameter will be removed in a future major release.',
-    )
-    AppleProvider? appleProvider,
+    WebProvider? providerWeb,
     AndroidAppCheckProvider? providerAndroid,
     AppleAppCheckProvider? providerApple,
     WindowsAppCheckProvider? providerWindows,
@@ -159,18 +149,12 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
       await _pigeonApi.activate(
         app.name,
         defaultTargetPlatform == TargetPlatform.android || kDebugMode
-            ? getAndroidProviderString(
-                legacyProvider: androidProvider,
-                newProvider: providerAndroid,
-              )
+            ? getAndroidProviderString(providerAndroid)
             : null,
         defaultTargetPlatform == TargetPlatform.iOS ||
                 defaultTargetPlatform == TargetPlatform.macOS ||
                 kDebugMode
-            ? getAppleProviderString(
-                legacyProvider: appleProvider,
-                newProvider: providerApple,
-              )
+            ? getAppleProviderString(providerApple)
             : null,
         _getDebugToken(
           providerAndroid: providerAndroid,
@@ -188,9 +172,7 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
     }
   }
 
-  void _setWindowsCustomProvider(
-    WindowsAppCheckProvider? providerWindows,
-  ) {
+  void _setWindowsCustomProvider(WindowsAppCheckProvider? providerWindows) {
     if (providerWindows is WindowsCustomProvider) {
       _windowsCustomProviders[app.name] = providerWindows;
     } else {

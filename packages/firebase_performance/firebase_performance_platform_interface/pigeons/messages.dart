@@ -22,23 +22,10 @@ import 'package:pigeon/pigeon.dart';
     copyrightHeader: 'pigeons/copyright.txt',
   ),
 )
-enum HttpMethod {
-  connect,
-  delete,
-  get,
-  head,
-  options,
-  patch,
-  post,
-  put,
-  trace,
-}
+enum HttpMethod { connect, delete, get, head, options, patch, post, put, trace }
 
 class HttpMetricOptions {
-  const HttpMetricOptions({
-    required this.url,
-    required this.httpMethod,
-  });
+  const HttpMetricOptions({required this.url, required this.httpMethod});
 
   final String url;
   final HttpMethod httpMethod;
@@ -61,10 +48,7 @@ class HttpMetricAttributes {
 }
 
 class TraceAttributes {
-  const TraceAttributes({
-    this.metrics,
-    this.attributes,
-  });
+  const TraceAttributes({this.metrics, this.attributes});
 
   final Map<String, int>? metrics;
   final Map<String, String>? attributes;

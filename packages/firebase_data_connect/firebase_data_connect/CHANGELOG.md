@@ -1,3 +1,37 @@
+## 0.4.2
+
+ - **FIX**: pass analyze and format on Flutter 3.50 ([#18950](https://github.com/firebase/flutterfire/issues/18950)). ([e5339880](https://github.com/firebase/flutterfire/commit/e53398808f6d78b293d4ac1455f296b9257a096d))
+ - **FIX**: make firebase_ai and firebase_data_connect Wasm-ready, and check is:wasm-ready in CI ([#18853](https://github.com/firebase/flutterfire/issues/18853)). ([b41a8b08](https://github.com/firebase/flutterfire/commit/b41a8b087292a6b236e8bd74e923f6a0f45119b7))
+ - **FEAT**(android): migrate plugins to built-in Kotlin on Flutter 3.44 ([#18922](https://github.com/firebase/flutterfire/issues/18922)). ([1abe0561](https://github.com/firebase/flutterfire/commit/1abe05614d03f22782f597f847c1fc9c8c57f016))
+ - **DOCS**(data_connect): declare supported platforms ([#18927](https://github.com/firebase/flutterfire/issues/18927)). ([13420bec](https://github.com/firebase/flutterfire/commit/13420beccd0f11aa120343a22420ef7bb27f06c2))
+
+## 0.4.1
+
+ - **FIX**(data_connect): send the current result to a new subscriber of a live query ([#18833](https://github.com/firebase/flutterfire/issues/18833)). ([094c3b80](https://github.com/firebase/flutterfire/commit/094c3b80ddfdd97ed8888548c21a335def53e9dd))
+ - **FEAT**: register flutter-fire-ai and flutter-fire-dc platform versions and fix web late registration ([#18707](https://github.com/firebase/flutterfire/issues/18707)). ([569c39e7](https://github.com/firebase/flutterfire/commit/569c39e71d32f1bef77b1cea4c0d1389374be2b5))
+
+## 0.4.0
+
+> Note: This release has breaking changes.
+
+Migration: `FirebaseDataConnect` / `FirebaseDataConnect.instanceFor` no longer take `auth` or `appCheck` arguments. Those instances are obtained from the associated `FirebaseApp` internally.
+
+ - **FIX**(android): build on Firebase BoM 35 and require minSdk 24 ([#18782](https://github.com/firebase/flutterfire/issues/18782)). ([7555707d](https://github.com/firebase/flutterfire/commit/7555707dec23382dfce1e7841c00446a21c9a406))
+ - **BREAKING** **REFACTOR**(data_connect): remove deprecated auth and appCheck arguments ([#18778](https://github.com/firebase/flutterfire/issues/18778)). ([d14c4dc6](https://github.com/firebase/flutterfire/commit/d14c4dc67b1edec7617f29bf776b933e896a8853))
+ - **BREAKING** **REFACTOR**(app_check): remove deprecated activate provider parameters ([#18779](https://github.com/firebase/flutterfire/issues/18779)). ([90bea4ed](https://github.com/firebase/flutterfire/commit/90bea4edd78eea274fe5b43778c5e036bf51be31))
+
+## 0.3.3
+
+ - **FIX**(data_connect): exclude generated protobuf sources from analysis ([#18687](https://github.com/firebase/flutterfire/issues/18687)). ([82ac5ff8](https://github.com/firebase/flutterfire/commit/82ac5ff83a186a9f9805ec45f196ded045ca20cf))
+ - **FEAT**(auth,ios): add support for `migrateCurrentUser` ([#18460](https://github.com/firebase/flutterfire/issues/18460)). ([b4eeafba](https://github.com/firebase/flutterfire/commit/b4eeafba347abed13e5410263556e9a4bff1b96e))
+
+## 0.3.2
+
+ - **REFACTOR**(tests): update listener completion logic and improve WebSocket channel handling ([#18524](https://github.com/firebase/flutterfire/issues/18524)). ([6b1fbc93](https://github.com/firebase/flutterfire/commit/6b1fbc93793db381a7d6d8cfb1a6cb4c8f078d9a))
+ - **FIX**(ci): bump Kotlin Gradle plugin to 2.3.0 ([#18600](https://github.com/firebase/flutterfire/issues/18600)). ([4c3865e2](https://github.com/firebase/flutterfire/commit/4c3865e2e56bf59904a9f48a6e70f0f963df2cda))
+ - **FIX**(ci): align Android toolchain and analyzer with Flutter 3.47 ([#18566](https://github.com/firebase/flutterfire/issues/18566)). ([87ace849](https://github.com/firebase/flutterfire/commit/87ace8496fec75c461f3b29a9b8a85d46e286957))
+ - **FEAT**(sql_connect): update websocket URL for GSLB soft stickiness ([#18531](https://github.com/firebase/flutterfire/issues/18531)). ([5283f143](https://github.com/firebase/flutterfire/commit/5283f1431f9e48e4062c0bbf972c1b558e505014))
+
 ## 0.3.1
 
  - **FIX**(sql_connect): e2e listen test ([#18496](https://github.com/firebase/flutterfire/issues/18496)). ([e512d39a](https://github.com/firebase/flutterfire/commit/e512d39a88f3d8df0eaeb2b7d7a439460b00b8e7))

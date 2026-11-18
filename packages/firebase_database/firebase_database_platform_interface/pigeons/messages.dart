@@ -51,9 +51,7 @@ class DatabasePigeonFirebaseApp {
 }
 
 class DatabaseReferencePlatform {
-  const DatabaseReferencePlatform({
-    required this.path,
-  });
+  const DatabaseReferencePlatform({required this.path});
 
   final String path;
 }
@@ -71,10 +69,7 @@ class DatabaseReferenceRequest {
 }
 
 class UpdateRequest {
-  const UpdateRequest({
-    required this.path,
-    required this.value,
-  });
+  const UpdateRequest({required this.path, required this.value});
 
   final String path;
   final Map<String, Object?> value;
@@ -93,11 +88,7 @@ class TransactionRequest {
 }
 
 class QueryRequest {
-  const QueryRequest({
-    required this.path,
-    required this.modifiers,
-    this.value,
-  });
+  const QueryRequest({required this.path, required this.modifiers, this.value});
 
   final String path;
   final List<Map<String, Object?>> modifiers;
@@ -117,21 +108,28 @@ abstract class FirebaseDatabaseHostApi {
 
   @async
   void setPersistenceCacheSizeBytes(
-      DatabasePigeonFirebaseApp app, int cacheSize);
+    DatabasePigeonFirebaseApp app,
+    int cacheSize,
+  );
 
   @async
   void setLoggingEnabled(DatabasePigeonFirebaseApp app, bool enabled);
 
   @async
   void useDatabaseEmulator(
-      DatabasePigeonFirebaseApp app, String host, int port);
+    DatabasePigeonFirebaseApp app,
+    String host,
+    int port,
+  );
 
   @async
   DatabaseReferencePlatform ref(DatabasePigeonFirebaseApp app, [String? path]);
 
   @async
   DatabaseReferencePlatform refFromURL(
-      DatabasePigeonFirebaseApp app, String url);
+    DatabasePigeonFirebaseApp app,
+    String url,
+  );
 
   @async
   void purgeOutstandingWrites(DatabasePigeonFirebaseApp app);
@@ -139,36 +137,52 @@ abstract class FirebaseDatabaseHostApi {
   // DatabaseReference methods
   @async
   void databaseReferenceSet(
-      DatabasePigeonFirebaseApp app, DatabaseReferenceRequest request);
+    DatabasePigeonFirebaseApp app,
+    DatabaseReferenceRequest request,
+  );
 
   @async
   void databaseReferenceSetWithPriority(
-      DatabasePigeonFirebaseApp app, DatabaseReferenceRequest request);
+    DatabasePigeonFirebaseApp app,
+    DatabaseReferenceRequest request,
+  );
 
   @async
   void databaseReferenceUpdate(
-      DatabasePigeonFirebaseApp app, UpdateRequest request);
+    DatabasePigeonFirebaseApp app,
+    UpdateRequest request,
+  );
 
   @async
   void databaseReferenceSetPriority(
-      DatabasePigeonFirebaseApp app, DatabaseReferenceRequest request);
+    DatabasePigeonFirebaseApp app,
+    DatabaseReferenceRequest request,
+  );
 
   @async
   void databaseReferenceRunTransaction(
-      DatabasePigeonFirebaseApp app, TransactionRequest request);
+    DatabasePigeonFirebaseApp app,
+    TransactionRequest request,
+  );
 
   @async
   Map<String, Object?> databaseReferenceGetTransactionResult(
-      DatabasePigeonFirebaseApp app, int transactionKey);
+    DatabasePigeonFirebaseApp app,
+    int transactionKey,
+  );
 
   // OnDisconnect methods
   @async
   void onDisconnectSet(
-      DatabasePigeonFirebaseApp app, DatabaseReferenceRequest request);
+    DatabasePigeonFirebaseApp app,
+    DatabaseReferenceRequest request,
+  );
 
   @async
   void onDisconnectSetWithPriority(
-      DatabasePigeonFirebaseApp app, DatabaseReferenceRequest request);
+    DatabasePigeonFirebaseApp app,
+    DatabaseReferenceRequest request,
+  );
 
   @async
   void onDisconnectUpdate(DatabasePigeonFirebaseApp app, UpdateRequest request);
@@ -185,7 +199,9 @@ abstract class FirebaseDatabaseHostApi {
 
   @async
   Map<String, Object?> queryGet(
-      DatabasePigeonFirebaseApp app, QueryRequest request);
+    DatabasePigeonFirebaseApp app,
+    QueryRequest request,
+  );
 }
 
 class TransactionHandlerResult {
@@ -205,5 +221,7 @@ class TransactionHandlerResult {
 abstract class FirebaseDatabaseFlutterApi {
   @async
   TransactionHandlerResult callTransactionHandler(
-      int transactionKey, Object? snapshotValue);
+    int transactionKey,
+    Object? snapshotValue,
+  );
 }

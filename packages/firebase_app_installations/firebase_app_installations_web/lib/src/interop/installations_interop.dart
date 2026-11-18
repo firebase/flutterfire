@@ -19,13 +19,16 @@ external JSPromise<JSString> getId(InstallationsJsImpl installations);
 
 @JS()
 @staticInterop
-external JSPromise<JSString> getToken(InstallationsJsImpl installations,
-    [JSBoolean? forceRefresh]);
+external JSPromise<JSString> getToken(
+  InstallationsJsImpl installations, [
+  JSBoolean? forceRefresh,
+]);
 
 @JS()
 @staticInterop
 external JSPromise /* void */ deleteInstallations(
-    InstallationsJsImpl installations);
+  InstallationsJsImpl installations,
+);
 
 @JS()
 @staticInterop

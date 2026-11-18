@@ -37,8 +37,11 @@ Object? _extractReplyValueOrThrow(
   return replyList.firstOrNull;
 }
 
-List<Object?> wrapResponse(
-    {Object? result, PlatformException? error, bool empty = false}) {
+List<Object?> wrapResponse({
+  Object? result,
+  PlatformException? error,
+  bool empty = false,
+}) {
   if (empty) {
     return <Object?>[];
   }
@@ -60,8 +63,9 @@ bool _deepEquals(Object? a, Object? b) {
   }
   if (a is List && b is List) {
     return a.length == b.length &&
-        a.indexed
-            .every(((int, dynamic) item) => _deepEquals(item.$2, b[item.$1]));
+        a.indexed.every(
+          ((int, dynamic) item) => _deepEquals(item.$2, b[item.$1]),
+        );
   }
   if (a is Map && b is Map) {
     if (a.length != b.length) {
@@ -143,11 +147,7 @@ class InternalStorageFirebaseApp {
   String bucket;
 
   List<Object?> _toList() {
-    return <Object?>[
-      appName,
-      tenantId,
-      bucket,
-    ];
+    return <Object?>[appName, tenantId, bucket];
   }
 
   Object encode() {
@@ -197,11 +197,7 @@ class InternalStorageReference {
   String name;
 
   List<Object?> _toList() {
-    return <Object?>[
-      bucket,
-      fullPath,
-      name,
-    ];
+    return <Object?>[bucket, fullPath, name];
   }
 
   Object encode() {
@@ -238,16 +234,12 @@ class InternalStorageReference {
 }
 
 class InternalFullMetaData {
-  InternalFullMetaData({
-    this.metadata,
-  });
+  InternalFullMetaData({this.metadata});
 
   Map<String?, Object?>? metadata;
 
   List<Object?> _toList() {
-    return <Object?>[
-      metadata,
-    ];
+    return <Object?>[metadata];
   }
 
   Object encode() {
@@ -279,10 +271,7 @@ class InternalFullMetaData {
 }
 
 class InternalListOptions {
-  InternalListOptions({
-    required this.maxResults,
-    this.pageToken,
-  });
+  InternalListOptions({required this.maxResults, this.pageToken});
 
   /// If set, limits the total number of `prefixes` and `items` to return.
   ///
@@ -295,10 +284,7 @@ class InternalListOptions {
   String? pageToken;
 
   List<Object?> _toList() {
-    return <Object?>[
-      maxResults,
-      pageToken,
-    ];
+    return <Object?>[maxResults, pageToken];
   }
 
   Object encode() {
@@ -392,8 +378,8 @@ class InternalSettableMetadata {
       contentEncoding: result[2] as String?,
       contentLanguage: result[3] as String?,
       contentType: result[4] as String?,
-      customMetadata:
-          (result[5] as Map<Object?, Object?>?)?.cast<String?, String?>(),
+      customMetadata: (result[5] as Map<Object?, Object?>?)
+          ?.cast<String?, String?>(),
     );
   }
 
@@ -437,12 +423,7 @@ class InternalStorageTaskSnapShot {
   int totalBytes;
 
   List<Object?> _toList() {
-    return <Object?>[
-      bytesTransferred,
-      metadata,
-      state,
-      totalBytes,
-    ];
+    return <Object?>[bytesTransferred, metadata, state, totalBytes];
   }
 
   Object encode() {
@@ -494,11 +475,7 @@ class InternalListResult {
   List<InternalStorageReference?> prefixs;
 
   List<Object?> _toList() {
-    return <Object?>[
-      items,
-      pageToken,
-      prefixs,
-    ];
+    return <Object?>[items, pageToken, prefixs];
   }
 
   Object encode() {
@@ -599,11 +576,13 @@ class FirebaseStorageHostApi {
   /// Constructor for [FirebaseStorageHostApi].  The [binaryMessenger] named argument is
   /// available for dependency injection.  If it is left null, the default
   /// BinaryMessenger will be used which routes to the host platform.
-  FirebaseStorageHostApi(
-      {BinaryMessenger? binaryMessenger, String messageChannelSuffix = ''})
-      : pigeonVar_binaryMessenger = binaryMessenger,
-        pigeonVar_messageChannelSuffix =
-            messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+  FirebaseStorageHostApi({
+    BinaryMessenger? binaryMessenger,
+    String messageChannelSuffix = '',
+  }) : pigeonVar_binaryMessenger = binaryMessenger,
+       pigeonVar_messageChannelSuffix = messageChannelSuffix.isNotEmpty
+           ? '.$messageChannelSuffix'
+           : '';
   final BinaryMessenger? pigeonVar_binaryMessenger;
 
   static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
@@ -611,7 +590,10 @@ class FirebaseStorageHostApi {
   final String pigeonVar_messageChannelSuffix;
 
   Future<InternalStorageReference> getReferencebyPath(
-      InternalStorageFirebaseApp app, String path, String? bucket) async {
+    InternalStorageFirebaseApp app,
+    String path,
+    String? bucket,
+  ) async {
     final pigeonVar_channelName =
         'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.getReferencebyPath$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
@@ -619,8 +601,9 @@ class FirebaseStorageHostApi {
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, path, bucket]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[app, path, bucket],
+    );
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
@@ -632,7 +615,9 @@ class FirebaseStorageHostApi {
   }
 
   Future<void> setMaxOperationRetryTime(
-      InternalStorageFirebaseApp app, int time) async {
+    InternalStorageFirebaseApp app,
+    int time,
+  ) async {
     final pigeonVar_channelName =
         'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.setMaxOperationRetryTime$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
@@ -640,8 +625,9 @@ class FirebaseStorageHostApi {
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, time]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[app, time],
+    );
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     _extractReplyValueOrThrow(
@@ -652,7 +638,9 @@ class FirebaseStorageHostApi {
   }
 
   Future<void> setMaxUploadRetryTime(
-      InternalStorageFirebaseApp app, int time) async {
+    InternalStorageFirebaseApp app,
+    int time,
+  ) async {
     final pigeonVar_channelName =
         'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.setMaxUploadRetryTime$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
@@ -660,8 +648,9 @@ class FirebaseStorageHostApi {
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, time]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[app, time],
+    );
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     _extractReplyValueOrThrow(
@@ -672,7 +661,9 @@ class FirebaseStorageHostApi {
   }
 
   Future<void> setMaxDownloadRetryTime(
-      InternalStorageFirebaseApp app, int time) async {
+    InternalStorageFirebaseApp app,
+    int time,
+  ) async {
     final pigeonVar_channelName =
         'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.setMaxDownloadRetryTime$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
@@ -680,8 +671,9 @@ class FirebaseStorageHostApi {
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, time]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[app, time],
+    );
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     _extractReplyValueOrThrow(
@@ -692,7 +684,10 @@ class FirebaseStorageHostApi {
   }
 
   Future<void> useStorageEmulator(
-      InternalStorageFirebaseApp app, String host, int port) async {
+    InternalStorageFirebaseApp app,
+    String host,
+    int port,
+  ) async {
     final pigeonVar_channelName =
         'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.useStorageEmulator$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
@@ -700,8 +695,9 @@ class FirebaseStorageHostApi {
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, host, port]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[app, host, port],
+    );
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     _extractReplyValueOrThrow(
@@ -711,8 +707,10 @@ class FirebaseStorageHostApi {
     );
   }
 
-  Future<void> referenceDelete(InternalStorageFirebaseApp app,
-      InternalStorageReference reference) async {
+  Future<void> referenceDelete(
+    InternalStorageFirebaseApp app,
+    InternalStorageReference reference,
+  ) async {
     final pigeonVar_channelName =
         'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceDelete$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
@@ -720,8 +718,9 @@ class FirebaseStorageHostApi {
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, reference]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[app, reference],
+    );
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     _extractReplyValueOrThrow(
@@ -731,8 +730,10 @@ class FirebaseStorageHostApi {
     );
   }
 
-  Future<String> referenceGetDownloadURL(InternalStorageFirebaseApp app,
-      InternalStorageReference reference) async {
+  Future<String> referenceGetDownloadURL(
+    InternalStorageFirebaseApp app,
+    InternalStorageReference reference,
+  ) async {
     final pigeonVar_channelName =
         'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceGetDownloadURL$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
@@ -740,8 +741,9 @@ class FirebaseStorageHostApi {
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, reference]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[app, reference],
+    );
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
@@ -753,8 +755,9 @@ class FirebaseStorageHostApi {
   }
 
   Future<InternalFullMetaData> referenceGetMetaData(
-      InternalStorageFirebaseApp app,
-      InternalStorageReference reference) async {
+    InternalStorageFirebaseApp app,
+    InternalStorageReference reference,
+  ) async {
     final pigeonVar_channelName =
         'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceGetMetaData$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
@@ -762,8 +765,9 @@ class FirebaseStorageHostApi {
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, reference]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[app, reference],
+    );
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
@@ -774,8 +778,11 @@ class FirebaseStorageHostApi {
     return pigeonVar_replyValue! as InternalFullMetaData;
   }
 
-  Future<InternalListResult> referenceList(InternalStorageFirebaseApp app,
-      InternalStorageReference reference, InternalListOptions options) async {
+  Future<InternalListResult> referenceList(
+    InternalStorageFirebaseApp app,
+    InternalStorageReference reference,
+    InternalListOptions options,
+  ) async {
     final pigeonVar_channelName =
         'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceList$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
@@ -783,8 +790,9 @@ class FirebaseStorageHostApi {
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, reference, options]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[app, reference, options],
+    );
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
@@ -795,8 +803,10 @@ class FirebaseStorageHostApi {
     return pigeonVar_replyValue! as InternalListResult;
   }
 
-  Future<InternalListResult> referenceListAll(InternalStorageFirebaseApp app,
-      InternalStorageReference reference) async {
+  Future<InternalListResult> referenceListAll(
+    InternalStorageFirebaseApp app,
+    InternalStorageReference reference,
+  ) async {
     final pigeonVar_channelName =
         'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceListAll$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
@@ -804,8 +814,9 @@ class FirebaseStorageHostApi {
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, reference]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[app, reference],
+    );
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
@@ -816,8 +827,11 @@ class FirebaseStorageHostApi {
     return pigeonVar_replyValue! as InternalListResult;
   }
 
-  Future<Uint8List?> referenceGetData(InternalStorageFirebaseApp app,
-      InternalStorageReference reference, int maxSize) async {
+  Future<Uint8List?> referenceGetData(
+    InternalStorageFirebaseApp app,
+    InternalStorageReference reference,
+    int maxSize,
+  ) async {
     final pigeonVar_channelName =
         'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceGetData$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
@@ -825,8 +839,9 @@ class FirebaseStorageHostApi {
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, reference, maxSize]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[app, reference, maxSize],
+    );
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
@@ -838,11 +853,12 @@ class FirebaseStorageHostApi {
   }
 
   Future<String> referencePutData(
-      InternalStorageFirebaseApp app,
-      InternalStorageReference reference,
-      Uint8List data,
-      InternalSettableMetadata settableMetaData,
-      int handle) async {
+    InternalStorageFirebaseApp app,
+    InternalStorageReference reference,
+    Uint8List data,
+    InternalSettableMetadata settableMetaData,
+    int handle,
+  ) async {
     final pigeonVar_channelName =
         'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutData$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
@@ -850,8 +866,9 @@ class FirebaseStorageHostApi {
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel
-        .send(<Object?>[app, reference, data, settableMetaData, handle]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[app, reference, data, settableMetaData, handle],
+    );
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
@@ -863,12 +880,13 @@ class FirebaseStorageHostApi {
   }
 
   Future<String> referencePutString(
-      InternalStorageFirebaseApp app,
-      InternalStorageReference reference,
-      String data,
-      int format,
-      InternalSettableMetadata settableMetaData,
-      int handle) async {
+    InternalStorageFirebaseApp app,
+    InternalStorageReference reference,
+    String data,
+    int format,
+    InternalSettableMetadata settableMetaData,
+    int handle,
+  ) async {
     final pigeonVar_channelName =
         'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutString$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
@@ -877,7 +895,8 @@ class FirebaseStorageHostApi {
       binaryMessenger: pigeonVar_binaryMessenger,
     );
     final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
-        <Object?>[app, reference, data, format, settableMetaData, handle]);
+      <Object?>[app, reference, data, format, settableMetaData, handle],
+    );
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
@@ -889,11 +908,12 @@ class FirebaseStorageHostApi {
   }
 
   Future<String> referencePutFile(
-      InternalStorageFirebaseApp app,
-      InternalStorageReference reference,
-      String filePath,
-      InternalSettableMetadata? settableMetaData,
-      int handle) async {
+    InternalStorageFirebaseApp app,
+    InternalStorageReference reference,
+    String filePath,
+    InternalSettableMetadata? settableMetaData,
+    int handle,
+  ) async {
     final pigeonVar_channelName =
         'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referencePutFile$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
@@ -901,8 +921,9 @@ class FirebaseStorageHostApi {
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel
-        .send(<Object?>[app, reference, filePath, settableMetaData, handle]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[app, reference, filePath, settableMetaData, handle],
+    );
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
@@ -913,8 +934,12 @@ class FirebaseStorageHostApi {
     return pigeonVar_replyValue! as String;
   }
 
-  Future<String> referenceDownloadFile(InternalStorageFirebaseApp app,
-      InternalStorageReference reference, String filePath, int handle) async {
+  Future<String> referenceDownloadFile(
+    InternalStorageFirebaseApp app,
+    InternalStorageReference reference,
+    String filePath,
+    int handle,
+  ) async {
     final pigeonVar_channelName =
         'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceDownloadFile$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
@@ -922,8 +947,9 @@ class FirebaseStorageHostApi {
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, reference, filePath, handle]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[app, reference, filePath, handle],
+    );
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
@@ -935,9 +961,10 @@ class FirebaseStorageHostApi {
   }
 
   Future<InternalFullMetaData> referenceUpdateMetadata(
-      InternalStorageFirebaseApp app,
-      InternalStorageReference reference,
-      InternalSettableMetadata metadata) async {
+    InternalStorageFirebaseApp app,
+    InternalStorageReference reference,
+    InternalSettableMetadata metadata,
+  ) async {
     final pigeonVar_channelName =
         'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.referenceUpdateMetadata$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
@@ -945,8 +972,9 @@ class FirebaseStorageHostApi {
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, reference, metadata]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[app, reference, metadata],
+    );
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
@@ -958,7 +986,9 @@ class FirebaseStorageHostApi {
   }
 
   Future<Map<String, Object>> taskPause(
-      InternalStorageFirebaseApp app, int handle) async {
+    InternalStorageFirebaseApp app,
+    int handle,
+  ) async {
     final pigeonVar_channelName =
         'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.taskPause$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
@@ -966,8 +996,9 @@ class FirebaseStorageHostApi {
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, handle]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[app, handle],
+    );
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
@@ -980,7 +1011,9 @@ class FirebaseStorageHostApi {
   }
 
   Future<Map<String, Object>> taskResume(
-      InternalStorageFirebaseApp app, int handle) async {
+    InternalStorageFirebaseApp app,
+    int handle,
+  ) async {
     final pigeonVar_channelName =
         'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.taskResume$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
@@ -988,8 +1021,9 @@ class FirebaseStorageHostApi {
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, handle]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[app, handle],
+    );
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
@@ -1002,7 +1036,9 @@ class FirebaseStorageHostApi {
   }
 
   Future<Map<String, Object>> taskCancel(
-      InternalStorageFirebaseApp app, int handle) async {
+    InternalStorageFirebaseApp app,
+    int handle,
+  ) async {
     final pigeonVar_channelName =
         'dev.flutter.pigeon.firebase_storage_platform_interface.FirebaseStorageHostApi.taskCancel$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
@@ -1010,8 +1046,9 @@ class FirebaseStorageHostApi {
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[app, handle]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[app, handle],
+    );
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(

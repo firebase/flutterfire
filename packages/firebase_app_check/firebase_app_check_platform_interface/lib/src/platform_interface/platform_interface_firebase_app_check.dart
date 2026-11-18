@@ -55,7 +55,7 @@ abstract class FirebaseAppCheckPlatform extends PlatformInterface {
   ///
   /// ## Platform Configuration
   ///
-  /// **Web**: Provide the reCAPTCHA v3 Site Key using `webProvider`, which can be
+  /// **Web**: Provide the reCAPTCHA v3 Site Key using `providerWeb`, which can be
   /// found in the Firebase Console.
   ///
   /// **Android**: The default provider is "play integrity". Use `providerAndroid`
@@ -67,33 +67,24 @@ abstract class FirebaseAppCheckPlatform extends PlatformInterface {
   /// "app attest with fallback to device check" via `AppleAppCheckProvider`.
   /// Note: App Attest is only available on iOS 14.0+ and macOS 14.0+.
   ///
+  /// Do not call `FirebaseApp.configure()` in `AppDelegate` unless you also
+  /// call `AppCheck.setAppCheckProviderFactory` first; otherwise
+  /// `providerApple` is ignored on physical Apple devices. Prefer
+  /// `Firebase.initializeApp()` only.
+  /// See https://github.com/firebase/flutterfire/issues/18613.
+  ///
   /// **Windows**: Use `providerWindows` to configure either
   /// [WindowsCustomProvider] for production token minting or
   /// [WindowsDebugProvider] for development. The desktop C++ SDK does not
   /// auto-generate debug tokens. Either pass a registered token via
   /// `providerWindows: WindowsDebugProvider(debugToken: 'your-token')` or set
-  /// the `APP_CHECK_DEBUG_TOKEN` environment variable.
-  ///
-  /// ## Migration Notice
-  ///
-  /// The `androidProvider` and `appleProvider` parameters will be deprecated
-  /// in a future release. Use `providerAndroid` and `providerApple` instead,
-  /// which support the new provider classes including `AndroidDebugProvider`
-  /// and `AppleDebugProvider` for passing debug tokens directly.
+  /// the `APP_CHECK_DEBUG_TOKEN` environment variable. The token must
+  /// first be registered in the Firebase Console under
+  /// *App Check → Apps → Manage debug tokens*.
   ///
   /// For more information, see [the Firebase Documentation](https://firebase.google.com/docs/app-check)
   Future<void> activate({
-    WebProvider? webProvider,
-    @Deprecated(
-      'Use providerAndroid instead. '
-      'This parameter will be removed in a future major release.',
-    )
-    AndroidProvider? androidProvider,
-    @Deprecated(
-      'Use providerApple instead. '
-      'This parameter will be removed in a future major release.',
-    )
-    AppleProvider? appleProvider,
+    WebProvider? providerWeb,
     AndroidAppCheckProvider? providerAndroid,
     AppleAppCheckProvider? providerApple,
     WindowsAppCheckProvider? providerWindows,

@@ -25,9 +25,9 @@ Pod::Spec.new do |s|
   s.authors          = 'The Chromium Authors'
   s.source           = { :path => '.' }
 
-  s.source_files     = 'firebase_auth/Sources/firebase_auth/**/*.{h,m}'
-  s.public_header_files = 'firebase_auth/Sources/firebase_auth/include/Public/**/*.h'
-  s.private_header_files = 'firebase_auth/Sources/firebase_auth/include/Private/**/*.h'
+  s.source_files     = 'firebase_auth/Sources/firebase_auth/**/*.swift'
+
+  s.swift_version = '5.0'
 
   s.ios.deployment_target = '15.0'
   s.dependency 'Flutter'

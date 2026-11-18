@@ -34,8 +34,6 @@
 - firebase_messaging
 - firebase_messaging/firebase_messaging_platform_interface
 - firebase_messaging/firebase_messaging_web
-- firebase_ml_model_downloader
-- firebase_ml_model_downloader/firebase_ml_model_downloader_platform_interface
 - firebase_performance
 - firebase_performance/firebase_performance_platform_interface
 - firebase_performance/firebase_performance_web

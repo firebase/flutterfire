@@ -14,16 +14,17 @@
 import 'dart:async';
 import 'dart:developer' as developer;
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:firebase_ai/firebase_ai.dart';
 import 'package:waveform_flutter/waveform_flutter.dart';
 
+import '../constants.dart';
 import '../utils/audio_input.dart';
 import '../utils/audio_output.dart';
 import '../utils/video_input.dart';
-import '../widgets/message_widget.dart';
 import '../widgets/audio_visualizer.dart';
 import '../widgets/camera_previews.dart';
+import '../widgets/message_widget.dart';
 
 // ============================================================================
 // MEDIA MANAGER
@@ -105,13 +106,10 @@ class BidiMediaManager {
     // Wait for Mac Camera to Settle (Prevent audio hijack)
     await Future.delayed(const Duration(milliseconds: 1000));
 
-    _videoSubscription = _videoInput.startStreamingImages().listen(
-      (data) {
-        String mimeType = 'image/jpeg';
-        onData(data, mimeType);
-      },
-      onError: (e) => developer.log('Video Stream Error: $e'),
-    );
+    _videoSubscription = _videoInput.startStreamingImages().listen((data) {
+      String mimeType = 'image/jpeg';
+      onData(data, mimeType);
+    }, onError: (e) => developer.log('Video Stream Error: $e'));
   }
 
   Future<void> stopVideo() async {
@@ -170,12 +168,99 @@ class BidiSessionController extends ChangeNotifier {
   int? _inputTranscriptionMessageIndex;
   int? _outputTranscriptionMessageIndex;
 
+  bool disableAutomaticActivityDetection = false;
+  ActivityHandling? selectedActivityHandling;
+  TurnCoverage? selectedTurnCoverage;
+  Sensitivity? selectedStartSensitivity;
+  Sensitivity? selectedEndSensitivity;
+
+  /// Number of successful [LiveSession.resumeSession] calls on this session.
+  int resumeCount = 0;
+
+  /// Whether new sessions request limited-use App Check tokens.
+  ///
+  /// Limited-use tokens are rejected on replay, so resuming with them checks
+  /// that [LiveSession.resumeSession] fetches fresh headers for each reconnect.
+  bool useLimitedUseAppCheckTokens = true;
+
+  void updateRealtimeConfig({
+    bool? disableVAD,
+    ActivityHandling? activityHandling,
+    TurnCoverage? turnCoverage,
+    Sensitivity? startSensitivity,
+    Sensitivity? endSensitivity,
+    bool clearActivityHandling = false,
+    bool clearTurnCoverage = false,
+    bool clearStartSensitivity = false,
+    bool clearEndSensitivity = false,
+  }) {
+    if (disableVAD != null) disableAutomaticActivityDetection = disableVAD;
+    if (clearActivityHandling) {
+      selectedActivityHandling = null;
+    } else if (activityHandling != null) {
+      selectedActivityHandling = activityHandling;
+    }
+    if (clearTurnCoverage) {
+      selectedTurnCoverage = null;
+    } else if (turnCoverage != null) {
+      selectedTurnCoverage = turnCoverage;
+    }
+    if (clearStartSensitivity) {
+      selectedStartSensitivity = null;
+    } else if (startSensitivity != null) {
+      selectedStartSensitivity = startSensitivity;
+    }
+    if (clearEndSensitivity) {
+      selectedEndSensitivity = null;
+    } else if (endSensitivity != null) {
+      selectedEndSensitivity = endSensitivity;
+    }
+    _initLiveModel();
+    notifyListeners();
+  }
+
+  void setUseLimitedUseAppCheckTokens(bool value) {
+    useLimitedUseAppCheckTokens = value;
+    _initLiveModel();
+    notifyListeners();
+  }
+
   void _initLiveModel() {
+    final RealtimeInputConfig? realtimeInputConfig;
+    final bool hasSensitivities =
+        selectedStartSensitivity != null || selectedEndSensitivity != null;
+    final ActivityDetectionConfig? automaticActivityDetection;
+
+    if (disableAutomaticActivityDetection) {
+      automaticActivityDetection = ActivityDetectionConfig.disabled();
+    } else if (hasSensitivities) {
+      automaticActivityDetection = ActivityDetectionConfig(
+        startSensitivity: selectedStartSensitivity,
+        endSensitivity: selectedEndSensitivity,
+      );
+    } else {
+      automaticActivityDetection = null;
+    }
+
+    if (disableAutomaticActivityDetection ||
+        hasSensitivities ||
+        selectedActivityHandling != null ||
+        selectedTurnCoverage != null) {
+      realtimeInputConfig = RealtimeInputConfig(
+        automaticActivityDetection: automaticActivityDetection,
+        activityHandling: selectedActivityHandling,
+        turnCoverage: selectedTurnCoverage,
+      );
+    } else {
+      realtimeInputConfig = null;
+    }
+
     final config = LiveGenerationConfig(
       speechConfig: SpeechConfig(voiceName: 'Fenrir'),
       responseModalities: [ResponseModalities.audio],
       inputAudioTranscription: AudioTranscriptionConfig(),
       outputAudioTranscription: AudioTranscriptionConfig(),
+      realtimeInputConfig: realtimeInputConfig,
     );
 
     final tools = [
@@ -184,16 +269,54 @@ class BidiSessionController extends ChangeNotifier {
     ];
 
     _liveModel = useVertexBackend
-        ? FirebaseAI.agentPlatform().liveGenerativeModel(
-            model: 'gemini-live-2.5-flash-preview-native-audio-09-2025',
+        ? FirebaseAI.agentPlatform(
+            useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens,
+          ).liveGenerativeModel(
+            model: ExampleModels.liveAgentPlatform,
             liveGenerationConfig: config,
             tools: tools,
           )
-        : FirebaseAI.googleAI().liveGenerativeModel(
-            model: 'gemini-2.5-flash-native-audio-preview-09-2025',
+        : FirebaseAI.googleAI(
+            useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens,
+          ).liveGenerativeModel(
+            model: ExampleModels.liveGoogleAI,
             liveGenerationConfig: config,
             tools: tools,
           );
+  }
+
+  Future<void> sendStartActivity() async {
+    if (!isSessionActive || _session == null) return;
+    try {
+      await _session!.sendStartActivityRealtime();
+      messages.add(
+        MessageData(
+          text: '[System] Sent manual start activity signal',
+          fromUser: true,
+        ),
+      );
+      onScrollDown?.call();
+      notifyListeners();
+    } catch (e) {
+      onShowError?.call(e.toString());
+    }
+  }
+
+  Future<void> sendStopActivity() async {
+    if (!isSessionActive || _session == null) return;
+    try {
+      await _session!.sendStopActivityRealtime();
+      messages.add(
+        MessageData(
+          text: '[System] Sent manual stop activity signal',
+          fromUser: true,
+        ),
+      );
+      onScrollDown?.call();
+      notifyListeners();
+    } catch (e) {
+      onShowError?.call(e.toString());
+    }
   }
 
   Future<void> initialize() async {
@@ -214,6 +337,7 @@ class BidiSessionController extends ChangeNotifier {
 
   Future<void> _startSession({required bool explicit}) async {
     isLoading = true;
+    resumeCount = 0;
     notifyListeners();
 
     try {
@@ -263,11 +387,51 @@ class BidiSessionController extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> _sessionResume() async {
-    if (isSessionActive) {
-      await _stopSession(explicit: false);
-      await _startSession(explicit: false);
+  /// Reconnects the existing [LiveSession] via [LiveSession.resumeSession].
+  ///
+  /// This is the code path fixed by
+  /// https://github.com/firebase/flutterfire/pull/18814: each resume must send
+  /// freshly fetched App Check / Auth headers instead of replaying the ones
+  /// captured during the initial `connect()`.
+  Future<void> resumeSession() async {
+    final session = _session;
+    if (!isSessionActive || session == null) return;
+    final handle = _activeSessionHandle;
+    if (handle == null) {
+      onShowError?.call(
+        'No session resumption handle received yet. Send a message first so '
+        'the server issues a SessionResumptionUpdate.',
+      );
+      return;
     }
+
+    isLoading = true;
+    notifyListeners();
+    _addSystemMessage(
+      'Calling resumeSession() '
+      '(limited-use App Check: $useLimitedUseAppCheckTokens)...',
+    );
+
+    try {
+      await session.resumeSession(
+        sessionResumption: SessionResumptionConfig.resume(handle),
+      );
+      resumeCount++;
+      _addSystemMessage('resumeSession() #$resumeCount succeeded.');
+    } catch (e) {
+      developer.log('resumeSession() failed: $e');
+      _addSystemMessage('resumeSession() failed: $e');
+      onShowError?.call('resumeSession() failed: $e');
+    } finally {
+      isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  void _addSystemMessage(String text) {
+    messages.add(MessageData(text: '[System] $text', fromUser: true));
+    onScrollDown?.call();
+    notifyListeners();
   }
 
   Future<void> _onAudioData(Uint8List data) async {
@@ -426,7 +590,7 @@ class BidiSessionController extends ChangeNotifier {
       await _handleLiveServerToolCall(message);
     } else if (message is GoingAwayNotice) {
       if (_activeSessionHandle != null) {
-        unawaited(_sessionResume());
+        unawaited(resumeSession());
       }
     } else if (message is SessionResumptionUpdate &&
         message.resumable != null &&
@@ -640,10 +804,33 @@ class _BidiPageState extends State<BidiPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    'Live Stream Session',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Live Stream Session',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          'Resumes: ${_controller.resumeCount}',
+                          style: const TextStyle(fontSize: 11),
+                        ),
+                      ],
+                    ),
                   ),
+                  ElevatedButton.icon(
+                    icon: const Icon(Icons.replay, size: 16),
+                    label: const Text('Resume'),
+                    style: ElevatedButton.styleFrom(
+                      visualDensity: VisualDensity.compact,
+                    ),
+                    onPressed:
+                        _controller.isSessionActive && !_controller.isLoading
+                        ? () => _controller.resumeSession()
+                        : null,
+                  ),
+                  const SizedBox(width: 8),
                   ElevatedButton.icon(
                     icon: const Icon(Icons.speed, size: 16),
                     label: const Text('Simulate GoAway'),
@@ -656,13 +843,194 @@ class _BidiPageState extends State<BidiPage> {
                   ),
                 ],
               ),
+              SwitchListTile(
+                dense: true,
+                contentPadding: EdgeInsets.zero,
+                title: const Text('Limited-use App Check tokens'),
+                subtitle: const Text('Applies to the next session'),
+                value: _controller.useLimitedUseAppCheckTokens,
+                onChanged: _controller.isSessionActive || _controller.isLoading
+                    ? null
+                    : _controller.setUseLimitedUseAppCheckTokens,
+              ),
+              const SizedBox(height: 8),
+              Card(
+                margin: const EdgeInsets.symmetric(vertical: 4),
+                child: ExpansionTile(
+                  title: const Text(
+                    'Realtime Input Config Settings',
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                  ),
+                  subtitle: Text(
+                    _controller.disableAutomaticActivityDetection
+                        ? 'Auto VAD: Disabled (Manual signals required)'
+                        : 'Auto VAD: Enabled',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: _controller.disableAutomaticActivityDetection
+                          ? Colors.orangeAccent
+                          : Colors.greenAccent,
+                    ),
+                  ),
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text('Disable Automatic VAD:'),
+                              Switch(
+                                value: _controller
+                                    .disableAutomaticActivityDetection,
+                                onChanged: (val) {
+                                  _controller.updateRealtimeConfig(
+                                    disableVAD: val,
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: ElevatedButton.icon(
+                                  icon: const Icon(Icons.play_arrow, size: 16),
+                                  label: const Text('Start Activity'),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.green.shade800,
+                                  ),
+                                  onPressed: _controller.isSessionActive
+                                      ? () => _controller.sendStartActivity()
+                                      : null,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: ElevatedButton.icon(
+                                  icon: const Icon(Icons.stop, size: 16),
+                                  label: const Text('Stop Activity'),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.red.shade800,
+                                  ),
+                                  onPressed: _controller.isSessionActive
+                                      ? () => _controller.sendStopActivity()
+                                      : null,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const Divider(height: 24),
+                          Wrap(
+                            spacing: 12,
+                            runSpacing: 12,
+                            children: [
+                              DropdownButton<ActivityHandling?>(
+                                value: _controller.selectedActivityHandling,
+                                hint: const Text('Activity Handling'),
+                                items: [
+                                  const DropdownMenuItem(
+                                    child: Text('Handling: Default'),
+                                  ),
+                                  ...ActivityHandling.values.map(
+                                    (e) => DropdownMenuItem(
+                                      value: e,
+                                      child: Text('Handling: ${e.name}'),
+                                    ),
+                                  ),
+                                ],
+                                onChanged: (val) {
+                                  _controller.updateRealtimeConfig(
+                                    activityHandling: val,
+                                    clearActivityHandling: val == null,
+                                  );
+                                },
+                              ),
+                              DropdownButton<TurnCoverage?>(
+                                value: _controller.selectedTurnCoverage,
+                                hint: const Text('Turn Coverage'),
+                                items: [
+                                  const DropdownMenuItem(
+                                    child: Text('Coverage: Default'),
+                                  ),
+                                  ...TurnCoverage.values.map(
+                                    (e) => DropdownMenuItem(
+                                      value: e,
+                                      child: Text('Coverage: ${e.name}'),
+                                    ),
+                                  ),
+                                ],
+                                onChanged: (val) {
+                                  _controller.updateRealtimeConfig(
+                                    turnCoverage: val,
+                                    clearTurnCoverage: val == null,
+                                  );
+                                },
+                              ),
+                              DropdownButton<Sensitivity?>(
+                                value: _controller.selectedStartSensitivity,
+                                hint: const Text('Start Sensitivity'),
+                                items: [
+                                  const DropdownMenuItem(
+                                    child: Text('Start Sens: Default'),
+                                  ),
+                                  ...Sensitivity.values.map(
+                                    (e) => DropdownMenuItem(
+                                      value: e,
+                                      child: Text('Start Sens: ${e.name}'),
+                                    ),
+                                  ),
+                                ],
+                                onChanged: (val) {
+                                  _controller.updateRealtimeConfig(
+                                    startSensitivity: val,
+                                    clearStartSensitivity: val == null,
+                                  );
+                                },
+                              ),
+                              DropdownButton<Sensitivity?>(
+                                value: _controller.selectedEndSensitivity,
+                                hint: const Text('End Sensitivity'),
+                                items: [
+                                  const DropdownMenuItem(
+                                    child: Text('End Sens: Default'),
+                                  ),
+                                  ...Sensitivity.values.map(
+                                    (e) => DropdownMenuItem(
+                                      value: e,
+                                      child: Text('End Sens: ${e.name}'),
+                                    ),
+                                  ),
+                                ],
+                                onChanged: (val) {
+                                  _controller.updateRealtimeConfig(
+                                    endSensitivity: val,
+                                    clearEndSensitivity: val == null,
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
               const SizedBox(height: 8),
               if (_controller.isCameraOn)
                 Container(
                   height: 200,
                   color: Colors.black,
                   alignment: Alignment.center,
-                  child: (_controller.mediaManager.cameraController != null &&
+                  child:
+                      (_controller.mediaManager.cameraController != null &&
                           _controller.mediaManager.controllerInitialized)
                       ? FullCameraPreview(
                           controller: _controller.mediaManager.cameraController,
@@ -693,8 +1061,10 @@ class _BidiPageState extends State<BidiPage> {
                 ),
               ),
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 25, horizontal: 15),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 25,
+                  horizontal: 15,
+                ),
                 child: Row(
                   children: [
                     Expanded(

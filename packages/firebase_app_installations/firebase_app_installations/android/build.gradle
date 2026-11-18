@@ -1,11 +1,11 @@
-group 'io.flutter.plugins.firebase.installations.firebase_app_installations'
-version '1.0'
+group = 'io.flutter.plugins.firebase.installations.firebase_app_installations'
+version = '1.0'
 
 apply plugin: 'com.android.library'
 apply from: file("local-config.gradle")
 
 buildscript {
-    ext.kotlin_version = "2.0.0"
+    ext.kotlin_version = "2.3.0"
     repositories {
         google()
         mavenCentral()
@@ -20,16 +20,6 @@ rootProject.allprojects {
         google()
         mavenCentral()
     }
-}
-
-// AGP 9+ has built-in Kotlin support unless Flutter opts out via android.builtInKotlin=false.
-def agpMajor = com.android.Version.ANDROID_GRADLE_PLUGIN_VERSION.tokenize('.')[0] as int
-def builtInKotlin = providers.gradleProperty("android.builtInKotlin")
-        .map { it.toBoolean() }
-        .orElse(agpMajor >= 9)
-        .get()
-if (agpMajor < 9 || !builtInKotlin) {
-    apply plugin: 'kotlin-android'
 }
 
 def firebaseCoreProject = rootProject.subprojects.find { it.name == "firebase_core" }
@@ -48,7 +38,7 @@ def getRootProjectExtOrCoreProperty(name, firebaseCoreProject) {
 android {
     // Conditional for compatibility with AGP <4.2.
     if (project.android.hasProperty("namespace")) {
-      namespace 'io.flutter.plugins.firebase.installations.firebase_app_installations'
+      namespace = 'io.flutter.plugins.firebase.installations.firebase_app_installations'
     }
 
     compileSdkVersion project.ext.compileSdk
@@ -69,7 +59,7 @@ android {
     }
 
     buildFeatures {
-        buildConfig true
+        buildConfig = true
     }
 
     dependencies {
@@ -83,10 +73,20 @@ dependencies {
   implementation 'androidx.annotation:annotation:1.7.0'
 }
 
-plugins.withId("org.jetbrains.kotlin.android") {
+// Built-in Kotlin registers this extension before the script gets here.
+// When it is off, Flutter applies the Kotlin plugin after this script.
+if (extensions.findByName("kotlin") != null) {
   kotlin {
     compilerOptions {
       jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.fromTarget(project.ext.javaVersion.toString())
+    }
+  }
+} else {
+  plugins.withId("org.jetbrains.kotlin.android") {
+    kotlin {
+      compilerOptions {
+        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.fromTarget(project.ext.javaVersion.toString())
+      }
     }
   }
 }

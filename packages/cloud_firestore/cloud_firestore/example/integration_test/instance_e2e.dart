@@ -11,233 +11,422 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void runInstanceTests() {
-  group(
-    '$FirebaseFirestore.instance',
-    () {
-      late FirebaseFirestore firestore;
+  group('$FirebaseFirestore.instance', () {
+    late FirebaseFirestore firestore;
 
-      setUpAll(() async {
-        firestore = FirebaseFirestore.instance;
+    setUpAll(() async {
+      firestore = FirebaseFirestore.instance;
+    });
+
+    test('snapshotsInSync()', () async {
+      DocumentReference<Map<String, dynamic>> documentReference = firestore.doc(
+        'flutter-tests/insync',
+      );
+
+      // Ensure deleted
+      await documentReference.delete();
+
+      StreamController controller = StreamController();
+      StreamSubscription insync;
+      StreamSubscription snapshots;
+
+      int inSyncCount = 0;
+
+      insync = firestore.snapshotsInSync().listen((_) {
+        controller.add('insync=$inSyncCount');
+        inSyncCount++;
       });
 
-      test(
-        'snapshotsInSync()',
-        () async {
-          DocumentReference<Map<String, dynamic>> documentReference =
-              firestore.doc('flutter-tests/insync');
+      snapshots = documentReference.snapshots().listen((ds) {
+        controller.add('snapshot-exists=${ds.exists}');
+      });
 
-          // Ensure deleted
-          await documentReference.delete();
+      // Allow the snapshots to trigger...
+      await Future.delayed(const Duration(seconds: 1));
 
-          StreamController controller = StreamController();
-          StreamSubscription insync;
-          StreamSubscription snapshots;
+      await documentReference.set({'foo': 'bar'});
 
-          int inSyncCount = 0;
-
-          insync = firestore.snapshotsInSync().listen((_) {
-            controller.add('insync=$inSyncCount');
-            inSyncCount++;
-          });
-
-          snapshots = documentReference.snapshots().listen((ds) {
-            controller.add('snapshot-exists=${ds.exists}');
-          });
-
-          // Allow the snapshots to trigger...
-          await Future.delayed(const Duration(seconds: 1));
-
-          await documentReference.set({'foo': 'bar'});
-
-          await expectLater(
-            controller.stream,
-            emitsInOrder([
-              'insync=0', // No other snapshots
-              'snapshot-exists=false',
-              'insync=1',
-              'snapshot-exists=true',
-              'insync=2',
-            ]),
-          );
-
-          await controller.close();
-          await insync.cancel();
-          await snapshots.cancel();
-        },
-        skip: kIsWeb,
+      await expectLater(
+        controller.stream,
+        emitsInOrder([
+          'insync=0', // No other snapshots
+          'snapshot-exists=false',
+          'insync=1',
+          'snapshot-exists=true',
+          'insync=2',
+        ]),
       );
 
-      test(
-        'enableNetwork()',
-        () async {
-          // Write some data while online
-          await firestore.enableNetwork();
-          DocumentReference<Map<String, dynamic>> documentReference =
-              firestore.doc('flutter-tests/enable-network');
-          await documentReference.set({'foo': 'bar'});
+      await controller.close();
+      await insync.cancel();
+      await snapshots.cancel();
+    }, skip: kIsWeb);
 
-          // Disable the network
-          await firestore.disableNetwork();
+    test(
+      'snapshotsInSync() follows a remote query snapshot',
+      () async {
+        final writerApp = await Firebase.initializeApp(
+          name: 'insync-writer-${DateTime.now().microsecondsSinceEpoch}',
+          options: Firebase.app().options,
+        );
+        final writer = FirebaseFirestore.instanceFor(app: writerApp);
+        writer.settings = const Settings(persistenceEnabled: false);
+        writer.useFirestoreEmulator('localhost', 8080);
 
-          StreamController controller = StreamController();
+        final collection = firestore
+            .collection('flutter-tests')
+            .doc('insync-${DateTime.now().microsecondsSinceEpoch}')
+            .collection('items');
+        const docId = 'shared';
+        final events = <String>[];
 
-          // Set some data while offline
-          // ignore: unawaited_futures
-          documentReference.set({'foo': 'baz'}).then((_) async {
-            // Only when back online will this trigger
-            controller.add(true);
-          });
-
-          // Go back online
-          await firestore.enableNetwork();
-
-          await expectLater(controller.stream, emits(true));
-          await controller.close();
-        },
-        skip: kIsWeb,
-      );
-
-      test(
-        'disableNetwork()',
-        () async {
-          // Write some data while online
-          await firestore.enableNetwork();
-          DocumentReference<Map<String, dynamic>> documentReference =
-              firestore.doc('flutter-tests/disable-network');
-          await documentReference.set({'foo': 'bar'});
-
-          // Disable the network
-          await firestore.disableNetwork();
-
-          // Get data from cache
-          DocumentSnapshot<Map<String, dynamic>> documentSnapshot =
-              await documentReference.get();
-          expect(documentSnapshot.metadata.isFromCache, isTrue);
-          expect(documentSnapshot.data()!['foo'], equals('bar'));
-
-          // Go back online once test complete
-          await firestore.enableNetwork();
-        },
-        skip: kIsWeb,
-      );
-
-      test(
-        'waitForPendingWrites()',
-        () async {
-          await firestore.waitForPendingWrites();
-        },
-        skip: kIsWeb,
-      );
-
-      test(
-        'terminate() / clearPersistence()',
-        () async {
-          // Since the firestore instance has already been used,
-          // calling `clearPersistence` will throw a native error.
-          // We first check it does throw as expected, then terminate
-          // the instance, and then check whether clearing succeeds.
-          try {
-            await firestore.clearPersistence();
-            fail('Should have thrown');
-          } on FirebaseException catch (e) {
-            expect(e.code, equals('failed-precondition'));
-          } catch (e) {
-            fail('$e');
+        final querySub = collection.snapshots().listen((snapshot) {
+          String? value;
+          for (final document in snapshot.docs) {
+            if (document.id == docId) {
+              value = '${document.data()['n']}';
+            }
           }
+          events.add('query:$value:${snapshot.metadata.hasPendingWrites}');
+        });
+        final syncSub = firestore.snapshotsInSync().listen((_) {
+          events.add('sync');
+        });
 
-          await firestore.terminate();
-          await firestore.clearPersistence();
-        },
-        skip: kIsWeb,
+        Future<void> waitUntil(bool Function() ready) async {
+          final deadline = DateTime.now().add(const Duration(seconds: 5));
+          while (!ready()) {
+            expect(
+              DateTime.now().isBefore(deadline),
+              isTrue,
+              reason: '$events',
+            );
+            await Future<void>.delayed(const Duration(milliseconds: 20));
+          }
+        }
+
+        Future<void> settle() async {
+          final deadline = DateTime.now().add(const Duration(seconds: 2));
+          var count = events.length;
+          while (DateTime.now().isBefore(deadline)) {
+            await Future<void>.delayed(const Duration(milliseconds: 80));
+            if (events.length == count) {
+              return;
+            }
+            count = events.length;
+          }
+        }
+
+        await waitUntil(
+          () =>
+              events.contains('sync') &&
+              events.any((event) => event.startsWith('query:')),
+        );
+        await settle();
+        events.clear();
+
+        for (var i = 1; i <= 24; i++) {
+          final marker = events.length;
+          await writer.collection(collection.path).doc(docId).set({'n': i});
+          await waitUntil(
+            () => events.sublist(marker).contains('query:$i:false'),
+          );
+          await waitUntil(() => events.sublist(marker).contains('sync'));
+          final slice = events.sublist(marker);
+          final queryAt = slice.indexOf('query:$i:false');
+          final syncAt = slice.indexOf('sync');
+          expect(queryAt, lessThan(syncAt), reason: 'write $i: $slice');
+          await settle();
+        }
+
+        await querySub.cancel();
+        await syncSub.cancel();
+        await writerApp.delete();
+
+        // This database is not cached, so the lookup has to walk every
+        // entry, including the deleted writer's.
+        final uncached = FirebaseFirestore.instanceFor(
+          app: Firebase.app(),
+          databaseId: 'insync-after-delete',
+        );
+        uncached.settings = const Settings(persistenceEnabled: false);
+        uncached.useFirestoreEmulator('localhost', 8080);
+        await uncached.doc('flutter-tests/insync-after-delete').set({
+          'ok': true,
+        });
+        await firestore.doc('flutter-tests/insync-after-delete').set({
+          'ok': true,
+        });
+      },
+      timeout: const Timeout(Duration(minutes: 2)),
+      skip:
+          defaultTargetPlatform != TargetPlatform.iOS &&
+          defaultTargetPlatform != TargetPlatform.macOS &&
+          defaultTargetPlatform != TargetPlatform.android,
+    );
+
+    test('enableNetwork()', () async {
+      // Write some data while online
+      await firestore.enableNetwork();
+      DocumentReference<Map<String, dynamic>> documentReference = firestore.doc(
+        'flutter-tests/enable-network',
+      );
+      await documentReference.set({'foo': 'bar'});
+
+      // Disable the network
+      await firestore.disableNetwork();
+
+      StreamController controller = StreamController();
+
+      // Set some data while offline
+      // ignore: unawaited_futures
+      documentReference.set({'foo': 'baz'}).then((_) async {
+        // Only when back online will this trigger
+        controller.add(true);
+      });
+
+      // Go back online
+      await firestore.enableNetwork();
+
+      await expectLater(controller.stream, emits(true));
+      await controller.close();
+    }, skip: kIsWeb);
+
+    test('disableNetwork()', () async {
+      // Write some data while online
+      await firestore.enableNetwork();
+      DocumentReference<Map<String, dynamic>> documentReference = firestore.doc(
+        'flutter-tests/disable-network',
+      );
+      await documentReference.set({'foo': 'bar'});
+
+      // Disable the network
+      await firestore.disableNetwork();
+
+      // Get data from cache
+      DocumentSnapshot<Map<String, dynamic>> documentSnapshot =
+          await documentReference.get();
+      expect(documentSnapshot.metadata.isFromCache, isTrue);
+      expect(documentSnapshot.data()!['foo'], equals('bar'));
+
+      // Go back online once test complete
+      await firestore.enableNetwork();
+    }, skip: kIsWeb);
+
+    test('waitForPendingWrites()', () async {
+      await firestore.waitForPendingWrites();
+    }, skip: kIsWeb);
+
+    test('terminate() / clearPersistence()', () async {
+      // Since the firestore instance has already been used,
+      // calling `clearPersistence` will throw a native error.
+      // We first check it does throw as expected, then terminate
+      // the instance, and then check whether clearing succeeds.
+      try {
+        await firestore.clearPersistence();
+        fail('Should have thrown');
+      } on FirebaseException catch (e) {
+        expect(e.code, equals('failed-precondition'));
+      } catch (e) {
+        fail('$e');
+      }
+
+      await firestore.terminate();
+      await firestore.clearPersistence();
+    }, skip: kIsWeb);
+
+    test('terminate() then use Firestore again', () async {
+      // Regression test for https://github.com/firebase/flutterfire/issues/17781
+      // On Windows, terminate() did not remove the instance from the native
+      // cache, so subsequent usage would crash with "The client has already
+      // been terminated".
+      final instance = FirebaseFirestore.instanceFor(
+        app: Firebase.app(),
+        databaseId: 'flutterfire-2',
       );
 
-      test(
-        'terminate() then use Firestore again',
-        () async {
-          // Regression test for https://github.com/firebase/flutterfire/issues/17781
-          // On Windows, terminate() did not remove the instance from the native
-          // cache, so subsequent usage would crash with "The client has already
-          // been terminated".
-          final instance = FirebaseFirestore.instanceFor(
+      instance.useFirestoreEmulator('localhost', 8080);
+
+      // Use Firestore so it is fully initialized
+      await instance.collection('flutterfire-2').doc('terminate-test').set({
+        'foo': 'bar',
+      });
+
+      await instance.terminate();
+      await instance.clearPersistence();
+
+      // After terminate + clearPersistence, we should be able to use
+      // Firestore again without crashing.
+      await instance.collection('flutterfire-2').doc('terminate-test').get();
+
+      // Clean up: terminate so the native instance cache is cleared
+      // for subsequent tests that may use the same databaseId.
+      await instance.terminate();
+    }, skip: kIsWeb);
+
+    test(
+      'Settings() - persistenceEnabled: false does not persist across terminate()',
+      () async {
+        // Regression test for https://github.com/firebase/flutterfire/issues/18659
+        // Windows ignored persistenceEnabled: false (pointer-to-bool + never
+        // forwarded to the C++ SDK). Disk cache is the only state that
+        // survives terminate(); in-memory cache does not.
+        FirebaseFirestore firestoreFor(
+          String databaseId, {
+          required bool persistenceEnabled,
+        }) {
+          final firestore = FirebaseFirestore.instanceFor(
             app: Firebase.app(),
-            databaseId: 'flutterfire-2',
+            databaseId: databaseId,
           );
+          firestore.settings = Settings(persistenceEnabled: persistenceEnabled);
+          firestore.useFirestoreEmulator('localhost', 8080);
+          return firestore;
+        }
 
-          instance.useFirestoreEmulator('localhost', 8080);
-
-          // Use Firestore so it is fully initialized
-          await instance.collection('flutterfire-2').doc('terminate-test').set(
+        Future<void> writeThenTerminate(FirebaseFirestore firestore) async {
+          await firestore.doc('flutter-tests/persistence-across-terminate').set(
             {'foo': 'bar'},
           );
+          await firestore.waitForPendingWrites();
+          await firestore.terminate();
+        }
 
-          await instance.terminate();
-          await instance.clearPersistence();
+        const docPath = 'flutter-tests/persistence-across-terminate';
+        const cacheGet = GetOptions(source: Source.cache);
 
-          // After terminate + clearPersistence, we should be able to use
-          // Firestore again without crashing.
-          await instance
-              .collection('flutterfire-2')
-              .doc('terminate-test')
-              .get();
+        // Control: persistence on → cache must survive terminate. If this
+        // fails, Windows is not keeping a disk cache and the disabled case
+        // would not prove the setting was forwarded.
+        final enabled = firestoreFor(
+          'persistence-enabled-18659',
+          persistenceEnabled: true,
+        );
+        await writeThenTerminate(enabled);
 
-          // Clean up: terminate so the native instance cache is cleared
-          // for subsequent tests that may use the same databaseId.
-          await instance.terminate();
-        },
-        skip: kIsWeb,
-      );
+        final cachedWhenEnabled = await enabled.doc(docPath).get(cacheGet);
+        expect(cachedWhenEnabled.data(), {'foo': 'bar'});
+        expect(cachedWhenEnabled.metadata.isFromCache, isTrue);
+        await enabled.terminate();
 
-      test(
-        'setIndexConfigurationFromJSON()',
-        () async {
-          final json = jsonEncode({
-            'indexes': [
-              {
-                'collectionGroup': 'posts',
-                'queryScope': 'COLLECTION',
-                'fields': [
-                  {'fieldPath': 'author', 'arrayConfig': 'CONTAINS'},
-                  {'fieldPath': 'timestamp', 'order': 'DESCENDING'},
-                ],
-              }
+        final disabled = firestoreFor(
+          'persistence-disabled-18659',
+          persistenceEnabled: false,
+        );
+        await writeThenTerminate(disabled);
+
+        await expectLater(
+          disabled.doc(docPath).get(cacheGet),
+          throwsA(
+            isA<FirebaseException>().having(
+              (e) => e.code,
+              'code',
+              'unavailable',
+            ),
+          ),
+        );
+        await disabled.terminate();
+      },
+      skip: defaultTargetPlatform != TargetPlatform.windows,
+    );
+
+    test(
+      'Settings() - persistenceEnabled: false on the DocumentReference codec path',
+      () async {
+        // Regression test for https://github.com/firebase/flutterfire/issues/18931
+        // The Windows settings codec runs only when a DocumentReference is
+        // decoded, and that decode is what first creates the native instance.
+        // A plain get() is created by GetFirestoreFromPigeon, which already
+        // forwards persistenceEnabled. The second open writes a different
+        // document so the one we read is not sitting in the memory cache.
+        const databaseId = 'codec-persistence-18931';
+        const storedPath = 'flutter-tests/codec-persistence-18931';
+        const openerPath = 'flutter-tests/codec-opener-18931';
+        const targetPath = 'flutter-tests/codec-target-18931';
+        const cacheGet = GetOptions(source: Source.cache);
+
+        final firestore = FirebaseFirestore.instanceFor(
+          app: Firebase.app(),
+          databaseId: databaseId,
+        );
+        firestore.settings = const Settings(persistenceEnabled: false);
+        firestore.useFirestoreEmulator('localhost', 8080);
+
+        Future<void> writeReference(String path) {
+          return firestore.doc(path).set({'ref': firestore.doc(targetPath)});
+        }
+
+        await writeReference(storedPath);
+        await firestore.waitForPendingWrites();
+        await firestore.terminate();
+
+        try {
+          await writeReference(openerPath);
+          await expectLater(
+            firestore.doc(storedPath).get(cacheGet),
+            throwsA(
+              isA<FirebaseException>().having(
+                (e) => e.code,
+                'code',
+                'unavailable',
+              ),
+            ),
+          );
+        } finally {
+          await firestore.terminate();
+        }
+      },
+      skip: defaultTargetPlatform != TargetPlatform.windows,
+    );
+
+    test('setIndexConfigurationFromJSON()', () async {
+      final json = jsonEncode({
+        'indexes': [
+          {
+            'collectionGroup': 'posts',
+            'queryScope': 'COLLECTION',
+            'fields': [
+              {'fieldPath': 'author', 'arrayConfig': 'CONTAINS'},
+              {'fieldPath': 'timestamp', 'order': 'DESCENDING'},
             ],
-            'fieldOverrides': [
-              {
-                'collectionGroup': 'posts',
-                'fieldPath': 'myBigMapField',
-                'indexes': [],
-              }
-            ],
-          });
-
-          // ignore: experimental_member_use
-          await firestore.setIndexConfigurationFromJSON(json);
-        },
-        skip: defaultTargetPlatform == TargetPlatform.windows,
-      );
-
-      test('setLoggingEnabled should resolve without issue', () async {
-        await FirebaseFirestore.setLoggingEnabled(true);
-        await FirebaseFirestore.setLoggingEnabled(false);
+          },
+        ],
+        'fieldOverrides': [
+          {
+            'collectionGroup': 'posts',
+            'fieldPath': 'myBigMapField',
+            'indexes': [],
+          },
+        ],
       });
 
-      test(
-          'Settings() - `persistenceEnabled` & `cacheSizeBytes` with acceptable number',
-          () async {
-        FirebaseFirestore.instance.settings =
-            const Settings(persistenceEnabled: true, cacheSizeBytes: 10000000);
+      // ignore: deprecated_member_use, experimental_member_use
+      await firestore.setIndexConfigurationFromJSON(json);
+    }, skip: defaultTargetPlatform == TargetPlatform.windows);
+
+    test('setLoggingEnabled should resolve without issue', () async {
+      await FirebaseFirestore.setLoggingEnabled(true);
+      await FirebaseFirestore.setLoggingEnabled(false);
+    });
+
+    test(
+      'Settings() - `persistenceEnabled` & `cacheSizeBytes` with acceptable number',
+      () async {
+        FirebaseFirestore.instance.settings = const Settings(
+          persistenceEnabled: true,
+          cacheSizeBytes: 10000000,
+        );
         // Used to trigger settings
         await FirebaseFirestore.instance
             .collection('flutter-tests')
             .doc('new-doc')
-            .set(
-          {'some': 'data'},
-        );
-      });
+            .set({'some': 'data'});
+      },
+    );
 
-      test(
-          'Settings() - `persistenceEnabled` & `cacheSizeBytes` with `Settings.CACHE_SIZE_UNLIMITED`',
-          () async {
+    test(
+      'Settings() - `persistenceEnabled` & `cacheSizeBytes` with `Settings.CACHE_SIZE_UNLIMITED`',
+      () async {
         FirebaseFirestore.instance.settings = const Settings(
           persistenceEnabled: true,
           cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
@@ -246,138 +435,137 @@ void runInstanceTests() {
         await FirebaseFirestore.instance
             .collection('flutter-tests')
             .doc('new-doc')
-            .set(
-          {'some': 'data'},
-        );
-      });
+            .set({'some': 'data'});
+      },
+    );
 
-      test('Settings() - `persistenceEnabled` & without `cacheSizeBytes`',
-          () async {
-        FirebaseFirestore.instance.settings =
-            const Settings(persistenceEnabled: true);
+    test(
+      'Settings() - `persistenceEnabled` & without `cacheSizeBytes`',
+      () async {
+        FirebaseFirestore.instance.settings = const Settings(
+          persistenceEnabled: true,
+        );
         // Used to trigger settings
         await FirebaseFirestore.instance
             .collection('flutter-tests')
             .doc('new-doc')
-            .set(
-          {'some': 'data'},
-        );
-      });
-      test(
-        '`PersistenceCacheIndexManager` with default persistence settings for each platform',
-        () async {
-          if (defaultTargetPlatform == TargetPlatform.windows) {
-            try {
-              // Windows does not have `PersistenceCacheIndexManager` support
-              FirebaseFirestore.instance.persistentCacheIndexManager();
-            } catch (e) {
-              expect(e, isInstanceOf<UnimplementedError>());
-            }
-          } else {
-            if (kIsWeb) {
-              // persistence is disabled by default on web
-              final firestore = FirebaseFirestore.instanceFor(
-                app: Firebase.app(),
-                // Use different firestore instance to test behavior
-                databaseId: 'default-web',
-              );
-              PersistentCacheIndexManager? indexManager =
-                  firestore.persistentCacheIndexManager();
-              expect(indexManager, isNull);
-            } else {
-              final firestore = FirebaseFirestore.instanceFor(
-                app: Firebase.app(),
-                // Use different firestore instance to test behavior
-                databaseId: 'default-other-platform-test',
-              );
-              // macOS, android, iOS have persistence enabled by default
-              PersistentCacheIndexManager? indexManager =
-                  firestore.persistentCacheIndexManager();
-              await indexManager!.enableIndexAutoCreation();
-              await indexManager.disableIndexAutoCreation();
-              await indexManager.deleteAllIndexes();
-            }
+            .set({'some': 'data'});
+      },
+    );
+    test(
+      '`PersistenceCacheIndexManager` with default persistence settings for each platform',
+      () async {
+        if (defaultTargetPlatform == TargetPlatform.windows) {
+          try {
+            // Windows does not have `PersistenceCacheIndexManager` support
+            FirebaseFirestore.instance.persistentCacheIndexManager();
+          } catch (e) {
+            expect(e, isInstanceOf<UnimplementedError>());
           }
-        },
-      );
-
-      test(
-        '`PersistenceCacheIndexManager` with persistence enabled for each platform',
-        () async {
+        } else {
           if (kIsWeb) {
+            // persistence is disabled by default on web
             final firestore = FirebaseFirestore.instanceFor(
               app: Firebase.app(),
-              databaseId: 'web-enabled',
+              // Use different firestore instance to test behavior
+              databaseId: 'default-web',
             );
-            // persistence is disabled by default so we enable it
-            firestore.settings = const Settings(persistenceEnabled: true);
-
-            PersistentCacheIndexManager? indexManager =
-                firestore.persistentCacheIndexManager();
-
-            await indexManager!.enableIndexAutoCreation();
-            await indexManager.disableIndexAutoCreation();
-            await indexManager.deleteAllIndexes();
-
-            final firestore2 = FirebaseFirestore.instanceFor(
-              app: Firebase.app(),
-              databaseId: 'web-disabled-2',
-            );
-
-            // Enable persistence using settings instead of deprecated enablePersistence()
-            firestore2.settings = const Settings(persistenceEnabled: true);
-
-            PersistentCacheIndexManager? indexManager2 =
-                firestore2.persistentCacheIndexManager();
-
-            await indexManager2!.enableIndexAutoCreation();
-            await indexManager2.disableIndexAutoCreation();
-            await indexManager2.deleteAllIndexes();
-          } else {
-            final firestore = FirebaseFirestore.instanceFor(
-              app: Firebase.app(),
-              databaseId: 'other-platform-enabled',
-            );
-            firestore.settings = const Settings(persistenceEnabled: true);
-            PersistentCacheIndexManager? indexManager =
-                firestore.persistentCacheIndexManager();
-            await indexManager!.enableIndexAutoCreation();
-            await indexManager.disableIndexAutoCreation();
-            await indexManager.deleteAllIndexes();
-          }
-        },
-        skip: defaultTargetPlatform == TargetPlatform.windows,
-      );
-
-      test(
-        '`PersistenceCacheIndexManager` with persistence disabled for each platform',
-        () async {
-          if (kIsWeb) {
-            final firestore = FirebaseFirestore.instanceFor(
-              app: Firebase.app(),
-              databaseId: 'web-disabled-1',
-            );
-            // persistence is disabled by default so we enable it
-            firestore.settings = const Settings(persistenceEnabled: false);
-
-            PersistentCacheIndexManager? indexManager =
-                firestore.persistentCacheIndexManager();
-
+            PersistentCacheIndexManager? indexManager = firestore
+                .persistentCacheIndexManager();
             expect(indexManager, isNull);
           } else {
             final firestore = FirebaseFirestore.instanceFor(
               app: Firebase.app(),
-              databaseId: 'other-platform-disabled',
+              // Use different firestore instance to test behavior
+              databaseId: 'default-other-platform-test',
             );
-            // macOS, android, iOS have persistence enabled by default so we disable it
-            firestore.settings = const Settings(persistenceEnabled: false);
-            PersistentCacheIndexManager? indexManager =
-                firestore.persistentCacheIndexManager();
-            expect(indexManager, isNull);
+            // macOS, android, iOS have persistence enabled by default
+            PersistentCacheIndexManager? indexManager = firestore
+                .persistentCacheIndexManager();
+            await indexManager!.enableIndexAutoCreation();
+            await indexManager.disableIndexAutoCreation();
+            await indexManager.deleteAllIndexes();
           }
-        },
-        skip: defaultTargetPlatform == TargetPlatform.windows,
-      );
-    },
-  );
+        }
+      },
+    );
+
+    test(
+      '`PersistenceCacheIndexManager` with persistence enabled for each platform',
+      () async {
+        if (kIsWeb) {
+          final firestore = FirebaseFirestore.instanceFor(
+            app: Firebase.app(),
+            databaseId: 'web-enabled',
+          );
+          // persistence is disabled by default so we enable it
+          firestore.settings = const Settings(persistenceEnabled: true);
+
+          PersistentCacheIndexManager? indexManager = firestore
+              .persistentCacheIndexManager();
+
+          await indexManager!.enableIndexAutoCreation();
+          await indexManager.disableIndexAutoCreation();
+          await indexManager.deleteAllIndexes();
+
+          final firestore2 = FirebaseFirestore.instanceFor(
+            app: Firebase.app(),
+            databaseId: 'web-disabled-2',
+          );
+
+          // Enable persistence using settings instead of deprecated enablePersistence()
+          firestore2.settings = const Settings(persistenceEnabled: true);
+
+          PersistentCacheIndexManager? indexManager2 = firestore2
+              .persistentCacheIndexManager();
+
+          await indexManager2!.enableIndexAutoCreation();
+          await indexManager2.disableIndexAutoCreation();
+          await indexManager2.deleteAllIndexes();
+        } else {
+          final firestore = FirebaseFirestore.instanceFor(
+            app: Firebase.app(),
+            databaseId: 'other-platform-enabled',
+          );
+          firestore.settings = const Settings(persistenceEnabled: true);
+          PersistentCacheIndexManager? indexManager = firestore
+              .persistentCacheIndexManager();
+          await indexManager!.enableIndexAutoCreation();
+          await indexManager.disableIndexAutoCreation();
+          await indexManager.deleteAllIndexes();
+        }
+      },
+      skip: defaultTargetPlatform == TargetPlatform.windows,
+    );
+
+    test(
+      '`PersistenceCacheIndexManager` with persistence disabled for each platform',
+      () async {
+        if (kIsWeb) {
+          final firestore = FirebaseFirestore.instanceFor(
+            app: Firebase.app(),
+            databaseId: 'web-disabled-1',
+          );
+          // persistence is disabled by default so we enable it
+          firestore.settings = const Settings(persistenceEnabled: false);
+
+          PersistentCacheIndexManager? indexManager = firestore
+              .persistentCacheIndexManager();
+
+          expect(indexManager, isNull);
+        } else {
+          final firestore = FirebaseFirestore.instanceFor(
+            app: Firebase.app(),
+            databaseId: 'other-platform-disabled',
+          );
+          // macOS, android, iOS have persistence enabled by default so we disable it
+          firestore.settings = const Settings(persistenceEnabled: false);
+          PersistentCacheIndexManager? indexManager = firestore
+              .persistentCacheIndexManager();
+          expect(indexManager, isNull);
+        }
+      },
+      skip: defaultTargetPlatform == TargetPlatform.windows,
+    );
+  });
 }

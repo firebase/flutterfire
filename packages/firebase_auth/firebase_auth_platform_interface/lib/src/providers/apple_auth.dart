@@ -41,9 +41,7 @@ class AppleAuthProvider extends AuthProvider {
 
   /// Create a new [AppleAuthCredential] from a provided [accessToken];
   static OAuthCredential credential(String accessToken) {
-    return AppleAuthCredential._credential(
-      accessToken,
-    );
+    return AppleAuthCredential._credential(accessToken);
   }
 
   /// Create a new [AppleAuthCredential] from a provided [idToken], [rawNonce] and [appleFullPersonName];
@@ -107,18 +105,16 @@ class AppleAuthCredential extends OAuthCredential {
     String? idToken,
     AppleFullPersonName? appleFullPersonName,
   }) : super(
-          providerId: _kProviderId,
-          signInMethod: _kProviderId,
-          accessToken: accessToken,
-          appleFullPersonName: appleFullPersonName,
-          rawNonce: rawNonce,
-          idToken: idToken,
-        );
+         providerId: _kProviderId,
+         signInMethod: _kProviderId,
+         accessToken: accessToken,
+         appleFullPersonName: appleFullPersonName,
+         rawNonce: rawNonce,
+         idToken: idToken,
+       );
 
   factory AppleAuthCredential._credential(String accessToken) {
-    return AppleAuthCredential._(
-      accessToken: accessToken,
-    );
+    return AppleAuthCredential._(accessToken: accessToken);
   }
 
   factory AppleAuthCredential._credentialWithIDToken(

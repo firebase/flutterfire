@@ -9,6 +9,7 @@ import StoreKit
   import FlutterMacOS
 #else
   import Flutter
+  import UIKit
 #endif
 
 #if canImport(firebase_core)
@@ -45,6 +46,9 @@ public class FirebaseAnalyticsPlugin: NSObject, FLTFirebasePluginProtocol, Flutt
 
     let instance = FirebaseAnalyticsPlugin()
     FirebaseAnalyticsHostApiSetup.setUp(binaryMessenger: binaryMessenger, api: instance)
+    #if os(iOS)
+      registerSceneDelegateIfAvailable(registrar, instance: instance)
+    #endif
   }
 
   func logEvent(event: [String: Any?], completion: @escaping (Result<Void, any Error>) -> Void) {
@@ -294,3 +298,73 @@ public class FirebaseAnalyticsPlugin: NSObject, FLTFirebasePluginProtocol, Flutt
     FLTFirebaseAnalyticsChannelName
   }
 }
+
+#if os(iOS)
+  /// Registers for UIScene callbacks when the host Flutter SDK supports it.
+  ///
+  /// `addSceneDelegate(_:)` and `FlutterSceneLifeCycleDelegate` were added in
+  /// Flutter 3.38. Calling via `responds(to:)` keeps this plugin compiling on
+  /// older Flutter versions; the methods below are unused until registration
+  /// succeeds.
+  private func registerSceneDelegateIfAvailable(
+    _ registrar: FlutterPluginRegistrar,
+    instance: FirebaseAnalyticsPlugin
+  ) {
+    let selector = NSSelectorFromString("addSceneDelegate:")
+    guard (registrar as AnyObject).responds(to: selector) else {
+      return
+    }
+    _ = (registrar as AnyObject).perform(selector, with: instance)
+  }
+
+  /// Forwards UIScene URL and universal-link opens to Analytics.
+  ///
+  /// The native SDK only swizzles `UIApplicationDelegate`. Under UIScene, UIKit
+  /// delivers those opens here instead, so campaign attribution (`firebase_campaign`)
+  /// is lost unless we call `handleOpen` / `handleUserActivity` ourselves.
+  ///
+  /// Always returns `false` so later plugins (Auth, Messaging, etc.) still receive
+  /// the same scene events. Selectors match `FlutterSceneLifeCycleDelegate`
+  /// without conforming to that protocol, which is absent from older Flutter SDKs.
+  extension FirebaseAnalyticsPlugin {
+    @objc(scene:willConnectToSession:options:)
+    public func scene(
+      _: UIScene,
+      willConnectTo _: UISceneSession,
+      options connectionOptions: UIScene.ConnectionOptions?
+    ) -> Bool {
+      handleCampaign(urlContexts: connectionOptions?.urlContexts)
+      handleCampaign(userActivities: connectionOptions?.userActivities)
+      return false
+    }
+
+    @objc(scene:openURLContexts:)
+    public func scene(
+      _: UIScene,
+      openURLContexts urlContexts: Set<UIOpenURLContext>
+    ) -> Bool {
+      handleCampaign(urlContexts: urlContexts)
+      return false
+    }
+
+    @objc(scene:continueUserActivity:)
+    public func scene(_: UIScene, continue userActivity: NSUserActivity) -> Bool {
+      Analytics.handleUserActivity(userActivity)
+      return false
+    }
+
+    private func handleCampaign(urlContexts: Set<UIOpenURLContext>?) {
+      guard let urlContexts else { return }
+      for context in urlContexts {
+        Analytics.handleOpen(context.url)
+      }
+    }
+
+    private func handleCampaign(userActivities: Set<NSUserActivity>?) {
+      guard let userActivities else { return }
+      for activity in userActivities {
+        Analytics.handleUserActivity(activity)
+      }
+    }
+  }
+#endif

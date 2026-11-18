@@ -1,3 +1,20 @@
+## 6.2.0
+
+ - **FIX**(cloud_functions): surface httpsCallable stream errors as FirebaseFunctionsException ([#18834](https://github.com/firebase/flutterfire/issues/18834)). ([62218f41](https://github.com/firebase/flutterfire/commit/62218f41d0f5b71416361f7ba69477b8204b75b7))
+ - **FEAT**(android): migrate plugins to built-in Kotlin on Flutter 3.44 ([#18922](https://github.com/firebase/flutterfire/issues/18922)). ([1abe0561](https://github.com/firebase/flutterfire/commit/1abe05614d03f22782f597f847c1fc9c8c57f016))
+
+## 6.1.1
+
+ - Update a dependency to the latest release.
+
+## 6.1.0
+
+ - **FEAT**(cloud_functions): expose allowInsecureTokenAttachment for Apple debug builds ([#18734](https://github.com/firebase/flutterfire/issues/18734)). ([8f954613](https://github.com/firebase/flutterfire/commit/8f95461306aed516911664e1e529ca89406b31aa))
+
+## 6.0.7
+
+ - Update a dependency to the latest release.
+
 ## 6.0.6
 
  - Update a dependency to the latest release.

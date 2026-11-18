@@ -1,3 +1,47 @@
+## 5.2.0
+
+ - **FIX**(firebase_ai): default an omitted Vertex countTokens total to zero ([#18952](https://github.com/firebase/flutterfire/issues/18952)). ([4ce01987](https://github.com/firebase/flutterfire/commit/4ce0198712f2dfad06817bf0575dc0dc0b13ee8f))
+ - **FIX**: pass analyze and format on Flutter 3.50 ([#18950](https://github.com/firebase/flutterfire/issues/18950)). ([e5339880](https://github.com/firebase/flutterfire/commit/e53398808f6d78b293d4ac1455f296b9257a096d))
+ - **FIX**(firebase_ai): keep parsing when a URL retrieval status is omitted ([#18933](https://github.com/firebase/flutterfire/issues/18933)). ([8829ed7d](https://github.com/firebase/flutterfire/commit/8829ed7dad23b1d6916b29bed7b974848d56b279))
+ - **FIX**(firebase_ai): parse code execution results that omit output ([#18882](https://github.com/firebase/flutterfire/issues/18882)). ([0307fa2e](https://github.com/firebase/flutterfire/commit/0307fa2e9173fdd7ff03b9fec8aae76f2e4eeb69))
+ - **FIX**: make firebase_ai and firebase_data_connect Wasm-ready, and check is:wasm-ready in CI ([#18853](https://github.com/firebase/flutterfire/issues/18853)). ([b41a8b08](https://github.com/firebase/flutterfire/commit/b41a8b087292a6b236e8bd74e923f6a0f45119b7))
+ - **FEAT**(android): detect built-in Kotlin instead of checking the AGP version ([#18355](https://github.com/firebase/flutterfire/issues/18355)). ([4376b824](https://github.com/firebase/flutterfire/commit/4376b824405005092630aef97a5b7f31a394aaa7))
+ - **FEAT**(android): migrate plugins to built-in Kotlin on Flutter 3.44 ([#18922](https://github.com/firebase/flutterfire/issues/18922)). ([1abe0561](https://github.com/firebase/flutterfire/commit/1abe05614d03f22782f597f847c1fc9c8c57f016))
+ - **FEAT**(firebase_ai): expose Live API voice activity ([#18929](https://github.com/firebase/flutterfire/issues/18929)). ([8ce0ffa4](https://github.com/firebase/flutterfire/commit/8ce0ffa420b0d48b7ab3f7ad9c6cf9f552b691fd))
+
+## 5.1.0
+
+ - **FIX**(firebaseai): add useLimitedUseAppCheckTokens flag to instance cache keys ([#18826](https://github.com/firebase/flutterfire/issues/18826)). ([91b00a03](https://github.com/firebase/flutterfire/commit/91b00a0399fe8282ff984029af350ccb67ab580e))
+ - **FIX**(android): replace Groovy space-assignment in plugin build.gradle files ([#18837](https://github.com/firebase/flutterfire/issues/18837)). ([09e913ac](https://github.com/firebase/flutterfire/commit/09e913acd98fa25ea6ff547141e7caf421b7b02d))
+ - **FIX**(ai): tolerate optional safetyRatings, unknown HarmProbability, and decoded webSearchQueries ([#18816](https://github.com/firebase/flutterfire/issues/18816)). ([9b821bc1](https://github.com/firebase/flutterfire/commit/9b821bc18500b9ae55a9cb74b0be949cb64bcd19))
+ - **FIX**(firebaseai): refresh App Check and Auth headers on LiveSession.resumeSession ([#18814](https://github.com/firebase/flutterfire/issues/18814)). ([a71a5e06](https://github.com/firebase/flutterfire/commit/a71a5e06b10e756b036ea85d460c33df0128090b))
+ - **FEAT**(firebaseai): add SpeechMetadata support to TextPart ([#18811](https://github.com/firebase/flutterfire/issues/18811)). ([e8f72dd5](https://github.com/firebase/flutterfire/commit/e8f72dd51b3c6044c9a81599d0c6af5164765bc3))
+ - **FEAT**: register flutter-fire-ai and flutter-fire-dc platform versions and fix web late registration ([#18707](https://github.com/firebase/flutterfire/issues/18707)). ([569c39e7](https://github.com/firebase/flutterfire/commit/569c39e71d32f1bef77b1cea4c0d1389374be2b5))
+
+## 5.0.0
+
+> Note: This release has breaking changes.
+
+ - **REVERT**(firebaseai): Rename Agent Platform to Gemini Enterprise ([#18740](https://github.com/firebase/flutterfire/issues/18740)) ([#18759](https://github.com/firebase/flutterfire/issues/18759)). ([3f647996](https://github.com/firebase/flutterfire/commit/3f6479969c5a1a27bf7087ac45c643557d0ac396))
+ - **FIX**(ai): keep auto-executed function turns in TemplateChatSession history ([#18758](https://github.com/firebase/flutterfire/issues/18758)). ([c650d79b](https://github.com/firebase/flutterfire/commit/c650d79b65d73a048710184a3f5ae4118f979ca9))
+ - **FIX**(apple): build on Firebase Apple SDK 13 and require macOS 11 for Swift packages ([#18783](https://github.com/firebase/flutterfire/issues/18783)). ([aca14eab](https://github.com/firebase/flutterfire/commit/aca14eab5305d80011af473bc7dd289ef71b75e8))
+ - **FIX**(android): build on Firebase BoM 35 and require minSdk 24 ([#18782](https://github.com/firebase/flutterfire/issues/18782)). ([7555707d](https://github.com/firebase/flutterfire/commit/7555707dec23382dfce1e7841c00446a21c9a406))
+ - **FIX**(firebase_ai): parse camelCase fileData response parts ([#18754](https://github.com/firebase/flutterfire/issues/18754)). ([9f70ff93](https://github.com/firebase/flutterfire/commit/9f70ff938591e8a457276cdfa664951abcb9e214))
+ - **FEAT**(firebaseai): Rename Agent Platform to Gemini Enterprise ([#18740](https://github.com/firebase/flutterfire/issues/18740)). ([1035bd97](https://github.com/firebase/flutterfire/commit/1035bd97258c11fd31b25f4a8be356bfde38dd64))
+ - **FEAT**(firebaseai): Deprecated `candidateCount`, `temperature`, `topP`, `topK`, `presence… ([#18694](https://github.com/firebase/flutterfire/issues/18694)). ([2c1e26fb](https://github.com/firebase/flutterfire/commit/2c1e26fb2f2309a9e545cb3734be2fbb21c1a52d))
+ - **BREAKING** **REFACTOR**(firebaseai): remove deprecated apis ([#18708](https://github.com/firebase/flutterfire/issues/18708)). ([d857508b](https://github.com/firebase/flutterfire/commit/d857508be36f8997c5911b464b2e8c71ce6d8f3d))
+ - **BREAKING** **FIX**(firebaseai): keep LiveSession.receive() open on unrecognized server messages ([#18770](https://github.com/firebase/flutterfire/issues/18770)). ([304c435c](https://github.com/firebase/flutterfire/commit/304c435cfe398b0f58fd28a6eaac2ae9af0593ea))
+
+## 4.0.0
+
+> Note: This release has breaking changes.
+
+ - **FIX**(ai): reuse a persistent http.Client in HttpApiClient ([#18603](https://github.com/firebase/flutterfire/issues/18603)). ([87a4137c](https://github.com/firebase/flutterfire/commit/87a4137c08f2eb5c7ba4ba79ded82baa09cafe37))
+ - **FIX**(ci): bump Kotlin Gradle plugin to 2.3.0 ([#18600](https://github.com/firebase/flutterfire/issues/18600)). ([4c3865e2](https://github.com/firebase/flutterfire/commit/4c3865e2e56bf59904a9f48a6e70f0f963df2cda))
+ - **FIX**(ci): align Android toolchain and analyzer with Flutter 3.47 ([#18566](https://github.com/firebase/flutterfire/issues/18566)). ([87ace849](https://github.com/firebase/flutterfire/commit/87ace8496fec75c461f3b29a9b8a85d46e286957))
+ - **FEAT**(firebaseai): realtime input config ([#18447](https://github.com/firebase/flutterfire/issues/18447)). ([09d423b8](https://github.com/firebase/flutterfire/commit/09d423b800a966fead9eba1f4bdbc322d2720335))
+ - **BREAKING** **REFACTOR**(firebaseai): Removed deprecated Imagen methods and types due to Imagen models being shut down ([#18577](https://github.com/firebase/flutterfire/issues/18577)). ([989a177f](https://github.com/firebase/flutterfire/commit/989a177fb5f3ed93a6c4c0f76d58d2e6ab2b9d87))
+
 ## 3.15.0
 
  - **FEAT**(firebaseai): Rename vertexAI to agentPlatform ([#18467](https://github.com/firebase/flutterfire/issues/18467)). ([2f942f28](https://github.com/firebase/flutterfire/commit/2f942f28586a6fcc82b1de454b707633ba8e2e04))

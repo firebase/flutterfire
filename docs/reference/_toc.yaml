@@ -51,9 +51,6 @@ toc:
 - title: firebase_messaging_web
   path: https://pub.dev/documentation/firebase_messaging_web/latest/
   status: external
-- title: firebase_ml_model_downloader
-  path: https://pub.dev/documentation/firebase_ml_model_downloader/latest/
-  status: external
 - title: firebase_performance
   path: https://pub.dev/documentation/firebase_performance/latest/
   status: external

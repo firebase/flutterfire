@@ -8,6 +8,9 @@ import 'package:pigeon/pigeon.dart';
   PigeonOptions(
     dartOut: 'lib/src/pigeon/messages.pigeon.dart',
     // Exported via lib/test.dart so firebase_crashlytics package tests can mock it.
+    // `melos run generate:pigeon` rewrites the generated `flutter_test` import
+    // to `package:firebase_core_platform_interface/test_binding.dart`, because
+    // `flutter_test` cannot be a dependency of a published package.
     dartTestOut: 'lib/src/pigeon/test_api.dart',
     dartPackageName: 'firebase_crashlytics_platform_interface',
     kotlinOut:

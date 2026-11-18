@@ -23,10 +23,14 @@ abstract class FirebaseFunctionsPlatform extends PlatformInterface {
   FirebaseFunctionsPlatform(this.app, this.region) : super(token: _token);
 
   /// Create an instance using [app] using the existing implementation
-  factory FirebaseFunctionsPlatform.instanceFor(
-      {FirebaseApp? app, required String region}) {
-    return FirebaseFunctionsPlatform.instance
-        .delegateFor(app: app, region: region);
+  factory FirebaseFunctionsPlatform.instanceFor({
+    FirebaseApp? app,
+    required String region,
+  }) {
+    return FirebaseFunctionsPlatform.instance.delegateFor(
+      app: app,
+      region: region,
+    );
   }
 
   static final Object _token = Object();
@@ -38,6 +42,12 @@ abstract class FirebaseFunctionsPlatform extends PlatformInterface {
 
   /// The region for the HTTPS trigger, such as "us-central1".
   final String region;
+
+  /// Whether Auth, FCM, and App Check tokens may be sent over plain HTTP to a
+  /// non-loopback host.
+  ///
+  /// Only Apple debug builds consult this value. Android and web ignore it.
+  bool allowInsecureTokenAttachment = false;
 
   /// The current default [FirebaseFunctionsPlatform] instance.
   ///
@@ -56,20 +66,28 @@ abstract class FirebaseFunctionsPlatform extends PlatformInterface {
   /// Enables delegates to create new instances of themselves if a none default
   /// [FirebaseApp] instance or region is required by the user.
   @protected
-  FirebaseFunctionsPlatform delegateFor(
-      {FirebaseApp? app, required String region}) {
+  FirebaseFunctionsPlatform delegateFor({
+    FirebaseApp? app,
+    required String region,
+  }) {
     throw UnimplementedError('delegateFor() is not implemented');
   }
 
   /// Creates a [HttpsCallablePlatform] instance
   HttpsCallablePlatform httpsCallable(
-      String? origin, String name, HttpsCallableOptions options) {
+    String? origin,
+    String name,
+    HttpsCallableOptions options,
+  ) {
     throw UnimplementedError('httpsCallable() is not implemented');
   }
 
   /// Creates a [HttpsCallablePlatform] instance from a [Uri]
   HttpsCallablePlatform httpsCallableWithUri(
-      String? origin, Uri uri, HttpsCallableOptions options) {
+    String? origin,
+    Uri uri,
+    HttpsCallableOptions options,
+  ) {
     throw UnimplementedError('httpsCallableWithUri() is not implemented');
   }
 }

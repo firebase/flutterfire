@@ -33,8 +33,8 @@ Future<void> main() async {
     [
       Directory.current.path,
       'packages',
-      'firebase_data_connect',
-      'firebase_data_connect',
+      'firebase_ai',
+      'firebase_ai',
       'pubspec.yaml',
     ],
   );

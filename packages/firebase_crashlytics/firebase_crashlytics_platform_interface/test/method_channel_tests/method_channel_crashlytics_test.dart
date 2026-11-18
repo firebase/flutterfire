@@ -27,7 +27,7 @@ void main() {
       'method': 'recordError',
       'file': 'method_channel_crashlytics_test.dart',
       'line': '99999',
-    }
+    },
   ];
 
   group('$MethodChannelFirebaseCrashlytics', () {
@@ -57,15 +57,16 @@ void main() {
       });
 
       test(
-          'catch a [PlatformException] error and throws a [FirebaseCrashlyticsException] error',
-          () async {
-        hostApi.throwPlatformException = true;
+        'catch a [PlatformException] error and throws a [FirebaseCrashlyticsException] error',
+        () async {
+          hostApi.throwPlatformException = true;
 
-        await testExceptionHandling(
-          'PLATFORM',
-          mockCrashlytics.checkForUnsentReports,
-        );
-      });
+          await testExceptionHandling(
+            'PLATFORM',
+            mockCrashlytics.checkForUnsentReports,
+          );
+        },
+      );
     });
 
     group('crash', () {
@@ -76,12 +77,13 @@ void main() {
       });
 
       test(
-          'catch a [PlatformException] error and throws a [FirebaseCrashlyticsException] error',
-          () async {
-        hostApi.throwPlatformException = true;
+        'catch a [PlatformException] error and throws a [FirebaseCrashlyticsException] error',
+        () async {
+          hostApi.throwPlatformException = true;
 
-        await testExceptionHandling('PLATFORM', crashlytics.crash);
-      });
+          await testExceptionHandling('PLATFORM', crashlytics.crash);
+        },
+      );
     });
 
     group('deleteUnsentReports', () {
@@ -94,15 +96,16 @@ void main() {
       });
 
       test(
-          'catch a [PlatformException] error and throws a [FirebaseCrashlyticsException] error',
-          () async {
-        hostApi.throwPlatformException = true;
+        'catch a [PlatformException] error and throws a [FirebaseCrashlyticsException] error',
+        () async {
+          hostApi.throwPlatformException = true;
 
-        await testExceptionHandling(
-          'PLATFORM',
-          crashlytics.deleteUnsentReports,
-        );
-      });
+          await testExceptionHandling(
+            'PLATFORM',
+            crashlytics.deleteUnsentReports,
+          );
+        },
+      );
     });
 
     group('didCrashOnPreviousExecution', () {
@@ -114,15 +117,16 @@ void main() {
       });
 
       test(
-          'catch a [PlatformException] error and throws a [FirebaseCrashlyticsException] error',
-          () async {
-        hostApi.throwPlatformException = true;
+        'catch a [PlatformException] error and throws a [FirebaseCrashlyticsException] error',
+        () async {
+          hostApi.throwPlatformException = true;
 
-        await testExceptionHandling(
-          'PLATFORM',
-          crashlytics.didCrashOnPreviousExecution,
-        );
-      });
+          await testExceptionHandling(
+            'PLATFORM',
+            crashlytics.didCrashOnPreviousExecution,
+          );
+        },
+      );
     });
 
     group('recordError', () {
@@ -155,20 +159,21 @@ void main() {
       });
 
       test(
-          'catch a [PlatformException] error and throws a [FirebaseCrashlyticsException] error',
-          () async {
-        hostApi.throwPlatformException = true;
+        'catch a [PlatformException] error and throws a [FirebaseCrashlyticsException] error',
+        () async {
+          hostApi.throwPlatformException = true;
 
-        await testExceptionHandling(
-          'PLATFORM',
-          () => crashlytics.recordError(
-            exception: 'test exception',
-            reason: 'test',
-            information: 'test',
-            stackTraceElements: [],
-          ),
-        );
-      });
+          await testExceptionHandling(
+            'PLATFORM',
+            () => crashlytics.recordError(
+              exception: 'test exception',
+              reason: 'test',
+              information: 'test',
+              stackTraceElements: [],
+            ),
+          );
+        },
+      );
     });
 
     test('log', () async {
@@ -185,12 +190,16 @@ void main() {
       });
 
       test(
-          'catch a [PlatformException] error and throws a [FirebaseCrashlyticsException] error',
-          () async {
-        hostApi.throwPlatformException = true;
+        'catch a [PlatformException] error and throws a [FirebaseCrashlyticsException] error',
+        () async {
+          hostApi.throwPlatformException = true;
 
-        await testExceptionHandling('PLATFORM', crashlytics.sendUnsentReports);
-      });
+          await testExceptionHandling(
+            'PLATFORM',
+            crashlytics.sendUnsentReports,
+          );
+        },
+      );
     });
 
     group('setCrashlyticsCollectionEnabled', () {
@@ -201,15 +210,16 @@ void main() {
       });
 
       test(
-          'catch a [PlatformException] error and throws a [FirebaseCrashlyticsException] error',
-          () async {
-        hostApi.throwPlatformException = true;
+        'catch a [PlatformException] error and throws a [FirebaseCrashlyticsException] error',
+        () async {
+          hostApi.throwPlatformException = true;
 
-        await testExceptionHandling(
-          'PLATFORM',
-          () => crashlytics.setCrashlyticsCollectionEnabled(true),
-        );
-      });
+          await testExceptionHandling(
+            'PLATFORM',
+            () => crashlytics.setCrashlyticsCollectionEnabled(true),
+          );
+        },
+      );
     });
 
     group('setUserIdentifier', () {
@@ -220,15 +230,16 @@ void main() {
       });
 
       test(
-          'catch a [PlatformException] error and throws a [FirebaseCrashlyticsException] error',
-          () async {
-        hostApi.throwPlatformException = true;
+        'catch a [PlatformException] error and throws a [FirebaseCrashlyticsException] error',
+        () async {
+          hostApi.throwPlatformException = true;
 
-        await testExceptionHandling(
-          'PLATFORM',
-          () => crashlytics.setUserIdentifier(kMockUserIdentifier),
-        );
-      });
+          await testExceptionHandling(
+            'PLATFORM',
+            () => crashlytics.setUserIdentifier(kMockUserIdentifier),
+          );
+        },
+      );
     });
 
     group('setCustomKey', () {
@@ -240,15 +251,16 @@ void main() {
       });
 
       test(
-          'catch a [PlatformException] error and throws a [FirebaseCrashlyticsException] error',
-          () async {
-        hostApi.throwPlatformException = true;
+        'catch a [PlatformException] error and throws a [FirebaseCrashlyticsException] error',
+        () async {
+          hostApi.throwPlatformException = true;
 
-        await testExceptionHandling(
-          'PLATFORM',
-          () => crashlytics.setCustomKey('foo', 'bar'),
-        );
-      });
+          await testExceptionHandling(
+            'PLATFORM',
+            () => crashlytics.setCustomKey('foo', 'bar'),
+          );
+        },
+      );
     });
   });
 }

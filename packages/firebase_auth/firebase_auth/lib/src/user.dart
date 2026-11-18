@@ -163,9 +163,9 @@ class User {
   ///    user, an `email` and `credential` ([AuthCredential]) fields are also
   ///    provided. You have to link the credential to the existing user with
   ///    that email if you wish to continue signing in with that credential. To
-  ///    do so, sign in to `email` via one of
-  ///    the providers returned and then [User.linkWithCredential] the original
-  ///    credential to that newly signed in user.
+  ///    do so, sign in to `email` with the provider the account already uses
+  ///    and then [User.linkWithCredential] the original credential to that
+  ///    newly signed in user.
   /// - **operation-not-allowed**:
   ///  - Thrown if you have not enabled the provider in the Firebase Console. Go
   ///    to the Firebase Console for your project, in the Auth section and the
@@ -173,10 +173,6 @@ class User {
   /// - **invalid-email**:
   ///  - Thrown if the email used in a [EmailAuthProvider.credential] is
   ///    invalid.
-  /// - **invalid-email**:
-  ///  - Thrown if the password used in a [EmailAuthProvider.credential] is not
-  ///    correct or when the user associated with the email does not have a
-  ///    password.
   /// - **invalid-verification-code**:
   ///  - Thrown if the credential is a [PhoneAuthProvider.credential] and the
   ///    verification code of the credential is not valid.
@@ -198,6 +194,10 @@ class User {
 
   /// Links with an AuthProvider using native authentication flow.
   /// On web, you should use [linkWithPopup] or [linkWithRedirect] instead.
+  ///
+  /// On macOS, only [AppleAuthProvider] is supported: the Firebase Apple SDK
+  /// implements the OAuth web sign-in flow on iOS only. Any other provider
+  /// throws a [FirebaseAuthException] with the code `unsupported-platform`.
   ///
   /// A [FirebaseAuthException] maybe thrown with the following error code:
   /// - **provider-already-linked**:
@@ -232,9 +232,7 @@ class User {
   ///  - Thrown if you have not enabled the provider in the Firebase Console. Go
   ///    to the Firebase Console for your project, in the Auth section and the
   ///    Sign in Method tab and configure the provider.
-  Future<UserCredential> linkWithProvider(
-    AuthProvider provider,
-  ) async {
+  Future<UserCredential> linkWithProvider(AuthProvider provider) async {
     try {
       return UserCredential._(
         _auth,
@@ -251,6 +249,10 @@ class User {
   ///
   /// Use before operations such as [User.updatePassword] that require tokens
   /// from recent sign-in attempts.
+  ///
+  /// On macOS, only [AppleAuthProvider] is supported: the Firebase Apple SDK
+  /// implements the OAuth web sign-in flow on iOS only. Any other provider
+  /// throws a [FirebaseAuthException] with the code `unsupported-platform`.
   ///
   /// A [FirebaseAuthException] maybe thrown with the following error code:
   /// - **user-mismatch**:
@@ -320,9 +322,7 @@ class User {
   /// - **invalid-verification-id**:
   ///  - Thrown if the credential is a [PhoneAuthProvider.credential] and the
   ///    verification ID of the credential is not valid.
-  Future<UserCredential> reauthenticateWithPopup(
-    AuthProvider provider,
-  ) async {
+  Future<UserCredential> reauthenticateWithPopup(AuthProvider provider) async {
     return UserCredential._(
       _auth,
       await _delegate.reauthenticateWithPopup(provider),
@@ -358,9 +358,7 @@ class User {
   /// - **invalid-verification-id**:
   ///  - Thrown if the credential is a [PhoneAuthProvider.credential] and the
   ///    verification ID of the credential is not valid.
-  Future<void> reauthenticateWithRedirect(
-    AuthProvider provider,
-  ) async {
+  Future<void> reauthenticateWithRedirect(AuthProvider provider) async {
     await _delegate.reauthenticateWithRedirect(provider);
   }
 
@@ -401,10 +399,7 @@ class User {
   ///    Sign in Method tab and configure the provider.
   Future<UserCredential> linkWithPopup(AuthProvider provider) async {
     try {
-      return UserCredential._(
-        _auth,
-        await _delegate.linkWithPopup(provider),
-      );
+      return UserCredential._(_auth, await _delegate.linkWithPopup(provider));
     } on FirebaseAuthMultiFactorExceptionPlatform catch (e) {
       throw FirebaseAuthMultiFactorException._(_auth, e);
     } catch (e) {
@@ -493,8 +488,10 @@ class User {
     bool mustClear = verifier == null;
     verifier ??= RecaptchaVerifier(auth: _delegate.auth);
     try {
-      final result =
-          await _delegate.linkWithPhoneNumber(phoneNumber, verifier.delegate);
+      final result = await _delegate.linkWithPhoneNumber(
+        phoneNumber,
+        verifier.delegate,
+      );
       if (mustClear) {
         verifier.clear();
       }
@@ -617,8 +614,9 @@ class User {
 
   /// Update the user name.
   Future<void> updateDisplayName(String? displayName) {
-    return _delegate
-        .updateProfile(<String, String?>{'displayName': displayName});
+    return _delegate.updateProfile(<String, String?>{
+      'displayName': displayName,
+    });
   }
 
   /// Update the user's profile picture.
@@ -626,11 +624,22 @@ class User {
     return _delegate.updateProfile(<String, String?>{'photoURL': photoURL});
   }
 
+  // Default value of the [updateProfile] arguments, so an omitted argument can
+  // be told apart from an explicit `null`.
+  static const String _unchangedProfileField = '<unchanged>';
+
   /// Updates a user's profile data.
-  Future<void> updateProfile({String? displayName, String? photoURL}) {
+  ///
+  /// Only the fields that are passed are changed. Pass `null` to remove the
+  /// display name or the photo URL.
+  Future<void> updateProfile({
+    String? displayName = _unchangedProfileField,
+    String? photoURL = _unchangedProfileField,
+  }) {
     return _delegate.updateProfile(<String, String?>{
-      'displayName': displayName,
-      'photoURL': photoURL,
+      if (!identical(displayName, _unchangedProfileField))
+        'displayName': displayName,
+      if (!identical(photoURL, _unchangedProfileField)) 'photoURL': photoURL,
     });
   }
 

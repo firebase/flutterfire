@@ -208,7 +208,6 @@ Product                                          | Plugin name                  
 [{{data_connect_short}}][dataconnect docs]       | `firebase_data_connect`        | {{YES}} | {{YES}} | {{YES}} | |
 [{{inappmessaging}}][fiam docs]                  | `firebase_in_app_messaging`    | {{YES}} | {{YES}} |         | |
 [{{firebase_installations}}][installations docs] | `firebase_app_installations`   | {{YES}} | {{YES}} | {{YES}} | beta |
-[ML Model Downloader][ml docs]                   | `firebase_ml_model_downloader` | {{YES}} | {{YES}} |         | deprecated |
 [{{perfmon}}][perfmon docs]                      | `firebase_performance`         | {{YES}} | {{YES}} | {{YES}} | |
 [{{database}}][rtdb docs]                        | `firebase_database`            | {{YES}} | {{YES}} | {{YES}} | beta |
 [{{remote_config}}][remote config docs]          | `firebase_remote_config`       | {{YES}} | {{YES}} | {{YES}} | beta |
@@ -335,7 +334,6 @@ By default, the Firebase Flutter SDK auto-injects the Firebase JavaScript SDK wh
 [ddls docs]: /docs/dynamic-links/flutter/create
 [fiam docs]: /docs/in-app-messaging/get-started?platform=flutter
 [installations docs]: /docs/projects/manage-installations
-[ml docs]: /docs/ml/flutter/use-custom-models
 [perfmon docs]: /docs/perf-mon/flutter/get-started
 [rtdb docs]: /docs/database/flutter/start
 [remote config docs]: /docs/remote-config/get-started?platform=flutter

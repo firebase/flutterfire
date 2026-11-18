@@ -3,8 +3,14 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 @TestOn('chrome')
+import 'dart:js_interop';
+
 import 'package:firebase_remote_config_platform_interface/firebase_remote_config_platform_interface.dart';
 import 'package:firebase_remote_config_web/firebase_remote_config_web.dart';
+import 'package:firebase_remote_config_web/src/interop/firebase_remote_config.dart'
+    as remote_config_interop_wrapper;
+import 'package:firebase_remote_config_web/src/interop/firebase_remote_config_interop.dart'
+    as remote_config_interop;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
@@ -24,8 +30,9 @@ void main() {
     test('setInitialValues', () {
       final remoteConfigValues = <dynamic, dynamic>{'a': 'b'};
       remoteConfig.setInitialValues(remoteConfigValues: remoteConfigValues);
-      verify(remoteConfig.setInitialValues(
-          remoteConfigValues: remoteConfigValues));
+      verify(
+        remoteConfig.setInitialValues(remoteConfigValues: remoteConfigValues),
+      );
       verifyNoMoreInteractions(remoteConfig);
     });
 
@@ -96,8 +103,10 @@ void main() {
 
     test('setConfigSettings', () {
       const time = Duration(milliseconds: 1000);
-      RemoteConfigSettings settings =
-          RemoteConfigSettings(fetchTimeout: time, minimumFetchInterval: time);
+      RemoteConfigSettings settings = RemoteConfigSettings(
+        fetchTimeout: time,
+        minimumFetchInterval: time,
+      );
       remoteConfig.setConfigSettings(settings);
       verify(remoteConfig.setConfigSettings(settings));
       verifyNoMoreInteractions(remoteConfig);
@@ -109,5 +118,29 @@ void main() {
       verify(remoteConfig.setDefaults(parameters));
       verifyNoMoreInteractions(remoteConfig);
     });
+
+    test(
+      'RemoteConfig.defaultConfig round-trips and returns unmodifiable Map',
+      () {
+        final jsRemoteConfig =
+            JSObject() as remote_config_interop.RemoteConfigJsImpl;
+        final wrapper = remote_config_interop_wrapper.RemoteConfig.getInstance(
+          jsRemoteConfig,
+        );
+
+        wrapper.defaultConfig = <String, dynamic>{
+          'title': 'Hello',
+          'counter': 1,
+        };
+        final config = wrapper.defaultConfig;
+
+        expect(config, isA<Map<String, dynamic>>());
+        expect(
+          config,
+          equals(<String, dynamic>{'title': 'Hello', 'counter': 1}),
+        );
+        expect(() => config['x'] = 2, throwsUnsupportedError);
+      },
+    );
   });
 }

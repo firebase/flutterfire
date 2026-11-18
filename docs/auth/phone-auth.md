@@ -34,7 +34,7 @@ Before starting with Phone Authentication, ensure you have followed these steps:
 **Note**; Phone number sign-in is only available for use on real devices and the web. To test your authentication flow on device emulators,
 please see [Testing](#testing).
 
-## iOS: reCAPTCHA SDK and Identity Platform
+## iOS: reCAPTCHA SDK and Identity Platform {:#ios-recaptcha-sdk-and-identity-platform}
 
 On **iOS**, phone sign-in can fail with `FirebaseAuthException` code **`recaptcha-sdk-not-linked`** (for example: *The reCAPTCHA SDK is not linked to your app*).
 That error is raised by the **native Firebase iOS Auth** SDK when your Firebase / **Identity Platform** configuration expects **reCAPTCHA Enterprise**

@@ -56,9 +56,7 @@ class CustomAppCheckToken {
 /// ```
 class WindowsCustomProvider extends WindowsAppCheckProvider {
   /// Creates a Windows custom provider.
-  const WindowsCustomProvider({
-    required this.fetchToken,
-  }) : super('custom');
+  const WindowsCustomProvider({required this.fetchToken}) : super('custom');
 
   /// Callback invoked when the native Firebase SDK needs a fresh token.
   final Future<CustomAppCheckToken> Function() fetchToken;

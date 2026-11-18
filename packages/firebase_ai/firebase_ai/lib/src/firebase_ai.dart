@@ -22,8 +22,10 @@ import 'package:meta/meta.dart';
 
 import '../firebase_ai.dart';
 import 'base_model.dart';
+import 'firebaseai_version.dart';
+import 'platform_version_stub.dart'
+    if (dart.library.js_interop) 'platform_version_web.dart';
 
-const _defaultVertexAILocation = 'us-central1';
 const _defaultAgentPlatformLocation = 'global';
 
 /// The entrypoint for generative models.
@@ -31,12 +33,13 @@ class FirebaseAI extends FirebasePlugin {
   FirebaseAI._({
     required this.app,
     required this.location,
-    required bool useAgentPlatform,
+    required this._useAgentPlatform,
     this.appCheck,
     this.auth,
     this.useLimitedUseAppCheckTokens = false,
-  })  : _useAgentPlatform = useAgentPlatform,
-        super(app.name, 'plugins.flutter.io/firebase_vertexai');
+  }) : super(app.name, 'plugins.flutter.io/firebase_vertexai') {
+    registerWebLibraryVersion('flutter-fire-ai', packageVersion);
+  }
 
   /// The [FirebaseApp] for this current [FirebaseAI] instance.
   FirebaseApp app;
@@ -61,60 +64,20 @@ class FirebaseAI extends FirebasePlugin {
   /// Returns an instance using a specified [FirebaseApp].
   ///
   /// If [app] is not provided, the default Firebase app will be used.
-  /// If pass in [appCheck], request session will get protected from abusing.
-  @Deprecated(
-      'Use agentPlatform() instead. Note that the default location for agentPlatform is now "global" instead of "us-central1"')
-  static FirebaseAI vertexAI({
-    FirebaseApp? app,
-    @Deprecated(
-        'Passing an explicit instance is deprecated, internal handling is now automatic.')
-    FirebaseAppCheck? appCheck,
-    @Deprecated(
-        'Passing an explicit instance is deprecated, internal handling is now automatic.')
-    FirebaseAuth? auth,
-    String? location,
-    bool? useLimitedUseAppCheckTokens,
-  }) {
-    app ??= Firebase.app();
-    appCheck ??= app.getService<FirebaseAppCheck>();
-    auth ??= app.getService<FirebaseAuth>();
-    var instanceKey = '${app.name}::vertexai::$location';
-
-    if (_cachedInstances.containsKey(instanceKey)) {
-      return _cachedInstances[instanceKey]!;
-    }
-
-    location ??= _defaultVertexAILocation;
-
-    FirebaseAI newInstance = FirebaseAI._(
-      app: app,
-      location: location,
-      appCheck: appCheck,
-      auth: auth,
-      useAgentPlatform: true,
-      useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens ?? false,
-    );
-    _cachedInstances[instanceKey] = newInstance;
-
-    return newInstance;
-  }
-
-  /// Returns an instance using a specified [FirebaseApp].
-  ///
-  /// If [app] is not provided, the default Firebase app will be used.
   static FirebaseAI agentPlatform({
     FirebaseApp? app,
     String? location,
     bool? useLimitedUseAppCheckTokens,
   }) {
     app ??= Firebase.app();
-    var instanceKey = '${app.name}::agentPlatform::$location';
+    location ??= _defaultAgentPlatformLocation;
+    final limitedUseTokens = useLimitedUseAppCheckTokens ?? false;
+    var instanceKey =
+        '${app.name}::agentPlatform::$location::$limitedUseTokens';
 
     if (_cachedInstances.containsKey(instanceKey)) {
       return _cachedInstances[instanceKey]!;
     }
-
-    location ??= _defaultAgentPlatformLocation;
 
     FirebaseAI newInstance = FirebaseAI._(
       app: app,
@@ -122,7 +85,7 @@ class FirebaseAI extends FirebasePlugin {
       appCheck: app.getService<FirebaseAppCheck>(),
       auth: app.getService<FirebaseAuth>(),
       useAgentPlatform: true,
-      useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens ?? false,
+      useLimitedUseAppCheckTokens: limitedUseTokens,
     );
     _cachedInstances[instanceKey] = newInstance;
 
@@ -135,18 +98,11 @@ class FirebaseAI extends FirebasePlugin {
   /// If pass in [appCheck], request session will get protected from abusing.
   static FirebaseAI googleAI({
     FirebaseApp? app,
-    @Deprecated(
-        'Passing an explicit instance is deprecated, internal handling is now automatic.')
-    FirebaseAppCheck? appCheck,
-    @Deprecated(
-        'Passing an explicit instance is deprecated, internal handling is now automatic.')
-    FirebaseAuth? auth,
     bool? useLimitedUseAppCheckTokens,
   }) {
     app ??= Firebase.app();
-    appCheck ??= app.getService<FirebaseAppCheck>();
-    auth ??= app.getService<FirebaseAuth>();
-    var instanceKey = '${app.name}::googleai';
+    final limitedUseTokens = useLimitedUseAppCheckTokens ?? false;
+    var instanceKey = '${app.name}::googleai::$limitedUseTokens';
 
     if (_cachedInstances.containsKey(instanceKey)) {
       return _cachedInstances[instanceKey]!;
@@ -155,10 +111,10 @@ class FirebaseAI extends FirebasePlugin {
     FirebaseAI newInstance = FirebaseAI._(
       app: app,
       location: _defaultAgentPlatformLocation,
-      appCheck: appCheck,
-      auth: auth,
+      appCheck: app.getService<FirebaseAppCheck>(),
+      auth: app.getService<FirebaseAuth>(),
       useAgentPlatform: false,
-      useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens ?? false,
+      useLimitedUseAppCheckTokens: limitedUseTokens,
     );
     _cachedInstances[instanceKey] = newInstance;
 
@@ -205,26 +161,6 @@ class FirebaseAI extends FirebasePlugin {
     );
   }
 
-  /// Create a [ImagenModel].
-  ///
-  /// The optional [safetySettings] can be used to control and guide the
-  /// generation. See [ImagenSafetySettings] for details.
-  ImagenModel imagenModel(
-      {required String model,
-      ImagenGenerationConfig? generationConfig,
-      ImagenSafetySettings? safetySettings}) {
-    return createImagenModel(
-        app: app,
-        location: location,
-        model: model,
-        useAgentPlatform: _useAgentPlatform,
-        generationConfig: generationConfig,
-        safetySettings: safetySettings,
-        appCheck: appCheck,
-        auth: auth,
-        useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens);
-  }
-
   /// Create a [LiveGenerativeModel] for real-time interaction.
   ///
   /// The optional [liveGenerationConfig] can be used to control and guide the
@@ -255,20 +191,6 @@ class FirebaseAI extends FirebasePlugin {
   @experimental
   TemplateGenerativeModel templateGenerativeModel() {
     return createTemplateGenerativeModel(
-        app: app,
-        location: location,
-        useAgentPlatform: _useAgentPlatform,
-        useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens,
-        auth: auth,
-        appCheck: appCheck);
-  }
-
-  /// Returns a [TemplateImagenModel] instance.
-  ///
-  /// This is an experimental API and may change in the future.
-  @experimental
-  TemplateImagenModel templateImagenModel() {
-    return createTemplateImagenModel(
       app: app,
       location: location,
       useAgentPlatform: _useAgentPlatform,

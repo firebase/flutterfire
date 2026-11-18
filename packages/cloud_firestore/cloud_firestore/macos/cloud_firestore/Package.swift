@@ -7,13 +7,13 @@
 
 import PackageDescription
 
-let libraryVersion = "6.8.0"
-let firebaseSdkVersion: Version = "12.17.0"
+let libraryVersion = "7.2.0"
+let firebaseSdkVersion: Version = "13.2.0"
 
 let package = Package(
   name: "cloud_firestore",
   platforms: [
-    .macOS("10.15")
+    .macOS("11.0")
   ],
   products: [
     .library(name: "cloud-firestore", targets: ["cloud_firestore"])
@@ -24,22 +24,41 @@ let package = Package(
     .package(name: "FlutterFramework", path: "../FlutterFramework"),
   ],
   targets: [
+    // SPM does not allow mixing Swift and ObjC in a single target.
+    .target(
+      name: "cloud_firestore_objc",
+      dependencies: [
+        .product(name: "FirebaseFirestore", package: "firebase-ios-sdk")
+      ],
+      path: "Sources/cloud_firestore_objc",
+      publicHeadersPath: "include",
+      cSettings: [
+        .headerSearchPath("include")
+      ]
+    ),
     .target(
       name: "cloud_firestore",
       dependencies: [
+        "cloud_firestore_objc",
         .product(name: "FirebaseFirestore", package: "firebase-ios-sdk"),
         .product(name: "firebase-core", package: "firebase_core"),
         .product(name: "FlutterFramework", package: "FlutterFramework"),
       ],
+      path: "Sources/cloud_firestore",
       resources: [
         .process("Resources")
       ],
-      cSettings: [
-        .headerSearchPath("include/cloud_firestore/Private"),
-        .headerSearchPath("include/cloud_firestore/Public"),
-        .define("LIBRARY_VERSION", to: "\"\(libraryVersion)\""),
-        .define("LIBRARY_NAME", to: "\"flutter-fire-fst\""),
+      swiftSettings: [
+        .define("FLT_FIREBASE_SDK_13")
       ]
-    )
+    ),
+    .testTarget(
+      name: "cloud_firestoreTests",
+      dependencies: [
+        "cloud_firestore",
+        .product(name: "FirebaseFirestore", package: "firebase-ios-sdk"),
+      ],
+      path: "Tests/cloud_firestoreTests"
+    ),
   ]
 )

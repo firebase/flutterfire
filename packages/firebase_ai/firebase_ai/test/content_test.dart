@@ -17,7 +17,11 @@ import 'dart:typed_data';
 
 import 'package:firebase_ai/src/api.dart';
 import 'package:firebase_ai/src/content.dart';
+import 'package:firebase_ai/src/error.dart';
+import 'package:firebase_ai/src/speech_config.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+import 'utils/matchers.dart';
 
 // Mock google_ai classes (if needed)
 // ...
@@ -25,8 +29,10 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   group('Content tests', () {
     test('constructor', () {
-      final content = Content('user',
-          [const TextPart('Test'), InlineDataPart('image/png', Uint8List(0))]);
+      final content = Content('user', [
+        const TextPart('Test'),
+        InlineDataPart('image/png', Uint8List(0)),
+      ]);
       expect(content.role, 'user');
       expect(content.parts[0], isA<TextPart>());
       expect((content.parts[0] as TextPart).text, 'Test');
@@ -42,8 +48,9 @@ void main() {
     });
 
     test('data()', () {
-      final content =
-          Content('user', [InlineDataPart('image/png', Uint8List(0))]);
+      final content = Content('user', [
+        InlineDataPart('image/png', Uint8List(0)),
+      ]);
       expect(content.parts[0], isA<InlineDataPart>());
     });
 
@@ -58,35 +65,69 @@ void main() {
         'role': 'user',
         'parts': [
           {
-            'inlineData': {
-              'mimeType': 'image/png',
-              'data': '',
-            },
-            'mediaResolution': {
-              'level': 'MEDIA_RESOLUTION_HIGH',
-            },
-          }
+            'inlineData': {'mimeType': 'image/png', 'data': ''},
+            'mediaResolution': {'level': 'MEDIA_RESOLUTION_HIGH'},
+          },
         ],
       });
     });
 
     test('multi()', () {
-      final content = Content('user',
-          [const TextPart('Test'), InlineDataPart('image/png', Uint8List(0))]);
+      final content = Content('user', [
+        const TextPart('Test'),
+        InlineDataPart('image/png', Uint8List(0)),
+      ]);
       expect(content.parts.length, 2);
       expect(content.parts[0], isA<TextPart>());
       expect(content.parts[1], isA<InlineDataPart>());
     });
 
+    test('functionResponse() has role user', () {
+      final content = Content.functionResponse('testFunc', {'result': 'ok'});
+      expect(content.role, 'user');
+      expect(content.parts.length, 1);
+      expect(content.parts[0], isA<FunctionResponse>());
+      final json = content.toJson();
+      expect(json['role'], 'user');
+      expect(
+        (json['parts']! as List)[0]['functionResponse']['name'],
+        'testFunc',
+      );
+    });
+
+    test('functionResponses() has role user', () {
+      final content = Content.functionResponses([
+        const FunctionResponse('testFunc1', {'result': 1}),
+        const FunctionResponse('testFunc2', {'result': 2}),
+      ]);
+      expect(content.role, 'user');
+      expect(content.parts.length, 2);
+      final json = content.toJson();
+      expect(json['role'], 'user');
+    });
+
+    test('toJson sanitizes legacy function role to user', () {
+      final content = Content('function', [
+        const FunctionResponse('legacyFunc', {}),
+      ]);
+      expect(content.role, 'function');
+      final json = content.toJson();
+      expect(json['role'], 'user');
+    });
+
     test('toJson', () {
-      final content = Content('user',
-          [const TextPart('Test'), InlineDataPart('image/png', Uint8List(0))]);
+      final content = Content('user', [
+        const TextPart('Test'),
+        InlineDataPart('image/png', Uint8List(0)),
+      ]);
       final json = content.toJson();
       expect(json['role'], 'user');
       expect((json['parts']! as List).length, 2);
       expect((json['parts']! as List)[0]['text'], 'Test');
       expect(
-          (json['parts']! as List)[1]['inlineData']['mimeType'], 'image/png');
+        (json['parts']! as List)[1]['inlineData']['mimeType'],
+        'image/png',
+      );
       expect((json['parts']! as List)[1]['inlineData']['data'].length, 0);
     });
 
@@ -95,7 +136,7 @@ void main() {
         'role': 'user',
         'parts': [
           {'text': 'Hello'},
-        ]
+        ],
       };
       final content = parseContent(json);
       expect(content.role, 'user');
@@ -107,17 +148,63 @@ void main() {
 
   group('Part tests', () {
     test('TextPart with isThought and thoughtSignature toJson', () {
-      const part =
-          TextPart.forTest('Test', isThought: true, thoughtSignature: 'sig');
+      const part = TextPart.forTest(
+        'Test',
+        isThought: true,
+        thoughtSignature: 'sig',
+      );
       final json = part.toJson() as Map;
       expect(json['text'], 'Test');
       expect(json['thought'], true);
       expect(json['thoughtSignature'], 'sig');
+      expect(json.containsKey('speechMetadata'), false);
+    });
+
+    test('TextPart with SpeechMetadata toJson', () {
+      const part = TextPart(
+        'Hello there!',
+        speechMetadata: SpeechMetadata(speaker: 'Alice', style: 'excitedly'),
+      );
+      expect(part.toJson(), {
+        'text': 'Hello there!',
+        'speechMetadata': {'speaker': 'Alice', 'style': 'excitedly'},
+      });
+
+      const speakerOnlyPart = TextPart(
+        'Hi!',
+        speechMetadata: SpeechMetadata(speaker: 'Bob'),
+      );
+      expect(speakerOnlyPart.toJson(), {
+        'text': 'Hi!',
+        'speechMetadata': {'speaker': 'Bob'},
+      });
+
+      const styleOnlyPart = TextPart(
+        'Shh...',
+        speechMetadata: SpeechMetadata(style: 'whispering'),
+      );
+      expect(styleOnlyPart.toJson(), {
+        'text': 'Shh...',
+        'speechMetadata': {'style': 'whispering'},
+      });
+
+      const emptyMetadataPart = TextPart(
+        'Plain',
+        speechMetadata: SpeechMetadata(),
+      );
+      expect(emptyMetadataPart.toJson(), {
+        'text': 'Plain',
+        'speechMetadata': <String, Object?>{},
+      });
     });
 
     test('DataPart with isThought and thoughtSignature toJson', () {
-      final part = InlineDataPart.forTest('image/png', Uint8List(0),
-          isThought: true, thoughtSignature: 'sig');
+      final part = InlineDataPart.forTest(
+        'image/png',
+        Uint8List(0),
+        isThought: true,
+        thoughtSignature: 'sig',
+      );
       final json = part.toJson() as Map;
       final inlineData = json['inlineData'] as Map;
       expect(inlineData['mimeType'], 'image/png');
@@ -128,8 +215,11 @@ void main() {
     });
 
     test('DataPart with false willContinue toJson', () {
-      final part =
-          InlineDataPart('image/png', Uint8List(0), willContinue: false);
+      final part = InlineDataPart(
+        'image/png',
+        Uint8List(0),
+        willContinue: false,
+      );
       final json = part.toJson() as Map;
       final inlineData = json['inlineData'] as Map;
       expect(inlineData['mimeType'], 'image/png');
@@ -139,8 +229,11 @@ void main() {
     });
 
     test('DataPart with true willContinue toJson', () {
-      final part =
-          InlineDataPart('image/png', Uint8List(0), willContinue: true);
+      final part = InlineDataPart(
+        'image/png',
+        Uint8List(0),
+        willContinue: true,
+      );
       final json = part.toJson() as Map;
       final inlineData = json['inlineData'] as Map;
       expect(inlineData['mimeType'], 'image/png');
@@ -157,27 +250,23 @@ void main() {
       );
 
       expect(part.toJson(), {
-        'inlineData': {
-          'mimeType': 'image/png',
-          'data': '',
-        },
-        'mediaResolution': {
-          'level': 'MEDIA_RESOLUTION_ULTRA_HIGH',
-        },
+        'inlineData': {'mimeType': 'image/png', 'data': ''},
+        'mediaResolution': {'level': 'MEDIA_RESOLUTION_ULTRA_HIGH'},
       });
     });
 
     test('FunctionCall with isThought and thoughtSignature toJson', () {
       const part = FunctionCall.forTest(
-          'myFunction',
-          {
-            'arguments': [
-              {'text': 'Test'}
-            ],
-          },
-          id: 'myFunctionId',
-          isThought: true,
-          thoughtSignature: 'sig');
+        'myFunction',
+        {
+          'arguments': [
+            {'text': 'Test'},
+          ],
+        },
+        id: 'myFunctionId',
+        isThought: true,
+        thoughtSignature: 'sig',
+      );
       final json = part.toJson() as Map;
       final functionCall = json['functionCall'] as Map;
       expect(functionCall['name'], 'myFunction');
@@ -198,8 +287,8 @@ void main() {
         {
           'inlineData': {
             'mimeType': 'application/octet-stream',
-            'data': Uint8List(0)
-          }
+            'data': Uint8List(0),
+          },
         },
         id: 'myFunctionId',
         isThought: true,
@@ -216,8 +305,11 @@ void main() {
     });
 
     test('FileData with isThought and thoughtSignature toJson', () {
-      const part = FileData.forTest('image/png', 'gs://bucket-name/path',
-          isThought: true);
+      const part = FileData.forTest(
+        'image/png',
+        'gs://bucket-name/path',
+        isThought: true,
+      );
       final json = part.toJson() as Map;
       final fileData = json['file_data'] as Map;
       expect(fileData['mime_type'], 'image/png');
@@ -237,9 +329,7 @@ void main() {
           'mime_type': 'image/png',
           'file_uri': 'gs://bucket-name/path',
         },
-        'mediaResolution': {
-          'level': 'MEDIA_RESOLUTION_HIGH',
-        },
+        'mediaResolution': {'level': 'MEDIA_RESOLUTION_HIGH'},
       });
     });
   });
@@ -249,7 +339,50 @@ void main() {
       final json = {'text': 'Hello, world!'};
       final result = parsePart(json);
       expect(result, isA<TextPart>());
-      expect((result as TextPart).text, 'Hello, world!');
+      final textPart = result as TextPart;
+      expect(textPart.text, 'Hello, world!');
+      expect(textPart.speechMetadata, isNull);
+    });
+
+    test('parses TextPart with SpeechMetadata correctly', () {
+      final json = {
+        'text': 'Hello there!',
+        'speechMetadata': {'speaker': 'Alice', 'style': 'excitedly'},
+      };
+      final result = parsePart(json);
+      expect(result, isA<TextPart>());
+      final textPart = result as TextPart;
+      expect(textPart.text, 'Hello there!');
+      expect(
+        textPart.speechMetadata,
+        matchesSpeechMetadata(
+          const SpeechMetadata(speaker: 'Alice', style: 'excitedly'),
+        ),
+      );
+    });
+
+    test('parses TextPart with partial SpeechMetadata correctly', () {
+      final speakerOnlyJson = {
+        'text': 'Hi!',
+        'speechMetadata': {'speaker': 'Bob'},
+      };
+      final speakerOnlyResult = parsePart(speakerOnlyJson) as TextPart;
+      expect(speakerOnlyResult.text, 'Hi!');
+      expect(
+        speakerOnlyResult.speechMetadata,
+        matchesSpeechMetadata(const SpeechMetadata(speaker: 'Bob')),
+      );
+
+      final styleOnlyJson = {
+        'text': 'Shh...',
+        'speechMetadata': {'style': 'whispering'},
+      };
+      final styleOnlyResult = parsePart(styleOnlyJson) as TextPart;
+      expect(styleOnlyResult.text, 'Shh...');
+      expect(
+        styleOnlyResult.speechMetadata,
+        matchesSpeechMetadata(const SpeechMetadata(style: 'whispering')),
+      );
     });
 
     test('parses FunctionCall correctly', () {
@@ -258,7 +391,7 @@ void main() {
           'name': 'myFunction',
           'args': {'arg1': 1, 'arg2': 'value'},
           'id': '123',
-        }
+        },
       };
       final result = parsePart(json);
       expect(result, isA<FunctionCall>());
@@ -273,7 +406,7 @@ void main() {
         'file_data': {
           'file_uri': 'file:///path/to/file.txt',
           'mime_type': 'text/plain',
-        }
+        },
       };
       final result = parsePart(json);
       expect(result, isA<FileData>());
@@ -282,13 +415,60 @@ void main() {
       expect(fileData.mimeType, 'text/plain');
     });
 
+    test('parses camelCase fileData correctly', () {
+      final json = {
+        'fileData': {
+          'fileUri': 'gs://bucket/image.png',
+          'mimeType': 'image/png',
+        },
+      };
+      final result = parsePart(json);
+      expect(result, isA<FileData>());
+      final fileData = result as FileData;
+      expect(fileData.fileUri, 'gs://bucket/image.png');
+      expect(fileData.mimeType, 'image/png');
+      expect(fileData.isThought, false);
+      expect((fileData.toJson() as Map).containsKey('thoughtSignature'), false);
+    });
+
+    test('parses camelCase fileData with thought and thoughtSignature', () {
+      final json = {
+        'thought': true,
+        'thoughtSignature': 'sig',
+        'fileData': {
+          'fileUri': 'gs://bucket/image.png',
+          'mimeType': 'image/png',
+        },
+      };
+      final result = parsePart(json);
+      expect(result, isA<FileData>());
+      final fileData = result as FileData;
+      expect(fileData.fileUri, 'gs://bucket/image.png');
+      expect(fileData.mimeType, 'image/png');
+      expect(fileData.isThought, true);
+      expect((fileData.toJson() as Map)['thoughtSignature'], 'sig');
+    });
+
+    test('parses camelCase fileData with mediaResolution', () {
+      final json = {
+        'fileData': {
+          'fileUri': 'gs://bucket/image.png',
+          'mimeType': 'image/png',
+        },
+        'mediaResolution': {'level': 'MEDIA_RESOLUTION_HIGH'},
+      };
+      final result = parsePart(json);
+      expect(result, isA<FileData>());
+      expect((result as FileData).mediaResolution, MediaResolution.high);
+    });
+
     test('parses InlineDataPart correctly', () {
       final json = {
         'inlineData': {
           'mimeType': 'image/png',
           'data': base64Encode([1, 2, 3]),
-          'willContinue': true
-        }
+          'willContinue': true,
+        },
       };
       final result = parsePart(json);
       expect(result, isA<InlineDataPart>());
@@ -303,8 +483,8 @@ void main() {
         'inlineData': {
           'mimeType': 'image/png',
           'data': base64Encode([1, 2, 3]),
-          'willContinue': false
-        }
+          'willContinue': false,
+        },
       };
       final result = parsePart(json);
       expect(result, isA<InlineDataPart>());
@@ -318,8 +498,8 @@ void main() {
       final json = {
         'inlineData': {
           'mimeType': 'image/png',
-          'data': base64Encode([1, 2, 3])
-        }
+          'data': base64Encode([1, 2, 3]),
+        },
       };
       final result = parsePart(json);
       expect(result, isA<InlineDataPart>());
@@ -331,7 +511,7 @@ void main() {
 
     test('returns UnknownPart for functionResponse', () {
       final json = {
-        'functionResponse': {'name': 'test', 'response': {}}
+        'functionResponse': {'name': 'test', 'response': {}},
       };
       final result = parsePart(json);
       expect(result, isA<UnknownPart>());
@@ -359,6 +539,69 @@ void main() {
       expect(result, isA<UnknownPart>());
       final unknownPart = result as UnknownPart;
       expect(unknownPart.data, {'unhandled': {}});
+    });
+
+    test('parses a code execution result that omits output', () {
+      final result = parsePart({
+        'thought': true,
+        'thoughtSignature': 'sig',
+        'codeExecutionResult': {'outcome': 'OUTCOME_OK'},
+      });
+      expect(result, isA<CodeExecutionResultPart>());
+      final part = result as CodeExecutionResultPart;
+      expect(part.outcome, Outcome.ok);
+      expect(part.output, isEmpty);
+      expect(part.isThought, true);
+      final json = part.toJson() as Map;
+      expect(json['thoughtSignature'], 'sig');
+      expect(json['codeExecutionResult'], {
+        'outcome': 'OUTCOME_OK',
+        'output': '',
+      });
+    });
+
+    test('parses a null code execution output as an empty string', () {
+      final result =
+          parsePart({
+                'codeExecutionResult': {
+                  'outcome': 'OUTCOME_FAILED',
+                  'output': null,
+                },
+              })
+              as CodeExecutionResultPart;
+      expect(result.outcome, Outcome.failed);
+      expect(result.output, isEmpty);
+    });
+
+    test('parses a code execution result that includes output', () {
+      final result =
+          parsePart({
+                'codeExecutionResult': {
+                  'outcome': 'OUTCOME_OK',
+                  'output': 'hello world',
+                },
+              })
+              as CodeExecutionResultPart;
+      expect(result.outcome, Outcome.ok);
+      expect(result.output, 'hello world');
+    });
+
+    test('throws when a code execution result has no outcome', () {
+      expect(
+        () => parsePart({
+          'codeExecutionResult': {'output': 'hello world'},
+        }),
+        throwsA(isA<FirebaseAISdkException>()),
+      );
+    });
+
+    test('throws when a code execution output is not a string', () {
+      expect(
+        () => parsePart({
+          'codeExecutionResult': {'outcome': 'OUTCOME_OK', 'output': 1},
+        }),
+        throwsA(isA<FirebaseAISdkException>()),
+      );
     });
   });
 }

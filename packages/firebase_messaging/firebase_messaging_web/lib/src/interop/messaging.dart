@@ -16,9 +16,11 @@ export 'messaging_interop.dart';
 
 /// Given an AppJSImp, return the Messaging instance.
 Messaging getMessagingInstance([App? app]) {
-  return Messaging.getInstance(app != null
-      ? messaging_interop.getMessaging(app.jsObject)
-      : messaging_interop.getMessaging());
+  return Messaging.getInstance(
+    app != null
+        ? messaging_interop.getMessaging(app.jsObject)
+        : messaging_interop.getMessaging(),
+  );
 }
 
 class Messaging extends JsObjectWrapper<messaging_interop.MessagingJsImpl> {
@@ -35,16 +37,50 @@ class Messaging extends JsObjectWrapper<messaging_interop.MessagingJsImpl> {
       messaging_interop.isSupported().toDart.then((value) => value.toDart);
 
   Messaging._fromJsObject(messaging_interop.MessagingJsImpl jsObject)
-      : super.fromJsObject(jsObject);
+    : super.fromJsObject(jsObject);
 
   /// To forcibly stop a registration token from being used, delete it by calling this method.
   /// Calling this method will stop the periodic data transmission to the FCM backend.
   Future<void> deleteToken() => messaging_interop.deleteToken(jsObject).toDart;
 
+  Future<messaging_interop.RegisterOptions?> _buildRegisterOptions({
+    String? vapidKey,
+    String? serviceWorkerScriptPath,
+  }) async {
+    web.ServiceWorkerRegistration? serviceWorkerRegistration;
+    if (serviceWorkerScriptPath != null) {
+      serviceWorkerRegistration = await web.window.navigator.serviceWorker
+          .register(serviceWorkerScriptPath.toJS)
+          .toDart;
+    }
+
+    return vapidKey == null && serviceWorkerRegistration == null
+        ? null
+        : messaging_interop.RegisterOptions(
+            vapidKey: vapidKey?.toJS,
+            serviceWorkerRegistration: serviceWorkerRegistration,
+          );
+  }
+
+  Future<void> register({
+    String? vapidKey,
+    String? serviceWorkerScriptPath,
+  }) async {
+    final registerOptions = await _buildRegisterOptions(
+      vapidKey: vapidKey,
+      serviceWorkerScriptPath: serviceWorkerScriptPath,
+    );
+    await messaging_interop.register(jsObject, registerOptions).toDart;
+  }
+
+  Future<void> unregister() => messaging_interop.unregister(jsObject).toDart;
+
   /// After calling [requestPermission] you can call this method to get an FCM registration token
   /// that can be used to send push messages to this user.
-  Future<String> getToken(
-      {String? vapidKey, String? serviceWorkerScriptPath}) async {
+  Future<String> getToken({
+    String? vapidKey,
+    String? serviceWorkerScriptPath,
+  }) async {
     try {
       web.ServiceWorkerRegistration? serviceWorkerRegistration;
       if (serviceWorkerScriptPath != null) {
@@ -52,17 +88,20 @@ class Messaging extends JsObjectWrapper<messaging_interop.MessagingJsImpl> {
             .register(serviceWorkerScriptPath.toJS)
             .toDart;
       }
-      final token = (await messaging_interop
-              .getToken(
-                  jsObject,
-                  vapidKey == null && serviceWorkerRegistration == null
-                      ? null
-                      : messaging_interop.GetTokenOptions(
-                          vapidKey: vapidKey?.toJS,
-                          serviceWorkerRegistration: serviceWorkerRegistration,
-                        ))
-              .toDart)
-          .toDart;
+      final token =
+          (await messaging_interop
+                  .getToken(
+                    jsObject,
+                    vapidKey == null && serviceWorkerRegistration == null
+                        ? null
+                        : messaging_interop.GetTokenOptions(
+                            vapidKey: vapidKey?.toJS,
+                            serviceWorkerRegistration:
+                                serviceWorkerRegistration,
+                          ),
+                  )
+                  .toDart)
+              .toDart;
       return token;
     } catch (err) {
       // A race condition can happen in which the service worker get registered
@@ -82,6 +121,10 @@ class Messaging extends JsObjectWrapper<messaging_interop.MessagingJsImpl> {
 
   // ignore: close_sinks
   StreamController<MessagePayload>? _onMessageController;
+  // ignore: close_sinks
+  StreamController<String>? _onRegisteredController;
+  // ignore: close_sinks
+  StreamController<String>? _onUnregisteredController;
 
   /// When a push message is received and the user is currently on a page for your origin,
   /// the message is passed to the page and an [onMessage] event is dispatched with the payload of the push message.
@@ -89,22 +132,65 @@ class Messaging extends JsObjectWrapper<messaging_interop.MessagingJsImpl> {
       _createOnMessageStream(_onMessageController);
 
   Stream<MessagePayload> _createOnMessageStream(
-      StreamController<MessagePayload>? controller) {
+    StreamController<MessagePayload>? controller,
+  ) {
     StreamController<MessagePayload>? _controller = controller;
     if (_controller == null) {
       _controller = StreamController.broadcast(sync: true);
       final nextWrapper = (JSAny payload) {
-        _controller!.add(MessagePayload._fromJsObject(
-            payload as messaging_interop.MessagePayloadJsImpl));
+        _controller!.add(
+          MessagePayload._fromJsObject(
+            payload as messaging_interop.MessagePayloadJsImpl,
+          ),
+        );
       };
       final errorWrapper = (JSError e) {
         _controller!.addError(e);
       };
 
       messaging_interop.onMessage(
-          jsObject,
-          messaging_interop.Observer(
-              next: nextWrapper.toJS, error: errorWrapper.toJS));
+        jsObject,
+        messaging_interop.Observer(
+          next: nextWrapper.toJS,
+          error: errorWrapper.toJS,
+        ),
+      );
+    }
+    return _controller.stream;
+  }
+
+  Stream<String> get onRegistered =>
+      _createRegistrationStream(_onRegisteredController, true);
+
+  Stream<String> get onUnregistered =>
+      _createRegistrationStream(_onUnregisteredController, false);
+
+  Stream<String> _createRegistrationStream(
+    StreamController<String>? controller,
+    bool registered,
+  ) {
+    StreamController<String>? _controller = controller;
+    if (_controller == null) {
+      _controller = StreamController.broadcast(sync: true);
+      final nextWrapper = (JSString installationId) {
+        _controller!.add(installationId.toDart);
+      };
+      final errorWrapper = (JSError e) {
+        _controller!.addError(e);
+      };
+
+      final observer = messaging_interop.Observer(
+        next: nextWrapper.toJS,
+        error: errorWrapper.toJS,
+      );
+
+      if (registered) {
+        messaging_interop.onRegistered(jsObject, observer);
+        _onRegisteredController = _controller;
+      } else {
+        messaging_interop.onUnregistered(jsObject, observer);
+        _onUnregisteredController = _controller;
+      }
     }
     return _controller.stream;
   }
@@ -113,8 +199,8 @@ class Messaging extends JsObjectWrapper<messaging_interop.MessagingJsImpl> {
 class NotificationPayload
     extends JsObjectWrapper<messaging_interop.NotificationPayloadJsImpl> {
   NotificationPayload._fromJsObject(
-      messaging_interop.NotificationPayloadJsImpl jsObject)
-      : super.fromJsObject(jsObject);
+    messaging_interop.NotificationPayloadJsImpl jsObject,
+  ) : super.fromJsObject(jsObject);
 
   String? get title => jsObject.title?.toDart;
   String? get body => jsObject.body?.toDart;
@@ -124,7 +210,7 @@ class NotificationPayload
 class MessagePayload
     extends JsObjectWrapper<messaging_interop.MessagePayloadJsImpl> {
   MessagePayload._fromJsObject(messaging_interop.MessagePayloadJsImpl jsObject)
-      : super.fromJsObject(jsObject);
+    : super.fromJsObject(jsObject);
 
   String get messageId => jsObject.messageId.toDart;
   String? get collapseKey => jsObject.collapseKey?.toDart;
@@ -142,7 +228,7 @@ class MessagePayload
 
 class FcmOptions extends JsObjectWrapper<messaging_interop.FcmOptionsJsImpl> {
   FcmOptions._fromJsObject(messaging_interop.FcmOptionsJsImpl jsObject)
-      : super.fromJsObject(jsObject);
+    : super.fromJsObject(jsObject);
 
   String? get analyticsLabel => jsObject.analyticsLabel?.toDart;
   String? get link => jsObject.link?.toDart;

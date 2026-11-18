@@ -13,9 +13,10 @@
 // limitations under the License.
 
 import 'dart:async';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_ai/firebase_ai.dart';
+import '../constants.dart';
 
 class IntegrationTestPage extends StatefulWidget {
   const IntegrationTestPage({super.key});
@@ -47,17 +48,28 @@ class TestItem {
   final String id;
   final String name;
   final String description;
+  final String model;
+  final bool useLimitedUseAppCheckTokens;
   final Future<TestResult> Function(FirebaseAI provider, TestLogger logger) run;
   TestResult googleAIResult;
   TestResult agentPlatformResult;
 
   TestItem({
     required this.id,
-    required this.name,
+    required String name,
     required this.description,
-    required this.run,
-  })  : googleAIResult = TestResult.pending(),
-        agentPlatformResult = TestResult.pending();
+    required this.model,
+    this.useLimitedUseAppCheckTokens = false,
+    required Future<TestResult> Function(
+      FirebaseAI provider,
+      TestLogger logger,
+      String modelName,
+    )
+    run,
+  }) : name = name.contains(model) ? name : '$name ($model)',
+       run = ((provider, logger) => run(provider, logger, model)),
+       googleAIResult = TestResult.pending(),
+       agentPlatformResult = TestResult.pending();
 }
 
 class TestLogger {
@@ -86,13 +98,13 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
     _testCases = [
       TestItem(
         id: '1',
-        name: 'Stateless Text Gen (gemini-3.1-flash-lite)',
+        name: 'Stateless Text Gen',
+        model: ExampleModels.flashLite,
         description:
-            'Verifies simple stateless text generation with a precise answer target using gemini-3.1-flash-lite.',
-        run: (provider, logger) async {
-          logger.log('Initializing model gemini-3.1-flash-lite...');
-          final model =
-              provider.generativeModel(model: 'gemini-3.1-flash-lite');
+            'Verifies simple stateless text generation with a precise answer target using ${ExampleModels.flashLite}.',
+        run: (provider, logger, modelName) async {
+          logger.log('Initializing model $modelName...');
+          final model = provider.generativeModel(model: modelName);
           const prompt = "Reply with exactly the word 'SUCCESS' in uppercase.";
           logger.log('Sending prompt: "$prompt"');
           final response = await model.generateContent([Content.text(prompt)]);
@@ -116,12 +128,13 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
       ),
       TestItem(
         id: '2',
-        name: 'Stateless Text Gen (gemini-3.5-flash)',
+        name: 'Stateless Text Gen',
+        model: ExampleModels.flashLite,
         description:
-            'Verifies simple stateless text generation with a precise answer target using gemini-3.5-flash.',
-        run: (provider, logger) async {
-          logger.log('Initializing model gemini-3.5-flash...');
-          final model = provider.generativeModel(model: 'gemini-3.5-flash');
+            'Verifies simple stateless text generation with a precise answer target using ${ExampleModels.flashLite}.',
+        run: (provider, logger, modelName) async {
+          logger.log('Initializing model $modelName...');
+          final model = provider.generativeModel(model: modelName);
           const prompt = "Reply with exactly the word 'SUCCESS' in uppercase.";
           logger.log('Sending prompt: "$prompt"');
           final response = await model.generateContent([Content.text(prompt)]);
@@ -146,12 +159,15 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
       TestItem(
         id: '3',
         name: 'System Instructions',
+        model: ExampleModels.flashLite,
         description:
             'Verifies system instructions config is serialized and respected.',
-        run: (provider, logger) async {
-          logger.log('Initializing model with medieval system instruction...');
+        run: (provider, logger, modelName) async {
+          logger.log(
+            'Initializing model $modelName with medieval system instruction...',
+          );
           final model = provider.generativeModel(
-            model: 'gemini-3.1-flash-lite',
+            model: modelName,
             systemInstruction: Content.text(
               'You are a medieval knight. Respond only with Shakespearean knightly terms.',
             ),
@@ -161,7 +177,8 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
           final response = await model.generateContent([Content.text(prompt)]);
           logger.log('Response received: "${response.text}"');
           final responseText = response.text?.toLowerCase() ?? '';
-          final containsKnightTerms = responseText.contains('thou') ||
+          final containsKnightTerms =
+              responseText.contains('thou') ||
               responseText.contains('thee') ||
               responseText.contains('sir') ||
               responseText.contains('knight') ||
@@ -188,12 +205,14 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
       TestItem(
         id: '4',
         name: 'Stateful Chat History',
+        model: ExampleModels.flashLite,
         description:
             'Verifies stateful conversation preservation across turns via ChatSession.',
-        run: (provider, logger) async {
-          logger.log('Initializing model and starting ChatSession...');
-          final model =
-              provider.generativeModel(model: 'gemini-3.1-flash-lite');
+        run: (provider, logger, modelName) async {
+          logger.log(
+            'Initializing model $modelName and starting ChatSession...',
+          );
+          final model = provider.generativeModel(model: modelName);
           final chat = model.startChat();
 
           const prompt1 = 'My secret agent name is Agent Orange.';
@@ -226,9 +245,10 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
       TestItem(
         id: '5',
         name: 'Auto Function Calling',
+        model: ExampleModels.flashLite,
         description:
             'Verifies automatic function/tool call execution via AutoFunctionDeclaration.',
-        run: (provider, logger) async {
+        run: (provider, logger, modelName) async {
           logger.log(
             'Declaring AutoFunctionDeclaration for getSuperHeroPower...',
           );
@@ -236,8 +256,9 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
             name: 'getSuperHeroPower',
             description: 'Returns the superpower of a given superhero by name.',
             parameters: {
-              'heroName':
-                  Schema.string(description: 'The name of the superhero.'),
+              'heroName': Schema.string(
+                description: 'The name of the superhero.',
+              ),
             },
             callable: (args) async {
               final hero = args['heroName'] as String?;
@@ -251,8 +272,11 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
             },
           );
 
+          logger.log(
+            'Initializing model $modelName with AutoFunctionDeclaration...',
+          );
           final model = provider.generativeModel(
-            model: 'gemini-3.1-flash-lite',
+            model: modelName,
             tools: [
               Tool.functionDeclarations([autoPowerTool]),
             ],
@@ -284,21 +308,26 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
       TestItem(
         id: '6',
         name: 'Manual Function Calling',
+        model: ExampleModels.flashLite,
         description:
             'Verifies manual function call prediction and response handling.',
-        run: (provider, logger) async {
+        run: (provider, logger, modelName) async {
           logger.log('Declaring FunctionDeclaration...');
           final powerTool = FunctionDeclaration(
             'getSuperHeroPower',
             'Returns the superpower of a given superhero by name.',
             parameters: {
-              'heroName':
-                  Schema.string(description: 'The name of the superhero.'),
+              'heroName': Schema.string(
+                description: 'The name of the superhero.',
+              ),
             },
           );
 
+          logger.log(
+            'Initializing model $modelName for manual function calling...',
+          );
           final model = provider.generativeModel(
-            model: 'gemini-3.1-flash-lite',
+            model: modelName,
             tools: [
               Tool.functionDeclarations([powerTool]),
             ],
@@ -337,8 +366,9 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
           );
           final manualResponse = FunctionResponse(call.name, {'power': power});
 
-          logger
-              .log('Sending second request with history + FunctionResponse...');
+          logger.log(
+            'Sending second request with history + FunctionResponse...',
+          );
           final nextResponse = await model.generateContent([
             Content.text(prompt),
             response.candidates.first.content,
@@ -365,14 +395,15 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
       TestItem(
         id: '7',
         name: 'Code Execution Tool',
+        model: ExampleModels.flashLite,
         description:
             'Verifies Tool.codeExecution() internal code execution and parts extraction.',
-        run: (provider, logger) async {
+        run: (provider, logger, modelName) async {
           logger.log(
-            'Initializing model gemini-3.5-flash with Tool.codeExecution()...',
+            'Initializing model $modelName with Tool.codeExecution()...',
           );
           final model = provider.generativeModel(
-            model: 'gemini-3.5-flash',
+            model: modelName,
             tools: [Tool.codeExecution()],
           );
 
@@ -415,15 +446,16 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
       ),
       TestItem(
         id: '8',
-        name: 'Search Grounding (gemini-3.5-flash)',
+        name: 'Search Grounding',
+        model: ExampleModels.flashLite,
         description:
             'Verifies Google Search Grounding tool configuration and grounding metadata.',
-        run: (provider, logger) async {
+        run: (provider, logger, modelName) async {
           logger.log(
-            'Initializing model gemini-3.5-flash with Tool.googleSearch()...',
+            'Initializing model $modelName with Tool.googleSearch()...',
           );
           final model = provider.generativeModel(
-            model: 'gemini-3.5-flash',
+            model: modelName,
             tools: [Tool.googleSearch()],
           );
           const prompt = 'Who is the current CEO of Google?';
@@ -457,12 +489,12 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
       TestItem(
         id: '9',
         name: 'Streaming Generation',
+        model: ExampleModels.flashLite,
         description:
             'Verifies generateContentStream works and aggregates chunks correctly.',
-        run: (provider, logger) async {
-          logger.log('Initializing model for streaming...');
-          final model =
-              provider.generativeModel(model: 'gemini-3.1-flash-lite');
+        run: (provider, logger, modelName) async {
+          logger.log('Initializing model $modelName for streaming...');
+          final model = provider.generativeModel(model: modelName);
 
           const prompt = 'Write a 2-paragraph poem about a computer.';
           logger.log('Starting prompt stream: "$prompt"');
@@ -499,15 +531,15 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
       TestItem(
         id: '10',
         name: 'Advanced Token Counting',
+        model: ExampleModels.flashLite,
         description:
             'Verifies counting tokens on multimodal inputs (text + image asset).',
-        run: (provider, logger) async {
+        run: (provider, logger, modelName) async {
           logger.log('Loading cat.jpg asset...');
           final catBytes = await rootBundle.load('assets/images/cat.jpg');
 
-          logger.log('Initializing model for token counting...');
-          final model =
-              provider.generativeModel(model: 'gemini-3.1-flash-lite');
+          logger.log('Initializing model $modelName for token counting...');
+          final model = provider.generativeModel(model: modelName);
 
           final content = [
             Content.multi([
@@ -538,14 +570,13 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
       TestItem(
         id: '11',
         name: 'Usage Metadata & Thinking',
+        model: ExampleModels.flashLite,
         description:
             'Verifies extraction of thought logs and usage metadata with ThinkingConfig.',
-        run: (provider, logger) async {
-          logger.log(
-            'Initializing model gemini-3.5-flash with ThinkingConfig...',
-          );
+        run: (provider, logger, modelName) async {
+          logger.log('Initializing model $modelName with ThinkingConfig...');
           final model = provider.generativeModel(
-            model: 'gemini-3.5-flash',
+            model: modelName,
             generationConfig: GenerationConfig(
               thinkingConfig: ThinkingConfig.withThinkingBudget(
                 2048,
@@ -586,14 +617,17 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
       TestItem(
         id: '12',
         name: 'Multimodal Response Modality',
+        model: ExampleModels.flashImage,
+        // This model only accepts limited-use App Check tokens.
+        useLimitedUseAppCheckTokens: true,
         description:
-            'Verifies text + image response output generation via gemini-2.5-flash-image model.',
-        run: (provider, logger) async {
+            'Verifies text + image response output generation via ${ExampleModels.flashImage} model.',
+        run: (provider, logger, modelName) async {
           logger.log(
-            'Initializing gemini-2.5-flash-image with dual response modalities...',
+            'Initializing model $modelName with dual response modalities...',
           );
           final model = provider.generativeModel(
-            model: 'gemini-2.5-flash-image',
+            model: modelName,
             generationConfig: GenerationConfig(
               responseModalities: [
                 ResponseModalities.text,
@@ -606,8 +640,9 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
           logger.log('Sending multimodal output prompt: "$prompt"');
           final response = await model.generateContent([Content.text(prompt)]);
 
-          final imageParts = response.inlineDataParts
-              .where((p) => p.mimeType.startsWith('image/'));
+          final imageParts = response.inlineDataParts.where(
+            (p) => p.mimeType.startsWith('image/'),
+          );
           logger.log('Response text: "${response.text}"');
           logger.log('Image parts returned: ${imageParts.length}');
 
@@ -637,17 +672,26 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
   }
 
   Future<void> _runTestItem(TestItem item, bool isAgentPlatform) async {
-    final provider =
-        isAgentPlatform ? FirebaseAI.agentPlatform() : FirebaseAI.googleAI();
+    final provider = isAgentPlatform
+        ? FirebaseAI.agentPlatform(
+            useLimitedUseAppCheckTokens: item.useLimitedUseAppCheckTokens,
+          )
+        : FirebaseAI.googleAI(
+            useLimitedUseAppCheckTokens: item.useLimitedUseAppCheckTokens,
+          );
     final logger = TestLogger();
 
     setState(() {
       if (isAgentPlatform) {
-        item.agentPlatformResult =
-            TestResult(status: TestStatus.running, logs: 'Running...');
+        item.agentPlatformResult = TestResult(
+          status: TestStatus.running,
+          logs: 'Running...',
+        );
       } else {
-        item.googleAIResult =
-            TestResult(status: TestStatus.running, logs: 'Running...');
+        item.googleAIResult = TestResult(
+          status: TestStatus.running,
+          logs: 'Running...',
+        );
       }
     });
 
@@ -891,10 +935,12 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
 
   @override
   Widget build(BuildContext context) {
-    final googleAIResults =
-        _testCases.map((item) => item.googleAIResult).toList();
-    final vertexAIResults =
-        _testCases.map((item) => item.agentPlatformResult).toList();
+    final googleAIResults = _testCases
+        .map((item) => item.googleAIResult)
+        .toList();
+    final vertexAIResults = _testCases
+        .map((item) => item.agentPlatformResult)
+        .toList();
 
     return Scaffold(
       appBar: AppBar(
@@ -954,8 +1000,10 @@ class _IntegrationTestPageState extends State<IntegrationTestPage> {
               itemBuilder: (context, index) {
                 final item = _testCases[index];
                 return Card(
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
                   child: ExpansionTile(
                     leading: CircleAvatar(
                       backgroundColor: Colors.grey.shade800,

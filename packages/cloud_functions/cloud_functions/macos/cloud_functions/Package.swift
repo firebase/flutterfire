@@ -7,12 +7,12 @@
 
 import PackageDescription
 
-let firebaseSdkVersion: Version = "12.17.0"
+let firebaseSdkVersion: Version = "13.2.0"
 
 let package = Package(
   name: "cloud_functions",
   platforms: [
-    .macOS("10.15")
+    .macOS("11.0")
   ],
   products: [
     .library(name: "cloud-functions", targets: ["cloud_functions"])

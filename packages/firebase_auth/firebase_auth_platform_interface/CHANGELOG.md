@@ -1,3 +1,28 @@
+## 9.2.0
+
+ - **FEAT**(android): migrate plugins to built-in Kotlin on Flutter 3.44 ([#18922](https://github.com/firebase/flutterfire/issues/18922)). ([1abe0561](https://github.com/firebase/flutterfire/commit/1abe05614d03f22782f597f847c1fc9c8c57f016))
+
+## 9.1.2
+
+ - **FIX**(auth): forward signed-out initial native callbacks ([#18797](https://github.com/firebase/flutterfire/issues/18797)). ([6cfdb79d](https://github.com/firebase/flutterfire/commit/6cfdb79db49e8a85cc20f389b890b81efa5951da))
+ - **FIX**(firebase_auth): stop dropping profile, provider and action code fields ([#18820](https://github.com/firebase/flutterfire/issues/18820)). ([2572d82b](https://github.com/firebase/flutterfire/commit/2572d82b760b2800dd53c454474381d3ddbe6d9f))
+ - **DOCS**(auth,functions): document all FirebaseAuthException and FirebaseFunctionsException codes ([#18713](https://github.com/firebase/flutterfire/issues/18713)). ([b4feba95](https://github.com/firebase/flutterfire/commit/b4feba95a65f650c91cb6d3863f8b7467ef099b7))
+
+## 9.1.1
+
+ - Update a dependency to the latest release.
+
+## 9.1.0
+
+ - **FEAT**(auth,ios): add support for `migrateCurrentUser` ([#18460](https://github.com/firebase/flutterfire/issues/18460)). ([b4eeafba](https://github.com/firebase/flutterfire/commit/b4eeafba347abed13e5410263556e9a4bff1b96e))
+
+## 9.0.7
+
+ - **REFACTOR**(platform_interface): replace Flutter UI and foundation imports with package:meta ([#18604](https://github.com/firebase/flutterfire/issues/18604)). ([fef6d420](https://github.com/firebase/flutterfire/commit/fef6d42090ea275f07117c085bd04710d9df51bc))
+ - **REFACTOR**(auth,android): migrate native implementation to Kotlin ([#18582](https://github.com/firebase/flutterfire/issues/18582)). ([6131eddc](https://github.com/firebase/flutterfire/commit/6131eddc724aac2005f839e612617953572422fc))
+ - **REFACTOR**(auth,apple): migrate iOS/macOS plugin implementation to Swift ([#18581](https://github.com/firebase/flutterfire/issues/18581)). ([8d97b561](https://github.com/firebase/flutterfire/commit/8d97b56120900eee4e78bd52577b12831604cce9))
+ - **DOCS**(auth): update account-exists guidance after fetchSignInMethodsForEmail removal ([#18547](https://github.com/firebase/flutterfire/issues/18547)). ([b0585f0e](https://github.com/firebase/flutterfire/commit/b0585f0e32e40771b62fd711b87e91fc408d8520))
+
 ## 9.0.6
 
  - Update a dependency to the latest release.

@@ -29,10 +29,11 @@ class MockFirebaseAuth extends Mock implements FirebaseAuth {
   @override
   Stream<User?> idTokenChanges() {
     return super.noSuchMethod(
-      Invocation.method(#idTokenChanges, []),
-      returnValue: const Stream<User?>.empty(),
-      returnValueForMissingStub: const Stream<User?>.empty(),
-    ) as Stream<User?>;
+          Invocation.method(#idTokenChanges, []),
+          returnValue: const Stream<User?>.empty(),
+          returnValueForMissingStub: const Stream<User?>.empty(),
+        )
+        as Stream<User?>;
   }
 }
 
@@ -55,8 +56,22 @@ class DynamicMockFirebaseApp extends Mock implements FirebaseApp {
   final FirebaseAuth? mockAuth;
   final FirebaseAppCheck? mockAppCheck;
 
+  final Map<Type, FirebaseService> _registered = {};
+
+  @override
+  void registerService<T extends FirebaseService>(
+    T service, {
+    Future<void> Function(T service)? dispose,
+  }) {
+    _registered[T] = service;
+  }
+
   @override
   T? getService<T extends FirebaseService>() {
+    final registered = _registered[T];
+    if (registered != null) {
+      return registered as T;
+    }
     if (T == FirebaseAppCheck) {
       return mockAppCheck as T?;
     }
@@ -103,13 +118,11 @@ void main() {
       final dataConnect = FirebaseDataConnect(
         app: mockApp,
         connectorConfig: mockConnectorConfig,
-        auth: mockAuth,
-        appCheck: mockAppCheck,
       );
 
       expect(dataConnect.app, equals(mockApp));
-      expect(dataConnect.auth, equals(mockAuth));
-      expect(dataConnect.appCheck, equals(mockAppCheck));
+      expect(dataConnect.auth, isNull);
+      expect(dataConnect.appCheck, isNull);
       expect(dataConnect.connectorConfig, equals(mockConnectorConfig));
       expect(dataConnect.options.projectId, 'fake_project_id');
     });
@@ -118,8 +131,6 @@ void main() {
       final dataConnect = FirebaseDataConnect(
         app: mockApp,
         connectorConfig: mockConnectorConfig,
-        auth: mockAuth,
-        appCheck: mockAppCheck,
       );
 
       dataConnect.checkTransport();
@@ -131,8 +142,6 @@ void main() {
       final dataConnect = FirebaseDataConnect(
         app: mockApp,
         connectorConfig: mockConnectorConfig,
-        auth: mockAuth,
-        appCheck: mockAppCheck,
       );
 
       final queryRef = dataConnect.query(
@@ -149,8 +158,6 @@ void main() {
       final dataConnect = FirebaseDataConnect(
         app: mockApp,
         connectorConfig: mockConnectorConfig,
-        auth: mockAuth,
-        appCheck: mockAppCheck,
       );
 
       final mutationRef = dataConnect.mutation(
@@ -167,8 +174,6 @@ void main() {
       final dataConnect = FirebaseDataConnect(
         app: mockApp,
         connectorConfig: mockConnectorConfig,
-        auth: mockAuth,
-        appCheck: mockAppCheck,
       );
 
       dataConnect.useDataConnectEmulator('localhost', 8080);
@@ -181,25 +186,29 @@ void main() {
     test('instanceFor returns cached instance if available', () {
       FirebaseDataConnect.cachedInstances.clear(); // Clear cache first
 
-      when(mockApp.name).thenReturn('appName');
+      final dynamicApp = DynamicMockFirebaseApp(
+        name: 'cachedApp',
+        options: const FirebaseOptions(
+          apiKey: 'fake_api_key',
+          appId: 'fake_app_id',
+          messagingSenderId: 'fake_messaging_sender_id',
+          projectId: 'fake_project_id',
+        ),
+      );
       when(mockConnectorConfig.toJson()).thenReturn('connectorConfigStr');
 
       final dataConnect = FirebaseDataConnect(
-        app: mockApp,
+        app: dynamicApp,
         connectorConfig: mockConnectorConfig,
-        auth: mockAuth,
-        appCheck: mockAppCheck,
       );
 
-      FirebaseDataConnect.cachedInstances['appName'] = {
+      FirebaseDataConnect.cachedInstances['cachedApp'] = {
         'connectorConfigStr': dataConnect,
       };
 
       final instance = FirebaseDataConnect.instanceFor(
-        app: mockApp,
+        app: dynamicApp,
         connectorConfig: mockConnectorConfig,
-        auth: mockAuth,
-        appCheck: mockAppCheck,
       );
 
       expect(instance, equals(dataConnect));
@@ -208,51 +217,86 @@ void main() {
     test('instanceFor creates new instance if not cached', () {
       FirebaseDataConnect.cachedInstances.clear(); // Clear cache first
 
-      when(mockApp.name).thenReturn('appName');
-      when(mockConnectorConfig.toJson()).thenReturn('connectorConfigStr');
-
-      final instance = FirebaseDataConnect.instanceFor(
-        app: mockApp,
-        connectorConfig: mockConnectorConfig,
-        auth: mockAuth,
-        appCheck: mockAppCheck,
-      );
-
-      expect(instance, isA<FirebaseDataConnect>());
-      expect(
-        FirebaseDataConnect.cachedInstances['appName']!['connectorConfigStr'],
-        equals(instance),
-      );
-    });
-
-    test(
-        'checkTransport resolves dynamic service instances from registry just-in-time',
-        () {
-      FirebaseDataConnect.cachedInstances.clear();
-
       final dynamicApp = DynamicMockFirebaseApp(
-        name: 'transportAppName',
+        name: 'newInstanceApp',
         options: const FirebaseOptions(
           apiKey: 'fake_api_key',
           appId: 'fake_app_id',
           messagingSenderId: 'fake_messaging_sender_id',
           projectId: 'fake_project_id',
         ),
-        mockAuth: mockAuth,
-        mockAppCheck: mockAppCheck,
       );
+      when(mockConnectorConfig.toJson()).thenReturn('newInstanceConnector');
 
-      final instance = FirebaseDataConnect(
+      final instance = FirebaseDataConnect.instanceFor(
         app: dynamicApp,
         connectorConfig: mockConnectorConfig,
       );
 
-      instance.checkTransport();
-
-      final dynamic routingTransport = instance.transport;
-      expect(routingTransport.rest.appCheck, equals(mockAppCheck));
-      expect(routingTransport.websocket.auth, equals(mockAuth));
-      expect(routingTransport.websocket.appCheck, equals(mockAppCheck));
+      expect(instance, isA<FirebaseDataConnect>());
+      final cached = FirebaseDataConnect.cachedInstances['newInstanceApp']!;
+      expect(cached['newInstanceConnector'], equals(instance));
     });
+
+    test('instanceFor attaches auth and app check from the app', () {
+      FirebaseDataConnect.cachedInstances.clear();
+
+      final dynamicApp = DynamicMockFirebaseApp(
+        name: 'attachApp',
+        options: const FirebaseOptions(
+          apiKey: 'fake_api_key',
+          appId: 'fake_app_id',
+          messagingSenderId: 'fake_messaging_sender_id',
+          projectId: 'fake_project_id',
+        ),
+      );
+      when(mockConnectorConfig.toJson()).thenReturn('attachConnector');
+      expect(dynamicApp.getService<FirebaseAuth>(), isNull);
+      expect(dynamicApp.getService<FirebaseAppCheck>(), isNull);
+
+      final instance = FirebaseDataConnect.instanceFor(
+        app: dynamicApp,
+        connectorConfig: mockConnectorConfig,
+      );
+
+      expect(instance.auth, isA<FirebaseAuth>());
+      expect(instance.appCheck, isA<FirebaseAppCheck>());
+      expect(dynamicApp.getService<FirebaseAuth>(), same(instance.auth));
+      expect(
+        dynamicApp.getService<FirebaseAppCheck>(),
+        same(instance.appCheck),
+      );
+    });
+
+    test(
+      'checkTransport resolves dynamic service instances from registry just-in-time',
+      () {
+        FirebaseDataConnect.cachedInstances.clear();
+
+        final dynamicApp = DynamicMockFirebaseApp(
+          name: 'transportAppName',
+          options: const FirebaseOptions(
+            apiKey: 'fake_api_key',
+            appId: 'fake_app_id',
+            messagingSenderId: 'fake_messaging_sender_id',
+            projectId: 'fake_project_id',
+          ),
+          mockAuth: mockAuth,
+          mockAppCheck: mockAppCheck,
+        );
+
+        final instance = FirebaseDataConnect(
+          app: dynamicApp,
+          connectorConfig: mockConnectorConfig,
+        );
+
+        instance.checkTransport();
+
+        final dynamic routingTransport = instance.transport;
+        expect(routingTransport.rest.appCheck, equals(mockAppCheck));
+        expect(routingTransport.websocket.auth, equals(mockAuth));
+        expect(routingTransport.websocket.appCheck, equals(mockAppCheck));
+      },
+    );
   });
 }
