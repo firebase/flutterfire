@@ -378,6 +378,39 @@ void main() {
         );
       });
 
+      // Regression test for https://github.com/firebase/flutterfire/issues/18982
+      test('accepts number values 0 and 1', () async {
+        for (final value in <num>[0, 1, 0.0, 1.0]) {
+          final partialData = await callable
+              .stream(value)
+              .where((event) => event is Chunk)
+              .map((event) => (event as Chunk).partialData)
+              .first
+              .timeout(_completerTimeout);
+          expect(partialData, equals('number'), reason: 'sent $value');
+        }
+      });
+
+      test('keeps number values 0 and 1 in a [Map] and [List]', () async {
+        final input = <String, Object>{
+          'type': 'rawData',
+          'zero': 0,
+          'one': 1,
+          'zeroDouble': 0.0,
+          'oneDouble': 1.0,
+          'booleanTrue': true,
+          'booleanFalse': false,
+          'list': <Object>[0, 1, 1.0, true, false],
+        };
+        final partialData = await callable
+            .stream(input)
+            .where((event) => event is Chunk)
+            .map((event) => (event as Chunk).partialData)
+            .first
+            .timeout(_completerTimeout);
+        expect(partialData, equals(input));
+      });
+
       test('can be called using an String url', () async {
         final localhostMapped = kIsWeb || !Platform.isAndroid
             ? 'localhost'
