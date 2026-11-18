@@ -72,6 +72,13 @@ func runTests() throws {
   try expectJSON(true, equals: "true", "Swift true")
   try expectJSON(false, equals: "false", "Swift false")
 
+  try expectJSON(UInt64.max, equals: "18446744073709551615", "UInt64.max")
+  try expectJSON(UInt64(Int64.max) + 1, equals: "9223372036854775808", "Int64.max + 1")
+  try expectJSON(Int64.max, equals: "9223372036854775807", "Int64.max")
+  try expectJSON(Int64.min, equals: "-9223372036854775808", "Int64.min")
+  try expectJSON(Float(0.1), equals: "0.1", "Float 0.1")
+  try expectNumber(NSNumber(value: Float(1)), equals: 1, "Float 1")
+
   let payload: [String: Any] = [
     "timezoneOffset": NSNumber(value: 1.0),
     "enabled": NSNumber(value: true),

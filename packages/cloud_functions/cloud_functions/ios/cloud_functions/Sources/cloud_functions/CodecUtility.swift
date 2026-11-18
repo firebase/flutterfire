@@ -53,6 +53,8 @@ public struct AnyEncodable: Encodable {
     }
   }
 
+  /// `NSNumber` reports `Q` for unsigned values above `Int64.max` and `f` for
+  /// `Float`. Those keep their own width so they do not wrap or gain digits.
   private func encode(
     _ number: NSNumber,
     into container: inout SingleValueEncodingContainer
@@ -61,11 +63,18 @@ public struct AnyEncodable: Encodable {
       try container.encode(number.boolValue)
       return
     }
-    if CFNumberIsFloatType(number) {
-      try container.encode(number.doubleValue)
-      return
+    switch String(cString: number.objCType) {
+    case "Q":
+      try container.encode(number.uint64Value)
+    case "f":
+      try container.encode(number.floatValue)
+    default:
+      if CFNumberIsFloatType(number) {
+        try container.encode(number.doubleValue)
+      } else {
+        try container.encode(number.int64Value)
+      }
     }
-    try container.encode(number.int64Value)
   }
 }
 
