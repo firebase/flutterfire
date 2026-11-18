@@ -10,9 +10,9 @@ import PackageDescription
 
 let firebaseSdkVersion: Version = "13.2.0"
 
-// Set FIREBASE_APP_CHECK_WITHOUT_RECAPTCHA=true to leave out the reCAPTCHA
-// Enterprise SDK if the app does not use AppleReCaptchaProvider.
-// e.g. FIREBASE_APP_CHECK_WITHOUT_RECAPTCHA=true flutter build ios
+/// Set FIREBASE_APP_CHECK_WITHOUT_RECAPTCHA=true to leave out the reCAPTCHA
+/// Enterprise SDK if the app does not use AppleReCaptchaProvider.
+/// e.g. FIREBASE_APP_CHECK_WITHOUT_RECAPTCHA=true flutter build ios
 let withoutRecaptcha =
   ProcessInfo.processInfo.environment["FIREBASE_APP_CHECK_WITHOUT_RECAPTCHA"] != nil
 
