@@ -141,7 +141,7 @@ foreach(firebase_lib IN ITEMS ${FIREBASE_RELEASE_PATH_LIBS})
 endforeach()
 
 set(FIREBASE_LIBS firebase_app)
-set(ADDITIONAL_LIBS advapi32 ws2_32 crypt32 rpcrt4 ole32)
+set(ADDITIONAL_LIBS advapi32 ws2_32 crypt32 rpcrt4 ole32 bcrypt iphlpapi secur32)
 
 target_link_libraries(${PLUGIN_NAME} PUBLIC "${FIREBASE_LIBS}" "${ADDITIONAL_LIBS}")
 
