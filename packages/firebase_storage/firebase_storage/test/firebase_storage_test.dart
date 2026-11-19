@@ -172,6 +172,21 @@ void main() {
         verify(kMockStoragePlatform.ref(testPath));
       });
 
+      test(
+        'verify delegate method is called for a 127.0.0.1 emulator download URL',
+        () {
+          const String customBucket = 'demo-18988.appspot.com';
+          const String testPath = 'photos/hello world.txt';
+          const String url =
+              'http://127.0.0.1:9199/v0/b/$customBucket/o/photos%2Fhello%20world.txt?alt=media&token=d521a7a8-b252-4979-973f-88c8132e7ab7';
+
+          final ref = storage.refFromURL(url);
+
+          expect(ref, isA<Reference>());
+          verify(kMockStoragePlatform.ref(testPath));
+        },
+      );
+
       test('verify special characters are allowed in http path', () {
         const String customBucket = 'test.appspot.com';
         const String testPath = '[!@+= ^&*_+-= {};,.<> ].jpg';

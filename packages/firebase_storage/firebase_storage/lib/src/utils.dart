@@ -21,7 +21,6 @@ String pathFromGoogleStorageUrl(String url) {
   return url.substring(stopIndex + 1, url.length);
 }
 
-const String _firebaseStorageHost = 'firebasestorage.googleapis.com';
 const String _cloudStorageHost =
     '(?:storage.googleapis.com|storage.cloud.google.com)';
 const String _bucketDomain = r'([A-Za-z0-9.\-_]+)';
@@ -43,46 +42,29 @@ Map<String, String?>? partsFromHttpUrl(String url) {
     return null;
   }
 
-  // 10.0.2.2 is used on Android emulators for connecting to the host machine's Firebase emulator.
-  final isEmulatorHost =
-      decodedUrl.contains('localhost') || decodedUrl.contains('10.0.2.2');
-  final isFirebaseStorageUrl = decodedUrl.contains(_firebaseStorageHost);
-  if (isFirebaseStorageUrl || isEmulatorHost) {
-    String origin;
-    if (isEmulatorHost) {
-      Uri uri = Uri.parse(url);
-      origin = '^http?://${uri.host}:${uri.port}';
-    } else {
-      origin = '^https?://$_firebaseStorageHost';
-    }
+  // The Storage emulator advertises whatever host it was given, including
+  // 127.0.0.1 and LAN addresses, so the download route is matched by path.
+  RegExp firebaseStorageRegExp = RegExp(
+    '^https?://[^/]+/$_version/b/$_bucketDomain/o$_firebaseStoragePath',
+    caseSensitive: false,
+  );
 
-    RegExp firebaseStorageRegExp = RegExp(
-      '$origin$_optionalPort/$_version/b/$_bucketDomain/o$_firebaseStoragePath',
-      caseSensitive: false,
-    );
-
-    RegExpMatch? match = firebaseStorageRegExp.firstMatch(decodedUrl);
-
-    if (match == null) {
-      return null;
-    }
-
+  RegExpMatch? match = firebaseStorageRegExp.firstMatch(decodedUrl);
+  if (match != null) {
     return {'bucket': match.group(1), 'path': match.group(3)};
-  } else {
-    // Google Cloud storage url
-    RegExp cloudStorageRegExp = RegExp(
-      '^https?://$_cloudStorageHost$_optionalPort/$_bucketDomain/$_cloudStoragePath',
-      caseSensitive: false,
-    );
-
-    RegExpMatch? match = cloudStorageRegExp.firstMatch(decodedUrl);
-
-    if (match == null) {
-      return null;
-    }
-
-    return {'bucket': match.group(1), 'path': match.group(2)};
   }
+
+  RegExp cloudStorageRegExp = RegExp(
+    '^https?://$_cloudStorageHost$_optionalPort/$_bucketDomain/$_cloudStoragePath',
+    caseSensitive: false,
+  );
+
+  match = cloudStorageRegExp.firstMatch(decodedUrl);
+  if (match == null) {
+    return null;
+  }
+
+  return {'bucket': match.group(1), 'path': match.group(2)};
 }
 
 String? _decodeHttpUrl(String url) {
