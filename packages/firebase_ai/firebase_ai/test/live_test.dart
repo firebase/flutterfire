@@ -607,6 +607,9 @@ void main() {
           'promptTokensDetails': [
             {'modality': 'TEXT', 'tokenCount': 10},
           ],
+          'candidatesTokensDetails': [
+            {'modality': 'AUDIO', 'tokenCount': 25},
+          ],
         },
       });
 
@@ -620,6 +623,27 @@ void main() {
         ContentModality.text,
       );
       expect(usageMetadata?.promptTokensDetails?.single.tokenCount, 10);
+      final outputTokens = usageMetadata?.candidatesTokensDetails?.single;
+      expect(outputTokens?.modality, ContentModality.audio);
+      expect(outputTokens?.tokenCount, 25);
+    });
+
+    test('parseServerResponse parses Gemini Developer API output tokens', () {
+      final response = parseServerResponse({
+        'serverContent': {'turnComplete': true},
+        'usageMetadata': {
+          'responseTokenCount': 25,
+          'responseTokensDetails': [
+            {'modality': 'AUDIO', 'tokenCount': 25},
+          ],
+        },
+      });
+
+      final usageMetadata = response.usageMetadata;
+      expect(usageMetadata?.candidatesTokenCount, 25);
+      final outputTokens = usageMetadata?.candidatesTokensDetails?.single;
+      expect(outputTokens?.modality, ContentModality.audio);
+      expect(outputTokens?.tokenCount, 25);
     });
 
     test('usage metadata is optional', () {

@@ -1710,8 +1710,8 @@ UsageMetadata parseUsageMetadata(Object jsonObject) {
     _ => null,
   };
   final candidatesTokenCount = switch (jsonObject) {
-    {'candidatesTokenCount': final int candidatesTokenCount} =>
-      candidatesTokenCount,
+    {'candidatesTokenCount': final int count} ||
+    {'responseTokenCount': final int count} => count,
     _ => null,
   };
   final totalTokenCount = switch (jsonObject) {
@@ -1733,8 +1733,10 @@ UsageMetadata parseUsageMetadata(Object jsonObject) {
     _ => null,
   };
   final candidatesTokensDetails = switch (jsonObject) {
-    {'candidatesTokensDetails': final List<Object?> candidatesTokensDetails} =>
-      candidatesTokensDetails.map(_parseModalityTokenCount).toList(),
+    {'candidatesTokensDetails': final List<Object?> details} ||
+    {
+      'responseTokensDetails': final List<Object?> details,
+    } => details.map(_parseModalityTokenCount).toList(),
     _ => null,
   };
   final toolUsePromptTokensDetails = switch (jsonObject) {
