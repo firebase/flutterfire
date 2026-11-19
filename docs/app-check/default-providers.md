@@ -146,8 +146,8 @@ FIREBASE_APP_CHECK_WITHOUT_RECAPTCHA=true flutter build ios
 
 If the project was already built, run `flutter clean` after turning the
 variable on or off. Otherwise Xcode reuses the previous package graph: the
-build fails with `Missing package product 'RecaptchaEnterprise'` after
-turning it on, and leaves the SDK out of the app after turning it off.
+build fails with a `Missing package product` error for reCAPTCHA Enterprise
+after turning it on, and leaves the SDK out of the app after turning it off.
 
 With CocoaPods, the plugin does not add the SDK; to use
 `AppleReCaptchaProvider`, add `pod 'RecaptchaEnterprise'` to your app's
