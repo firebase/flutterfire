@@ -149,9 +149,8 @@ variable on or off. Otherwise Xcode reuses the previous package graph: the
 build fails with `Missing package product 'RecaptchaEnterprise'` after
 turning it on, and leaves the SDK out of the app after turning it off.
 
-You can also add this variable to your Xcode scheme's environment variables
-for persistent configuration. With CocoaPods, the plugin does not add the SDK;
-to use `AppleReCaptchaProvider`, add `pod 'RecaptchaEnterprise'` to your app's
+With CocoaPods, the plugin does not add the SDK; to use
+`AppleReCaptchaProvider`, add `pod 'RecaptchaEnterprise'` to your app's
 `Podfile`. Without the SDK, `AppleReCaptchaProvider` configures no provider
 and App Check token requests fail.
 
