@@ -9,7 +9,7 @@ Demonstrates how to use the `firebase_auth` plugin and enable multiple auth prov
 1. Enable phone authentication in the [Firebase console]((https://console.firebase.google.com/u/0/project/_/authentication/providers)).
 2. Add test phone number and verification code to the Firebase console.
   - For this sample the number `+1 408-555-6969` and verification code `888888` are used.
-3. For iOS set the `URL Schemes` to the `REVERSE_CLIENT_ID` from the `GoogleServices-Info.plist` file.
+3. For iOS set the `URL Schemes` to the `REVERSED_CLIENT_ID` from the `GoogleService-Info.plist` file.
 4. Enter the phone number `+1 408-555-6969` and press the `Verify phone number` button.
 5. Once the phone number is verified the app displays the test
    verification code.
@@ -20,7 +20,7 @@ Demonstrates how to use the `firebase_auth` plugin and enable multiple auth prov
 
 1. Enable Google authentication in the [Firebase console](https://console.firebase.google.com/u/0/project/_/authentication/providers).
 2. For Android, add your app's package name and SHA-1 fingerprint to the [Settings page](https://console.firebase.google.com/project/_/settings/general) of the Firebase console. Refer to [Authenticating Your Client]('https://developers.google.com/android/guides/client-auth') for details on how to get your app's SHA-1 fingerprint.
-3. For iOS set the `URL Schemes` to the `REVERSE_CLIENT_ID` from the `GoogleServices-Info.plist` file (same step for `Phone Auth` above).
+3. For iOS set the `URL Schemes` to the `REVERSED_CLIENT_ID` from the `GoogleService-Info.plist` file (same step for `Phone Auth` above).
 4. Select `Google` under `Social Authentication` and click the `Sign In With Google` button.
 5. Signed in user's details are displayed in the UI.
 
