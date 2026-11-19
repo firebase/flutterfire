@@ -9,7 +9,9 @@ import 'generate_versions_spm.dart';
 void main() {
   _pluginDropsItsExactPin();
   _analyticsDropsItsPinWithoutADoubleBlank();
+  _pluginFloorIsTheSdkItWasBuiltAgainst();
   _pluginFloorFollowsTheNextMajor();
+  _blankLinesAwayFromThePinStay();
   _coreKeepsAnExactPin();
   _rewriteIsIdempotent();
   _manifestWithoutTheSdkIsLeftAlone();
@@ -51,10 +53,10 @@ let libraryVersion = "7.1.0"
 
 let package = Package(
   dependencies: [
-    .package(url: "https://github.com/firebase/firebase-ios-sdk", from: "13.0.0"),
+    .package(url: "https://github.com/firebase/firebase-ios-sdk", from: "13.2.0"),
   ],
 )
-''', 'plugin uses the current major as a floor');
+''', 'plugin uses the SDK it was generated against as a floor');
   if (rewritten.contains('firebaseSdkVersion') ||
       rewritten.contains('exact:')) {
     _fail('plugin rewrite still carries an exact pin');
@@ -87,10 +89,24 @@ import PackageDescription
 // Set FIREBASE_ANALYTICS_WITHOUT_ADID=true to use FirebaseAnalyticsCore.
 let package = Package(
   dependencies: [
-    .package(url: "https://github.com/firebase/firebase-ios-sdk", from: "13.0.0"),
+    .package(url: "https://github.com/firebase/firebase-ios-sdk", from: "13.2.0"),
   ],
 )
 ''', 'analytics keeps a single blank line where the pin was');
+}
+
+void _pluginFloorIsTheSdkItWasBuiltAgainst() {
+  final rewritten = rewritePackageSwiftFirebaseSdkPin(
+    _plugin,
+    sdkVersion: '13.1.1',
+    pinExact: false,
+  );
+  if (!rewritten.contains('from: "13.1.1"') ||
+      rewritten.contains('from: "13.0.0"')) {
+    _fail(
+      'floor should be the SDK the plugin was generated against:\n$rewritten',
+    );
+  }
 }
 
 void _pluginFloorFollowsTheNextMajor() {
@@ -105,8 +121,40 @@ void _pluginFloorFollowsTheNextMajor() {
     pinExact: false,
   );
   if (!onFourteen.contains('from: "14.0.0"') ||
-      onFourteen.contains('from: "13.0.0"')) {
+      onFourteen.contains('from: "13.2.0"')) {
     _fail('major bump did not move the floor to 14.0.0:\n$onFourteen');
+  }
+}
+
+void _blankLinesAwayFromThePinStay() {
+  const manifest =
+      'let libraryVersion = "7.1.0"\n'
+      'let firebaseSdkVersion: Version = "12.15.0"\n'
+      '\n'
+      'let package = Package(\n'
+      '  dependencies: [\n'
+      '    .package(url: "https://github.com/firebase/firebase-ios-sdk", exact: firebaseSdkVersion),\n'
+      '  ],\n'
+      ')\n'
+      '\n'
+      '\n'
+      '\n'
+      '// kept\n';
+  final rewritten = rewritePackageSwiftFirebaseSdkPin(
+    manifest,
+    sdkVersion: '13.2.0',
+    pinExact: false,
+  );
+  const trailing = '\n\n\n// kept\n';
+  if (!rewritten.endsWith(trailing)) {
+    _fail('rewrite collapsed blank lines away from the pin:\n$rewritten');
+  }
+  if (!rewritten.startsWith('let libraryVersion = "7.1.0"\n\nlet package')) {
+    _fail('pin removal left the wrong blank line:\n$rewritten');
+  }
+  if (rewritten.contains('firebaseSdkVersion') ||
+      !rewritten.contains('from: "13.2.0"')) {
+    _fail('rewrite did not drop the pin:\n$rewritten');
   }
 }
 

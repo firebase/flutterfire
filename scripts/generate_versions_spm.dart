@@ -19,9 +19,10 @@ import 'firebase_sdk_version_spm.dart';
 void main(List<String> args) async {
   final workspace = await getMelosWorkspace();
 
-  // firebase_core keeps an exact pin. Other plugins accept any version in
-  // that major, so SwiftPM can select the pin from firebase_core.
-  // CocoaPods keeps its own pin in firebase_sdk_version.rb.
+  // firebase_core keeps an exact pin. Other plugins accept that version up
+  // to the next major, so SwiftPM selects the pin from firebase_core and
+  // rejects an older one. CocoaPods keeps its own pin in
+  // firebase_sdk_version.rb.
   updatePluginPackageSwiftVersions(workspace, firebaseSpmSdkVersion);
   // Update plugin version in Constants.swift for pure Swift plugins. Unable to pass macros in pure Swift implementations
   updateLibraryVersionPureSwiftPlugins();
@@ -44,8 +45,10 @@ Future<melos.MelosWorkspace> getMelosWorkspace() async {
 ///
 /// [pinExact] is true for `firebase_core`, which is the package every other
 /// plugin depends on. Its exact version is the one SwiftPM must select.
-/// Other plugins get `from: "<major>.0.0"` so a plugin published against an
-/// older patch in the same major can resolve together with that pin.
+/// Other plugins get `from` the SDK version they were generated against.
+/// `from` stops before the next major, so a current `firebase_core` pin still
+/// resolves, and an older pin conflicts instead of compiling the plugin
+/// against an SDK that is missing APIs it uses.
 String rewritePackageSwiftFirebaseSdkPin(
   String content, {
   required String sdkVersion,
@@ -53,7 +56,7 @@ String rewritePackageSwiftFirebaseSdkPin(
 }) {
   final requirement = pinExact
       ? '.package(url: "$_firebaseIosSdkUrl", exact: firebaseSdkVersion)'
-      : '.package(url: "$_firebaseIosSdkUrl", from: "${_spmMajorFloor(sdkVersion)}")';
+      : '.package(url: "$_firebaseIosSdkUrl", from: "${_spmFromVersion(sdkVersion)}")';
 
   if (!content.contains(_firebaseSdkRequirement)) {
     if (content.contains('firebase-ios-sdk')) {
@@ -82,22 +85,46 @@ String rewritePackageSwiftFirebaseSdkPin(
     );
   }
 
-  final withoutPin = withRequirement.replaceFirst(
-    RegExp('\nlet firebaseSdkVersion: Version = "[^"]+"\n'),
-    '\n',
+  final pinDeclaration = RegExp(
+    '\nlet firebaseSdkVersion: Version = "[^"]+"\n',
   );
-  return withoutPin.replaceAll(RegExp('\n{3,}'), '\n\n');
+  final match = pinDeclaration.firstMatch(withRequirement);
+  if (match == null) {
+    return withRequirement;
+  }
+
+  final removed = withRequirement.replaceRange(match.start, match.end, '\n');
+  return _collapseBlankLinesAt(removed, match.start);
 }
 
-/// `13.2.0` -> `13.0.0`. `from` already stops before the next major.
-String _spmMajorFloor(String sdkVersion) {
-  final major = sdkVersion.split('.').first;
-  if (int.tryParse(major) == null) {
+/// Collapses the newline run at [index] to one blank line.
+///
+/// Removing `firebaseSdkVersion` can leave the blank line that surrounded
+/// that declaration. Blank lines anywhere else in the manifest stay put.
+String _collapseBlankLinesAt(String content, int index) {
+  var start = index;
+  var end = index;
+  while (start > 0 && content[start - 1] == '\n') {
+    start--;
+  }
+  while (end < content.length && content[end] == '\n') {
+    end++;
+  }
+  if (end - start <= 2) {
+    return content;
+  }
+  return content.replaceRange(start, end, '\n\n');
+}
+
+String _spmFromVersion(String sdkVersion) {
+  final parts = sdkVersion.split('.');
+  if (parts.length != 3 ||
+      parts.any((part) => part.isEmpty || int.tryParse(part) == null)) {
     throw FormatException(
       'Invalid Swift Package Manager SDK version: $sdkVersion',
     );
   }
-  return '$major.0.0';
+  return sdkVersion;
 }
 
 const _firebaseIosSdkUrl = 'https://github.com/firebase/firebase-ios-sdk';
