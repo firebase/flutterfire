@@ -6,7 +6,9 @@
 
 import 'package:melos/melos.dart' as melos;
 import 'package:glob/glob.dart';
+
 import 'dart:io';
+
 import 'package:cli_util/cli_logging.dart' as logging;
 import 'package:yaml/yaml.dart';
 
@@ -17,7 +19,8 @@ import 'firebase_sdk_version_spm.dart';
 void main(List<String> args) async {
   final workspace = await getMelosWorkspace();
 
-  // Update hard-coded versions in all plugin Package.swift files.
+  // firebase_core keeps an exact pin. Other plugins accept any version in
+  // that major, so SwiftPM can select the pin from firebase_core.
   // CocoaPods keeps its own pin in firebase_sdk_version.rb.
   updatePluginPackageSwiftVersions(workspace, firebaseSpmSdkVersion);
   // Update plugin version in Constants.swift for pure Swift plugins. Unable to pass macros in pure Swift implementations
@@ -27,11 +30,7 @@ void main(List<String> args) async {
 Future<melos.MelosWorkspace> getMelosWorkspace() async {
   final packageFilters = melos.PackageFilters(
     includePrivatePackages: false,
-    ignore: [
-      Glob('*web*'),
-      Glob('*platform*'),
-      Glob('*internals*'),
-    ],
+    ignore: [Glob('*web*'), Glob('*platform*'), Glob('*internals*')],
   );
   final workspace = await melos.MelosWorkspace.fromConfig(
     await melos.MelosWorkspaceConfig.fromWorkspaceRoot(Directory.current),
@@ -41,23 +40,87 @@ Future<melos.MelosWorkspace> getMelosWorkspace() async {
   return workspace;
 }
 
+/// Rewrites the `firebase-ios-sdk` requirement in one `Package.swift`.
+///
+/// [pinExact] is true for `firebase_core`, which is the package every other
+/// plugin depends on. Its exact version is the one SwiftPM must select.
+/// Other plugins get `from: "<major>.0.0"` so a plugin published against an
+/// older patch in the same major can resolve together with that pin.
+String rewritePackageSwiftFirebaseSdkPin(
+  String content, {
+  required String sdkVersion,
+  required bool pinExact,
+}) {
+  final requirement = pinExact
+      ? '.package(url: "$_firebaseIosSdkUrl", exact: firebaseSdkVersion)'
+      : '.package(url: "$_firebaseIosSdkUrl", from: "${_spmMajorFloor(sdkVersion)}")';
+
+  if (!content.contains(_firebaseSdkRequirement)) {
+    if (content.contains('firebase-ios-sdk')) {
+      throw StateError(
+        'Package.swift depends on firebase-ios-sdk in a form this generator '
+        'does not know how to rewrite.',
+      );
+    }
+    return content;
+  }
+
+  content = content.replaceAll(_firebaseSdkRequirement, requirement);
+
+  if (pinExact) {
+    if (!content.contains('let firebaseSdkVersion: Version =')) {
+      throw StateError(
+        'firebase_core Package.swift is missing its firebaseSdkVersion pin.',
+      );
+    }
+    return content.replaceAll(
+      RegExp(r'let firebaseSdkVersion: Version = "[^"]+"'),
+      'let firebaseSdkVersion: Version = "$sdkVersion"',
+    );
+  }
+
+  content = content.replaceFirst(
+    RegExp(r'\nlet firebaseSdkVersion: Version = "[^"]+"\n'),
+    '\n',
+  );
+  return content.replaceAll(RegExp(r'\n{3,}'), '\n\n');
+}
+
+/// `13.2.0` -> `13.0.0`. `from` already stops before the next major.
+String _spmMajorFloor(String sdkVersion) {
+  final major = sdkVersion.split('.').first;
+  if (int.tryParse(major) == null) {
+    throw FormatException(
+      'Invalid Swift Package Manager SDK version: $sdkVersion',
+    );
+  }
+  return '$major.0.0';
+}
+
+const _firebaseIosSdkUrl = 'https://github.com/firebase/firebase-ios-sdk';
+
+final _firebaseSdkRequirement = RegExp(
+  r'\.package\(url: "https://github.com/firebase/firebase-ios-sdk", (?:exact: firebaseSdkVersion|from: "[0-9]+\.[0-9]+\.[0-9]+")\)',
+);
+
 void updatePluginPackageSwiftVersions(
   melos.MelosWorkspace workspace,
   String firebaseiOSVersion,
 ) {
   for (final package in workspace.filteredPackages.values) {
     for (final platform in ['ios', 'macos']) {
-      final packageSwiftFile =
-          File('${package.path}/$platform/${package.name}/Package.swift');
+      final packageSwiftFile = File(
+        '${package.path}/$platform/${package.name}/Package.swift',
+      );
 
       if (!packageSwiftFile.existsSync()) continue;
 
       var content = packageSwiftFile.readAsStringSync();
 
-      // Update firebaseSdkVersion (matches Package.swift naming).
-      content = content.replaceAll(
-        RegExp(r'let firebaseSdkVersion: Version = "[^"]+"'),
-        'let firebaseSdkVersion: Version = "$firebaseiOSVersion"',
+      content = rewritePackageSwiftFirebaseSdkPin(
+        content,
+        sdkVersion: firebaseiOSVersion,
+        pinExact: package.name == 'firebase_core',
       );
 
       // Update libraryVersion / libraryVersionString from pubspec version.
