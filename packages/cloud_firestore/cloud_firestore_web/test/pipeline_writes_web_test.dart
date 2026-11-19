@@ -7,6 +7,7 @@ library;
 
 import 'dart:js_interop';
 import 'dart:js_interop_unsafe';
+import 'dart:typed_data';
 
 import 'package:cloud_firestore_web/src/interop/firestore_interop.dart'
     as interop;
@@ -64,8 +65,16 @@ void main() {
     }).toJS;
     source['collection'] = ((JSAny path) => pipeline).toJS;
 
+    final bytesConstructor = JSObject();
+    bytesConstructor['fromUint8Array'] = ((JSUint8Array list) {
+      final bytes = JSObject();
+      bytes['bytes'] = list;
+      return bytes;
+    }).toJS;
+
     final firestoreSdk = JSObject();
     firestoreSdk['pipelines'] = pipelinesModule;
+    firestoreSdk['Bytes'] = bytesConstructor;
     globalContext['firebase_firestore'] = firestoreSdk;
   });
 
@@ -210,6 +219,39 @@ void main() {
       expect(deleteOptions, isA<JSObject>());
     },
   );
+
+  test('a byte literal becomes Bytes and a number list stays an array', () {
+    buildPipelineFromStages(firestore(), [
+      {
+        'stage': 'literals',
+        'args': {
+          'documents': [
+            {
+              'payload': {
+                'kind': 'value',
+                'value': Uint8List.fromList([1, 2, 3]),
+              },
+              'scores': {
+                'kind': 'value',
+                'value': [1, 2, 3],
+              },
+            },
+          ],
+        },
+      },
+    ]);
+
+    final documents = (literalsDocuments! as JSArray).toDart;
+    final document = documents.first! as JSObject;
+    final payload = document.getProperty('payload'.toJS) as JSObject;
+    expect((payload.getProperty('bytes'.toJS) as JSUint8Array).toDart, [
+      1,
+      2,
+      3,
+    ]);
+    expect(document.getProperty('scores'.toJS).dartify(), [1, 2, 3]);
+    expect(document.getProperty('scores'.toJS), isA<JSArray>());
+  });
 
   test('a literals stage without documents throws', () {
     expect(

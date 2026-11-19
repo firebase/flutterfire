@@ -710,11 +710,28 @@ void main() {
         );
       });
 
-      test('delete fails on non-web before a write is sent', () {
-        expect(
-          firestore.pipeline().collection('books').delete().execute(),
-          throwsA(isA<UnsupportedError>()),
-        );
+      test('write stages fail on non-web before a write is sent', () {
+        final pipelines = [
+          firestore.pipeline().collection('books').delete(),
+          firestore.pipeline().collection('books').update(),
+          firestore.pipeline().collection('books').insert(),
+          firestore.pipeline().collection('books').upsert(),
+          firestore.pipeline().literals([
+            {'name': 'Ada'},
+          ]),
+        ];
+        for (final pipeline in pipelines) {
+          expect(
+            pipeline.execute(),
+            throwsA(
+              isA<UnsupportedError>().having(
+                (error) => error.message,
+                'message',
+                contains('web only'),
+              ),
+            ),
+          );
+        }
       });
     });
   });
