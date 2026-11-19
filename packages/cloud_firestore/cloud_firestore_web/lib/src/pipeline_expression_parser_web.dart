@@ -899,9 +899,13 @@ class PipelineExpressionParserWeb {
 
   /// Converts a literals field value into a JS value the Firestore SDK accepts.
   ///
-  /// Lists become JS arrays. Nested maps stay maps. [List<int>] is an array
-  /// of numbers here; byte values are [Blob].
+  /// Lists become JS arrays. Nested maps stay maps. A [Uint8List] is
+  /// Firestore bytes. A plain [List<int>] stays an array of numbers, and
+  /// [Blob] is bytes.
   JSAny? _literalValueToJs(Object? value) {
+    if (value is Uint8List) {
+      return interop.BytesJsImpl.fromUint8Array(value.toJS) as JSAny;
+    }
     if (value is Map) {
       final object = JSObject();
       value.forEach((key, nested) {

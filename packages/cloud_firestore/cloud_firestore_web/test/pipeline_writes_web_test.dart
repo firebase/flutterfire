@@ -211,13 +211,24 @@ void main() {
     },
   );
 
-  test('a literals stage with no documents list still builds', () {
-    buildPipelineFromStages(firestore(), [
-      {'stage': 'literals', 'args': <String, dynamic>{}},
-      {'stage': 'delete', 'args': <String, dynamic>{}},
-    ]);
+  test('a literals stage without documents throws', () {
+    expect(
+      () => buildPipelineFromStages(firestore(), [
+        {'stage': 'literals', 'args': <String, dynamic>{}},
+      ]),
+      throwsArgumentError,
+    );
+  });
 
-    expect((literalsDocuments! as JSArray).toDart, isEmpty);
-    expect(deleteOptions, isA<JSObject>());
+  test('a literals stage with an empty documents list throws', () {
+    expect(
+      () => buildPipelineFromStages(firestore(), [
+        {
+          'stage': 'literals',
+          'args': {'documents': <dynamic>[]},
+        },
+      ]),
+      throwsArgumentError,
+    );
   });
 }

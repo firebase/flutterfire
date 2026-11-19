@@ -61,15 +61,22 @@ interop.PipelineJsImpl _applySourceStage(
           .toJS,
     ),
     'literals' => source.literals(
-      converter.toLiteralsDocuments(
-        ((args as Map<String, dynamic>)['documents'] ?? const <dynamic>[])
-            as List<dynamic>,
-      ),
+      converter.toLiteralsDocuments(_requiredLiteralDocuments(args)),
     ),
     _ => throw UnsupportedError(
       'Pipeline source stage "$stageName" is not supported on web.',
     ),
   };
+}
+
+List<dynamic> _requiredLiteralDocuments(Object? args) {
+  final documents = args is Map<String, dynamic> ? args['documents'] : null;
+  if (documents is! List || documents.isEmpty) {
+    throw ArgumentError(
+      'A literals stage requires a non-empty documents list.',
+    );
+  }
+  return documents;
 }
 
 interop.PipelineJsImpl _applyStage(

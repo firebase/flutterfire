@@ -814,6 +814,12 @@ class Pipeline {
 
   /// Deletes each input document at its `__name__` path.
   ///
+  /// This must be the last stage in the pipeline. A later stage, such as
+  /// [limit], is rejected by the backend.
+  ///
+  /// Currently supported on web only. On other platforms, [execute] throws
+  /// [UnsupportedError].
+  ///
   /// Example:
   /// ```dart
   /// firestore
@@ -829,9 +835,16 @@ class Pipeline {
 
   /// Updates each input document at its `__name__` path.
   ///
-  /// [transformedFields] are aliased expressions applied before the write.
+  /// [transformedFields] are [AliasedExpression]s applied before the write.
+  /// A bare [Expression.field] is not a field name here; call [Expression.as].
   /// When omitted, each input document is written back from its current
   /// fields. This stage does not create missing documents.
+  ///
+  /// This must be the last stage in the pipeline. A later stage, such as
+  /// [limit], is rejected by the backend.
+  ///
+  /// Currently supported on web only. On other platforms, [execute] throws
+  /// [UnsupportedError].
   ///
   /// Example:
   /// ```dart
@@ -839,19 +852,34 @@ class Pipeline {
   ///   Expression.field('rating').as('score'),
   /// ]);
   /// ```
-  Pipeline update([List<Selectable> transformedFields = const []]) {
+  Pipeline update([List<AliasedExpression> transformedFields = const []]) {
     final stage = _UpdateStage(transformedFields);
     return Pipeline._(_firestore, _delegate.addStage(stage.toMap()));
   }
 
   /// Inserts each input document.
   ///
-  /// The write fails if a document already exists at the target path. The
-  /// target is the input document's `__name__` when [collectionPath] and
-  /// [documentId] are both omitted. [collectionPath] writes into that
-  /// collection, reusing the input document id or generating one.
+  /// The write fails if a document already exists at the target path.
+  ///
+  /// The target path depends on [collectionPath] and [documentId]:
+  ///
+  /// * Neither set: the input document's `__name__` path. The write fails
+  ///   when that field is missing.
+  /// * [collectionPath] only: that collection. The input document id is
+  ///   reused when `__name__` is present, and a new id is generated when it
+  ///   is not.
+  /// * [documentId] only: the input document's parent collection, using the
+  ///   id from [documentId]. The input document must have a `__name__` field.
+  /// * Both set: [collectionPath], using the id from [documentId].
+  ///
   /// [documentId] is evaluated for each document: a field path is
   /// [Expression.field], and a fixed id is [Expression.constant].
+  ///
+  /// This must be the last stage in the pipeline. A later stage, such as
+  /// [limit], is rejected by the backend.
+  ///
+  /// Currently supported on web only. On other platforms, [execute] throws
+  /// [UnsupportedError].
   Pipeline insert({String? collectionPath, Expression? documentId}) {
     _checkCollectionPath(collectionPath);
     final stage = _InsertStage(collectionPath, documentId);
@@ -861,14 +889,39 @@ class Pipeline {
   /// Inserts each input document, or replaces it when the target already exists.
   ///
   /// An existing document is replaced entirely. Fields that are not in the
-  /// written document are removed. [additionalFields] are aliased expressions
-  /// merged onto each input document before the write. See [insert] for how
-  /// [collectionPath] and [documentId] choose the target path.
+  /// written document are removed. [additionalFields] are [AliasedExpression]s
+  /// merged onto each input document before the write. A bare
+  /// [Expression.field] is not a field name here; call [Expression.as].
+  ///
+  /// The target path depends on [collectionPath] and [documentId]:
+  ///
+  /// * Neither set: the input document's `__name__` path. The write fails
+  ///   when that field is missing.
+  /// * [collectionPath] only: that collection. The input document id is
+  ///   reused when `__name__` is present, and a new id is generated when it
+  ///   is not.
+  /// * Both set: [collectionPath], using the id from [documentId].
+  ///
+  /// [documentId] without [collectionPath] is rejected. Unlike [insert], an
+  /// id on its own is not a target. [documentId] is evaluated for each
+  /// document: a field path is [Expression.field], and a fixed id is
+  /// [Expression.constant].
+  ///
+  /// This must be the last stage in the pipeline. A later stage, such as
+  /// [limit], is rejected by the backend.
+  ///
+  /// Currently supported on web only. On other platforms, [execute] throws
+  /// [UnsupportedError].
   Pipeline upsert({
     String? collectionPath,
     Expression? documentId,
-    List<Selectable> additionalFields = const [],
+    List<AliasedExpression> additionalFields = const [],
   }) {
+    if (documentId != null && collectionPath == null) {
+      throw ArgumentError(
+        'upsert() requires collectionPath when documentId is set.',
+      );
+    }
     _checkCollectionPath(collectionPath);
     final stage = _UpsertStage(collectionPath, documentId, additionalFields);
     return Pipeline._(_firestore, _delegate.addStage(stage.toMap()));
@@ -883,5 +936,7 @@ void _checkCollectionPath(String? collectionPath) {
     throw ArgumentError('A collection path must be a non-empty string.');
   } else if (collectionPath.contains('//')) {
     throw ArgumentError('A collection path must not contain "//".');
+  } else if (!isValidCollectionPath(collectionPath)) {
+    throw ArgumentError('A collection path must point to a valid collection.');
   }
 }

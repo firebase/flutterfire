@@ -665,6 +665,57 @@ void main() {
           throwsArgumentError,
         );
       });
+
+      test('throws when insert collection path is a document path', () {
+        expect(
+          () => firestore
+              .pipeline()
+              .collection('books')
+              .insert(collectionPath: 'books/dune'),
+          throwsArgumentError,
+        );
+      });
+
+      test('accepts a nested collection path', () {
+        final pipeline = firestore
+            .pipeline()
+            .collection('books')
+            .insert(collectionPath: 'books/dune/reviews');
+        expect(
+          pipeline.stages.last['args']['collection'],
+          'books/dune/reviews',
+        );
+      });
+
+      test('serializes insert with only a document id', () {
+        final pipeline = firestore
+            .pipeline()
+            .collection('books')
+            .insert(documentId: Expression.constant('dune'));
+        expect(pipeline.stages.last['args'], {
+          'document_id': {
+            'name': 'constant',
+            'args': {'value': 'dune'},
+          },
+        });
+      });
+
+      test('throws when upsert sets a document id without a collection', () {
+        expect(
+          () => firestore
+              .pipeline()
+              .collection('books')
+              .upsert(documentId: Expression.constant('dune')),
+          throwsArgumentError,
+        );
+      });
+
+      test('delete fails on non-web before a write is sent', () {
+        expect(
+          firestore.pipeline().collection('books').delete().execute(),
+          throwsA(isA<UnsupportedError>()),
+        );
+      });
     });
   });
 }

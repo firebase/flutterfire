@@ -68,8 +68,13 @@ class PipelineSource {
   /// Creates a pipeline from literal documents.
   ///
   /// Each map is one document. A field value may be a plain value or an
-  /// [Expression]. Expressions are only supported as top-level fields.
-  /// Nested maps and lists are plain values.
+  /// [Expression]. Expressions are only supported as top-level fields, and an
+  /// aliased expression is rejected because the map key is the field name.
+  /// Nested maps and lists are plain values. A [Uint8List] is bytes; a list
+  /// of numbers stays an array.
+  ///
+  /// Currently supported on web only. On other platforms, executing the
+  /// pipeline throws [UnsupportedError].
   ///
   /// Example:
   /// ```dart

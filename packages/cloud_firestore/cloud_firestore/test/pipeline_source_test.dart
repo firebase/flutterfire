@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -173,6 +175,44 @@ void main() {
             },
           ]),
           throwsArgumentError,
+        );
+      });
+
+      test('throws when a top-level field is aliased', () {
+        expect(
+          () => firestore.pipeline().literals([
+            {'name': Expression.constant('Ada').as('alias')},
+          ]),
+          throwsArgumentError,
+        );
+      });
+
+      test('keeps bytes distinct from a list of numbers', () {
+        final bytes = Uint8List.fromList([1, 2, 3]);
+        final pipeline = firestore.pipeline().literals([
+          {
+            'payload': bytes,
+            'scores': [1, 2, 3],
+          },
+        ]);
+        final documents =
+            pipeline.stages.first['args']['documents'] as List<dynamic>;
+        final document = documents.first as Map<String, dynamic>;
+        final payload = document['payload'] as Map<String, dynamic>;
+        expect(payload['kind'], 'value');
+        expect(payload['value'], same(bytes));
+        expect(document['scores'], {
+          'kind': 'value',
+          'value': [1, 2, 3],
+        });
+      });
+
+      test('literals fails on non-web before a write is sent', () {
+        expect(
+          firestore.pipeline().literals([
+            {'name': 'Ada'},
+          ]).execute(),
+          throwsA(isA<UnsupportedError>()),
         );
       });
     });

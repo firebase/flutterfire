@@ -398,7 +398,7 @@ final class _DeleteStage extends PipelineStage {
 
 /// Stage that updates each input document.
 final class _UpdateStage extends PipelineStage {
-  final List<Selectable> transformedFields;
+  final List<AliasedExpression> transformedFields;
 
   _UpdateStage(this.transformedFields);
 
@@ -439,7 +439,7 @@ final class _InsertStage extends PipelineStage {
 final class _UpsertStage extends PipelineStage {
   final String? collectionPath;
   final Expression? documentId;
-  final List<Selectable> additionalFields;
+  final List<AliasedExpression> additionalFields;
 
   _UpsertStage(this.collectionPath, this.documentId, this.additionalFields);
 
@@ -497,6 +497,12 @@ Map<String, dynamic> _encodeLiteralDocument(Map<String, Object?> document) {
 }
 
 Map<String, dynamic> _encodeLiteralField(Object? value) {
+  if (value is AliasedExpression) {
+    throw ArgumentError(
+      'literals() does not accept an aliased expression. '
+      'The map key is the field name; pass the expression without .as().',
+    );
+  }
   if (value is Expression) {
     return {'kind': 'expression', 'expression': value.toMap()};
   }
@@ -527,6 +533,9 @@ Object? _encodeLiteralValue(Object? value) {
       value is GeoPoint ||
       value is Blob ||
       value is VectorValue) {
+    return value;
+  }
+  if (value is Uint8List) {
     return value;
   }
   if (value is Map) {
