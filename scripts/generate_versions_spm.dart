@@ -65,25 +65,28 @@ String rewritePackageSwiftFirebaseSdkPin(
     return content;
   }
 
-  content = content.replaceAll(_firebaseSdkRequirement, requirement);
+  final withRequirement = content.replaceAll(
+    _firebaseSdkRequirement,
+    requirement,
+  );
 
   if (pinExact) {
-    if (!content.contains('let firebaseSdkVersion: Version =')) {
+    if (!withRequirement.contains('let firebaseSdkVersion: Version =')) {
       throw StateError(
         'firebase_core Package.swift is missing its firebaseSdkVersion pin.',
       );
     }
-    return content.replaceAll(
-      RegExp(r'let firebaseSdkVersion: Version = "[^"]+"'),
+    return withRequirement.replaceAll(
+      RegExp('let firebaseSdkVersion: Version = "[^"]+"'),
       'let firebaseSdkVersion: Version = "$sdkVersion"',
     );
   }
 
-  content = content.replaceFirst(
-    RegExp(r'\nlet firebaseSdkVersion: Version = "[^"]+"\n'),
+  final withoutPin = withRequirement.replaceFirst(
+    RegExp('\nlet firebaseSdkVersion: Version = "[^"]+"\n'),
     '\n',
   );
-  return content.replaceAll(RegExp(r'\n{3,}'), '\n\n');
+  return withoutPin.replaceAll(RegExp('\n{3,}'), '\n\n');
 }
 
 /// `13.2.0` -> `13.0.0`. `from` already stops before the next major.
@@ -131,11 +134,11 @@ void updatePluginPackageSwiftVersions(
         if (version != null) {
           final spmVersion = version.replaceAll('+', '-');
           content = content.replaceAll(
-            RegExp(r'let libraryVersionString = "[^"]+"'),
+            RegExp('let libraryVersionString = "[^"]+"'),
             'let libraryVersionString = "$spmVersion"',
           );
           content = content.replaceAll(
-            RegExp(r'let libraryVersion = "[^"]+"'),
+            RegExp('let libraryVersion = "[^"]+"'),
             'let libraryVersion = "$spmVersion"',
           );
         }
