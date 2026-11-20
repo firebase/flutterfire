@@ -354,6 +354,42 @@ void runInvalidFieldNameTests() {
       expect(snapshot.data(), <String, dynamic>{'ok': 1});
     });
 
+    test('where() rejects an empty field name in the compared value', () async {
+      await expectLater(
+        firestore
+            .collection('flutter-tests-invalid-field-query')
+            .where('m', isEqualTo: <String, dynamic>{'': 1})
+            .get(),
+        throwsInvalidField('must not be empty'),
+      );
+    });
+
+    test(
+      'where(Filter) rejects an empty field name in the compared value',
+      () async {
+        await expectLater(
+          firestore
+              .collection('flutter-tests-invalid-field-query')
+              .where(Filter('m', isEqualTo: <String, dynamic>{'': 1}))
+              .get(),
+          throwsInvalidField('must not be empty'),
+        );
+      },
+    );
+
+    test('startAt() rejects an empty field name in a cursor value', () async {
+      await expectLater(
+        firestore
+            .collection('flutter-tests-invalid-field-query')
+            .orderBy('m')
+            .startAt(<dynamic>[
+              <String, dynamic>{'': 1},
+            ])
+            .get(),
+        throwsInvalidField('must not be empty'),
+      );
+    });
+
     test(
       'a reserved field name in a query value is rejected by the backend',
       () async {

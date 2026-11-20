@@ -869,6 +869,51 @@ std::optional<std::string> RejectedWriteCommand(
   return std::nullopt;
 }
 
+std::optional<std::string> RejectedQueryValue(const EncodableValue& value);
+
+// Query values are parsed with UserDataSource::Argument. An empty key is
+// still invalid there. A name that begins and ends with "__" is not: that
+// rule is writes only, and the backend rejects it.
+std::optional<std::string> RejectedQueryMap(const EncodableMap& map) {
+  for (const auto& entry : map) {
+    if (const auto* key = std::get_if<std::string>(&entry.first)) {
+      if (key->empty()) {
+        return "Invalid data. Document fields must not be empty";
+      }
+    }
+    if (auto message = RejectedQueryValue(entry.second)) {
+      return message;
+    }
+  }
+  return std::nullopt;
+}
+
+std::optional<std::string> RejectedQueryValue(const EncodableValue& value) {
+  if (const auto* map = std::get_if<EncodableMap>(&value)) {
+    return RejectedQueryMap(*map);
+  }
+  if (const auto* list = std::get_if<EncodableList>(&value)) {
+    for (const EncodableValue& element : *list) {
+      if (auto message = RejectedQueryValue(element)) {
+        return message;
+      }
+    }
+  }
+  return std::nullopt;
+}
+
+void ThrowIfRejectedQueryValue(const EncodableValue& value) {
+  if (auto message = RejectedQueryValue(value)) {
+    throw std::invalid_argument(*message);
+  }
+}
+
+void ThrowIfRejectedQueryValues(const EncodableList& values) {
+  for (const EncodableValue& value : values) {
+    ThrowIfRejectedQueryValue(value);
+  }
+}
+
 FlutterError InvalidDocumentField(const std::string& message) {
   EncodableMap details;
   details[EncodableValue("code")] = EncodableValue("invalid-argument");
@@ -1730,6 +1775,7 @@ firebase::firestore::Filter filterFromJson(const EncodableMap& map) {
         FieldPathFromEncodable(map.at(EncodableValue("fieldPath")));
 
     auto value = map.at(EncodableValue("value"));
+    ThrowIfRejectedQueryValue(value);
 
     // All the operators from Firebase
     if (op == "==") {
@@ -1821,6 +1867,7 @@ firebase::firestore::Query ParseQuery(
       const std::string& op = std::get<std::string>(condition[1]);
 
       auto value = condition[2];
+      ThrowIfRejectedQueryValue(value);
       if (op == "==") {
         query = query.WhereEqualTo(
             fieldPath, CloudFirestorePlugin::ConvertToFieldValue(value));
@@ -1890,16 +1937,20 @@ firebase::firestore::Query ParseQuery(
     }
 
     if (parameters.start_at()) {
+      ThrowIfRejectedQueryValues(*parameters.start_at());
       query = query.StartAt(ConvertToFieldValueList(*parameters.start_at()));
     }
     if (parameters.start_after()) {
+      ThrowIfRejectedQueryValues(*parameters.start_after());
       query =
           query.StartAfter(ConvertToFieldValueList(*parameters.start_after()));
     }
     if (parameters.end_at()) {
+      ThrowIfRejectedQueryValues(*parameters.end_at());
       query = query.EndAt(ConvertToFieldValueList(*parameters.end_at()));
     }
     if (parameters.end_before()) {
+      ThrowIfRejectedQueryValues(*parameters.end_before());
       query =
           query.EndBefore(ConvertToFieldValueList(*parameters.end_before()));
     }
