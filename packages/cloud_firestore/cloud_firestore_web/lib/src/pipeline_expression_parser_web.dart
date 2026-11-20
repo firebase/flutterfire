@@ -678,6 +678,66 @@ class PipelineExpressionParserWeb {
       interop.AddFieldsOptionsJsImpl()
         ..fields = _toSelectableList(expressions).toJS;
 
+  JSAny toLiteralsDocuments(List<dynamic> documents) {
+    final objects = documents.map((document) {
+      final fields = document as Map;
+      final object = JSObject();
+      for (final entry in fields.entries) {
+        final tagged = Map<String, dynamic>.from(entry.value as Map);
+        final JSAny? jsValue;
+        if (tagged['kind'] == 'expression') {
+          jsValue = toExpression(
+            Map<String, dynamic>.from(tagged['expression'] as Map),
+          );
+        } else {
+          jsValue = _literalValueToJs(tagged['value']);
+        }
+        object.setProperty(entry.key.toString().toJS, jsValue);
+      }
+      return object;
+    }).toList();
+    return objects.toJS;
+  }
+
+  JSAny toUpdateOptions(Map<String, dynamic> map) {
+    final options = interop.UpdateStageOptionsJsImpl();
+    final expressions = map['expressions'] as List<dynamic>?;
+    if (expressions != null && expressions.isNotEmpty) {
+      options.transformedFields = _toSelectableList(expressions).toJS;
+    }
+    return options;
+  }
+
+  JSAny toInsertOptions(Map<String, dynamic> map) {
+    final options = interop.InsertStageOptionsJsImpl();
+    _applyWriteTarget(options, map);
+    return options;
+  }
+
+  JSAny toUpsertOptions(Map<String, dynamic> map) {
+    final options = interop.UpsertStageOptionsJsImpl();
+    _applyWriteTarget(options, map);
+    final additionalFields = map['additional_fields'] as List<dynamic>?;
+    if (additionalFields != null && additionalFields.isNotEmpty) {
+      options.additionalFields = _toSelectableList(additionalFields).toJS;
+    }
+    return options;
+  }
+
+  void _applyWriteTarget(JSObject options, Map<String, dynamic> map) {
+    final collection = map['collection'] as String?;
+    if (collection != null) {
+      options.setProperty('collection'.toJS, collection.toJS);
+    }
+    final documentId = map['document_id'];
+    if (documentId is Map) {
+      options.setProperty(
+        'documentIdExpression'.toJS,
+        toExpression(Map<String, dynamic>.from(documentId)),
+      );
+    }
+  }
+
   /// Converts select stage expressions to JS SelectStageOptions.
   JSAny toSelectOptions(List<dynamic> expressions) =>
       interop.SelectStageOptionsJsImpl()
@@ -832,6 +892,23 @@ class PipelineExpressionParserWeb {
   }
 
   // ── Private helpers ───────────────────────────────────────────────────────
+
+  JSAny? _literalValueToJs(Object? value) {
+    if (value is Uint8List) {
+      return interop.BytesJsImpl.fromUint8Array(value.toJS) as JSAny;
+    }
+    if (value is Map) {
+      final object = JSObject();
+      value.forEach((key, nested) {
+        object.setProperty(key.toString().toJS, _literalValueToJs(nested));
+      });
+      return object;
+    }
+    if (value is List) {
+      return value.map(_literalValueToJs).toList().toJS;
+    }
+    return _constantValueToJs(value);
+  }
 
   /// Converts a [Constant] value to the correct JS type for the pipelines API.
   ///
