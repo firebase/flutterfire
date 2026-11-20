@@ -7,8 +7,6 @@
 
 import PackageDescription
 
-let firebaseSdkVersion: Version = "13.2.0"
-
 let package = Package(
   name: "firebase_app_check",
   platforms: [
@@ -18,7 +16,7 @@ let package = Package(
     .library(name: "firebase-app-check", targets: ["firebase_app_check"])
   ],
   dependencies: [
-    .package(url: "https://github.com/firebase/firebase-ios-sdk", exact: firebaseSdkVersion),
+    .package(url: "https://github.com/firebase/firebase-ios-sdk", from: "13.2.0"),
     .package(
       url: "https://github.com/GoogleCloudPlatform/recaptcha-enterprise-mobile-sdk.git",
       from: "18.0.0"
