@@ -103,6 +103,9 @@ class FirebaseInAppMessaging extends FirebasePlugin {
 
   /// Notifies when an in-app message could not be rendered, for example
   /// because its image failed to download.
+  ///
+  /// On iOS, it also fires for a message that nothing listened to on
+  /// [onMessageDisplay], which the plugin reports as a display error.
   Stream<InAppMessagingDisplayErrorEvent> get onMessageDisplayError =>
       _delegate.onMessageDisplayError;
 
@@ -111,7 +114,8 @@ class FirebaseInAppMessaging extends FirebasePlugin {
   /// When [enabled] is `true`, native modal / card / banner / image-only
   /// templates are not shown. Eligible campaigns are delivered on
   /// [onMessageDisplay] instead. Call this after [Firebase.initializeApp]
-  /// and before campaigns may trigger.
+  /// and before campaigns may trigger, and listen to [onMessageDisplay]
+  /// first.
   ///
   /// Apps must report [InAppMessage.impress], [InAppMessage.click], or
   /// [InAppMessage.dismiss] so analytics and frequency capping keep working.
@@ -129,5 +133,11 @@ class FirebaseInAppMessaging extends FirebasePlugin {
   /// This is not Firebase Cloud Messaging's `onMessage`, and it is not
   /// [onMessageClicked]. It fires only after [setCustomDisplayEnabled] is
   /// `true`, at the moment the SDK would have drawn a native template.
+  ///
+  /// Listen before enabling custom display. A message that arrives while
+  /// nothing listens is held for the first listener for a few seconds, then
+  /// dropped. On iOS, where the SDK shows no other campaign until the current
+  /// one is reported, the message is also reported as a display error, which
+  /// [onMessageDisplayError] notifies.
   Stream<InAppMessage> get onMessageDisplay => _delegate.onMessageDisplay;
 }
