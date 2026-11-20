@@ -56,6 +56,12 @@ class AppleAppAttestWithDeviceCheckFallbackProvider
 }
 
 /// reCAPTCHA provider for Apple platforms.
+///
+/// Only available on iOS, and only if the app links the reCAPTCHA Enterprise
+/// SDK: Swift Package Manager builds add it unless
+/// `FIREBASE_APP_CHECK_WITHOUT_RECAPTCHA` is set to `true`; CocoaPods builds
+/// need the `RecaptchaEnterprise` pod in the app's `Podfile`. Without the SDK,
+/// no provider is configured and token requests fail.
 class AppleReCaptchaProvider extends AppleAppCheckProvider {
   /// Creates an Apple reCAPTCHA provider with a required [siteKey].
   const AppleReCaptchaProvider(this.siteKey) : super('recaptcha');

@@ -194,7 +194,8 @@ jobs:
     needs: changes
     if: needs.changes.outputs.ios == 'true'
     runs-on: xcode-27
-    timeout-minutes: 35
+    # Two iOS builds: the default one and the reCAPTCHA opt-out one.
+    timeout-minutes: 50
     env:
       FLUTTER_DEPENDENCIES: "cloud_firestore firebase_remote_config cloud_functions firebase_database firebase_auth firebase_storage firebase_analytics firebase_messaging firebase_app_check firebase_in_app_messaging firebase_performance firebase_crashlytics firebase_app_installations firebase_ai"
       PR_HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
@@ -220,6 +221,38 @@ jobs:
         run: |
           dart ./.github/workflows/scripts/generate-dummy-firebase-configs.dart
           dart ./.github/workflows/scripts/swift-integration.dart --platform=ios $FLUTTER_DEPENDENCIES
+      # firebase_app_check's Package.swift adds the reCAPTCHA Enterprise SDK
+      # unless FIREBASE_APP_CHECK_WITHOUT_RECAPTCHA=true. The two checks below
+      # pin both sides of that condition: the default build must embed the SDK
+      # and the opt-out build must build without it and not embed it.
+      - name: 'Check iOS App embeds reCAPTCHA Enterprise by default'
+        run: |
+          app=packages/firebase_core/firebase_core/example/build/ios/iphoneos/Runner.app
+          test -d "$app"
+          found=$(find "$app" -iname '*recaptcha*')
+          if [ -z "$found" ]; then
+            echo "::error::No reCAPTCHA Enterprise SDK in $app; the default Swift Package Manager build should embed it."
+            exit 1
+          fi
+          echo "$found"
+      - name: 'Build iOS App with Swift Package Manager without reCAPTCHA Enterprise'
+        env:
+          FIREBASE_APP_CHECK_WITHOUT_RECAPTCHA: 'true'
+        run: |
+          cd packages/firebase_core/firebase_core/example
+          # Xcode keeps the default build's package graph and fails with
+          # "Missing package product 'RecaptchaEnterprise'"; flutter clean
+          # drops it and empties build/, so no framework is left over.
+          flutter clean
+          flutter build ios --no-codesign
+          app=build/ios/iphoneos/Runner.app
+          test -d "$app"
+          found=$(find "$app" -iname '*recaptcha*')
+          if [ -n "$found" ]; then
+            echo "$found"
+            echo "::error::reCAPTCHA Enterprise SDK is embedded in $app although FIREBASE_APP_CHECK_WITHOUT_RECAPTCHA=true."
+            exit 1
+          fi
 
   swift-integration-macos:
     needs: changes
