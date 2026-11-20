@@ -15,6 +15,7 @@ import 'field_value_e2e.dart';
 import 'firebase_options.dart';
 import 'geo_point_e2e.dart';
 import 'instance_e2e.dart';
+import 'invalid_field_name_e2e.dart';
 import 'load_bundle_e2e.dart';
 import 'query_e2e.dart';
 import 'report_test_results.dart';
@@ -72,6 +73,7 @@ void main() {
     runTimestampTests();
     runTransactionTests();
     runWriteBatchTests();
+    runInvalidFieldNameTests();
     runLoadBundleTests();
     runWebSnapshotListenersTests();
     if (defaultTargetPlatform != TargetPlatform.windows) {

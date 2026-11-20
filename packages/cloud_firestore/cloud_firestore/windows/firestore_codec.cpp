@@ -149,8 +149,7 @@ cloud_firestore_windows::FirestoreCodec::ReadValueOfType(
             std::get<std::string>(FirestoreCodec::ReadValue(stream)));
       }
 
-      FieldPath fieldPath(array);
-      return CustomEncodableValue(fieldPath);
+      return CustomEncodableValue(DecodedFieldPath{std::move(array)});
     }
 
     case DATA_TYPE_BLOB: {
@@ -166,6 +165,9 @@ cloud_firestore_windows::FirestoreCodec::ReadValueOfType(
     case DATA_TYPE_ARRAY_UNION: {
       auto customValue =
           std::get<flutter::EncodableList>(FirestoreCodec::ReadValue(stream));
+      if (auto message = RejectedArrayElements(customValue)) {
+        return CustomEncodableValue(InvalidWriteData{*message});
+      }
       std::vector<FieldValue> arrayUnionValue;
 
       for (auto& value : customValue) {
@@ -179,6 +181,9 @@ cloud_firestore_windows::FirestoreCodec::ReadValueOfType(
     case DATA_TYPE_ARRAY_REMOVE: {
       auto customValue =
           std::get<flutter::EncodableList>(FirestoreCodec::ReadValue(stream));
+      if (auto message = RejectedArrayElements(customValue)) {
+        return CustomEncodableValue(InvalidWriteData{*message});
+      }
       std::vector<FieldValue> arrayRemoveValue;
 
       for (auto& value : customValue) {
