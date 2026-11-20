@@ -47,7 +47,6 @@ public class FLTFirebaseFirestorePlugin: NSObject, FlutterPlugin, FLTFirebasePlu
   init(messenger: FlutterBinaryMessenger) {
     self.messenger = messenger
     super.init()
-    FLTFirebasePluginRegistry.sharedInstance().register(self)
   }
 
   @objc
