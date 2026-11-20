@@ -43,6 +43,29 @@ override func application(
 }
 ```
 
+### Registering with a Firebase Installation ID
+
+`register()`, `unregister()`, `onRegistered` and `onUnregistered` replace the token API.
+On Android, iOS and macOS, the native SDKs turn registration by Firebase Installation ID off
+by default, and `register()` and `unregister()` fail until the app enables it.
+
+Android, in `android/app/src/main/AndroidManifest.xml` inside `<application>`:
+
+```xml
+<meta-data
+    android:name="firebase_messaging_installation_id_enabled"
+    android:value="true" />
+```
+
+iOS and macOS, in `Info.plist`:
+
+```xml
+<key>FirebaseMessagingInstallationIdEnabled</key>
+<true/>
+```
+
+With this setting, the token API (`getToken()`, `deleteToken()`) fails on those platforms.
+
 ## Issues and feedback
 
 Please file FlutterFire specific issues, bugs, or feature requests in our [issue tracker](https://github.com/firebase/flutterfire/issues/new).
