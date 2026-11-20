@@ -40,7 +40,7 @@ void main() {
     );
 
     test(
-      'should catch a [PlatformException] and throw a [FirebaseException] with the correct message',
+      'normalizes blocking function errors and preserves the JSON message',
       () async {
         PlatformException platformException = PlatformException(
           code: 'UNKNOWN',
@@ -55,7 +55,7 @@ void main() {
                 .having(
                   (e) => e.code,
                   'code',
-                  'blocking-function-error-response',
+                  'blocking-cloud-function-returned-error',
                 )
                 .having(
                   (e) => e.message,
@@ -90,6 +90,34 @@ void main() {
   });
 
   group('platformExceptionToFirebaseAuthException()', () {
+    test('normalizes a blocking function error from pigeon details', () {
+      PlatformException platformException = PlatformException(
+        code: 'UNKNOWN',
+        details: {'message': 'BLOCKING_FUNCTION_ERROR_RESPONSE'},
+      );
+
+      FirebaseAuthException result =
+          platformExceptionToFirebaseAuthException(platformException)
+              as FirebaseAuthException;
+
+      expect(result.code, equals('blocking-cloud-function-returned-error'));
+      expect(result.message, isNull);
+    });
+
+    test('preserves the invalid login credentials error code', () {
+      PlatformException platformException = PlatformException(
+        code: 'UNKNOWN',
+        message:
+            'An internal error has occurred. [ INVALID_LOGIN_CREDENTIALS ]',
+      );
+
+      FirebaseAuthException result =
+          platformExceptionToFirebaseAuthException(platformException)
+              as FirebaseAuthException;
+
+      expect(result.code, equals('invalid-login-credentials'));
+    });
+
     test('handles non-Map pigeon details', () {
       PlatformException platformException = PlatformException(
         code: 'ERROR_INTERNAL_ERROR',
