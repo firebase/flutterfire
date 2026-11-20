@@ -871,9 +871,6 @@ std::optional<std::string> RejectedWriteCommand(
 
 std::optional<std::string> RejectedQueryValue(const EncodableValue& value);
 
-// Query values are parsed with UserDataSource::Argument. An empty key is
-// still invalid there. A name that begins and ends with "__" is not: that
-// rule is writes only, and the backend rejects it.
 std::optional<std::string> RejectedQueryMap(const EncodableMap& map) {
   for (const auto& entry : map) {
     if (const auto* key = std::get_if<std::string>(&entry.first)) {
