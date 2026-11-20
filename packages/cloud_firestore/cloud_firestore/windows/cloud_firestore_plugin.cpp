@@ -762,8 +762,8 @@ std::optional<std::string> RejectedFieldValue(const FieldValue& field,
         if (auto message = RejectedFieldSegment(entry.first)) {
           return message;
         }
-        if (auto message = RejectedFieldValue(entry.second, inside_array,
-                                              false, delete_rejection)) {
+        if (auto message = RejectedFieldValue(entry.second, inside_array, false,
+                                              delete_rejection)) {
           return message;
         }
       }
