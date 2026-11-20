@@ -333,6 +333,46 @@ struct CoreInitializeResponse: Hashable {
   }
 }
 
+/// The App Check SDK's answer to a token request, as the native SDKs report
+/// it: when the SDK can't produce a token, [token] is its placeholder and
+/// [error] the reason.
+///
+/// Generated class from Pigeon that represents data sent in messages.
+struct CoreAppCheckInteropToken: Hashable {
+  var token: String
+  var error: String? = nil
+
+  // swift-format-ignore: AlwaysUseLowerCamelCase
+  static func fromList(_ pigeonVar_list: [Any?]) -> CoreAppCheckInteropToken? {
+    let token = pigeonVar_list[0] as! String
+    let error: String? = nilOrValue(pigeonVar_list[1])
+
+    return CoreAppCheckInteropToken(
+      token: token,
+      error: error
+    )
+  }
+  func toList() -> [Any?] {
+    return [
+      token,
+      error,
+    ]
+  }
+  static func == (lhs: CoreAppCheckInteropToken, rhs: CoreAppCheckInteropToken) -> Bool {
+    if Swift.type(of: lhs) != Swift.type(of: rhs) {
+      return false
+    }
+    return deepEqualsFirebaseCoreMessages(lhs.token, rhs.token)
+      && deepEqualsFirebaseCoreMessages(lhs.error, rhs.error)
+  }
+
+  func hash(into hasher: inout Hasher) {
+    hasher.combine("CoreAppCheckInteropToken")
+    deepHashFirebaseCoreMessages(value: token, hasher: &hasher)
+    deepHashFirebaseCoreMessages(value: error, hasher: &hasher)
+  }
+}
+
 private class FirebaseCoreMessagesPigeonCodecReader: FlutterStandardReader {
   override func readValue(ofType type: UInt8) -> Any? {
     switch type {
@@ -340,6 +380,8 @@ private class FirebaseCoreMessagesPigeonCodecReader: FlutterStandardReader {
       return CoreFirebaseOptions.fromList(self.readValue() as! [Any?])
     case 130:
       return CoreInitializeResponse.fromList(self.readValue() as! [Any?])
+    case 131:
+      return CoreAppCheckInteropToken.fromList(self.readValue() as! [Any?])
     default:
       return super.readValue(ofType: type)
     }
@@ -353,6 +395,9 @@ private class FirebaseCoreMessagesPigeonCodecWriter: FlutterStandardWriter {
       super.writeValue(value.toList())
     } else if let value = value as? CoreInitializeResponse {
       super.writeByte(130)
+      super.writeValue(value.toList())
+    } else if let value = value as? CoreAppCheckInteropToken {
+      super.writeByte(131)
       super.writeValue(value.toList())
     } else {
       super.writeValue(value)
@@ -533,6 +578,92 @@ class FirebaseAppHostApiSetup {
       }
     } else {
       deleteChannel.setMessageHandler(nil)
+    }
+  }
+}
+/// Tokens from whichever Auth, App Check and Messaging SDKs the app links,
+/// looked up through the Firebase component container the way the Functions
+/// SDKs do. A null result means the SDK isn't linked or has nothing to give;
+/// it never means failure.
+///
+/// Generated protocol from Pigeon that represents a handler of messages from Flutter.
+protocol FirebaseTokenHostApi {
+  func getAuthIdToken(appName: String, completion: @escaping (Result<String?, Error>) -> Void)
+  func getAppCheckToken(
+    appName: String, limitedUse: Bool,
+    completion: @escaping (Result<CoreAppCheckInteropToken?, Error>) -> Void)
+  func getMessagingToken(appName: String, completion: @escaping (Result<String?, Error>) -> Void)
+}
+
+/// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
+class FirebaseTokenHostApiSetup {
+  static var codec: FlutterStandardMessageCodec { FirebaseCoreMessagesPigeonCodec.shared }
+  /// Sets up an instance of `FirebaseTokenHostApi` to handle messages through the `binaryMessenger`.
+  static func setUp(
+    binaryMessenger: FlutterBinaryMessenger, api: FirebaseTokenHostApi?,
+    messageChannelSuffix: String = ""
+  ) {
+    let channelSuffix = messageChannelSuffix.count > 0 ? ".\(messageChannelSuffix)" : ""
+    let getAuthIdTokenChannel = FlutterBasicMessageChannel(
+      name:
+        "dev.flutter.pigeon.firebase_core_platform_interface.FirebaseTokenHostApi.getAuthIdToken\(channelSuffix)",
+      binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      getAuthIdTokenChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let appNameArg = args[0] as! String
+        api.getAuthIdToken(appName: appNameArg) { result in
+          switch result {
+          case .success(let res):
+            reply(wrapResult(res))
+          case .failure(let error):
+            reply(wrapError(error))
+          }
+        }
+      }
+    } else {
+      getAuthIdTokenChannel.setMessageHandler(nil)
+    }
+    let getAppCheckTokenChannel = FlutterBasicMessageChannel(
+      name:
+        "dev.flutter.pigeon.firebase_core_platform_interface.FirebaseTokenHostApi.getAppCheckToken\(channelSuffix)",
+      binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      getAppCheckTokenChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let appNameArg = args[0] as! String
+        let limitedUseArg = args[1] as! Bool
+        api.getAppCheckToken(appName: appNameArg, limitedUse: limitedUseArg) { result in
+          switch result {
+          case .success(let res):
+            reply(wrapResult(res))
+          case .failure(let error):
+            reply(wrapError(error))
+          }
+        }
+      }
+    } else {
+      getAppCheckTokenChannel.setMessageHandler(nil)
+    }
+    let getMessagingTokenChannel = FlutterBasicMessageChannel(
+      name:
+        "dev.flutter.pigeon.firebase_core_platform_interface.FirebaseTokenHostApi.getMessagingToken\(channelSuffix)",
+      binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      getMessagingTokenChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let appNameArg = args[0] as! String
+        api.getMessagingToken(appName: appNameArg) { result in
+          switch result {
+          case .success(let res):
+            reply(wrapResult(res))
+          case .failure(let error):
+            reply(wrapError(error))
+          }
+        }
+      }
+    } else {
+      getMessagingTokenChannel.setMessageHandler(nil)
     }
   }
 }

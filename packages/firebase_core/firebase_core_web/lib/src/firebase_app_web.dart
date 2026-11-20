@@ -49,4 +49,23 @@ class FirebaseAppWeb extends FirebaseAppPlatform {
   Future<void> setAutomaticResourceManagementEnabled(bool enabled) {
     return Future.value();
   }
+
+  @override
+  Future<String?> getAuthIdToken() async {
+    return InteropTokenProvider.forApp(name).getAuthIdToken();
+  }
+
+  @override
+  Future<AppCheckInteropToken?> getAppCheckToken({
+    bool limitedUse = false,
+  }) async {
+    return InteropTokenProvider.forApp(
+      name,
+    ).getAppCheckToken(limitedUse: limitedUse);
+  }
+
+  @override
+  Future<String?> getMessagingToken() async {
+    return InteropTokenProvider.forApp(name).getMessagingToken();
+  }
 }
