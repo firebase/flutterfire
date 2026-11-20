@@ -157,6 +157,62 @@ void runInvalidFieldNameTests() {
       expect(snapshot.data(), <String, dynamic>{'ok': 1});
     });
 
+    test('set() rejects FieldValue.delete() without merge', () async {
+      final reference = document('invalid-field-set-delete');
+      await reference.set(<String, dynamic>{'ok': 1});
+
+      await expectLater(
+        reference.set(<String, dynamic>{'a': FieldValue.delete()}),
+        throwsInvalidArgument(),
+      );
+
+      final snapshot = await reference.get();
+      expect(snapshot.data(), <String, dynamic>{'ok': 1});
+    });
+
+    test('set() with merge allows FieldValue.delete()', () async {
+      final reference = document('valid-field-set-merge-delete');
+      await reference.set(<String, dynamic>{'ok': 1, 'a': 2});
+
+      await reference.set(<String, dynamic>{
+        'a': FieldValue.delete(),
+      }, SetOptions(merge: true));
+
+      final snapshot = await reference.get();
+      expect(snapshot.data(), <String, dynamic>{'ok': 1});
+    });
+
+    test('update() allows FieldValue.delete() at the top level', () async {
+      final reference = document('valid-field-update-delete');
+      await reference.set(<String, dynamic>{'ok': 1, 'a': 2});
+
+      await reference.update(<String, dynamic>{'a': FieldValue.delete()});
+
+      final snapshot = await reference.get();
+      expect(snapshot.data(), <String, dynamic>{'ok': 1});
+    });
+
+    test('update() rejects FieldValue.delete() nested in a map', () async {
+      final reference = document('invalid-field-update-nested-delete');
+      await reference.set(<String, dynamic>{
+        'ok': 1,
+        'a': <String, dynamic>{'b': 2},
+      });
+
+      await expectLater(
+        reference.update(<String, dynamic>{
+          'a': <String, dynamic>{'b': FieldValue.delete()},
+        }),
+        throwsInvalidArgument(),
+      );
+
+      final snapshot = await reference.get();
+      expect(snapshot.data(), <String, dynamic>{
+        'ok': 1,
+        'a': <String, dynamic>{'b': 2},
+      });
+    });
+
     test('set() rejects an empty field name inside arrayUnion', () async {
       final reference = document('invalid-field-set-array-union');
       await reference.set(<String, dynamic>{'ok': 1});

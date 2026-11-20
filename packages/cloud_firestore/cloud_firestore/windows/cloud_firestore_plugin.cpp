@@ -721,14 +721,23 @@ std::optional<std::string> RejectedFieldSegment(const std::string& segment) {
 
 std::optional<std::string> RejectedWriteValue(const EncodableValue& value,
                                               bool inside_array,
-                                              bool parent_is_array);
+                                              bool parent_is_array,
+                                              const char* delete_rejection);
 
 std::optional<std::string> RejectedFieldValue(const FieldValue& field,
                                               bool inside_array,
-                                              bool parent_is_array) {
+                                              bool parent_is_array,
+                                              const char* delete_rejection) {
   switch (field.type()) {
-    case FieldValue::Type::kServerTimestamp:
     case FieldValue::Type::kDelete:
+      if (inside_array) {
+        return "Invalid data. Field values are not supported inside arrays";
+      }
+      if (delete_rejection != nullptr) {
+        return delete_rejection;
+      }
+      return std::nullopt;
+    case FieldValue::Type::kServerTimestamp:
     case FieldValue::Type::kIncrementInteger:
     case FieldValue::Type::kIncrementDouble:
     case FieldValue::Type::kArrayUnion:
@@ -742,7 +751,8 @@ std::optional<std::string> RejectedFieldValue(const FieldValue& field,
         return "Invalid data. Nested arrays are not supported";
       }
       for (const FieldValue& element : field.array_value()) {
-        if (auto message = RejectedFieldValue(element, true, true)) {
+        if (auto message =
+                RejectedFieldValue(element, true, true, delete_rejection)) {
           return message;
         }
       }
@@ -752,8 +762,8 @@ std::optional<std::string> RejectedFieldValue(const FieldValue& field,
         if (auto message = RejectedFieldSegment(entry.first)) {
           return message;
         }
-        if (auto message =
-                RejectedFieldValue(entry.second, inside_array, false)) {
+        if (auto message = RejectedFieldValue(entry.second, inside_array,
+                                              false, delete_rejection)) {
           return message;
         }
       }
@@ -764,14 +774,16 @@ std::optional<std::string> RejectedFieldValue(const FieldValue& field,
 }
 
 std::optional<std::string> RejectedWriteMap(const EncodableMap& map,
-                                            bool inside_array) {
+                                            bool inside_array,
+                                            const char* delete_rejection) {
   for (const auto& entry : map) {
     if (const auto* key = std::get_if<std::string>(&entry.first)) {
       if (auto message = RejectedFieldSegment(*key)) {
         return message;
       }
     }
-    if (auto message = RejectedWriteValue(entry.second, inside_array, false)) {
+    if (auto message = RejectedWriteValue(entry.second, inside_array, false,
+                                          delete_rejection)) {
       return message;
     }
   }
@@ -780,9 +792,10 @@ std::optional<std::string> RejectedWriteMap(const EncodableMap& map,
 
 std::optional<std::string> RejectedWriteValue(const EncodableValue& value,
                                               bool inside_array,
-                                              bool parent_is_array) {
+                                              bool parent_is_array,
+                                              const char* delete_rejection) {
   if (const auto* nested = std::get_if<EncodableMap>(&value)) {
-    return RejectedWriteMap(*nested, inside_array);
+    return RejectedWriteMap(*nested, inside_array, delete_rejection);
   }
   if (const auto* list = std::get_if<EncodableList>(&value)) {
     if (parent_is_array) {
@@ -796,7 +809,8 @@ std::optional<std::string> RejectedWriteValue(const EncodableValue& value,
     }
     if (custom->type() == typeid(FieldValue)) {
       return RejectedFieldValue(std::any_cast<const FieldValue&>(*custom),
-                                inside_array, parent_is_array);
+                                inside_array, parent_is_array,
+                                delete_rejection);
     }
   }
   return std::nullopt;
@@ -805,11 +819,20 @@ std::optional<std::string> RejectedWriteValue(const EncodableValue& value,
 std::optional<std::string> RejectedArrayElements(
     const EncodableList& elements) {
   for (const EncodableValue& element : elements) {
-    if (auto message = RejectedWriteValue(element, true, true)) {
+    if (auto message = RejectedWriteValue(element, true, true, nullptr)) {
       return message;
     }
   }
   return std::nullopt;
+}
+
+bool IsDeleteFieldValue(const EncodableValue& value) {
+  const auto* custom = std::get_if<CustomEncodableValue>(&value);
+  if (custom == nullptr || custom->type() != typeid(FieldValue)) {
+    return false;
+  }
+  return std::any_cast<const FieldValue&>(*custom).type() ==
+         FieldValue::Type::kDelete;
 }
 
 std::optional<std::string> RejectedUpdateMap(const EncodableMap& map) {
@@ -830,7 +853,13 @@ std::optional<std::string> RejectedUpdateMap(const EncodableMap& map) {
         }
       }
     }
-    if (auto message = RejectedWriteValue(entry.second, false, false)) {
+    if (IsDeleteFieldValue(entry.second)) {
+      continue;
+    }
+    if (auto message = RejectedWriteValue(
+            entry.second, false, false,
+            "Invalid data. FieldValue::Delete() can only appear at the top "
+            "level of your update data")) {
       return message;
     }
   }
@@ -849,6 +878,16 @@ std::optional<std::string> RejectedMergeFields(const EncodableList& fields) {
   return std::nullopt;
 }
 
+bool SetAllowsDelete(const InternalDocumentOption* option) {
+  if (option == nullptr) {
+    return false;
+  }
+  if (option->merge() != nullptr && *option->merge()) {
+    return true;
+  }
+  return option->merge_fields() != nullptr;
+}
+
 std::optional<std::string> RejectedWriteCommand(
     InternalTransactionType type, const EncodableMap* data,
     const InternalDocumentOption* option) {
@@ -857,7 +896,13 @@ std::optional<std::string> RejectedWriteCommand(
     if (type == InternalTransactionType::kUpdate) {
       message = RejectedUpdateMap(*data);
     } else if (type == InternalTransactionType::kSet) {
-      message = RejectedWriteMap(*data, false);
+      const char* delete_rejection = nullptr;
+      if (!SetAllowsDelete(option)) {
+        delete_rejection =
+            "Invalid data. FieldValue::Delete() can only be used with "
+            "Update() and Set() with merge == true";
+      }
+      message = RejectedWriteMap(*data, false, delete_rejection);
     }
     if (message.has_value()) {
       return message;
