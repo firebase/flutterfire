@@ -123,14 +123,6 @@ public class FLTFirebaseFirestorePlugin: NSObject, FlutterPlugin, FLTFirebasePlu
     }
   }
 
-  private func cleanupFirestoreInstances(_ completion: (() -> Void)?) {
-    if FirebaseFirestoreUtils.count > 0 {
-      FirebaseFirestoreUtils.cleanupFirestoreInstances(completion)
-    } else {
-      completion?()
-    }
-  }
-
   @discardableResult
   private func registerEventChannel(
     prefix: String,
