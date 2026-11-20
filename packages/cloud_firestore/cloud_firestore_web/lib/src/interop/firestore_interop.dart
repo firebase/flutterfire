@@ -1261,7 +1261,6 @@ extension type PipelineSourceJsImpl._(JSObject _) implements JSObject {
   /// Sets the pipeline source to the given document paths or references.
   external PipelineJsImpl documents(JSArray docs);
 
-  /// Sets the pipeline source to the given literal documents.
   external PipelineJsImpl literals(JSAny documents);
 }
 

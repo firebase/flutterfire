@@ -385,7 +385,6 @@ final class _UnionStage extends PipelineStage {
   }
 }
 
-/// Stage that deletes each input document.
 final class _DeleteStage extends PipelineStage {
   @override
   String get name => 'delete';
@@ -396,7 +395,6 @@ final class _DeleteStage extends PipelineStage {
   }
 }
 
-/// Stage that updates each input document.
 final class _UpdateStage extends PipelineStage {
   final List<AliasedExpression> transformedFields;
 
@@ -416,7 +414,6 @@ final class _UpdateStage extends PipelineStage {
   }
 }
 
-/// Stage that inserts each input document.
 final class _InsertStage extends PipelineStage {
   final String? collectionPath;
   final Expression? documentId;
@@ -435,7 +432,6 @@ final class _InsertStage extends PipelineStage {
   }
 }
 
-/// Stage that inserts or replaces each input document.
 final class _UpsertStage extends PipelineStage {
   final String? collectionPath;
   final Expression? documentId;
@@ -472,7 +468,6 @@ Map<String, dynamic> _writeTargetArgs(
   return args;
 }
 
-/// Stage representing literal documents as a pipeline source.
 final class _LiteralsPipelineStage extends PipelineStage {
   final List<Map<String, Object?>> documents;
 

@@ -678,7 +678,6 @@ class PipelineExpressionParserWeb {
       interop.AddFieldsOptionsJsImpl()
         ..fields = _toSelectableList(expressions).toJS;
 
-  /// Converts a literals source document list into a JS array of objects.
   JSAny toLiteralsDocuments(List<dynamic> documents) {
     final objects = documents.map((document) {
       final fields = document as Map;
@@ -700,7 +699,6 @@ class PipelineExpressionParserWeb {
     return objects.toJS;
   }
 
-  /// Converts an update stage into JS UpdateStageOptions.
   JSAny toUpdateOptions(Map<String, dynamic> map) {
     final options = interop.UpdateStageOptionsJsImpl();
     final expressions = map['expressions'] as List<dynamic>?;
@@ -710,14 +708,12 @@ class PipelineExpressionParserWeb {
     return options;
   }
 
-  /// Converts an insert stage into JS InsertStageOptions.
   JSAny toInsertOptions(Map<String, dynamic> map) {
     final options = interop.InsertStageOptionsJsImpl();
     _applyWriteTarget(options, map);
     return options;
   }
 
-  /// Converts an upsert stage into JS UpsertStageOptions.
   JSAny toUpsertOptions(Map<String, dynamic> map) {
     final options = interop.UpsertStageOptionsJsImpl();
     _applyWriteTarget(options, map);
@@ -897,11 +893,6 @@ class PipelineExpressionParserWeb {
 
   // ── Private helpers ───────────────────────────────────────────────────────
 
-  /// Converts a literals field value into a JS value the Firestore SDK accepts.
-  ///
-  /// Lists become JS arrays. Nested maps stay maps. A [Uint8List] is
-  /// Firestore bytes. A plain [List<int>] stays an array of numbers, and
-  /// [Blob] is bytes.
   JSAny? _literalValueToJs(Object? value) {
     if (value is Uint8List) {
       return interop.BytesJsImpl.fromUint8Array(value.toJS) as JSAny;

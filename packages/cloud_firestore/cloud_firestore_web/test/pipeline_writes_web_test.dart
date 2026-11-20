@@ -243,8 +243,8 @@ void main() {
 
     final documents = (literalsDocuments! as JSArray).toDart;
     final document = documents.first! as JSObject;
-    final payload = document.getProperty('payload'.toJS) as JSObject;
-    expect((payload.getProperty('bytes'.toJS) as JSUint8Array).toDart, [
+    final payload = document.getProperty('payload'.toJS)! as JSObject;
+    expect((payload.getProperty('bytes'.toJS)! as JSUint8Array).toDart, [
       1,
       2,
       3,
