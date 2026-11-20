@@ -17,6 +17,7 @@ import 'geo_point_e2e.dart';
 import 'instance_e2e.dart';
 import 'load_bundle_e2e.dart';
 import 'query_e2e.dart';
+import 'reinitialize_core_e2e.dart';
 import 'report_test_results.dart';
 import 'second_database.dart';
 import 'settings_e2e.dart';
@@ -73,6 +74,7 @@ void main() {
     runTransactionTests();
     runWriteBatchTests();
     runLoadBundleTests();
+    runReinitializeCoreTests();
     runWebSnapshotListenersTests();
     if (defaultTargetPlatform != TargetPlatform.windows) {
       runSecondDatabaseTests();
