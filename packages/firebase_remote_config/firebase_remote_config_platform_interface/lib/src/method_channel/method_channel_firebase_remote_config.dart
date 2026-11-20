@@ -5,6 +5,7 @@
 // ignore_for_file: require_trailing_commas
 import 'dart:async';
 
+import 'package:_flutterfire_internals/_flutterfire_internals.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_remote_config_platform_interface/src/pigeon/messages.pigeon.dart';
 import 'package:flutter/services.dart';
@@ -292,7 +293,10 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
   @override
   Stream<RemoteConfigUpdate> get onConfigUpdated {
     _onConfigUpdatedStream ??= _eventChannelConfigUpdated
-        .receiveBroadcastStream(<String, dynamic>{'appName': app.name})
+        .receiveGuardedBroadcastStream(
+          arguments: <String, dynamic>{'appName': app.name},
+          onError: convertPlatformException,
+        )
         .map((event) {
           final updatedKeys = Set<String>.from(event);
           return RemoteConfigUpdate(updatedKeys);
