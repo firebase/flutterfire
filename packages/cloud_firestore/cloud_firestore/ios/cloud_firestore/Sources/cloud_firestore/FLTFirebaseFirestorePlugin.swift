@@ -47,6 +47,7 @@ public class FLTFirebaseFirestorePlugin: NSObject, FlutterPlugin, FLTFirebasePlu
   init(messenger: FlutterBinaryMessenger) {
     self.messenger = messenger
     super.init()
+    FLTFirebasePluginRegistry.sharedInstance().register(self)
   }
 
   @objc
@@ -71,8 +72,7 @@ public class FLTFirebaseFirestorePlugin: NSObject, FlutterPlugin, FLTFirebasePlu
   }
 
   public func didReinitializeFirebaseCore(_ completion: @escaping () -> Void) {
-    cleanupEventListeners()
-    cleanupFirestoreInstances(completion)
+    completion()
   }
 
   public func pluginConstants(for firebaseApp: FirebaseApp) -> [AnyHashable: Any] {
