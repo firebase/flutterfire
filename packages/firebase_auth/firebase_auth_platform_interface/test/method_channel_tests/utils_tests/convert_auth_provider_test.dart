@@ -21,5 +21,19 @@ void main() {
       expect(converted.scopes, ['mail-r']);
       expect(converted.parameters, {'prompt': 'login'});
     });
+
+    test('keeps FacebookAuthProvider scopes and custom parameters', () {
+      final provider = FacebookAuthProvider()
+        ..addScope('user_birthday')
+        ..setCustomParameters({'display': 'popup'});
+
+      final converted = convertToOAuthProvider(provider);
+
+      expect(converted, isA<OAuthProvider>());
+      converted as OAuthProvider;
+      expect(converted.providerId, 'facebook.com');
+      expect(converted.scopes, ['user_birthday']);
+      expect(converted.parameters, {'display': 'popup'});
+    });
   });
 }
