@@ -73,6 +73,12 @@ void main() {
       },
     );
 
+    test('preserves leading zeros in fractional seconds', () {
+      final timestamp = Timestamp.fromJson('1970-01-11T00:00:00.005Z');
+      expect(timestamp.toJson(), '1970-01-11T00:00:00.005000000Z');
+      expect(timestamp.toDateTime(), DateTime.utc(1970, 1, 11, 0, 0, 0, 5));
+    });
+
     test('toDateTime correctly converts to DateTime object', () {
       final timestamp = Timestamp(0, 864000); // Example timestamp
       final dateTime = timestamp.toDateTime();
