@@ -37,6 +37,23 @@ external void registerVersion(
   JSString? variant,
 ]);
 
+/// The provider for the component named [name] in [app]'s container. Internal
+/// to the JS SDK; how its modules reach each other's components.
+@JS('_getProvider')
+external ProviderJsImpl getProvider(AppJsImpl app, JSString name);
+
+/// A component provider of the Firebase JS SDK.
+extension type ProviderJsImpl._(JSObject _) implements JSObject {
+  /// The component's instance. With `optional: true`, null when the module that
+  /// registers the component isn't loaded or hasn't been initialized.
+  external JSObject? getImmediate(ProviderGetImmediateOptions options);
+}
+
+/// Options for [ProviderJsImpl.getImmediate].
+extension type ProviderGetImmediateOptions._(JSObject _) implements JSObject {
+  external factory ProviderGetImmediateOptions({bool optional});
+}
+
 /// FirebaseError is a subclass of the standard Error object.
 /// In addition to a message string, it contains a string-valued code.
 ///

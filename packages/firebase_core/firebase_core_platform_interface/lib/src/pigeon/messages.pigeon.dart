@@ -296,6 +296,50 @@ class CoreInitializeResponse {
   int get hashCode => _deepHash(<Object?>[runtimeType, ..._toList()]);
 }
 
+/// The App Check SDK's answer to a token request, as the native SDKs report
+/// it: when the SDK can't produce a token, [token] is its placeholder and
+/// [error] the reason.
+class CoreAppCheckInteropToken {
+  CoreAppCheckInteropToken({required this.token, this.error});
+
+  String token;
+
+  String? error;
+
+  List<Object?> _toList() {
+    return <Object?>[token, error];
+  }
+
+  Object encode() {
+    return _toList();
+  }
+
+  static CoreAppCheckInteropToken decode(Object result) {
+    result as List<Object?>;
+    return CoreAppCheckInteropToken(
+      token: result[0]! as String,
+      error: result[1] as String?,
+    );
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    if (other is! CoreAppCheckInteropToken ||
+        other.runtimeType != runtimeType) {
+      return false;
+    }
+    if (identical(this, other)) {
+      return true;
+    }
+    return _deepEquals(token, other.token) && _deepEquals(error, other.error);
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => _deepHash(<Object?>[runtimeType, ..._toList()]);
+}
+
 class _PigeonCodec extends StandardMessageCodec {
   const _PigeonCodec();
   @override
@@ -309,6 +353,9 @@ class _PigeonCodec extends StandardMessageCodec {
     } else if (value is CoreInitializeResponse) {
       buffer.putUint8(130);
       writeValue(buffer, value.encode());
+    } else if (value is CoreAppCheckInteropToken) {
+      buffer.putUint8(131);
+      writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
     }
@@ -321,6 +368,8 @@ class _PigeonCodec extends StandardMessageCodec {
         return CoreFirebaseOptions.decode(readValue(buffer)!);
       case 130:
         return CoreInitializeResponse.decode(readValue(buffer)!);
+      case 131:
+        return CoreAppCheckInteropToken.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
     }
@@ -489,5 +538,93 @@ class FirebaseAppHostApi {
       pigeonVar_channelName,
       isNullValid: true,
     );
+  }
+}
+
+/// Tokens from whichever Auth, App Check and Messaging SDKs the app links,
+/// looked up through the Firebase component container the way the Functions
+/// SDKs do. A null result means the SDK isn't linked or has nothing to give;
+/// it never means failure.
+class FirebaseTokenHostApi {
+  /// Constructor for [FirebaseTokenHostApi].  The [binaryMessenger] named argument is
+  /// available for dependency injection.  If it is left null, the default
+  /// BinaryMessenger will be used which routes to the host platform.
+  FirebaseTokenHostApi({
+    BinaryMessenger? binaryMessenger,
+    String messageChannelSuffix = '',
+  }) : pigeonVar_binaryMessenger = binaryMessenger,
+       pigeonVar_messageChannelSuffix = messageChannelSuffix.isNotEmpty
+           ? '.$messageChannelSuffix'
+           : '';
+  final BinaryMessenger? pigeonVar_binaryMessenger;
+
+  static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
+
+  final String pigeonVar_messageChannelSuffix;
+
+  Future<String?> getAuthIdToken(String appName) async {
+    final pigeonVar_channelName =
+        'dev.flutter.pigeon.firebase_core_platform_interface.FirebaseTokenHostApi.getAuthIdToken$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[appName],
+    );
+    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
+
+    final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
+      pigeonVar_replyList,
+      pigeonVar_channelName,
+      isNullValid: true,
+    );
+    return pigeonVar_replyValue as String?;
+  }
+
+  Future<CoreAppCheckInteropToken?> getAppCheckToken(
+    String appName,
+    bool limitedUse,
+  ) async {
+    final pigeonVar_channelName =
+        'dev.flutter.pigeon.firebase_core_platform_interface.FirebaseTokenHostApi.getAppCheckToken$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[appName, limitedUse],
+    );
+    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
+
+    final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
+      pigeonVar_replyList,
+      pigeonVar_channelName,
+      isNullValid: true,
+    );
+    return pigeonVar_replyValue as CoreAppCheckInteropToken?;
+  }
+
+  Future<String?> getMessagingToken(String appName) async {
+    final pigeonVar_channelName =
+        'dev.flutter.pigeon.firebase_core_platform_interface.FirebaseTokenHostApi.getMessagingToken$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[appName],
+    );
+    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
+
+    final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
+      pigeonVar_replyList,
+      pigeonVar_channelName,
+      isNullValid: true,
+    );
+    return pigeonVar_replyValue as String?;
   }
 }
