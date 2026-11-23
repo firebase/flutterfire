@@ -8,8 +8,6 @@
 import Foundation
 import PackageDescription
 
-let firebaseSdkVersion: Version = "13.2.0"
-
 /// Set FIREBASE_APP_CHECK_WITHOUT_RECAPTCHA=true to leave out the reCAPTCHA
 /// Enterprise SDK if the app does not use AppleReCaptchaProvider. Any other
 /// value keeps the SDK.
@@ -40,7 +38,7 @@ let package = Package(
     .library(name: "firebase-app-check", targets: ["firebase_app_check"])
   ],
   dependencies: [
-    .package(url: "https://github.com/firebase/firebase-ios-sdk", exact: firebaseSdkVersion),
+    .package(url: "https://github.com/firebase/firebase-ios-sdk", from: "13.2.0"),
     .package(name: "firebase_core", path: "../firebase_core"),
     .package(name: "FlutterFramework", path: "../FlutterFramework"),
   ] + recaptchaPackages,

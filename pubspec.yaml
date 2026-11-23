@@ -118,6 +118,17 @@ melos:
       run: dart scripts/validate_wasm_imports.dart
       description: Validate that published packages only depend on libraries available on Wasm.
 
+    test:spm-generator:
+      run: dart run scripts/generate_versions_spm_test.dart
+      description: Check the Swift package firebase-ios-sdk rewrite.
+
+    test:spm-sdk-pin:
+      run: ./scripts/verify_spm_sdk_pin.sh
+      description: >
+        Check that firebase_core's exact pin selects the Swift package SDK
+        version, and that an older pin conflicts with a plugin built against
+        a newer one.
+
     analyze-ci:
       # We are setting the concurrency to 1 because a higher concurrency can crash
       # the analysis server on low performance machines (like GitHub Actions).

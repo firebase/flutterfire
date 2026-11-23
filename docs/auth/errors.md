@@ -117,6 +117,9 @@ try {
   if (e.code == 'account-exists-with-different-credential') {
     // The email address of the existing account.
     String? email = e.email;
+    if (email == null) {
+      return;
+    }
     // The Google credential the user just tried to sign in with.
     AuthCredential? pendingCredential = e.credential;
 
@@ -131,9 +134,14 @@ try {
 
     // Link the Google credential to the existing account, so the user can
     // sign in with either provider from now on.
-    if (pendingCredential != null) {
-      await userCredential.user!.linkWithCredential(pendingCredential);
+    if (pendingCredential == null) {
+      return;
     }
+    User? user = userCredential.user;
+    if (user == null) {
+      return;
+    }
+    await user.linkWithCredential(pendingCredential);
   }
 }
 ```
