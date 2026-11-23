@@ -22,7 +22,6 @@ private let kStandardFieldMap: UInt8 = 13
 
 class FirebaseFirestoreWriter: FlutterStandardWriter {
   override func writeValue(_ value: Any) {
-    // Hot path for large query snapshots: avoid failed Swift `as?` casts (#18991).
     if value is NSString || value is String {
       super.writeValue(value)
       return

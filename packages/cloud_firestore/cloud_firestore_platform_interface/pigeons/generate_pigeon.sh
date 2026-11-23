@@ -28,9 +28,6 @@ FILE_NAME="../../cloud_firestore/ios/cloud_firestore/Sources/cloud_firestore/Fir
 sed -i '' 's/private class FirestoreMessagesPigeonCodecReader: FlutterStandardReader/class FirestoreMessagesPigeonCodecReader: FirebaseFirestoreReader/' "$FILE_NAME"
 sed -i '' 's/private class FirestoreMessagesPigeonCodecWriter: FlutterStandardWriter/class FirestoreMessagesPigeonCodecWriter: FirebaseFirestoreWriter/' "$FILE_NAME"
 sed -i '' 's/private class FirestoreMessagesPigeonCodecReaderWriter/class FirestoreMessagesPigeonCodecReaderWriter/' "$FILE_NAME"
-# Fast-path common leaf types before the generated `as?` ladder. Failed Swift casts
-# dominate encode time for large query snapshots (see #18991). Re-applied after every
-# pigeon regenerate because this class is generated.
 perl -i -0pe 's/(class FirestoreMessagesPigeonCodecWriter: FirebaseFirestoreWriter \{\n  override func writeValue\(_ value: Any\) \{\n)/$1    if value is NSString || value is NSNumber || value is String {\n      super.writeValue(value)\n      return\n    }\n/s' "$FILE_NAME"
 # `where` is a Swift keyword; Pigeon emits it as a property name on InternalQueryParameters.
 perl -i -pe 's/\bvar where:/var `where`:/g; s/\blet where:/let `where`:/g; s/\bwhere: where,/`where`: `where`,/g; s/\blhs\.where\b/lhs.`where`/g; s/\brhs\.where\b/rhs.`where`/g; s/value: where,/value: `where`,/g' "$FILE_NAME"
