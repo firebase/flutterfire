@@ -8,7 +8,6 @@
 import PackageDescription
 
 let libraryVersion = "0.12.2"
-let firebaseSdkVersion: Version = "13.2.0"
 
 let package = Package(
   name: "firebase_performance",
@@ -19,7 +18,7 @@ let package = Package(
     .library(name: "firebase-performance", targets: ["firebase_performance"])
   ],
   dependencies: [
-    .package(url: "https://github.com/firebase/firebase-ios-sdk", exact: firebaseSdkVersion),
+    .package(url: "https://github.com/firebase/firebase-ios-sdk", from: "13.2.0"),
     .package(name: "firebase_core", path: "../firebase_core"),
     .package(name: "FlutterFramework", path: "../FlutterFramework"),
   ],
