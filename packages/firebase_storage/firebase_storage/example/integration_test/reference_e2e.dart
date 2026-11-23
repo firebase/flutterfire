@@ -132,6 +132,26 @@ void setupReferenceTests() {
       });
     });
 
+    group('getData', () {
+      test('downloads data repeatedly and concurrently', () async {
+        const payload = 'repeated getData payload';
+        final ref = storage
+            .ref('flutter-tests')
+            .child('flt-get-data-stress.txt');
+        await ref.putString(payload);
+
+        for (var batch = 0; batch < 15; batch++) {
+          final results = await Future.wait(
+            List.generate(20, (_) => ref.getData(1024)),
+          );
+          for (final bytes in results) {
+            expect(bytes, isNotNull);
+            expect(utf8.decode(bytes!), payload);
+          }
+        }
+      }, timeout: const Timeout(Duration(minutes: 2)));
+    });
+
     group('getDownloadURL', () {
       test(
         'gets a download url',
