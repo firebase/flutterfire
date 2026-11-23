@@ -34,14 +34,23 @@ dev_dependencies:
   plugin_platform_interface: ^2.1.3
 
 flutter:
+  # `dartPluginClass` registers Messaging as the app's `MessagingTokenProvider`
+  # before `main` (and in background isolates the engine starts), so other
+  # Firebase packages can read the FCM token before the app uses Messaging.
   plugin:
     platforms:
       android:
         package: io.flutter.plugins.firebase.messaging
         pluginClass: FlutterFirebaseMessagingPlugin
+        dartPluginClass: FirebaseMessagingRegistrant
+        dartFileName: src/registrant.dart
       ios:
         pluginClass: FLTFirebaseMessagingPlugin
+        dartPluginClass: FirebaseMessagingRegistrant
+        dartFileName: src/registrant.dart
       macos:
         pluginClass: FLTFirebaseMessagingPlugin
+        dartPluginClass: FirebaseMessagingRegistrant
+        dartFileName: src/registrant.dart
       web:
         default_package: firebase_messaging_web

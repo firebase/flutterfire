@@ -615,6 +615,13 @@ public class FlutterFirebaseMessagingPlugin
       case "Messaging#getToken":
         methodCallTask = getToken();
         break;
+      case "Messaging#getCachedToken":
+        // The SDK has no read that returns only a stored token: getToken()
+        // returns the stored token when it is valid and registers one
+        // otherwise, as the Instance ID read the native Functions SDK uses
+        // does. Neither asks for notification permission.
+        methodCallTask = getToken();
+        break;
       case "Messaging#register":
         methodCallTask = register();
         break;

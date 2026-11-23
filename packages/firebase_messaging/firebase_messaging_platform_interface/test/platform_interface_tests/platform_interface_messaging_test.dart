@@ -150,6 +150,16 @@ void main() {
       fail('Should have thrown an [UnimplementedError]');
     });
 
+    test('throws if getCachedToken()', () async {
+      try {
+        await firebaseMessagingPlatform.getCachedToken();
+      } on UnimplementedError catch (e) {
+        expect(e.message, equals('getCachedToken() is not implemented'));
+        return;
+      }
+      fail('Should have thrown an [UnimplementedError]');
+    });
+
     test('throws if register()', () async {
       try {
         await firebaseMessagingPlatform.register();

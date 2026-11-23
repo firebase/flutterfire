@@ -183,6 +183,20 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
     throw UnimplementedError('getAPNSToken() is not implemented');
   }
 
+  /// The FCM registration token this app instance already holds, or `null`
+  /// when there is none.
+  ///
+  /// For other Firebase packages that attach the token to their own requests,
+  /// as the Functions SDKs do. Unlike [register], this never prompts for
+  /// notification permission. On Apple platforms it reads the token the SDK
+  /// has cached. On Android the SDK's token read returns the stored token and
+  /// registers one only when none is stored, as the Instance ID read the
+  /// native Functions SDK uses does. On web the token is read only when
+  /// notification permission is already granted.
+  Future<String?> getCachedToken() {
+    throw UnimplementedError('getCachedToken() is not implemented');
+  }
+
   /// Registers the current app instance with Firebase Cloud Messaging.
   ///
   /// Once registration completes, [onRegistered] provides the Firebase

@@ -5,8 +5,11 @@
 
 import 'dart:async';
 import 'dart:js_interop';
+import 'dart:js_interop_unsafe';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart'
+    show MessagingTokenProvider, registerFirebaseServiceFactory;
 import 'package:firebase_core_web/firebase_core_web.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
@@ -19,6 +22,7 @@ import 'src/interop/messaging.dart' as messaging_interop;
 import 'src/utils.dart' as utils;
 
 import 'src/firebase_messaging_version.dart';
+import 'src/firebase_messaging_web_token_provider.dart';
 
 /// Web implementation for [FirebaseMessagingPlatform]
 /// delegates calls to messaging web plugin.
@@ -55,6 +59,10 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
 
     FirebaseCoreWeb.registerService('messaging');
     FirebaseMessagingPlatform.instance = FirebaseMessagingWeb();
+    // Other Firebase packages get the FCM token from here.
+    registerFirebaseServiceFactory<MessagingTokenProvider>(
+      FirebaseMessagingWebTokenProvider.new,
+    );
   }
 
   Stream<String>? _noopOnTokenRefreshStream;
@@ -155,6 +163,32 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
   @override
   Stream<String> get onUnregistered {
     return _delegate.onUnregistered;
+  }
+
+  @override
+  Future<String?> getCachedToken() async {
+    // Asking Messaging for a token prompts for permission while it is
+    // undecided, so only ask once it is granted, as the JS Functions SDK does.
+    // Messaging then returns the stored token, creating one only when there
+    // is none.
+    if (!globalContext.has('Notification') ||
+        web.Notification.permission != 'granted') {
+      return null;
+    }
+
+    _delegate;
+
+    if (!_initialized) {
+      // no-op for unsupported browsers
+      return null;
+    }
+
+    try {
+      return await _delegate.getToken();
+    } catch (_) {
+      // The JS Functions SDK sends no token when Messaging can't produce one.
+      return null;
+    }
   }
 
   @override

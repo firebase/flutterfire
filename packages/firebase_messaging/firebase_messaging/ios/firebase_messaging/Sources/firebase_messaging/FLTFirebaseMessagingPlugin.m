@@ -249,6 +249,8 @@ static const NSInteger kFLTFirebaseMessagingChannelBufferSize = 64;
                                            withMethodCallResult:methodCallResult];
   } else if ([@"Messaging#getToken" isEqualToString:call.method]) {
     [self messagingGetToken:call.arguments withMethodCallResult:methodCallResult];
+  } else if ([@"Messaging#getCachedToken" isEqualToString:call.method]) {
+    [self messagingGetCachedToken:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Messaging#register" isEqualToString:call.method]) {
     [self messagingRegister:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Messaging#unregister" isEqualToString:call.method]) {
@@ -1101,6 +1103,14 @@ static const NSInteger kFLTFirebaseMessagingChannelBufferSize = 64;
       result.success(@{@"token" : token});
     }
   }];
+}
+
+- (void)messagingGetCachedToken:(id)arguments
+           withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  // The token the SDK already holds. Unlike tokenWithCompletion: this never
+  // registers one, which is how the native Functions SDK reads it.
+  NSString *token = [FIRMessaging messaging].FCMToken;
+  result.success(@{@"token" : token ?: [NSNull null]});
 }
 
 - (void)messagingGetAPNSToken:(id)arguments
