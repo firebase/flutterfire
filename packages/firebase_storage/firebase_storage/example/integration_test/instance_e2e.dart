@@ -137,6 +137,15 @@ void setupInstanceTests() {
         expect(ref.fullPath, '1mbTestFile.gif');
       });
 
+      test('accepts a Storage emulator download URL from 127.0.0.1', () {
+        const url =
+            'http://127.0.0.1:9199/v0/b/flutterfire-e2e-tests.appspot.com/o/photos%2Fhello%20world.txt?alt=media&token=d521a7a8-b252-4979-973f-88c8132e7ab7';
+        final ref = storage.refFromURL(url);
+        expect(ref.bucket, 'flutterfire-e2e-tests.appspot.com');
+        expect(ref.name, 'hello world.txt');
+        expect(ref.fullPath, 'photos/hello world.txt');
+      });
+
       test('accepts a https url including port number', () {
         const url =
             'https://firebasestorage.googleapis.com:433/v0/b/flutterfire-e2e-tests.appspot.com/o/nested/path/segments/1mbTestFile.gif?alt=media';
