@@ -8,6 +8,7 @@ library;
 
 export 'package:firebase_common/firebase_common.dart' show FirebaseException;
 
+export 'src/app_check_interop_token.dart';
 export 'src/constants.dart';
 export 'src/firebase.dart';
 export 'src/firebase_core_exceptions.dart';
@@ -15,3 +16,4 @@ export 'src/firebase_options.dart';
 export 'src/platform_interface/platform_interface_firebase.dart';
 export 'src/platform_interface/platform_interface_firebase_app.dart';
 export 'src/platform_interface/platform_interface_firebase_plugin.dart';
+export 'src/token_providers.dart';

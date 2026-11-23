@@ -16,20 +16,26 @@ import 'package:flutter/services.dart';
 // The pure-Dart types and contracts live in `firebase_core_interface`, so that
 // Dart apps without Flutter can use them. They stay importable from here. The
 // list is explicit so that names it adds later do not clash with other imports
-// in the plugins.
+// in the plugins. The token providers are contracts between Firebase packages,
+// not for app code, which is why `firebase_core` does not re-export them.
 export 'package:firebase_core_interface/firebase_core_interface.dart'
     show
+        AppCheckInteropToken,
+        AppCheckTokenProvider,
+        AuthTokenProvider,
         FirebaseAppPlatform,
         FirebaseException,
         FirebaseOptions,
         FirebasePlatform,
         FirebasePlugin,
+        MessagingTokenProvider,
         coreNotInitialized,
         defaultFirebaseAppName,
         duplicateApp,
         noAppExists,
         noDefaultAppDelete,
-        noDefaultAppInitialization;
+        noDefaultAppInitialization,
+        registerFirebaseServiceFactory;
 
 part 'src/method_channel/method_channel_firebase.dart';
 part 'src/method_channel/method_channel_firebase_app.dart';
