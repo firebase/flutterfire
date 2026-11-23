@@ -33,16 +33,27 @@ dev_dependencies:
   plugin_platform_interface: ^2.1.3
 
 flutter:
+  # `dartPluginClass` registers App Check as the app's `AppCheckTokenProvider`
+  # before `main` (and in background isolates the engine starts), so other
+  # Firebase packages can ask for a token before the app uses App Check.
   plugin:
     platforms:
       android:
         package: io.flutter.plugins.firebase.appcheck
         pluginClass: FirebaseAppCheckPlugin
+        dartPluginClass: FirebaseAppCheckRegistrant
+        dartFileName: src/registrant.dart
       ios:
         pluginClass: FirebaseAppCheckPlugin
+        dartPluginClass: FirebaseAppCheckRegistrant
+        dartFileName: src/registrant.dart
       macos:
         pluginClass: FirebaseAppCheckPlugin
+        dartPluginClass: FirebaseAppCheckRegistrant
+        dartFileName: src/registrant.dart
       web:
         default_package: firebase_app_check_web
       windows:
         pluginClass: FirebaseAppCheckPluginCApi
+        dartPluginClass: FirebaseAppCheckRegistrant
+        dartFileName: src/registrant.dart

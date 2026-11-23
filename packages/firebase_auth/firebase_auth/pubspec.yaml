@@ -36,17 +36,28 @@ dev_dependencies:
   plugin_platform_interface: ^2.1.3
 
 flutter:
+  # `dartPluginClass` registers Auth as the app's `AuthTokenProvider` before
+  # `main` (and in background isolates the engine starts), so other Firebase
+  # packages can get a restored user's ID token before the app uses Auth.
   plugin:
     platforms:
       android:
         package: io.flutter.plugins.firebase.auth
         pluginClass: FlutterFirebaseAuthPlugin
+        dartPluginClass: FirebaseAuthRegistrant
+        dartFileName: src/registrant.dart
       ios:
         pluginClass: FLTFirebaseAuthPlugin
+        dartPluginClass: FirebaseAuthRegistrant
+        dartFileName: src/registrant.dart
       macos:
         pluginClass: FLTFirebaseAuthPlugin
+        dartPluginClass: FirebaseAuthRegistrant
+        dartFileName: src/registrant.dart
       web:
         default_package: firebase_auth_web
       windows:
         pluginClass: FirebaseAuthPluginCApi
+        dartPluginClass: FirebaseAuthRegistrant
+        dartFileName: src/registrant.dart
 

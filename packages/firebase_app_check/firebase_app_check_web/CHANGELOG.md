@@ -1,3 +1,7 @@
+## NEXT
+
+ - Every `FirebaseAppCheckWeb` delegate of an app now shares the app's activated JS App Check instance, instead of each delegate activating its own. A delegate created after `activate()` ran, such as the app's `AppCheckTokenProvider` or `FirebaseAppCheck.instance` after `registerWith` re-activated App Check from the provider saved in local storage, now uses that instance rather than failing with "activate() must be called first". Activating an app that is already activated keeps its instance and does not initialize App Check again.
+
 ## 0.3.2+4
 
  - **FIX**(core,appcheck,web): start when the browser blocks web storage ([#18946](https://github.com/firebase/flutterfire/issues/18946)). ([229e08e8](https://github.com/firebase/flutterfire/commit/229e08e8f0b197c1eef240db73a716d7f948c2a1))
