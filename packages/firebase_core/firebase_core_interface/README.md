@@ -1,19 +1,28 @@
 # firebase_core_interface
 
-The `Firebase` entry point (`Firebase`, `FirebaseApp`, `FirebaseService`), the
-contracts that Firebase Core implementations extend (`FirebasePlatform`,
-`FirebaseAppPlatform`, `FirebasePlugin`) and the types they use
-(`FirebaseOptions`, `FirebaseException`, `defaultFirebaseAppName` and the core
-exception helpers). It has no Flutter dependency.
+Pure-Dart platform contracts and core client types for Firebase Core, with no
+Flutter dependency.
 
-Apps do not depend on it directly. `firebase_core` and `firebase_core_js`
-re-export `Firebase`, `FirebaseApp`, `FirebaseService`, `FirebaseOptions`,
-`FirebaseException` and `defaultFirebaseAppName`, and
-`firebase_core_platform_interface` re-exports the contracts.
+Apps do not depend on this package directly:
 
-# Usage
+- **Flutter apps**: use [`firebase_core`](https://pub.dev/packages/firebase_core).
+- **Dart web apps without Flutter**: use [`firebase_core_js`](https://pub.dev/packages/firebase_core_js).
 
-Implementations extend `FirebasePlatform` and register an instance with
-`FirebasePlatform.instance`. In a Dart web app that does not use Flutter, use
-[`firebase_core_js`](https://pub.dev/packages/firebase_core_js), which
-provides the web implementation.
+Both packages expose the same app-facing API (`Firebase`, `FirebaseApp`,
+`FirebaseOptions`, `FirebaseException`, and `defaultFirebaseAppName`).
+
+## Usage
+
+This package is for Firebase Core platform implementations and pure-Dart
+Firebase service plugins:
+
+- **Platform implementations**: **extend** (do not `implement`)
+  `FirebasePlatform` and `FirebaseAppPlatform`, register via
+  `FirebasePlatform.instance` (or `FirebasePlatform.fallbackInstanceFactory`),
+  and use the shared core exception helpers (`noAppExists`, `duplicateApp`,
+  `coreNotInitialized`).
+- **Service plugins**: extend `FirebasePlugin` and implement `FirebaseService`
+  to attach per-app instances with `FirebaseApp.registerService`.
+- **Flutter method-channel plugins**: depend on
+  [`firebase_core_platform_interface`](https://pub.dev/packages/firebase_core_platform_interface),
+  which re-exports these contracts alongside `MethodChannelFirebase`.

@@ -1,12 +1,19 @@
 # firebase_common
 
-Pure-Dart types shared by the Firebase client and server Dart SDKs. It has no
-Flutter dependency, so it resolves with `dart pub get` in any Dart app,
-including on the Dart VM.
+Foundational pure-Dart types (currently `FirebaseException`) designed to be
+shared across Firebase client and server Dart SDKs. It has no Flutter or browser
+dependency, so it resolves with `dart pub get` on both the Dart VM and web.
 
-Today it holds `FirebaseException`. Apps do not depend on it directly:
-`firebase_core` and the other FlutterFire packages re-export it.
+Most apps do not need to depend on this package directly:
 
-The contracts that `firebase_core` implementations extend live in
-[`firebase_core_interface`](https://pub.dev/packages/firebase_core_interface),
-so that their breaking changes stay out of this package.
+- **Flutter apps**: use [`firebase_core`](https://pub.dev/packages/firebase_core),
+  which re-exports `FirebaseException`.
+- **Dart web apps without Flutter**: use
+  [`firebase_core_js`](https://pub.dev/packages/firebase_core_js), which
+  re-exports `FirebaseException`.
+- **Shared client/server Dart packages**: depend on `firebase_common` directly
+  to handle `FirebaseException` without pulling in Flutter or browser APIs.
+
+Client platform contracts live in
+[`firebase_core_interface`](https://pub.dev/packages/firebase_core_interface) so
+that breaking changes to client contracts do not affect server SDKs.
