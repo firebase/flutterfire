@@ -23,6 +23,7 @@ import 'pipeline_search_e2e.dart';
 import 'pipeline_seed.dart';
 import 'pipeline_select_e2e.dart';
 import 'pipeline_unnest_union_e2e.dart';
+import 'pipeline_writes_e2e.dart';
 
 void main() {
   final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -64,5 +65,6 @@ void main() {
     runPipelineFindNearestTests();
     runPipelineSearchTests();
     runPipelineExpressionsTests();
+    runPipelineWriteTests();
   });
 }
