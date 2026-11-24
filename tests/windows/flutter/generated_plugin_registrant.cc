@@ -7,6 +7,7 @@
 #include "generated_plugin_registrant.h"
 
 #include <firebase_core/firebase_core_plugin_c_api.h>
+#include <cloud_firestore/cloud_firestore_plugin_c_api.h>
 #include <firebase_app_check/firebase_app_check_plugin_c_api.h>
 #include <firebase_auth/firebase_auth_plugin_c_api.h>
 #include <firebase_database/firebase_database_plugin_c_api.h>
@@ -16,6 +17,8 @@
 void RegisterPlugins(flutter::PluginRegistry* registry) {
   FirebaseCorePluginCApiRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("FirebaseCorePluginCApi"));
+  CloudFirestorePluginCApiRegisterWithRegistrar(
+      registry->GetRegistrarForPlugin("CloudFirestorePluginCApi"));
   FirebaseAppCheckPluginCApiRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("FirebaseAppCheckPluginCApi"));
   FirebaseAuthPluginCApiRegisterWithRegistrar(
