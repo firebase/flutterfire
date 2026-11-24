@@ -16,6 +16,7 @@ import 'package:flutter/services.dart';
 import 'method_channel_aggregate_query.dart';
 import 'method_channel_firestore.dart';
 import 'method_channel_query_snapshot.dart';
+import 'query_snapshot_chunk_assembler.dart';
 import 'utils/exception.dart';
 
 /// An implementation of [QueryPlatform] that uses [MethodChannel] to
@@ -202,15 +203,37 @@ class MethodChannelQuery extends QueryPlatform {
           listenSource,
         );
 
+    final assembler = QuerySnapshotChunkAssembler();
     yield* MethodChannelFirebaseFirestore.querySnapshotChannel(observerId)
-        .receiveGuardedBroadcastStream(onError: convertPlatformException)
-        .map((snapshot) {
-          // With Pigeon 26, the native side emits the generated Pigeon class
-          // directly through the Pigeon-aware codec, so we receive a fully
-          // decoded `InternalQuerySnapshot` here (no manual decode required).
-          final result = snapshot as InternalQuerySnapshot;
-          return MethodChannelQuerySnapshot(firestore, result);
-        });
+        .receiveGuardedBroadcastStream(
+          arguments: querySnapshotChunkListenArguments,
+          onError: convertPlatformException,
+        )
+        .transform(
+          StreamTransformer<dynamic, QuerySnapshotPlatform>.fromHandlers(
+            handleData: (Object? event, EventSink<QuerySnapshotPlatform> sink) {
+              try {
+                final snapshot = assembler.add(event);
+                if (snapshot != null) {
+                  sink.add(MethodChannelQuerySnapshot(firestore, snapshot));
+                }
+              } catch (error, stackTrace) {
+                assembler.reset();
+                sink.addError(error, stackTrace);
+                sink.close();
+              }
+            },
+            handleError:
+                (
+                  Object error,
+                  StackTrace stackTrace,
+                  EventSink<QuerySnapshotPlatform> sink,
+                ) {
+                  assembler.reset();
+                  sink.addError(error, stackTrace);
+                },
+          ),
+        );
   }
 
   @override
