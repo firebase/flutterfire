@@ -63,7 +63,7 @@ enum FirebaseAppInstallationsMessagesPigeonInternal {
       return true
     }
 
-    if case Optional<Any>.some(Any?.none) = value {
+    if case Optional<Any>.some(Optional<Any>.none) = value {
       return true
     }
 
