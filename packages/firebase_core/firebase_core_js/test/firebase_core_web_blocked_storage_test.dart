@@ -8,9 +8,10 @@ library;
 import 'dart:js_interop';
 import 'dart:js_interop_unsafe';
 
-import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
-import 'package:firebase_core_web/firebase_core_web.dart';
-import 'package:flutter_test/flutter_test.dart';
+import 'package:firebase_core_interface/firebase_core_interface.dart'
+    show FirebasePlatform;
+import 'package:firebase_core_js/firebase_core_js.dart';
+import 'package:test/test.dart';
 
 @JS('eval')
 external JSAny? _eval(String code);
