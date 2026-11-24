@@ -1,3 +1,23 @@
+## 7.2.0
+
+ - **REFACTOR**(firestore,apple): migrate iOS/macOS plugin implementation to Swift ([#18607](https://github.com/firebase/flutterfire/issues/18607)). ([899ff091](https://github.com/firebase/flutterfire/commit/899ff091c3c7fe93668ba6d464042250eb4acb50))
+ - **FIX**(cloud_firestore): deliver query snapshots before snapshotsInSync ([#18921](https://github.com/firebase/flutterfire/issues/18921)). ([1c4cf490](https://github.com/firebase/flutterfire/commit/1c4cf490017939dbf10d36e377491029d02fa232))
+ - **FIX**(cloud_firestore,windows): forward persistenceEnabled on the Windows codec ([#18936](https://github.com/firebase/flutterfire/issues/18936)). ([99d0e9ed](https://github.com/firebase/flutterfire/commit/99d0e9ed94e0c9313c515b190c151b56cfdf3ac3))
+ - **FIX**: pass analyze and format on Flutter 3.50 ([#18950](https://github.com/firebase/flutterfire/issues/18950)). ([e5339880](https://github.com/firebase/flutterfire/commit/e53398808f6d78b293d4ac1455f296b9257a096d))
+ - **FIX**(firestore): drop Apple snapshot events queued after cancel ([#18935](https://github.com/firebase/flutterfire/issues/18935)). ([b2114885](https://github.com/firebase/flutterfire/commit/b2114885f2557393cd6495d5d07f59dc08721b63))
+ - **FIX**(firestore,windows): fail a timed-out transaction instead of using a destroyed object ([#18884](https://github.com/firebase/flutterfire/issues/18884)). ([4f2b11cb](https://github.com/firebase/flutterfire/commit/4f2b11cba67e26c441efcb34de1b047d78fbad02))
+ - **FEAT**(android): migrate plugins to built-in Kotlin on Flutter 3.44 ([#18922](https://github.com/firebase/flutterfire/issues/18922)). ([1abe0561](https://github.com/firebase/flutterfire/commit/1abe05614d03f22782f597f847c1fc9c8c57f016))
+
+## 7.1.0
+
+ - **FIX**(iOS): **Security Update:** Removed root certificates associated with compromised eMudhra intermediate CAs from the embedded trust store. ([#16933](//github.com/firebase/firebase-ios-sdk/issues/16933))
+ - **FIX**(android): replace Groovy space-assignment in plugin build.gradle files ([#18837](https://github.com/firebase/flutterfire/issues/18837)). ([09e913ac](https://github.com/firebase/flutterfire/commit/09e913acd98fa25ea6ff547141e7caf421b7b02d))
+ - **FIX**(cloud_firestore): stop dropping filters, settings and instance on copies ([#18819](https://github.com/firebase/flutterfire/issues/18819)). ([b9c4a8ec](https://github.com/firebase/flutterfire/commit/b9c4a8ecee23701cf43051abd6264a2d7dcc69fd))
+ - **FIX**(firestore): always send the final loadBundle snapshot ([#18813](https://github.com/firebase/flutterfire/issues/18813)). ([31dd9ba4](https://github.com/firebase/flutterfire/commit/31dd9ba4d901fe315a36d0026759cb78c7f34fc2))
+ - **FIX**(firestore): drop snapshot listeners cancelled while they register ([#18809](https://github.com/firebase/flutterfire/issues/18809)). ([f09c359f](https://github.com/firebase/flutterfire/commit/f09c359f44b4dff28a25210cc522c44413552a81))
+ - **FEAT**(firestore): let findNearest return the calculated distance ([#18838](https://github.com/firebase/flutterfire/issues/18838)). ([cea359ca](https://github.com/firebase/flutterfire/commit/cea359cae07b7dd8776a490d4d99ff12c47ec1c4))
+ - **FEAT**(firestore): add FieldValue.minimum and FieldValue.maximum ([#18697](https://github.com/firebase/flutterfire/issues/18697)). ([387c707b](https://github.com/firebase/flutterfire/commit/387c707b25bc9b27825a436f11202664a5634fe0))
+
 ## 7.0.0
 
 > Note: This release has breaking changes.

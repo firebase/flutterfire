@@ -3,5 +3,5 @@
 # published to CocoaPods. New releases stop publishing in October 2026.
 # Swift Package Manager uses scripts/firebase_sdk_version_spm.dart.
 def firebase_sdk_version!()
-  '12.19.0'
+  '12.19.3'
 end

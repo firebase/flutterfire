@@ -1,3 +1,11 @@
+## 0.2.8+31
+
+ - **FEAT**(android): migrate plugins to built-in Kotlin on Flutter 3.44 ([#18922](https://github.com/firebase/flutterfire/issues/18922)). ([1abe0561](https://github.com/firebase/flutterfire/commit/1abe05614d03f22782f597f847c1fc9c8c57f016))
+
+## 0.2.7+30
+
+ - Update a dependency to the latest release.
+
 ## 0.2.6+29
 
  - **FEAT**(in_app_messaging): add custom Flutter display for campaigns ([#18586](https://github.com/firebase/flutterfire/issues/18586)). ([efa14e08](https://github.com/firebase/flutterfire/commit/efa14e08e78a2cba06a72a47d4dccee01be0ac61))

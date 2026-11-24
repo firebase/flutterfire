@@ -141,7 +141,7 @@ public class FirebaseFunctionsPlugin: NSObject, FLTFirebasePluginProtocol, Flutt
 
     function.call(parameters) { result, error in
       if let error {
-        let flutterError = self.createFlutterError(from: error)
+        let flutterError = Self.createFlutterError(from: error)
         completion(nil, flutterError)
       } else {
         completion(result?.data, nil)
@@ -156,7 +156,7 @@ public class FirebaseFunctionsPlugin: NSObject, FLTFirebasePluginProtocol, Flutt
     return Functions.functions(app: app, region: region ?? "")
   }
 
-  private func createFlutterError(from error: Error) -> FlutterError {
+  static func createFlutterError(from error: Error) -> FlutterError {
     let nsError = error as NSError
     var errorCode = "unknown"
     var additionalDetails: [String: Any] = [:]
@@ -179,7 +179,7 @@ public class FirebaseFunctionsPlugin: NSObject, FLTFirebasePluginProtocol, Flutt
     )
   }
 
-  private func mapFunctionsErrorCode(_ code: Int) -> String {
+  private static func mapFunctionsErrorCode(_ code: Int) -> String {
     switch code {
     case FunctionsErrorCode.aborted.rawValue: return "aborted"
     case FunctionsErrorCode.alreadyExists.rawValue: return "already-exists"

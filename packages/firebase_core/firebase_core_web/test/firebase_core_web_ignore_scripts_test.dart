@@ -23,10 +23,7 @@ void main() {
       "window.flutterfire_ignore_scripts = ['analytics', 'firestore']".toJS,
     );
 
-    expect(
-      FirebaseCoreWeb().ignoredServiceScripts,
-      ['analytics', 'firestore'],
-    );
+    expect(FirebaseCoreWeb().ignoredServiceScripts, ['analytics', 'firestore']);
   });
 
   test('returns an empty list when the window property is missing', () {

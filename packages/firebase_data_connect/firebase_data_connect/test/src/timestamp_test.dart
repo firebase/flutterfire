@@ -27,12 +27,14 @@ void main() {
       expect(() => Timestamp.fromJson('invalid-date'), throwsException);
     });
 
-    test('fromJson correctly parses date with nanoseconds and UTC (Z) format',
-        () {
-      final timestamp = Timestamp.fromJson('1970-01-11T00:00:00.123456789Z');
-      expect(timestamp.seconds, 864000);
-      expect(timestamp.nanoseconds, 123456789);
-    });
+    test(
+      'fromJson correctly parses date with nanoseconds and UTC (Z) format',
+      () {
+        final timestamp = Timestamp.fromJson('1970-01-11T00:00:00.123456789Z');
+        expect(timestamp.seconds, 864000);
+        expect(timestamp.nanoseconds, 123456789);
+      },
+    );
 
     test('fromJson correctly parses date without nanoseconds', () {
       final timestamp = Timestamp.fromJson('1970-01-11T00:00:00Z');
@@ -62,12 +64,14 @@ void main() {
       expect(json, '1970-01-11T00:00:00.123456789Z');
     });
 
-    test('toJson correctly serializes to ISO8601 string without nanoseconds',
-        () {
-      final timestamp = Timestamp(0, 864000); // No nanoseconds
-      final json = timestamp.toJson();
-      expect(json, '1970-01-11T00:00:00.000Z');
-    });
+    test(
+      'toJson correctly serializes to ISO8601 string without nanoseconds',
+      () {
+        final timestamp = Timestamp(0, 864000); // No nanoseconds
+        final json = timestamp.toJson();
+        expect(json, '1970-01-11T00:00:00.000Z');
+      },
+    );
 
     test('toDateTime correctly converts to DateTime object', () {
       final timestamp = Timestamp(0, 864000); // Example timestamp

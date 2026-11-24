@@ -48,8 +48,10 @@ void main() {
 
       expect(firestore.databaseId, equals('foo'));
 
-      final firestore2 =
-          FirebaseFirestore.instanceFor(app: Firebase.app(), databaseId: 'bar');
+      final firestore2 = FirebaseFirestore.instanceFor(
+        app: Firebase.app(),
+        databaseId: 'bar',
+      );
 
       expect(firestore2.databaseId, equals('bar'));
 
@@ -110,6 +112,19 @@ void main() {
       test('does accept an invalid path', () {
         // 'foo' points to a collection
         expect(() => firestore!.doc('bar'), throwsArgumentError);
+      });
+    });
+
+    group('.settings', () {
+      test('keeps ignoreUndefinedProperties', () {
+        final firestore = FirebaseFirestore.instanceFor(
+          app: Firebase.app(),
+          databaseId: 'settings-test',
+        );
+
+        firestore.settings = const Settings(ignoreUndefinedProperties: true);
+
+        expect(firestore.settings.ignoreUndefinedProperties, isTrue);
       });
     });
   });

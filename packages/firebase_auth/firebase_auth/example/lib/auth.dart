@@ -11,9 +11,7 @@ import 'package:firebase_auth_example/main.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+import 'package:material_ui/material_ui.dart';
 
 typedef OAuthSignIn = void Function();
 
@@ -38,10 +36,7 @@ class ScaffoldSnackbar {
     ScaffoldMessenger.of(_context)
       ..hideCurrentSnackBar()
       ..showSnackBar(
-        SnackBar(
-          content: Text(message),
-          behavior: SnackBarBehavior.floating,
-        ),
+        SnackBar(content: Text(message), behavior: SnackBarBehavior.floating),
       );
   }
 }
@@ -54,8 +49,8 @@ extension on AuthMode {
   String get label => this == AuthMode.login
       ? 'Sign in'
       : this == AuthMode.phone
-          ? 'Sign in'
-          : 'Register';
+      ? 'Sign in'
+      : 'Register';
 }
 
 enum OAuthButton {
@@ -113,33 +108,27 @@ class _AuthGateState extends State<AuthGate> {
 
     if (!kIsWeb && Platform.isMacOS) {
       authButtons = {
-        OAuthButton.apple: () => _handleMultiFactorException(
-              _signInWithApple,
-            ),
+        OAuthButton.apple: () => _handleMultiFactorException(_signInWithApple),
       };
     } else {
       authButtons = {
-        OAuthButton.apple: () => _handleMultiFactorException(
-              _signInWithApple,
-            ),
-        OAuthButton.google: () => _handleMultiFactorException(
-              _signInWithGoogle,
-            ),
-        OAuthButton.github: () => _handleMultiFactorException(
-              _signInWithGitHub,
-            ),
-        OAuthButton.microsoft: () => _handleMultiFactorException(
-              _signInWithMicrosoft,
-            ),
-        OAuthButton.twitter: () => _handleMultiFactorException(
-              _signInWithTwitter,
-            ),
-        OAuthButton.yahoo: () => _handleMultiFactorException(
-              _signInWithYahoo,
-            ),
-        OAuthButton.facebook: () => _handleMultiFactorException(
-              _signInWithFacebook,
-            ),
+        OAuthButton.apple: () => _handleMultiFactorException(_signInWithApple),
+        // signInWithProvider has no Google flow on Windows.
+        if (kIsWeb || !Platform.isWindows)
+          OAuthButton.google: () =>
+              _handleMultiFactorException(_signInWithGoogle),
+        OAuthButton.github: () =>
+            _handleMultiFactorException(_signInWithGitHub),
+        OAuthButton.microsoft: () =>
+            _handleMultiFactorException(_signInWithMicrosoft),
+        OAuthButton.twitter: () =>
+            _handleMultiFactorException(_signInWithTwitter),
+        OAuthButton.yahoo: () => _handleMultiFactorException(_signInWithYahoo),
+        // Firebase signs in with Facebook through the web SDK only; Android
+        // and iOS would need the Facebook SDK.
+        if (kIsWeb)
+          OAuthButton.facebook: () =>
+              _handleMultiFactorException(_signInWithFacebook),
       };
     }
   }
@@ -166,8 +155,9 @@ class _AuthGateState extends State<AuthGate> {
                           Visibility(
                             visible: error.isNotEmpty,
                             child: MaterialBanner(
-                              backgroundColor:
-                                  Theme.of(context).colorScheme.error,
+                              backgroundColor: Theme.of(
+                                context,
+                              ).colorScheme.error,
                               content: SelectableText(error),
                               actions: [
                                 TextButton(
@@ -182,8 +172,9 @@ class _AuthGateState extends State<AuthGate> {
                                   ),
                                 ),
                               ],
-                              contentTextStyle:
-                                  const TextStyle(color: Colors.white),
+                              contentTextStyle: const TextStyle(
+                                color: Colors.white,
+                              ),
                               padding: const EdgeInsets.all(10),
                             ),
                           ),
@@ -201,8 +192,8 @@ class _AuthGateState extends State<AuthGate> {
                                   autofillHints: const [AutofillHints.email],
                                   validator: (value) =>
                                       value != null && value.isNotEmpty
-                                          ? null
-                                          : 'Required',
+                                      ? null
+                                      : 'Required',
                                 ),
                                 const SizedBox(height: 20),
                                 TextFormField(
@@ -214,8 +205,8 @@ class _AuthGateState extends State<AuthGate> {
                                   ),
                                   validator: (value) =>
                                       value != null && value.isNotEmpty
-                                          ? null
-                                          : 'Required',
+                                      ? null
+                                      : 'Required',
                                 ),
                               ],
                             ),
@@ -229,8 +220,8 @@ class _AuthGateState extends State<AuthGate> {
                               ),
                               validator: (value) =>
                                   value != null && value.isNotEmpty
-                                      ? null
-                                      : 'Required',
+                                  ? null
+                                  : 'Required',
                             ),
                           const SizedBox(height: 20),
                           SizedBox(
@@ -240,8 +231,8 @@ class _AuthGateState extends State<AuthGate> {
                               onPressed: isLoading
                                   ? null
                                   : () => _handleMultiFactorException(
-                                        _emailAndPassword,
-                                      ),
+                                      _emailAndPassword,
+                                    ),
                               child: isLoading
                                   ? const CircularProgressIndicator.adaptive()
                                   : Text(mode.label),
@@ -254,8 +245,9 @@ class _AuthGateState extends State<AuthGate> {
                           ...authButtons.keys
                               .map(
                                 (button) => Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 5),
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 5,
+                                  ),
                                   child: AnimatedSwitcher(
                                     duration: const Duration(milliseconds: 200),
                                     child: isLoading
@@ -429,8 +421,9 @@ class _AuthGateState extends State<AuthGate> {
       setState(() {
         error = '${e.message}';
       });
-      final firstTotpHint = e.resolver.hints
-          .firstWhereOrNull((element) => element is TotpMultiFactorInfo);
+      final firstTotpHint = e.resolver.hints.firstWhereOrNull(
+        (element) => element is TotpMultiFactorInfo,
+      );
       if (firstTotpHint != null) {
         final code = await getSmsCodeFromUser(context);
         final assertion = await TotpMultiFactorGenerator.getAssertionForSignIn(
@@ -441,8 +434,9 @@ class _AuthGateState extends State<AuthGate> {
         return;
       }
 
-      final firstPhoneHint = e.resolver.hints
-          .firstWhereOrNull((element) => element is PhoneMultiFactorInfo);
+      final firstPhoneHint = e.resolver.hints.firstWhereOrNull(
+        (element) => element is PhoneMultiFactorInfo,
+      );
 
       if (firstPhoneHint is! PhoneMultiFactorInfo) {
         return;
@@ -464,9 +458,7 @@ class _AuthGateState extends State<AuthGate> {
 
             try {
               await e.resolver.resolveSignIn(
-                PhoneMultiFactorGenerator.getAssertion(
-                  credential,
-                ),
+                PhoneMultiFactorGenerator.getAssertion(credential),
               );
             } on FirebaseAuthException catch (e) {
               print(e.message);
@@ -512,8 +504,9 @@ class _AuthGateState extends State<AuthGate> {
       });
     } else {
       if (kIsWeb) {
-        final confirmationResult =
-            await auth.signInWithPhoneNumber(phoneController.text);
+        final confirmationResult = await auth.signInWithPhoneNumber(
+          phoneController.text,
+        );
         final smsCode = await getSmsCodeFromUser(context);
 
         if (smsCode != null) {
@@ -559,42 +552,17 @@ class _AuthGateState extends State<AuthGate> {
   }
 
   Future<void> _signInWithGoogle() async {
-    // Trigger the authentication flow
-    final googleUser = await GoogleSignIn().signIn();
+    final googleProvider = GoogleAuthProvider();
 
-    // Obtain the auth details from the request
-    final googleAuth = await googleUser?.authentication;
-
-    if (googleAuth != null) {
-      // Create a new credential
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
-
-      // Once signed in, return the UserCredential
-      await auth.signInWithCredential(credential);
+    if (kIsWeb) {
+      await auth.signInWithPopup(googleProvider);
+    } else {
+      await auth.signInWithProvider(googleProvider);
     }
   }
 
   Future<void> _signInWithFacebook() async {
-    // Trigger the authentication flow
-    // by default we request the email and the public profile
-    final LoginResult result = await FacebookAuth.instance.login();
-
-    if (result.status == LoginStatus.success) {
-      // Get access token
-      final AccessToken accessToken = result.accessToken!;
-
-      // Login with token
-      await auth.signInWithCredential(
-        FacebookAuthProvider.credential(accessToken.tokenString),
-      );
-    } else {
-      print('Facebook login did not succeed');
-      print(result.status);
-      print(result.message);
-    }
+    await auth.signInWithPopup(FacebookAuthProvider());
   }
 }
 

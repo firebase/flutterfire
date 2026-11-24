@@ -26,24 +26,24 @@ class MethodChannelFieldValueFactory extends FieldValueFactoryPlatform {
 
   @override
   MethodChannelFieldValue increment(num value) => _fromNum(
-        value,
-        FieldValueType.incrementDouble,
-        FieldValueType.incrementInteger,
-      );
+    value,
+    FieldValueType.incrementDouble,
+    FieldValueType.incrementInteger,
+  );
 
   @override
   MethodChannelFieldValue minimum(num value) => _fromNum(
-        value,
-        FieldValueType.minimumDouble,
-        FieldValueType.minimumInteger,
-      );
+    value,
+    FieldValueType.minimumDouble,
+    FieldValueType.minimumInteger,
+  );
 
   @override
   MethodChannelFieldValue maximum(num value) => _fromNum(
-        value,
-        FieldValueType.maximumDouble,
-        FieldValueType.maximumInteger,
-      );
+    value,
+    FieldValueType.maximumDouble,
+    FieldValueType.maximumInteger,
+  );
 
   MethodChannelFieldValue _fromNum(
     num value,
@@ -61,7 +61,8 @@ class MethodChannelFieldValueFactory extends FieldValueFactoryPlatform {
     }
 
     throw StateError(
-        'MethodChannelFieldValue() numeric factories expect a "num" value');
+      'MethodChannelFieldValue() numeric factories expect a "num" value',
+    );
   }
 
   @override

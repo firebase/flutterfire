@@ -17,9 +17,10 @@ import 'package:crypto/crypto.dart';
 
 import 'package:firebase_app_check/firebase_app_check.dart';
 
-import 'dart:io' show Platform;
-
 import 'package:flutter/foundation.dart';
+
+import 'operating_system_io.dart'
+    if (dart.library.js_interop) 'operating_system_web.dart';
 
 part 'dataconnect_error.dart';
 part 'dataconnect_options.dart';
@@ -31,7 +32,7 @@ String getGoogApiVal(CallerSDKType sdkType, String packageVersion) {
   if (sdkType == CallerSDKType.generated) {
     apiClientValue += ' dart/gen';
   }
-  return '$apiClientValue gl-${kIsWeb ? 'web' : Platform.operatingSystem}';
+  return '$apiClientValue gl-$operatingSystem';
 }
 
 String getFirebaseClientVal(String packageVersion) {

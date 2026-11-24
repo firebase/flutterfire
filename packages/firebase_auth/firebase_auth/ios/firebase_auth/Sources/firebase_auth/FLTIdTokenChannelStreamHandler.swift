@@ -26,7 +26,10 @@ final class FLTIdTokenChannelStreamHandler: NSObject, FlutterStreamHandler {
     handle = auth.addIDTokenDidChangeListener { auth, user in
       if initialAuthState {
         initialAuthState = false
-        return
+        // Forward a nil first callback after sign-out before subscription.
+        if user != nil {
+          return
+        }
       }
 
       if user != nil, let currentUser = auth.currentUser {

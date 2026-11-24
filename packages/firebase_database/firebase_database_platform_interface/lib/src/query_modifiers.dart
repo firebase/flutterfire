@@ -177,29 +177,29 @@ class LimitModifier implements QueryModifier {
 /// A modifier representing a start cursor query.
 class StartCursorModifier extends _CursorModifier {
   StartCursorModifier._(String name, Object? value, String? key)
-      : super(name, value, key);
+    : super(name, value, key);
 
   /// Creates a new `startAt` modifier with an optional key.
   StartCursorModifier.startAt(Object? value, String? key)
-      : this._('startAt', value, key);
+    : this._('startAt', value, key);
 
   /// Creates a new `startAfter` modifier with an optional key.
   StartCursorModifier.startAfter(Object? value, String? key)
-      : this._('startAfter', value, key);
+    : this._('startAfter', value, key);
 }
 
 /// A modifier representing a end cursor query.
 class EndCursorModifier extends _CursorModifier {
   EndCursorModifier._(String name, Object? value, String? key)
-      : super(name, value, key);
+    : super(name, value, key);
 
   /// Creates a new `endAt` modifier with an optional key.
   EndCursorModifier.endAt(Object? value, String? key)
-      : this._('endAt', value, key);
+    : this._('endAt', value, key);
 
   /// Creates a new `endBefore` modifier with an optional key.
   EndCursorModifier.endBefore(Object? value, String? key)
-      : this._('endBefore', value, key);
+    : this._('endBefore', value, key);
 }
 
 /// Underlying cursor query modifier for start and end points.

@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import 'dart:math';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:waveform_flutter/waveform_flutter.dart';
 
 class CenterCircle extends StatelessWidget {
@@ -81,8 +81,8 @@ class NestedCirclesPainter extends CustomPainter {
 
     // Configure the paint properties (same for both circles)
     final Paint paint = Paint()
-      ..color =
-          color.withValues(alpha: 0.7) // Make circles slightly transparent
+      ..color = color
+          .withValues(alpha: 0.7) // Make circles slightly transparent
       ..strokeWidth = strokeWidth
       ..style = PaintingStyle.stroke; // Draw the outline
 

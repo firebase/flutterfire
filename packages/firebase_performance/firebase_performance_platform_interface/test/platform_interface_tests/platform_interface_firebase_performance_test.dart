@@ -19,9 +19,7 @@ void main() {
     setUpAll(() async {
       app = await Firebase.initializeApp();
 
-      firebasePerformancePlatform = TestFirebasePerformancePlatform(
-        app,
-      );
+      firebasePerformancePlatform = TestFirebasePerformancePlatform(app);
     });
 
     test('Constructor', () {
@@ -30,9 +28,7 @@ void main() {
     });
 
     test('FirebasePerformancePlatform.instanceFor', () {
-      final result = FirebasePerformancePlatform.instanceFor(
-        app: app,
-      );
+      final result = FirebasePerformancePlatform.instanceFor(app: app);
       expect(result, isA<FirebasePerformancePlatform>());
     });
 
@@ -49,8 +45,9 @@ void main() {
 
     group('set.instance', () {
       test('sets the current instance', () {
-        FirebasePerformancePlatform.instance =
-            TestFirebasePerformancePlatform(app);
+        FirebasePerformancePlatform.instance = TestFirebasePerformancePlatform(
+          app,
+        );
 
         expect(
           FirebasePerformancePlatform.instance,

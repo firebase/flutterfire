@@ -35,9 +35,11 @@ class MockFirebaseDatabaseHostApi implements TestFirebaseDatabaseHostApi {
     pigeon.DatabasePigeonFirebaseApp app,
     bool enabled,
   ) async {
-    log.add(
-      {'method': 'setPersistenceEnabled', 'app': app, 'enabled': enabled},
-    );
+    log.add({
+      'method': 'setPersistenceEnabled',
+      'app': app,
+      'enabled': enabled,
+    });
   }
 
   @override
@@ -76,13 +78,12 @@ class MockFirebaseDatabaseHostApi implements TestFirebaseDatabaseHostApi {
 
   @override
   Future<pigeon.DatabaseReferencePlatform> ref(
-      pigeon.DatabasePigeonFirebaseApp app,
-      // ignore: require_trailing_commas
-      [String? path]) async {
+    pigeon.DatabasePigeonFirebaseApp app, [
+    // ignore: require_trailing_commas
+    String? path,
+  ]) async {
     log.add({'method': 'ref', 'app': app, 'path': path});
-    return pigeon.DatabaseReferencePlatform(
-      path: path ?? '',
-    );
+    return pigeon.DatabaseReferencePlatform(path: path ?? '');
   }
 
   @override
@@ -91,9 +92,7 @@ class MockFirebaseDatabaseHostApi implements TestFirebaseDatabaseHostApi {
     String url,
   ) async {
     log.add({'method': 'refFromURL', 'app': app, 'url': url});
-    return pigeon.DatabaseReferencePlatform(
-      path: '',
-    );
+    return pigeon.DatabaseReferencePlatform(path: '');
   }
 
   @override
@@ -128,9 +127,11 @@ class MockFirebaseDatabaseHostApi implements TestFirebaseDatabaseHostApi {
     pigeon.DatabasePigeonFirebaseApp app,
     pigeon.UpdateRequest request,
   ) async {
-    log.add(
-      {'method': 'databaseReferenceUpdate', 'app': app, 'request': request},
-    );
+    log.add({
+      'method': 'databaseReferenceUpdate',
+      'app': app,
+      'request': request,
+    });
   }
 
   @override
@@ -237,10 +238,7 @@ class MockFirebaseDatabaseHostApi implements TestFirebaseDatabaseHostApi {
     pigeon.QueryRequest request,
   ) async {
     log.add({'method': 'queryGet', 'app': app, 'request': request});
-    return {
-      'value': 'test-value',
-      'key': 'test-key',
-    };
+    return {'value': 'test-value', 'key': 'test-key'};
   }
 }
 
@@ -282,46 +280,30 @@ void main() {
       database.useDatabaseEmulator('localhost', 1234);
       // Options are only sent on subsequent calls to Pigeon.
       await database.goOnline();
-      expect(
-        mockApi.log,
-        <Matcher>[
-          containsPair('method', 'setLoggingEnabled'),
-          containsPair('method', 'setPersistenceCacheSizeBytes'),
-          containsPair('method', 'setPersistenceEnabled'),
-          containsPair('method', 'useDatabaseEmulator'),
-          containsPair('method', 'goOnline'),
-        ],
-      );
+      expect(mockApi.log, <Matcher>[
+        containsPair('method', 'setLoggingEnabled'),
+        containsPair('method', 'setPersistenceCacheSizeBytes'),
+        containsPair('method', 'setPersistenceEnabled'),
+        containsPair('method', 'useDatabaseEmulator'),
+        containsPair('method', 'goOnline'),
+      ]);
     });
 
     test('goOnline', () async {
       await database.goOnline();
-      expect(
-        mockApi.log,
-        <Matcher>[
-          containsPair('method', 'goOnline'),
-        ],
-      );
+      expect(mockApi.log, <Matcher>[containsPair('method', 'goOnline')]);
     });
 
     test('goOffline', () async {
       await database.goOffline();
-      expect(
-        mockApi.log,
-        <Matcher>[
-          containsPair('method', 'goOffline'),
-        ],
-      );
+      expect(mockApi.log, <Matcher>[containsPair('method', 'goOffline')]);
     });
 
     test('purgeOutstandingWrites', () async {
       await database.purgeOutstandingWrites();
-      expect(
-        mockApi.log,
-        <Matcher>[
-          containsPair('method', 'purgeOutstandingWrites'),
-        ],
-      );
+      expect(mockApi.log, <Matcher>[
+        containsPair('method', 'purgeOutstandingWrites'),
+      ]);
     });
 
     group('$MethodChannelDatabaseReference', () {
@@ -335,36 +317,27 @@ void main() {
         await database.ref('bar').setWithPriority(value, priority);
         await database.ref('bar').setWithPriority(value, null);
         await database.ref('baz').set(serverValue);
-        expect(
-          mockApi.log,
-          <Matcher>[
-            containsPair('method', 'databaseReferenceSet'),
-            containsPair('method', 'databaseReferenceSetWithPriority'),
-            containsPair('method', 'databaseReferenceSetWithPriority'),
-            containsPair('method', 'databaseReferenceSet'),
-          ],
-        );
+        expect(mockApi.log, <Matcher>[
+          containsPair('method', 'databaseReferenceSet'),
+          containsPair('method', 'databaseReferenceSetWithPriority'),
+          containsPair('method', 'databaseReferenceSetWithPriority'),
+          containsPair('method', 'databaseReferenceSet'),
+        ]);
       });
       test('update', () async {
         final dynamic value = <String, dynamic>{'hello': 'world'};
         await database.ref('foo').update(value);
-        expect(
-          mockApi.log,
-          <Matcher>[
-            containsPair('method', 'databaseReferenceUpdate'),
-          ],
-        );
+        expect(mockApi.log, <Matcher>[
+          containsPair('method', 'databaseReferenceUpdate'),
+        ]);
       });
 
       test('setPriority', () async {
         const int priority = 42;
         await database.ref('foo').setPriority(priority);
-        expect(
-          mockApi.log,
-          <Matcher>[
-            containsPair('method', 'databaseReferenceSetPriority'),
-          ],
-        );
+        expect(mockApi.log, <Matcher>[
+          containsPair('method', 'databaseReferenceSetPriority'),
+        ]);
       });
 
       test('runTransaction', () async {
@@ -377,13 +350,10 @@ void main() {
           });
         });
 
-        expect(
-          mockApi.log,
-          <Matcher>[
-            containsPair('method', 'databaseReferenceRunTransaction'),
-            containsPair('method', 'databaseReferenceGetTransactionResult'),
-          ],
-        );
+        expect(mockApi.log, <Matcher>[
+          containsPair('method', 'databaseReferenceRunTransaction'),
+          containsPair('method', 'databaseReferenceGetTransactionResult'),
+        ]);
 
         expect(result.committed, equals(true));
 
@@ -407,44 +377,32 @@ void main() {
             .setWithPriority(value, 'priority');
         await ref.child('por').onDisconnect().setWithPriority(value, value);
         await ref.child('por').onDisconnect().setWithPriority(value, null);
-        expect(
-          mockApi.log,
-          <Matcher>[
-            containsPair('method', 'onDisconnectSet'),
-            containsPair('method', 'onDisconnectSetWithPriority'),
-            containsPair('method', 'onDisconnectSetWithPriority'),
-            containsPair('method', 'onDisconnectSetWithPriority'),
-            containsPair('method', 'onDisconnectSetWithPriority'),
-          ],
-        );
+        expect(mockApi.log, <Matcher>[
+          containsPair('method', 'onDisconnectSet'),
+          containsPair('method', 'onDisconnectSetWithPriority'),
+          containsPair('method', 'onDisconnectSetWithPriority'),
+          containsPair('method', 'onDisconnectSetWithPriority'),
+          containsPair('method', 'onDisconnectSetWithPriority'),
+        ]);
       });
       test('update', () async {
         final dynamic value = <String, dynamic>{'hello': 'world'};
         await database.ref('foo').onDisconnect().update(value);
-        expect(
-          mockApi.log,
-          <Matcher>[
-            containsPair('method', 'onDisconnectUpdate'),
-          ],
-        );
+        expect(mockApi.log, <Matcher>[
+          containsPair('method', 'onDisconnectUpdate'),
+        ]);
       });
       test('cancel', () async {
         await database.ref('foo').onDisconnect().cancel();
-        expect(
-          mockApi.log,
-          <Matcher>[
-            containsPair('method', 'onDisconnectCancel'),
-          ],
-        );
+        expect(mockApi.log, <Matcher>[
+          containsPair('method', 'onDisconnectCancel'),
+        ]);
       });
       test('remove', () async {
         await database.ref('foo').onDisconnect().remove();
-        expect(
-          mockApi.log,
-          <Matcher>[
-            containsPair('method', 'onDisconnectSet'),
-          ],
-        );
+        expect(mockApi.log, <Matcher>[
+          containsPair('method', 'onDisconnectSet'),
+        ]);
       });
     });
 
@@ -453,12 +411,9 @@ void main() {
         const String path = 'foo';
         final QueryPlatform query = database.ref(path);
         await query.keepSynced(QueryModifiers([]), true);
-        expect(
-          mockApi.log,
-          <Matcher>[
-            containsPair('method', 'queryKeepSynced'),
-          ],
-        );
+        expect(mockApi.log, <Matcher>[
+          containsPair('method', 'queryKeepSynced'),
+        ]);
       });
       test('observing error events', () async {
         const String errorCode = 'some-error';
@@ -467,19 +422,17 @@ void main() {
 
         Future<void> simulateError(String errorMessage) async {
           await TestDefaultBinaryMessengerBinding
-              .instance.defaultBinaryMessenger
+              .instance
+              .defaultBinaryMessenger
               .handlePlatformMessage(
-            eventChannel.name,
-            eventChannel.codec.encodeErrorEnvelope(
-              code: errorCode,
-              message: errorMessage,
-              details: {
-                'code': errorCode,
-                'message': errorMessage,
-              },
-            ),
-            (_) {},
-          );
+                eventChannel.name,
+                eventChannel.codec.encodeErrorEnvelope(
+                  code: errorCode,
+                  message: errorMessage,
+                  details: {'code': errorCode, 'message': errorMessage},
+                ),
+                (_) {},
+              );
         }
 
         final errors = AsyncQueue<FirebaseException>();
@@ -515,21 +468,19 @@ void main() {
 
         Future<void> simulateEvent(Map<String, dynamic> event) async {
           await TestDefaultBinaryMessengerBinding
-              .instance.defaultBinaryMessenger
+              .instance
+              .defaultBinaryMessenger
               .handlePlatformMessage(
-            eventChannel.name,
-            eventChannel.codec.encodeSuccessEnvelope(event),
-            (_) {},
-          );
+                eventChannel.name,
+                eventChannel.codec.encodeSuccessEnvelope(event),
+                (_) {},
+              );
         }
 
         Map<String, dynamic> createValueEvent(dynamic value) {
           return {
             'eventType': 'value',
-            'snapshot': {
-              'value': value,
-              'key': path.split('/').last,
-            },
+            'snapshot': {'value': value, 'key': path.split('/').last},
           };
         }
 
@@ -537,8 +488,9 @@ void main() {
             AsyncQueue<DatabaseEventPlatform>();
 
         // Subscribe and allow subscription to complete.
-        final subscription =
-            query.onValue(QueryModifiers([])).listen(events.add);
+        final subscription = query
+            .onValue(QueryModifiers([]))
+            .listen(events.add);
         await Future<void>.delayed(Duration.zero);
 
         await simulateEvent(createValueEvent(1));
@@ -556,12 +508,7 @@ void main() {
         await subscription.cancel();
         await Future.delayed(Duration.zero);
 
-        expect(
-          mockApi.log,
-          <Matcher>[
-            containsPair('method', 'queryObserve'),
-          ],
-        );
+        expect(mockApi.log, <Matcher>[containsPair('method', 'queryObserve')]);
       });
     });
 

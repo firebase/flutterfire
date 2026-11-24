@@ -32,7 +32,9 @@ dynamic dartify(dynamic object) {
   if (jsObject.instanceof(TimestampJsConstructor as JSFunction)) {
     final castedJSObject = jsObject as TimestampJsImpl;
     return Timestamp(
-        castedJSObject.seconds.toDartInt, castedJSObject.nanoseconds.toDartInt);
+      castedJSObject.seconds.toDartInt,
+      castedJSObject.nanoseconds.toDartInt,
+    );
   }
   if (jsObject.instanceof(BytesConstructor as JSFunction)) {
     return jsObject as BytesJsImpl;
@@ -74,17 +76,13 @@ JSAny? jsify(Object? dartObject) {
 
   if (dartObject is DateTime) {
     final timestamp = Timestamp.fromDate(dartObject);
-    return TimestampJsImpl(
-      timestamp.seconds.toJS,
-      timestamp.nanoseconds.toJS,
-    ) as JSAny;
+    return TimestampJsImpl(timestamp.seconds.toJS, timestamp.nanoseconds.toJS)
+        as JSAny;
   }
 
   if (dartObject is Timestamp) {
-    return TimestampJsImpl(
-      dartObject.seconds.toJS,
-      dartObject.nanoseconds.toJS,
-    ) as JSAny;
+    return TimestampJsImpl(dartObject.seconds.toJS, dartObject.nanoseconds.toJS)
+        as JSAny;
   }
 
   if (dartObject is DocumentReference) {

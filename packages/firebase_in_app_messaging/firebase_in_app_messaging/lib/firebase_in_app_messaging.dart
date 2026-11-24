@@ -23,7 +23,7 @@ export 'package:firebase_in_app_messaging_platform_interface/firebase_in_app_mes
 
 class FirebaseInAppMessaging extends FirebasePlugin {
   FirebaseInAppMessaging._({required this.app})
-      : super(app.name, 'plugins.flutter.io/firebase_in_app_messaging');
+    : super(app.name, 'plugins.flutter.io/firebase_in_app_messaging');
 
   /// The [FirebaseApp] for this current [FirebaseAnalytics] instance.
   final FirebaseApp app;
@@ -42,9 +42,7 @@ class FirebaseInAppMessaging extends FirebasePlugin {
 
   /// Returns an instance using the default [FirebaseApp].
   static FirebaseInAppMessaging get instance {
-    return FirebaseInAppMessaging._instanceFor(
-      app: Firebase.app(),
-    );
+    return FirebaseInAppMessaging._instanceFor(app: Firebase.app());
   }
 
   /// Returns an instance using a specified [FirebaseApp].

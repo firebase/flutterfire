@@ -14,9 +14,9 @@ class MethodChannelListResult extends ListResultPlatform {
     String? nextPageToken,
     List<String>? items,
     List<String>? prefixes,
-  })  : _items = items ?? [],
-        _prefixes = prefixes ?? [],
-        super(storage, nextPageToken);
+  }) : _items = items ?? [],
+       _prefixes = prefixes ?? [],
+       super(storage, nextPageToken);
 
   List<String> _items;
 

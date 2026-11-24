@@ -33,30 +33,30 @@ class RemoteConfigPigeonSettings {
 
 @HostApi(dartHostTestHandler: 'TestFirebaseRemoteConfigHostApi')
 abstract class FirebaseRemoteConfigHostApi {
-  @async
+  @asyncCallback
   void fetch(String appName);
 
-  @async
+  @asyncCallback
   bool fetchAndActivate(String appName);
 
-  @async
+  @asyncCallback
   bool activate(String appName);
 
-  @async
+  @asyncCallback
   void setConfigSettings(String appName, RemoteConfigPigeonSettings settings);
 
-  @async
+  @asyncCallback
   void setDefaults(String appName, Map<String, Object?> defaultParameters);
 
-  @async
+  @asyncCallback
   void ensureInitialized(String appName);
 
-  @async
+  @asyncCallback
   void setCustomSignals(String appName, Map<String, Object?> customSignals);
 
-  @async
+  @asyncCallback
   Map<String, Object?> getAll(String appName);
 
-  @async
+  @asyncCallback
   Map<String, Object> getProperties(String appName);
 }

@@ -7,7 +7,7 @@
 import 'dart:async';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Web push certificate key used by the example app.
 ///
@@ -51,15 +51,16 @@ class _RegistrationMonitor extends State<RegistrationMonitor> {
   @override
   void initState() {
     super.initState();
-    _registeredSubscription =
-        FirebaseMessaging.instance.onRegistered.listen(setRegisteredFid);
-    _unregisteredSubscription =
-        FirebaseMessaging.instance.onUnregistered.listen(setUnregisteredFid);
-    FirebaseMessaging.instance
-        .register(vapidKey: messagingVapidKey)
-        .catchError((Object error) {
-      print('FCM registration failed: $error');
-    });
+    _registeredSubscription = FirebaseMessaging.instance.onRegistered.listen(
+      setRegisteredFid,
+    );
+    _unregisteredSubscription = FirebaseMessaging.instance.onUnregistered
+        .listen(setUnregisteredFid);
+    FirebaseMessaging.instance.register(vapidKey: messagingVapidKey).catchError(
+      (Object error) {
+        print('FCM registration failed: $error');
+      },
+    );
   }
 
   @override

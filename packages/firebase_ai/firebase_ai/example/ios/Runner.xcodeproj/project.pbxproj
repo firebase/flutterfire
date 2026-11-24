@@ -90,13 +90,6 @@
 			path = RunnerTests;
 			sourceTree = "<group>";
 		};
-		3C3B3E8596675CC144D1BD5B /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Pods;
-			sourceTree = "<group>";
-		};
 		9740EEB11CF90186004384FC /* Flutter */ = {
 			isa = PBXGroup;
 			children = (
@@ -119,7 +112,6 @@
 				97C146EF1CF9000F007C117D /* Products */,
 				331C8082294A63A400263BE5 /* RunnerTests */,
 				5F1FA05866A2D0FCA3287B20 /* GoogleService-Info.plist */,
-				3C3B3E8596675CC144D1BD5B /* Pods */,
 			);
 			sourceTree = "<group>";
 		};

@@ -18,7 +18,9 @@ import '../content.dart';
 ///
 /// Includes all the [Content.parts] of every element of [contents],
 /// and concatenates adjacent [TextPart]s into a single [TextPart],
-/// even across adjacent [Content]s.
+/// even across adjacent [Content]s. [TextPart]s with
+/// [TextPart.speechMetadata] are not concatenated, so their metadata is
+/// preserved.
 Content historyAggregate(List<Content> contents) {
   assert(contents.isNotEmpty);
   final role = contents.first.role ?? 'model';
@@ -39,7 +41,7 @@ Content historyAggregate(List<Content> contents) {
 
   for (final content in contents) {
     for (final part in content.parts) {
-      if (part case TextPart(:final text)) {
+      if (part case TextPart(:final text, speechMetadata: null)) {
         if (text.isNotEmpty) {
           previousText = textBuffer.isEmpty ? part : null;
           textBuffer.write(text);

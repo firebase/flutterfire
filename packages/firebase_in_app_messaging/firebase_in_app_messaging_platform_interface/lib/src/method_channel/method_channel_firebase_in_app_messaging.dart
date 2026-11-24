@@ -18,10 +18,10 @@ import 'utils/exception.dart';
 class _FirebaseInAppMessagingFlutterApi
     implements pigeon.FirebaseInAppMessagingFlutterApi {
   @override
-  void onMessageClicked(
+  Future<void> onMessageClicked(
     pigeon.FiamCampaignMetadata campaignMetadata,
     pigeon.FiamAction action,
-  ) {
+  ) async {
     MethodChannelFirebaseInAppMessaging.clickedController.add(
       InAppMessagingClickEvent(
         campaignMetadata: _campaignMetadata(campaignMetadata),
@@ -34,7 +34,9 @@ class _FirebaseInAppMessagingFlutterApi
   }
 
   @override
-  void onMessageImpression(pigeon.FiamCampaignMetadata campaignMetadata) {
+  Future<void> onMessageImpression(
+    pigeon.FiamCampaignMetadata campaignMetadata,
+  ) async {
     MethodChannelFirebaseInAppMessaging.impressionController.add(
       InAppMessagingImpressionEvent(
         campaignMetadata: _campaignMetadata(campaignMetadata),
@@ -43,10 +45,10 @@ class _FirebaseInAppMessagingFlutterApi
   }
 
   @override
-  void onMessageDismissed(
+  Future<void> onMessageDismissed(
     pigeon.FiamCampaignMetadata campaignMetadata,
     pigeon.FiamDismissType dismissType,
-  ) {
+  ) async {
     MethodChannelFirebaseInAppMessaging.dismissedController.add(
       InAppMessagingDismissEvent(
         campaignMetadata: _campaignMetadata(campaignMetadata),
@@ -56,10 +58,10 @@ class _FirebaseInAppMessagingFlutterApi
   }
 
   @override
-  void onMessageDisplayError(
+  Future<void> onMessageDisplayError(
     pigeon.FiamCampaignMetadata campaignMetadata,
     String? errorMessage,
-  ) {
+  ) async {
     MethodChannelFirebaseInAppMessaging.displayErrorController.add(
       InAppMessagingDisplayErrorEvent(
         campaignMetadata: _campaignMetadata(campaignMetadata),
@@ -69,7 +71,7 @@ class _FirebaseInAppMessagingFlutterApi
   }
 
   @override
-  void onMessageDisplay(pigeon.FiamDisplayMessage message) {
+  Future<void> onMessageDisplay(pigeon.FiamDisplayMessage message) async {
     MethodChannelFirebaseInAppMessaging.displayController.add(
       inAppMessageFromPigeon(message),
     );
@@ -346,20 +348,27 @@ InAppMessage inAppMessageFromPigeon(pigeon.FiamDisplayMessage message) {
     secondaryAction: mapAction(message.secondaryAction),
     data: data,
     onImpress: () {
-      return MethodChannelFirebaseInAppMessaging.instance
-          .reportImpression(campaignId);
+      return MethodChannelFirebaseInAppMessaging.instance.reportImpression(
+        campaignId,
+      );
     },
     onClick: (action) {
-      return MethodChannelFirebaseInAppMessaging.instance
-          .reportClick(campaignId, action.id);
+      return MethodChannelFirebaseInAppMessaging.instance.reportClick(
+        campaignId,
+        action.id,
+      );
     },
     onDismiss: (type) {
-      return MethodChannelFirebaseInAppMessaging.instance
-          .reportDismiss(campaignId, type.name);
+      return MethodChannelFirebaseInAppMessaging.instance.reportDismiss(
+        campaignId,
+        type.name,
+      );
     },
     onError: (reason) {
-      return MethodChannelFirebaseInAppMessaging.instance
-          .reportDisplayError(campaignId, reason);
+      return MethodChannelFirebaseInAppMessaging.instance.reportDisplayError(
+        campaignId,
+        reason,
+      );
     },
   );
 }

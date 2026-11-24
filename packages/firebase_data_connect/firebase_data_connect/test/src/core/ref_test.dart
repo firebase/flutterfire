@@ -47,7 +47,11 @@ void main() {
       final mockFirebaseDataConnect = MockFirebaseDataConnect();
 
       final result = OperationResult(
-          mockFirebaseDataConnect, mockData, DataSource.server, mockRef);
+        mockFirebaseDataConnect,
+        mockData,
+        DataSource.server,
+        mockRef,
+      );
 
       expect(result.data, mockData);
       expect(result.ref, mockRef);
@@ -62,7 +66,11 @@ void main() {
       final mockFirebaseDataConnect = MockFirebaseDataConnect();
 
       final queryResult = QueryResult(
-          mockFirebaseDataConnect, mockData, DataSource.server, mockRef);
+        mockFirebaseDataConnect,
+        mockData,
+        DataSource.server,
+        mockRef,
+      );
 
       expect(queryResult.data, mockData);
       expect(queryResult.ref, mockRef);
@@ -80,27 +88,28 @@ void main() {
     });
 
     test(
-        'addQuery should create a new StreamController if query does not exist',
-        () {
-      String deserializer(String data) => 'Deserialized Data';
-      String varSerializer(Object? _) {
-        return 'varsAsStr';
-      }
+      'addQuery should create a new StreamController if query does not exist',
+      () {
+        String deserializer(String data) => 'Deserialized Data';
+        String varSerializer(Object? _) {
+          return 'varsAsStr';
+        }
 
-      QueryRef ref = QueryRef(
-        mockDataConnect,
-        'testQuery',
-        MockDataConnectTransport(),
-        deserializer,
-        QueryManager(mockDataConnect),
-        varSerializer,
-        'variables',
-      );
-      final stream = queryManager.addQuery(ref);
+        QueryRef ref = QueryRef(
+          mockDataConnect,
+          'testQuery',
+          MockDataConnectTransport(),
+          deserializer,
+          QueryManager(mockDataConnect),
+          varSerializer,
+          'variables',
+        );
+        final stream = queryManager.addQuery(ref);
 
-      expect(queryManager.trackedQueries.values.contains(ref), isTrue);
-      expect(stream, isA<StreamController>());
-    });
+        expect(queryManager.trackedQueries.values.contains(ref), isTrue);
+        expect(stream, isA<StreamController>());
+      },
+    );
   });
 
   group('MutationRef', () {
@@ -170,57 +179,57 @@ void main() {
       await ref.execute();
     });
     test(
-        'query should forceRefresh on ID token if the first request is unauthorized',
-        () async {
-      final mockResponse = http.Response('{"error": "Unauthorized"}', 401);
-      final mockResponseSuccess = http.Response('{"success": true}', 200);
-      String deserializer(String data) => 'Deserialized Data';
-      int count = 0;
-      int idTokenCount = 0;
-      QueryRef ref = QueryRef(
-        mockDataConnect,
-        'operation',
-        transport,
-        deserializer,
-        QueryManager(mockDataConnect),
-        emptySerializer,
-        null,
-      );
-      when(mockUser.getIdToken()).thenAnswer(
-        (invocation) => [
-          Future.value('invalid-token'),
-          Future.value('valid-token'),
-        ][idTokenCount++],
-      );
+      'query should forceRefresh on ID token if the first request is unauthorized',
+      () async {
+        final mockResponse = http.Response('{"error": "Unauthorized"}', 401);
+        final mockResponseSuccess = http.Response('{"success": true}', 200);
+        String deserializer(String data) => 'Deserialized Data';
+        int count = 0;
+        int idTokenCount = 0;
+        QueryRef ref = QueryRef(
+          mockDataConnect,
+          'operation',
+          transport,
+          deserializer,
+          QueryManager(mockDataConnect),
+          emptySerializer,
+          null,
+        );
+        when(mockUser.getIdToken()).thenAnswer(
+          (invocation) => [
+            Future.value('invalid-token'),
+            Future.value('valid-token'),
+          ][idTokenCount++],
+        );
 
-      when(
-        mockHttpClient.post(
-          any,
-          headers: anyNamed('headers'),
-          body: anyNamed('body'),
-        ),
-      ).thenAnswer(
-        (invocation) => [
-          Future.value(mockResponse),
-          Future.value(mockResponseSuccess),
-        ][count++],
-      );
-      final result = await ref.execute();
+        when(
+          mockHttpClient.post(
+            any,
+            headers: anyNamed('headers'),
+            body: anyNamed('body'),
+          ),
+        ).thenAnswer(
+          (invocation) => [
+            Future.value(mockResponse),
+            Future.value(mockResponseSuccess),
+          ][count++],
+        );
+        final result = await ref.execute();
 
-      expect(result.data, 'Deserialized Data');
-      verify(
-        mockHttpClient.post(
-          any,
-          headers: anyNamed('headers'),
-          body: anyNamed('body'),
-        ),
-      ).called(2);
-    });
+        expect(result.data, 'Deserialized Data');
+        verify(
+          mockHttpClient.post(
+            any,
+            headers: anyNamed('headers'),
+            body: anyNamed('body'),
+          ),
+        ).called(2);
+      },
+    );
 
     test('throw Error if server throws one', () {
       String deserializer(String data) => 'Deserialized Data';
-      final mockResponse = http.Response(
-        '''
+      final mockResponse = http.Response('''
 {
     "data": {},
     "errors": [
@@ -233,9 +242,7 @@ void main() {
             "extensions": null
         }
     ]
-}''',
-        200,
-      ); // mockResponse
+}''', 200); // mockResponse
 
       QueryRef ref = QueryRef(
         mockDataConnect,
@@ -259,8 +266,7 @@ void main() {
     }); // throwServerError
 
     test('should decode partial error if available', () async {
-      final mockResponse = http.Response(
-        '''
+      final mockResponse = http.Response('''
         {
             "data": {"abc": "def"},
             "errors": [
@@ -273,9 +279,7 @@ void main() {
                     "extensions": null
                 }
             ]
-        }''',
-        200,
-      );
+        }''', 200);
       when(
         mockHttpClient.post(
           any,
@@ -301,22 +305,25 @@ void main() {
 
       expect(
         () async => ref.execute(),
-        throwsA(predicate((e) =>
-            e is DataConnectOperationError &&
-            e.response.rawData!['abc'] == 'def' &&
-            e.response.errors.first.message ==
-                'SQL query error: pq: duplicate key value violates unique constraint movie_pkey' &&
-            (e.response.errors.first.path[0] as DataConnectFieldPathSegment)
-                    .field ==
-                'the_matrix' &&
-            e.response.data is AbcHolder &&
-            (e.response.data as AbcHolder).abc == 'def')),
+        throwsA(
+          predicate(
+            (e) =>
+                e is DataConnectOperationError &&
+                e.response.rawData!['abc'] == 'def' &&
+                e.response.errors.first.message ==
+                    'SQL query error: pq: duplicate key value violates unique constraint movie_pkey' &&
+                (e.response.errors.first.path[0] as DataConnectFieldPathSegment)
+                        .field ==
+                    'the_matrix' &&
+                e.response.data is AbcHolder &&
+                (e.response.data as AbcHolder).abc == 'def',
+          ),
+        ),
       );
     }); // decodePartialError
 
     test('should decode partial error if error has no path', () {
-      final mockResponse = http.Response(
-        '''
+      final mockResponse = http.Response('''
         {
             "data": {"abc": "def"},
             "errors": [
@@ -327,9 +334,7 @@ void main() {
                     "extensions": null
                 }
             ]
-        }''',
-        200,
-      );
+        }''', 200);
       when(
         mockHttpClient.post(
           any,
@@ -355,19 +360,22 @@ void main() {
 
       expect(
         () async => ref.execute(),
-        throwsA(predicate((e) =>
-            e is DataConnectOperationError &&
-            e.response.rawData!['abc'] == 'def' &&
-            e.response.errors.first.message == 'invalid pkey' &&
-            e.response.errors.first.path.isEmpty &&
-            e.response.data is AbcHolder &&
-            (e.response.data as AbcHolder).abc == 'def')),
+        throwsA(
+          predicate(
+            (e) =>
+                e is DataConnectOperationError &&
+                e.response.rawData!['abc'] == 'def' &&
+                e.response.errors.first.message == 'invalid pkey' &&
+                e.response.errors.first.path.isEmpty &&
+                e.response.data is AbcHolder &&
+                (e.response.data as AbcHolder).abc == 'def',
+          ),
+        ),
       );
     }); // testPartialErrorWithoutPath
 
     test('should decode partial error if path is specified', () async {
-      final mockResponse = http.Response(
-        '''
+      final mockResponse = http.Response('''
         {
             "data": {"abc": "def"},
             "errors": [
@@ -378,9 +386,7 @@ void main() {
                     "extensions": null
                 }
             ]
-        }''',
-        200,
-      );
+        }''', 200);
       when(
         mockHttpClient.post(
           any,
@@ -404,16 +410,21 @@ void main() {
         null,
       );
 
-      expect(() async => ref.execute(), throwsA(predicate((e) {
-        return e is DataConnectOperationError &&
-            e.response.rawData!['abc'] == 'def' &&
-            e.response.errors.first.message == 'invalid pkey' &&
-            e.response.errors.first.path.length == 3 &&
-            e.response.errors.first.path.first
-                is DataConnectListIndexPathSegment &&
-            e.response.data is AbcHolder &&
-            (e.response.data as AbcHolder).abc == 'def';
-      })));
+      expect(
+        () async => ref.execute(),
+        throwsA(
+          predicate((e) {
+            return e is DataConnectOperationError &&
+                e.response.rawData!['abc'] == 'def' &&
+                e.response.errors.first.message == 'invalid pkey' &&
+                e.response.errors.first.path.length == 3 &&
+                e.response.errors.first.path.first
+                    is DataConnectListIndexPathSegment &&
+                e.response.data is AbcHolder &&
+                (e.response.data as AbcHolder).abc == 'def';
+          }),
+        ),
+      );
     }); // testPartialErrorWithPath
   }); // group(QueryRef)
 }

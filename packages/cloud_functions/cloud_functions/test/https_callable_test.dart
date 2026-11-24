@@ -19,8 +19,9 @@ void main() {
   setUp(() async {
     resetFirebaseCoreMocks();
     await Firebase.initializeApp();
-    FirebaseFunctionsPlatform.instance =
-        MockFirebaseFunctionsPlatform(region: 'us-central1');
+    FirebaseFunctionsPlatform.instance = MockFirebaseFunctionsPlatform(
+      region: 'us-central1',
+    );
     httpsCallable = FirebaseFunctions.instance.httpsCallable('foo');
   });
 
@@ -32,13 +33,7 @@ void main() {
 
       test('parameter validation accepts string values', () async {
         final result = await httpsCallable!.call('foo');
-        expect(
-          result.data,
-          allOf(
-            isA<String>(),
-            equals('foo'),
-          ),
-        );
+        expect(result.data, allOf(isA<String>(), equals('foo')));
       });
 
       test('parameter validation accepts numeric values', () async {
@@ -55,67 +50,45 @@ void main() {
 
       test('parameter validation accepts List values', () async {
         final result = await httpsCallable!.call(data.list);
-        expect(
-          result.data,
-          allOf(
-            isA<List>(),
-            equals(data.list),
-          ),
-        );
+        expect(result.data, allOf(isA<List>(), equals(data.list)));
       });
 
       test('parameter validation accepts nested List values', () async {
         final result = await httpsCallable!.call(data.deepList);
-        expect(
-          result.data,
-          allOf(
-            isA<List>(),
-            equals(data.deepList),
-          ),
-        );
+        expect(result.data, allOf(isA<List>(), equals(data.deepList)));
       });
 
       test('parameter validation accepts Map values', () async {
         final result = await httpsCallable!.call(data.map);
-        expect(
-          result.data,
-          allOf(
-            isA<Map>(),
-            equals(data.map),
-          ),
-        );
+        expect(result.data, allOf(isA<Map>(), equals(data.map)));
       });
 
       test('parameter validation accepts nested Map values', () async {
         final result = await httpsCallable!.call(data.deepMap);
-        expect(
-          result.data,
-          allOf(
-            isA<Map>(),
-            equals(data.deepMap),
-          ),
-        );
+        expect(result.data, allOf(isA<Map>(), equals(data.deepMap)));
       });
 
-      test('converts typed data lists in map values to regular lists',
-          () async {
-        final result = await httpsCallable!.call({
-          'bytes': Uint8List.fromList([1, 2, 3]),
-          'ints': Int32List.fromList([4, 5, 6]),
-          'floats': Float32List.fromList([1.0, 2.0]),
-          'doubles': Float64List.fromList([3.0, 4.0]),
-        });
-        final data = result.data as Map;
-        expect(data['bytes'], isA<List<int>>());
-        expect(data['bytes'], isNot(isA<Uint8List>()));
-        expect(data['bytes'], equals([1, 2, 3]));
-        expect(data['ints'], isA<List<int>>());
-        expect(data['ints'], isNot(isA<Int32List>()));
-        expect(data['floats'], isA<List<double>>());
-        expect(data['floats'], isNot(isA<Float32List>()));
-        expect(data['doubles'], isA<List<double>>());
-        expect(data['doubles'], isNot(isA<Float64List>()));
-      });
+      test(
+        'converts typed data lists in map values to regular lists',
+        () async {
+          final result = await httpsCallable!.call({
+            'bytes': Uint8List.fromList([1, 2, 3]),
+            'ints': Int32List.fromList([4, 5, 6]),
+            'floats': Float32List.fromList([1.0, 2.0]),
+            'doubles': Float64List.fromList([3.0, 4.0]),
+          });
+          final data = result.data as Map;
+          expect(data['bytes'], isA<List<int>>());
+          expect(data['bytes'], isNot(isA<Uint8List>()));
+          expect(data['bytes'], equals([1, 2, 3]));
+          expect(data['ints'], isA<List<int>>());
+          expect(data['ints'], isNot(isA<Int32List>()));
+          expect(data['floats'], isA<List<double>>());
+          expect(data['floats'], isNot(isA<Float32List>()));
+          expect(data['doubles'], isA<List<double>>());
+          expect(data['doubles'], isNot(isA<Float64List>()));
+        },
+      );
 
       test('converts typed data lists passed as direct parameters', () async {
         final result = await httpsCallable!.call(Uint8List.fromList([7, 8, 9]));
@@ -136,23 +109,25 @@ void main() {
         expect(data[1], isNot(isA<Int32List>()));
       });
 
-      test('parameter validation throws if any other type of data is passed',
-          () async {
-        expect(() {
-          return httpsCallable!.call(() => {});
-        }, throwsA(isA<AssertionError>()));
+      test(
+        'parameter validation throws if any other type of data is passed',
+        () async {
+          expect(() {
+            return httpsCallable!.call(() => {});
+          }, throwsA(isA<AssertionError>()));
 
-        // Check nested values in Lists or Maps also throw if invalid:
-        expect(() {
-          return httpsCallable!.call({
-            'valid': 'hello world',
-            'not_valid': () => {},
-          });
-        }, throwsA(isA<AssertionError>()));
-        expect(() {
-          return httpsCallable!.call(['valid', () => {}]);
-        }, throwsA(isA<AssertionError>()));
-      });
+          // Check nested values in Lists or Maps also throw if invalid:
+          expect(() {
+            return httpsCallable!.call({
+              'valid': 'hello world',
+              'not_valid': () => {},
+            });
+          }, throwsA(isA<AssertionError>()));
+          expect(() {
+            return httpsCallable!.call(['valid', () => {}]);
+          }, throwsA(isA<AssertionError>()));
+        },
+      );
     });
   });
 }

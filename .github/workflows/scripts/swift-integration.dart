@@ -340,9 +340,6 @@ Future<void> buildSwiftExampleApp(String platform, String plugins) async {
     }
   }
 
-  await _runCommand('rm', ['Podfile']);
-  await _runCommand('pod', ['deintegrate']);
-
   // Check what SPM packages are being resolved before build
   if (debugMode) {
     print('[DEBUG] Checking for existing SPM packages directory...');
@@ -372,13 +369,6 @@ Future<void> buildSwiftExampleApp(String platform, String plugins) async {
 
   if (debugMode) {
     print('[DEBUG] Flutter command args: ${flutterArgs.join(' ')}');
-  }
-
-  if (platform == 'macos') {
-    // TODO: temp solution to macos to remove firebase_messaging from build
-    // See: https://github.com/firebase/flutterfire/actions/runs/17042278122/job/48308815666?pr=17634#step:8:787
-    await _runCommand('flutter', ['pub', 'remove', 'firebase_messaging']);
-    await _runCommand('flutter', ['clean']);
   }
 
   // Run the flutter build command

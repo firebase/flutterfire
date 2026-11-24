@@ -10,28 +10,38 @@ void main() {
   const int kMockCreationTimestamp = 12345677;
   const int kMockLastSignInTimeTimestamp = 12345678;
   group('$UserMetadata', () {
-    final userMetadata =
-        UserMetadata(kMockCreationTimestamp, kMockLastSignInTimeTimestamp);
+    final userMetadata = UserMetadata(
+      kMockCreationTimestamp,
+      kMockLastSignInTimeTimestamp,
+    );
     group('Constructor', () {
       test('returns an instance of [UserMetadata]', () {
         expect(userMetadata, isA<UserMetadata>());
-        expect(userMetadata.creationTime!.millisecondsSinceEpoch,
-            kMockCreationTimestamp);
-        expect(userMetadata.lastSignInTime!.millisecondsSinceEpoch,
-            kMockLastSignInTimeTimestamp);
+        expect(
+          userMetadata.creationTime!.millisecondsSinceEpoch,
+          kMockCreationTimestamp,
+        );
+        expect(
+          userMetadata.lastSignInTime!.millisecondsSinceEpoch,
+          kMockLastSignInTimeTimestamp,
+        );
       });
     });
 
     group('creationTime', () {
       test('returns an instance of [DateTime]', () {
         expect(userMetadata.creationTime, isA<DateTime>());
-        expect(userMetadata.creationTime!.millisecondsSinceEpoch,
-            kMockCreationTimestamp);
+        expect(
+          userMetadata.creationTime!.millisecondsSinceEpoch,
+          kMockCreationTimestamp,
+        );
       });
 
       test('returns null', () {
-        UserMetadata testUserMetadata =
-            UserMetadata(null, kMockLastSignInTimeTimestamp);
+        UserMetadata testUserMetadata = UserMetadata(
+          null,
+          kMockLastSignInTimeTimestamp,
+        );
 
         expect(testUserMetadata.creationTime, isNull);
       });
@@ -40,20 +50,26 @@ void main() {
     group('lastSignInTime', () {
       test('returns an instance of [DateTime]', () {
         expect(userMetadata.lastSignInTime, isA<DateTime>());
-        expect(userMetadata.lastSignInTime!.millisecondsSinceEpoch,
-            kMockLastSignInTimeTimestamp);
+        expect(
+          userMetadata.lastSignInTime!.millisecondsSinceEpoch,
+          kMockLastSignInTimeTimestamp,
+        );
       });
       test('returns null', () {
-        UserMetadata testUserMetadata =
-            UserMetadata(kMockCreationTimestamp, null);
+        UserMetadata testUserMetadata = UserMetadata(
+          kMockCreationTimestamp,
+          null,
+        );
 
         expect(testUserMetadata.lastSignInTime, isNull);
       });
     });
 
     test('toString()', () {
-      expect(userMetadata.toString(),
-          'UserMetadata(creationTime: ${userMetadata.creationTime}, lastSignInTime: ${userMetadata.lastSignInTime})');
+      expect(
+        userMetadata.toString(),
+        'UserMetadata(creationTime: ${userMetadata.creationTime}, lastSignInTime: ${userMetadata.lastSignInTime})',
+      );
     });
   });
 }

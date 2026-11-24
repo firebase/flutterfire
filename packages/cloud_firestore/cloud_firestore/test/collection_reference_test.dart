@@ -55,8 +55,9 @@ void main() {
       expect(ref3 == ref, isFalse);
 
       DocumentReference docRef = firestore.collection('foo').doc('bar');
-      DocumentReference docRef2 =
-          firestoreSecondary.collection('foo').doc('bar');
+      DocumentReference docRef2 = firestoreSecondary
+          .collection('foo')
+          .doc('bar');
 
       expect(docRef, firestore.collection('foo').doc('bar'));
       expect(docRef2, firestoreSecondary.collection('foo').doc('bar'));
@@ -146,10 +147,7 @@ void main() {
           throwsArgumentError,
         );
         expect(() => docRef.collection('foo/bar'), throwsArgumentError);
-        expect(
-          () => docRef.collection('foo/bar/baz/quu'),
-          throwsArgumentError,
-        );
+        expect(() => docRef.collection('foo/bar/baz/quu'), throwsArgumentError);
       });
 
       test('must not have empty segments', () {
@@ -176,8 +174,7 @@ void main() {
         int fromFirestore(
           DocumentSnapshot snapshot,
           SnapshotOptions? options,
-        ) =>
-            42;
+        ) => 42;
         Map<String, dynamic> toFirestore(Object value, SetOptions? options) =>
             {};
 
@@ -282,8 +279,10 @@ void main() {
       });
 
       test('path', () {
-        final subCollection =
-            firestore.collection('foo').doc('42').collection('bar');
+        final subCollection = firestore
+            .collection('foo')
+            .doc('42')
+            .collection('bar');
 
         expect(
           subCollection
@@ -297,8 +296,10 @@ void main() {
       });
 
       test('parent', () {
-        final subCollection =
-            firestore.collection('foo').doc('42').collection('bar');
+        final subCollection = firestore
+            .collection('foo')
+            .doc('42')
+            .collection('bar');
 
         expect(
           subCollection
@@ -317,8 +318,7 @@ void main() {
         int fromFirestore(
           DocumentSnapshot snapshot,
           SnapshotOptions? options,
-        ) =>
-            42;
+        ) => 42;
         Map<String, dynamic> toFirestore(Object value, SetOptions? options) =>
             {};
 
@@ -329,7 +329,9 @@ void main() {
                 toFirestore: toFirestore,
               )
               .doc('42'),
-          foo.doc('42').withConverter(
+          foo
+              .doc('42')
+              .withConverter(
                 fromFirestore: fromFirestore,
                 toFirestore: toFirestore,
               ),

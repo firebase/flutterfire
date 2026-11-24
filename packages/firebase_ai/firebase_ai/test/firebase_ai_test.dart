@@ -56,14 +56,14 @@ void main() {
       customAuth = FirebaseAuth.instanceFor(app: customApp);
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMessageHandler(
-        'dev.flutter.pigeon.firebase_app_check_platform_interface.'
-        'FirebaseAppCheckHostApi.getToken',
-        (_) async {
-          return const StandardMessageCodec().encodeMessage(
-            <Object?>['app-check-token'],
+            'dev.flutter.pigeon.firebase_app_check_platform_interface.'
+            'FirebaseAppCheckHostApi.getToken',
+            (_) async {
+              return const StandardMessageCodec().encodeMessage(<Object?>[
+                'app-check-token',
+              ]);
+            },
           );
-        },
-      );
     });
 
     group('agentPlatform tests', () {
@@ -126,6 +126,94 @@ void main() {
         expect(agentPlatform.app, equals(customApp));
         expect(agentPlatform.auth, equals(customAuth));
       });
+
+      test(
+        'Default location shares an instance with explicit global location',
+        () {
+          final defaultLocation = FirebaseAI.agentPlatform(app: app);
+          final globalLocation = FirebaseAI.agentPlatform(
+            app: app,
+            location: 'global',
+          );
+
+          expect(identical(defaultLocation, globalLocation), isTrue);
+        },
+      );
+
+      test('Separate instances per useLimitedUseAppCheckTokens value', () {
+        final regular = FirebaseAI.agentPlatform(app: app);
+        final limitedUse = FirebaseAI.agentPlatform(
+          app: app,
+          useLimitedUseAppCheckTokens: true,
+        );
+
+        expect(identical(regular, limitedUse), isFalse);
+        expect(regular.useLimitedUseAppCheckTokens, isFalse);
+        expect(limitedUse.useLimitedUseAppCheckTokens, isTrue);
+        expect(
+          identical(
+            limitedUse,
+            FirebaseAI.agentPlatform(
+              app: app,
+              useLimitedUseAppCheckTokens: true,
+            ),
+          ),
+          isTrue,
+        );
+      });
+
+      test('Limited-use instance is not reused for calls without the flag', () {
+        final limitedUse = FirebaseAI.agentPlatform(
+          app: limitTokenApp,
+          useLimitedUseAppCheckTokens: true,
+        );
+        final regular = FirebaseAI.agentPlatform(app: limitTokenApp);
+
+        expect(identical(limitedUse, regular), isFalse);
+        expect(regular.useLimitedUseAppCheckTokens, isFalse);
+      });
+    });
+
+    group('googleAI tests', () {
+      test('Singleton behavior', () {
+        final instance1 = FirebaseAI.googleAI();
+        final instance2 = FirebaseAI.googleAI(
+          app: app,
+          useLimitedUseAppCheckTokens: false,
+        );
+
+        expect(identical(instance1, instance2), isTrue);
+      });
+
+      test('Separate instances per useLimitedUseAppCheckTokens value', () {
+        final regular = FirebaseAI.googleAI(app: app);
+        final limitedUse = FirebaseAI.googleAI(
+          app: app,
+          useLimitedUseAppCheckTokens: true,
+        );
+
+        expect(identical(regular, limitedUse), isFalse);
+        expect(regular.useLimitedUseAppCheckTokens, isFalse);
+        expect(limitedUse.useLimitedUseAppCheckTokens, isTrue);
+        expect(
+          identical(
+            limitedUse,
+            FirebaseAI.googleAI(app: app, useLimitedUseAppCheckTokens: true),
+          ),
+          isTrue,
+        );
+      });
+
+      test('Limited-use instance is not reused for calls without the flag', () {
+        final limitedUse = FirebaseAI.googleAI(
+          app: limitTokenApp,
+          useLimitedUseAppCheckTokens: true,
+        );
+        final regular = FirebaseAI.googleAI(app: limitTokenApp);
+
+        expect(identical(limitedUse, regular), isFalse);
+        expect(regular.useLimitedUseAppCheckTokens, isFalse);
+      });
     });
 
     test('generativeModel creation with Grounding tools', () {
@@ -164,10 +252,7 @@ void main() {
       });
       final ai = FirebaseAI.googleAI(app: app);
 
-      final model = ai.generativeModel(
-        model: 'gemini-pro',
-        httpClient: client,
-      );
+      final model = ai.generativeModel(model: 'gemini-pro', httpClient: client);
 
       await model.generateContent([Content.text('prompt')]);
       await model.generateContentStream([Content.text('prompt')]).drain<void>();

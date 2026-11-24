@@ -46,15 +46,19 @@ void main() {
     when(mockUser1.uid).thenReturn('uid-1');
     when(mockUser2.uid).thenReturn('uid-2');
     when(mockAuth.currentUser).thenReturn(mockUser1);
-    when(mockAuth.idTokenChanges())
-        .thenAnswer((_) => authChangesController.stream);
+    when(
+      mockAuth.idTokenChanges(),
+    ).thenAnswer((_) => authChangesController.stream);
 
     localHttpServer = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);
     addTearDown(() => localHttpServer.close(force: true));
 
     transport = WebSocketTransport(
       TransportOptions(
-          localHttpServer.address.host, localHttpServer.port, false),
+        localHttpServer.address.host,
+        localHttpServer.port,
+        false,
+      ),
       DataConnectOptions(
         'testProject',
         'testLocation',
@@ -71,24 +75,25 @@ void main() {
 
   group('WebSocketTransport Idle Reconnection Guard', () {
     test(
-        'should not schedule or perform any reconnect on auth user switch if there are no active subscriptions',
-        () async {
-      // Emit initial user (uid-1)
-      authChangesController.add(mockUser1);
-      await Future.delayed(Duration.zero);
+      'should not schedule or perform any reconnect on auth user switch if there are no active subscriptions',
+      () async {
+        // Emit initial user (uid-1)
+        authChangesController.add(mockUser1);
+        await Future.delayed(Duration.zero);
 
-      // Emit different user (uid-2) to trigger a user switch reconnect scenario
-      authChangesController.add(mockUser2);
-      await Future.delayed(Duration.zero);
+        // Emit different user (uid-2) to trigger a user switch reconnect scenario
+        authChangesController.add(mockUser2);
+        await Future.delayed(Duration.zero);
 
-      // Wait for longer than the initial reconnect delay (1000ms)
-      await Future.delayed(const Duration(milliseconds: 1500));
+        // Wait for longer than the initial reconnect delay (1000ms)
+        await Future.delayed(const Duration(milliseconds: 1500));
 
-      // Verify that the transport never attempted to refresh the token
-      // (which is the first step of a reconnect) since the client is idle.
-      verifyNever(mockUser2.getIdToken());
-      expect(transport.isConnected, isFalse);
-    });
+        // Verify that the transport never attempted to refresh the token
+        // (which is the first step of a reconnect) since the client is idle.
+        verifyNever(mockUser2.getIdToken());
+        expect(transport.isConnected, isFalse);
+      },
+    );
   });
 
   group('WebSocketTransport URL Validation', () {

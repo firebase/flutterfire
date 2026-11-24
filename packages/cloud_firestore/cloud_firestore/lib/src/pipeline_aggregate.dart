@@ -8,19 +8,14 @@ part of '../cloud_firestore.dart';
 abstract class PipelineAggregateFunction implements PipelineSerializable {
   /// Assigns an alias to this aggregate function
   AliasedAggregateFunction as(String alias) {
-    return AliasedAggregateFunction(
-      alias: alias,
-      aggregateFunction: this,
-    );
+    return AliasedAggregateFunction(alias: alias, aggregateFunction: this);
   }
 
   String get name;
 
   @override
   Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'name': name,
-    };
+    return <String, dynamic>{'name': name};
   }
 }
 
@@ -30,9 +25,9 @@ class AliasedAggregateFunction implements PipelineSerializable {
   final PipelineAggregateFunction aggregateFunction;
 
   AliasedAggregateFunction({
-    required String alias,
+    required this._alias,
     required this.aggregateFunction,
-  }) : _alias = alias;
+  });
 
   String get alias => _alias;
 
@@ -68,9 +63,7 @@ class Count extends PipelineAggregateFunction {
   @override
   Map<String, dynamic> toMap() {
     final map = super.toMap();
-    map['args'] = {
-      'expression': expression.toMap(),
-    };
+    map['args'] = {'expression': expression.toMap()};
     return map;
   }
 }
@@ -87,9 +80,7 @@ class Sum extends PipelineAggregateFunction {
   @override
   Map<String, dynamic> toMap() {
     final map = super.toMap();
-    map['args'] = {
-      'expression': expression.toMap(),
-    };
+    map['args'] = {'expression': expression.toMap()};
     return map;
   }
 }
@@ -106,9 +97,7 @@ class Average extends PipelineAggregateFunction {
   @override
   Map<String, dynamic> toMap() {
     final map = super.toMap();
-    map['args'] = {
-      'expression': expression.toMap(),
-    };
+    map['args'] = {'expression': expression.toMap()};
     return map;
   }
 }
@@ -125,9 +114,7 @@ class CountDistinct extends PipelineAggregateFunction {
   @override
   Map<String, dynamic> toMap() {
     final map = super.toMap();
-    map['args'] = {
-      'expression': expression.toMap(),
-    };
+    map['args'] = {'expression': expression.toMap()};
     return map;
   }
 }
@@ -144,9 +131,7 @@ class Minimum extends PipelineAggregateFunction {
   @override
   Map<String, dynamic> toMap() {
     final map = super.toMap();
-    map['args'] = {
-      'expression': expression.toMap(),
-    };
+    map['args'] = {'expression': expression.toMap()};
     return map;
   }
 }
@@ -163,9 +148,7 @@ class Maximum extends PipelineAggregateFunction {
   @override
   Map<String, dynamic> toMap() {
     final map = super.toMap();
-    map['args'] = {
-      'expression': expression.toMap(),
-    };
+    map['args'] = {'expression': expression.toMap()};
     return map;
   }
 }
@@ -185,9 +168,7 @@ class First extends PipelineAggregateFunction {
   @override
   Map<String, dynamic> toMap() {
     final map = super.toMap();
-    map['args'] = {
-      'expression': expression.toMap(),
-    };
+    map['args'] = {'expression': expression.toMap()};
     return map;
   }
 }
@@ -207,9 +188,7 @@ class Last extends PipelineAggregateFunction {
   @override
   Map<String, dynamic> toMap() {
     final map = super.toMap();
-    map['args'] = {
-      'expression': expression.toMap(),
-    };
+    map['args'] = {'expression': expression.toMap()};
     return map;
   }
 }
@@ -229,9 +208,7 @@ class ArrayAgg extends PipelineAggregateFunction {
   @override
   Map<String, dynamic> toMap() {
     final map = super.toMap();
-    map['args'] = {
-      'expression': expression.toMap(),
-    };
+    map['args'] = {'expression': expression.toMap()};
     return map;
   }
 }
@@ -251,9 +228,7 @@ class ArrayAggDistinct extends PipelineAggregateFunction {
   @override
   Map<String, dynamic> toMap() {
     final map = super.toMap();
-    map['args'] = {
-      'expression': expression.toMap(),
-    };
+    map['args'] = {'expression': expression.toMap()};
     return map;
   }
 }
@@ -263,10 +238,7 @@ class AggregateStageOptions implements PipelineSerializable {
   final List<AliasedAggregateFunction> accumulators;
   final List<Selectable>? groups;
 
-  AggregateStageOptions({
-    required this.accumulators,
-    this.groups,
-  });
+  AggregateStageOptions({required this.accumulators, this.groups});
 
   @override
   Map<String, dynamic> toMap() {

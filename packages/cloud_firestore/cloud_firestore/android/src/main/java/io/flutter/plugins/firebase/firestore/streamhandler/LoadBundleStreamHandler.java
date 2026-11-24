@@ -11,6 +11,7 @@ import static io.flutter.plugins.firebase.firestore.FlutterFirebaseFirestorePlug
 import androidx.annotation.NonNull;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.LoadBundleTask;
+import com.google.firebase.firestore.LoadBundleTaskProgress;
 import io.flutter.plugin.common.EventChannel;
 import io.flutter.plugins.firebase.firestore.utils.ExceptionConverter;
 import java.util.Map;
@@ -32,7 +33,18 @@ public class LoadBundleStreamHandler implements EventChannel.StreamHandler {
     eventSink = events;
     LoadBundleTask task = firestore.loadBundle(bundle);
 
-    task.addOnProgressListener(events::success);
+    // Progress listeners only see updates made after they are added, so a bundle
+    // that finishes loading first would never report SUCCESS and the Dart stream
+    // would never close. Success listeners also run for a completed task, so the
+    // final snapshot is sent from there.
+    task.addOnProgressListener(
+        progress -> {
+          if (progress.getTaskState() != LoadBundleTaskProgress.TaskState.SUCCESS) {
+            events.success(progress);
+          }
+        });
+
+    task.addOnSuccessListener(events::success);
 
     task.addOnFailureListener(
         exception -> {

@@ -8,12 +8,13 @@ import '../firebase_database.dart';
 import 'firebase_list.dart';
 import 'firebase_sorted_list.dart';
 
-typedef FirebaseAnimatedListItemBuilder = Widget Function(
-  BuildContext context,
-  DataSnapshot snapshot,
-  Animation<double> animation,
-  int index,
-);
+typedef FirebaseAnimatedListItemBuilder =
+    Widget Function(
+      BuildContext context,
+      DataSnapshot snapshot,
+      Animation<double> animation,
+      int index,
+    );
 
 /// An AnimatedList widget that is bound to a query
 class FirebaseAnimatedList extends StatefulWidget {
@@ -176,13 +177,12 @@ class FirebaseAnimatedListState extends State<FirebaseAnimatedList> {
   void _onChildRemoved(int index, DataSnapshot snapshot) {
     // The child should have already been removed from the model by now
     assert(index >= _model.length || _model[index].key != snapshot.key);
-    _animatedListKey.currentState?.removeItem(
-      index,
-      (BuildContext context, Animation<double> animation) {
-        return widget.itemBuilder(context, snapshot, animation, index);
-      },
-      duration: widget.duration,
-    );
+    _animatedListKey.currentState?.removeItem(index, (
+      BuildContext context,
+      Animation<double> animation,
+    ) {
+      return widget.itemBuilder(context, snapshot, animation, index);
+    }, duration: widget.duration);
   }
 
   // No animation, just update contents

@@ -30,10 +30,7 @@ class MethodChannelPipeline extends pipeline.PipelinePlatform {
     return MethodChannelPipeline(
       firestore,
       pigeonApp,
-      stages: List.unmodifiable([
-        ...stages,
-        ...newStages,
-      ]),
+      stages: List.unmodifiable([...stages, ...newStages]),
     );
   }
 

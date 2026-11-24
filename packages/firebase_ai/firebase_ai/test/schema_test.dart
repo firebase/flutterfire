@@ -20,7 +20,10 @@ void main() {
     // Test basic constructors and toJson() for primitive types
     test('Schema.boolean', () {
       final schema = Schema.boolean(
-          description: 'A boolean value', nullable: true, title: 'Is Active');
+        description: 'A boolean value',
+        nullable: true,
+        title: 'Is Active',
+      );
       expect(schema.type, SchemaType.boolean);
       expect(schema.description, 'A boolean value');
       expect(schema.nullable, true);
@@ -35,7 +38,11 @@ void main() {
 
     test('Schema.integer', () {
       final schema = Schema.integer(
-          format: 'int32', minimum: 0, maximum: 100, title: 'Count');
+        format: 'int32',
+        minimum: 0,
+        maximum: 100,
+        title: 'Count',
+      );
       expect(schema.type, SchemaType.integer);
       expect(schema.format, 'int32');
       expect(schema.minimum, 0);
@@ -52,11 +59,12 @@ void main() {
 
     test('Schema.number', () {
       final schema = Schema.number(
-          format: 'double',
-          nullable: false,
-          minimum: 0.5,
-          maximum: 99.5,
-          title: 'Percentage');
+        format: 'double',
+        nullable: false,
+        minimum: 0.5,
+        maximum: 99.5,
+        title: 'Percentage',
+      );
       expect(schema.type, SchemaType.number);
       expect(schema.format, 'double');
       expect(schema.nullable, false);
@@ -81,8 +89,10 @@ void main() {
     });
 
     test('Schema.enumString', () {
-      final schema =
-          Schema.enumString(enumValues: ['value1', 'value2'], title: 'Status');
+      final schema = Schema.enumString(
+        enumValues: ['value1', 'value2'],
+        title: 'Status',
+      );
       expect(schema.type, SchemaType.string);
       expect(schema.format, 'enum');
       expect(schema.enumValues, ['value1', 'value2']);
@@ -99,7 +109,11 @@ void main() {
     test('Schema.array', () {
       final itemSchema = Schema.string();
       final schema = Schema.array(
-          items: itemSchema, minItems: 1, maxItems: 5, title: 'Tags');
+        items: itemSchema,
+        minItems: 1,
+        maxItems: 5,
+        title: 'Tags',
+      );
       expect(schema.type, SchemaType.array);
       expect(schema.items, itemSchema);
       expect(schema.minItems, 1);
@@ -148,18 +162,13 @@ void main() {
     });
 
     test('JSONSchema.object with defs', () {
-      final properties = {
-        'metadata': JSONSchema.ref('#/metadata_schema'),
-      };
+      final properties = {'metadata': JSONSchema.ref('#/metadata_schema')};
       final defs = {
-        'metadata_schema': JSONSchema.object(properties: {
-          'id': JSONSchema.string(),
-        })
+        'metadata_schema': JSONSchema.object(
+          properties: {'id': JSONSchema.string()},
+        ),
       };
-      final schema = JSONSchema.object(
-        properties: properties,
-        defs: defs,
-      );
+      final schema = JSONSchema.object(properties: properties, defs: defs);
       expect(schema.type, SchemaType.object);
       expect(schema.properties, properties);
       expect(schema.defs, defs);
@@ -176,16 +185,13 @@ void main() {
               'id': {'type': 'string'},
             },
             'required': ['id'],
-          }
-        }
+          },
+        },
       });
     });
 
     test('Schema.object with empty optionalProperties', () {
-      final properties = {
-        'name': Schema.string(),
-        'age': Schema.integer(),
-      };
+      final properties = {'name': Schema.string(), 'age': Schema.integer()};
       final schema = Schema.object(
         properties: properties,
         // No optionalProperties, so all are required
@@ -203,10 +209,7 @@ void main() {
     });
 
     test('Schema.object with all properties optional', () {
-      final properties = {
-        'name': Schema.string(),
-        'age': Schema.integer(),
-      };
+      final properties = {'name': Schema.string(), 'age': Schema.integer()};
       final schema = Schema.object(
         properties: properties,
         optionalProperties: ['name', 'age'],
@@ -243,16 +246,16 @@ void main() {
     });
 
     test('Schema.anyOf with complex types', () {
-      final userSchema = Schema.object(properties: {
-        'id': Schema.integer(),
-        'username': Schema.string(),
-      }, optionalProperties: [
-        'username'
-      ]);
-      final errorSchema = Schema.object(properties: {
-        'errorCode': Schema.integer(),
-        'errorMessage': Schema.string(),
-      });
+      final userSchema = Schema.object(
+        properties: {'id': Schema.integer(), 'username': Schema.string()},
+        optionalProperties: ['username'],
+      );
+      final errorSchema = Schema.object(
+        properties: {
+          'errorCode': Schema.integer(),
+          'errorMessage': Schema.string(),
+        },
+      );
       final schema = Schema.anyOf(schemas: [userSchema, errorSchema]);
 
       expect(schema.type, SchemaType.anyOf);
@@ -288,8 +291,10 @@ void main() {
       expect(SchemaType.array.toJson(), 'ARRAY');
       expect(SchemaType.object.toJson(), 'OBJECT');
       expect(SchemaType.ref.toJson(), 'null');
-      expect(SchemaType.anyOf.toJson(),
-          'null'); // As per implementation, 'null' string for anyOf
+      expect(
+        SchemaType.anyOf.toJson(),
+        'null',
+      ); // As per implementation, 'null' string for anyOf
     });
 
     // Test JSONSchema.ref
@@ -297,9 +302,7 @@ void main() {
       final schema = JSONSchema.ref('#/components/schemas/User');
       expect(schema.type, SchemaType.ref);
       expect(schema.ref, '#/components/schemas/User');
-      expect(schema.toJson(), {
-        r'$ref': '#/components/schemas/User',
-      });
+      expect(schema.toJson(), {r'$ref': '#/components/schemas/User'});
     });
 
     test('JSONSchema.toJson handles nullable correctly', () {
@@ -309,9 +312,7 @@ void main() {
       });
 
       final stringSchema = JSONSchema.string(nullable: false);
-      expect(stringSchema.toJson(), {
-        'type': 'string',
-      });
+      expect(stringSchema.toJson(), {'type': 'string'});
     });
 
     // Test edge cases

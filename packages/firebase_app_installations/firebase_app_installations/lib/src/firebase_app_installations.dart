@@ -6,7 +6,7 @@ part of '../firebase_app_installations.dart';
 
 class FirebaseInstallations extends FirebasePlugin {
   FirebaseInstallations._({required this.app})
-      : super(app.name, 'plugins.flutter.io/firebase_app_installations');
+    : super(app.name, 'plugins.flutter.io/firebase_app_installations');
 
   // Cached and lazily loaded instance of [FirebaseAppInstallationsPlatform] to avoid
   // creating a [MethodChannelFirebaseInstallations] when not needed or creating an
@@ -27,9 +27,7 @@ class FirebaseInstallations extends FirebasePlugin {
 
   /// Returns an instance using the default [FirebaseApp] and region.
   static FirebaseInstallations get instance {
-    return FirebaseInstallations.instanceFor(
-      app: Firebase.app(),
-    );
+    return FirebaseInstallations.instanceFor(app: Firebase.app());
   }
 
   /// Returns an instance using a specified [FirebaseApp].
