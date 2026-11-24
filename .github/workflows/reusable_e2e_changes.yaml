@@ -95,6 +95,9 @@ jobs:
           # separate input - plugin package names are unique repo-wide.
           # Both this file and the caller are in `shared`: a change to either
           # must run everything.
+          # `macos` also matches `ios/**`: each plugin's `macos/` sources are
+          # symlinks into `ios/`, and git reports an edit at the link target,
+          # so a Swift change shared by both platforms only shows up there.
           filters: |
             shared: &shared
               - 'packages/firebase_core/**'
@@ -121,6 +124,7 @@ jobs:
             macos:
               - *shared
               - '${{ inputs.package-path }}/macos/**'
+              - '${{ inputs.package-path }}/ios/**'
               - '${{ inputs.package-path }}/darwin/**'
               - '${{ inputs.package-path }}/example/macos/**'
             web:
