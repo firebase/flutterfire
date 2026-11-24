@@ -5,6 +5,7 @@
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -204,6 +205,54 @@ void main() {
         expect(document['scores'], {
           'kind': 'value',
           'value': [1, 2, 3],
+        });
+      });
+
+      test('encodes top-level and nested document references', () {
+        final ada = firestore.doc('authors/ada');
+        final grace = firestore.doc('authors/grace');
+        final pipeline = firestore.pipeline().literals([
+          {
+            'primary': ada,
+            'authors': [ada, grace],
+            'meta': {'reviewer': grace},
+          },
+        ]);
+        final documents =
+            pipeline.stages.first['args']['documents'] as List<dynamic>;
+        final document = documents.first as Map<String, dynamic>;
+        final primary = document['primary'] as Map<String, dynamic>;
+        expect(primary['kind'], 'value');
+        expect(
+          primary['value'],
+          isA<DocumentReferencePlatform>().having(
+            (ref) => ref.path,
+            'path',
+            'authors/ada',
+          ),
+        );
+        final authors = document['authors'] as Map<String, dynamic>;
+        expect(authors['kind'], 'value');
+        expect(authors['value'], [
+          isA<DocumentReferencePlatform>().having(
+            (ref) => ref.path,
+            'path',
+            'authors/ada',
+          ),
+          isA<DocumentReferencePlatform>().having(
+            (ref) => ref.path,
+            'path',
+            'authors/grace',
+          ),
+        ]);
+        final meta = document['meta'] as Map<String, dynamic>;
+        expect(meta['kind'], 'value');
+        expect(meta['value'], {
+          'reviewer': isA<DocumentReferencePlatform>().having(
+            (ref) => ref.path,
+            'path',
+            'authors/grace',
+          ),
         });
       });
 

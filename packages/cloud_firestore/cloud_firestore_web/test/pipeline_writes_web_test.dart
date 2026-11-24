@@ -9,6 +9,10 @@ import 'dart:js_interop';
 import 'dart:js_interop_unsafe';
 import 'dart:typed_data';
 
+import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
+import 'package:cloud_firestore_web/src/document_reference_web.dart';
+import 'package:cloud_firestore_web/src/interop/firestore.dart'
+    as firestore_interop;
 import 'package:cloud_firestore_web/src/interop/firestore_interop.dart'
     as interop;
 import 'package:cloud_firestore_web/src/pipeline_builder_web.dart';
@@ -75,6 +79,12 @@ void main() {
     final firestoreSdk = JSObject();
     firestoreSdk['pipelines'] = pipelinesModule;
     firestoreSdk['Bytes'] = bytesConstructor;
+    firestoreSdk['doc'] = ((JSAny db, JSString path) {
+      final ref = JSObject();
+      ref['db'] = db;
+      ref['path'] = path;
+      return ref;
+    }).toJS;
     globalContext['firebase_firestore'] = firestoreSdk;
   });
 
@@ -273,4 +283,66 @@ void main() {
       throwsArgumentError,
     );
   });
+
+  test('converts top-level and nested document references in literals', () {
+    final platform = _FakeFirestorePlatform();
+    final mainFirestore = firestore();
+    final otherJsFirestore = JSObject() as interop.FirestoreJsImpl;
+    final ada = _FakeDocumentReference(platform, 'authors/ada');
+    final grace = DocumentReferenceWeb(
+      platform,
+      firestore_interop.Firestore.getInstance(otherJsFirestore),
+      'authors/grace',
+    );
+
+    buildPipelineFromStages(mainFirestore, [
+      {
+        'stage': 'literals',
+        'args': {
+          'documents': [
+            {
+              'primary': {'kind': 'value', 'value': ada},
+              'authors': {
+                'kind': 'value',
+                'value': [ada, grace],
+              },
+              'meta': {
+                'kind': 'value',
+                'value': {'reviewer': grace},
+              },
+            },
+          ],
+        },
+      },
+    ]);
+
+    final documents = (literalsDocuments! as JSArray).toDart;
+    final document = documents.first! as JSObject;
+
+    final primary = document.getProperty('primary'.toJS)! as JSObject;
+    expect(primary.getProperty('path'.toJS).dartify(), 'authors/ada');
+    expect(primary.getProperty('db'.toJS), mainFirestore);
+
+    final authors = (document.getProperty('authors'.toJS)! as JSArray).toDart;
+    expect(authors, hasLength(2));
+    final firstAuthor = authors[0]! as JSObject;
+    final secondAuthor = authors[1]! as JSObject;
+    expect(firstAuthor.getProperty('path'.toJS).dartify(), 'authors/ada');
+    expect(firstAuthor.getProperty('db'.toJS), mainFirestore);
+    expect(secondAuthor.getProperty('path'.toJS).dartify(), 'authors/grace');
+    expect(secondAuthor.getProperty('db'.toJS), otherJsFirestore);
+
+    final meta = document.getProperty('meta'.toJS)! as JSObject;
+    final reviewer = meta.getProperty('reviewer'.toJS)! as JSObject;
+    expect(reviewer.getProperty('path'.toJS).dartify(), 'authors/grace');
+    expect(reviewer.getProperty('db'.toJS), otherJsFirestore);
+  });
+}
+
+class _FakeFirestorePlatform extends FirebaseFirestorePlatform {
+  _FakeFirestorePlatform() : super();
+}
+
+class _FakeDocumentReference extends DocumentReferencePlatform {
+  _FakeDocumentReference(super.firestore, super.path);
 }

@@ -501,9 +501,6 @@ Map<String, dynamic> _encodeLiteralField(Object? value) {
   if (value is Expression) {
     return {'kind': 'expression', 'expression': value.toMap()};
   }
-  if (value is DocumentReference) {
-    return {'kind': 'expression', 'expression': Constant(value).toMap()};
-  }
   return {'kind': 'value', 'value': _encodeLiteralValue(value)};
 }
 
@@ -514,10 +511,7 @@ Object? _encodeLiteralValue(Object? value) {
     );
   }
   if (value is DocumentReference) {
-    throw ArgumentError(
-      'literals() only supports DocumentReference values as top-level '
-      'document fields.',
-    );
+    return value._delegate;
   }
   if (value == null ||
       value is String ||
@@ -527,10 +521,8 @@ Object? _encodeLiteralValue(Object? value) {
       value is Timestamp ||
       value is GeoPoint ||
       value is Blob ||
-      value is VectorValue) {
-    return value;
-  }
-  if (value is Uint8List) {
+      value is VectorValue ||
+      value is Uint8List) {
     return value;
   }
   if (value is Map) {
@@ -543,8 +535,8 @@ Object? _encodeLiteralValue(Object? value) {
   }
   throw ArgumentError(
     'literals() value must be null, String, num, bool, DateTime, Timestamp, '
-    'GeoPoint, Blob, VectorValue, List, Map, or a top-level Expression. '
-    'Got: ${value.runtimeType}',
+    'GeoPoint, Blob, Uint8List, DocumentReference, VectorValue, List, Map, '
+    'or a top-level Expression. Got: ${value.runtimeType}',
   );
 }
 

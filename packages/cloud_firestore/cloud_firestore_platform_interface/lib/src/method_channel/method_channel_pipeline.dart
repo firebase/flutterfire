@@ -43,15 +43,31 @@ class MethodChannelPipeline extends pipeline.PipelinePlatform {
   Future<PipelineSnapshotPlatform> execute({
     Map<String, dynamic>? options,
   }) async {
-    for (final stage in stages) {
-      final name = stage['stage'];
-      if (name is String && _webOnlyPipelineStages.contains(name)) {
-        throw UnsupportedError(
-          'Pipeline $name is currently supported on web only.',
-        );
+    _rejectWebOnlyStages(stages);
+    return firestore.executePipeline(stages, options: options);
+  }
+}
+
+void _rejectWebOnlyStages(List<dynamic> stages) {
+  for (final stage in stages) {
+    if (stage is! Map) {
+      continue;
+    }
+    final name = stage['stage'];
+    if (name is String && _webOnlyPipelineStages.contains(name)) {
+      throw UnsupportedError(
+        'Pipeline $name is currently supported on web only.',
+      );
+    }
+    if (name == 'union') {
+      final args = stage['args'];
+      if (args is Map) {
+        final nestedStages = args['pipeline'];
+        if (nestedStages is List) {
+          _rejectWebOnlyStages(nestedStages);
+        }
       }
     }
-    return firestore.executePipeline(stages, options: options);
   }
 }
 

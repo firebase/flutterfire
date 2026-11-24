@@ -8,7 +8,8 @@ import 'dart:js_interop_unsafe';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart'
-    show Blob, GeoPoint, Timestamp, VectorValue;
+    show Blob, DocumentReferencePlatform, GeoPoint, Timestamp, VectorValue;
+import 'package:cloud_firestore_web/src/document_reference_web.dart';
 import 'package:cloud_firestore_web/src/interop/firestore_interop.dart'
     as interop;
 import 'package:cloud_firestore_web/src/interop/utils/utils.dart';
@@ -896,6 +897,13 @@ class PipelineExpressionParserWeb {
   JSAny? _literalValueToJs(Object? value) {
     if (value is Uint8List) {
       return interop.BytesJsImpl.fromUint8Array(value.toJS) as JSAny;
+    }
+    if (value is DocumentReferenceWeb) {
+      return interop.doc(value.firestoreWeb.jsObject as JSAny, value.path.toJS)
+          as JSAny;
+    }
+    if (value is DocumentReferencePlatform) {
+      return interop.doc(_jsFirestore as JSAny, value.path.toJS) as JSAny;
     }
     if (value is Map) {
       final object = JSObject();

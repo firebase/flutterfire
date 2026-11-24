@@ -31,6 +31,8 @@ void runPipelineWriteTests() {
       }
 
       try {
+        final adaRef = firestore.doc('authors/ada');
+
         await firestore
             .pipeline()
             .literals([
@@ -38,6 +40,8 @@ void runPipelineWriteTests() {
                 'name': 'ada',
                 'score': Expression.constant(1),
                 'tags': ['a', 'b'],
+                'authors': [adaRef],
+                'meta': {'author': adaRef},
               },
             ])
             .upsert(
@@ -50,6 +54,8 @@ void runPipelineWriteTests() {
           'name': 'ada',
           'score': 1,
           'tags': ['a', 'b'],
+          'authors': [adaRef],
+          'meta': {'author': adaRef},
         });
 
         await firestore.pipeline().collection(collection).update([

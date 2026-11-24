@@ -719,6 +719,43 @@ void main() {
           firestore.pipeline().literals([
             {'name': 'Ada'},
           ]),
+          firestore
+              .pipeline()
+              .collection('books')
+              .union(
+                firestore.pipeline().literals([
+                  {'name': 'Ada'},
+                ]),
+              ),
+          firestore
+              .pipeline()
+              .collection('books')
+              .union(firestore.pipeline().collection('archive').delete()),
+          firestore
+              .pipeline()
+              .collection('books')
+              .union(firestore.pipeline().collection('archive').update()),
+          firestore
+              .pipeline()
+              .collection('books')
+              .union(firestore.pipeline().collection('archive').insert()),
+          firestore
+              .pipeline()
+              .collection('books')
+              .union(firestore.pipeline().collection('archive').upsert()),
+          firestore
+              .pipeline()
+              .collection('a')
+              .union(
+                firestore
+                    .pipeline()
+                    .collection('b')
+                    .union(
+                      firestore.pipeline().literals([
+                        {'name': 'Ada'},
+                      ]),
+                    ),
+              ),
         ];
         for (final pipeline in pipelines) {
           expect(
