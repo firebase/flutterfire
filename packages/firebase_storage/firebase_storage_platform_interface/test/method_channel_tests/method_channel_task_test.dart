@@ -49,36 +49,36 @@ void main() {
     TestFirebaseStorageHostApi.setUp(null);
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockStreamHandler(
-      MethodChannelFirebaseStorage.storageTaskChannel(_observerId),
-      null,
-    );
+          MethodChannelFirebaseStorage.storageTaskChannel(_observerId),
+          null,
+        );
   });
 
   test('keeps the last metadata when the task fails', () async {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockStreamHandler(
-      MethodChannelFirebaseStorage.storageTaskChannel(_observerId),
-      MockStreamHandler.inline(
-        onListen: (arguments, events) {
-          events.success(<String, Object?>{
-            'taskState': TaskState.running.index,
-            'snapshot': <String, Object?>{
-              'path': 'foo/bar',
-              'bytesTransferred': 1,
-              'totalBytes': 2,
-              'metadata': <String, Object?>{'contentType': 'text/plain'},
+          MethodChannelFirebaseStorage.storageTaskChannel(_observerId),
+          MockStreamHandler.inline(
+            onListen: (arguments, events) {
+              events.success(<String, Object?>{
+                'taskState': TaskState.running.index,
+                'snapshot': <String, Object?>{
+                  'path': 'foo/bar',
+                  'bytesTransferred': 1,
+                  'totalBytes': 2,
+                  'metadata': <String, Object?>{'contentType': 'text/plain'},
+                },
+              });
+              events.success(<String, Object?>{
+                'taskState': TaskState.error.index,
+                'error': <String, Object?>{
+                  'code': 'unauthorized',
+                  'message': 'User is not authorized.',
+                },
+              });
             },
-          });
-          events.success(<String, Object?>{
-            'taskState': TaskState.error.index,
-            'error': <String, Object?>{
-              'code': 'unauthorized',
-              'message': 'User is not authorized.',
-            },
-          });
-        },
-      ),
-    );
+          ),
+        );
 
     final task = MethodChannelPutTask(
       nextMockHandleId,

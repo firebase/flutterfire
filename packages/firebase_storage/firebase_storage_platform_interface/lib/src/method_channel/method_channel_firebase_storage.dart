@@ -17,9 +17,10 @@ import 'method_channel_reference.dart';
 class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {
   /// Creates a new [MethodChannelFirebaseStorage] instance with an [app] and/or
   /// [bucket].
-  MethodChannelFirebaseStorage(
-      {required FirebaseApp app, required String bucket})
-      : super(appInstance: app, bucket: bucket);
+  MethodChannelFirebaseStorage({
+    required FirebaseApp app,
+    required String bucket,
+  }) : super(appInstance: app, bucket: bucket);
 
   /// Internal stub class initializer.
   ///
@@ -44,10 +45,7 @@ class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {
 
   /// FirebaseApp pigeon instance
   InternalStorageFirebaseApp get pigeonFirebaseApp {
-    return InternalStorageFirebaseApp(
-      appName: app.name,
-      bucket: bucket,
-    );
+    return InternalStorageFirebaseApp(appName: app.name, bucket: bucket);
   }
 
   /// Returns a unique key to identify the instance by [FirebaseApp] name and
@@ -57,12 +55,10 @@ class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {
   }
 
   /// The [MethodChannelFirebaseStorage] method channel.
-  static const MethodChannel channel = MethodChannel(
-    storageMethodChannelName,
-  );
+  static const MethodChannel channel = MethodChannel(storageMethodChannelName);
 
   static Map<String, MethodChannelFirebaseStorage>
-      _methodChannelFirebaseStorageInstances =
+  _methodChannelFirebaseStorageInstances =
       <String, MethodChannelFirebaseStorage>{};
 
   /// Returns a stub instance to allow the platform interface to access
@@ -73,32 +69,37 @@ class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {
 
   /// Return an instance of a [InternalStorageReference]
   static InternalStorageReference getPigeonReference(
-      String bucket, String fullPath, String name) {
+    String bucket,
+    String fullPath,
+    String name,
+  ) {
     return InternalStorageReference(
-        bucket: bucket, fullPath: fullPath, name: name);
+      bucket: bucket,
+      fullPath: fullPath,
+      name: name,
+    );
   }
 
   /// Return an instance of a [InternalStorageFirebaseApp]
   InternalStorageFirebaseApp getPigeonFirebaseApp(String appName) {
-    return InternalStorageFirebaseApp(
-      appName: appName,
-      bucket: bucket,
-    );
+    return InternalStorageFirebaseApp(appName: appName, bucket: bucket);
   }
 
   /// Convert a [SettableMetadata] to [InternalSettableMetadata]
   static InternalSettableMetadata getPigeonSettableMetaData(
-      SettableMetadata? metaData) {
+    SettableMetadata? metaData,
+  ) {
     if (metaData == null) {
       return InternalSettableMetadata();
     }
     return InternalSettableMetadata(
-        cacheControl: metaData.cacheControl,
-        contentDisposition: metaData.contentDisposition,
-        contentEncoding: metaData.contentEncoding,
-        contentLanguage: metaData.contentLanguage,
-        contentType: metaData.contentType,
-        customMetadata: metaData.customMetadata);
+      cacheControl: metaData.cacheControl,
+      contentDisposition: metaData.contentDisposition,
+      contentEncoding: metaData.contentEncoding,
+      contentLanguage: metaData.contentLanguage,
+      contentType: metaData.contentType,
+      customMetadata: metaData.customMetadata,
+    );
   }
 
   static int _methodChannelHandleId = 0;
@@ -116,8 +117,10 @@ class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {
   int maxDownloadRetryTime = const Duration(minutes: 10).inMilliseconds;
 
   @override
-  FirebaseStoragePlatform delegateFor(
-      {required FirebaseApp app, required String bucket}) {
+  FirebaseStoragePlatform delegateFor({
+    required FirebaseApp app,
+    required String bucket,
+  }) {
     String key = _getInstanceKey(app.name, bucket);
 
     return _methodChannelFirebaseStorageInstances[key] ??=
@@ -135,7 +138,10 @@ class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {
     emulatorPort = port;
     try {
       return await pigeonChannel.useStorageEmulator(
-          pigeonFirebaseApp, host, port);
+        pigeonFirebaseApp,
+        host,
+        port,
+      );
     } catch (e, s) {
       convertPlatformException(e, s);
     }

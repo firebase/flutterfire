@@ -30,8 +30,9 @@ void main() {
     test('setInitialValues', () {
       final remoteConfigValues = <dynamic, dynamic>{'a': 'b'};
       remoteConfig.setInitialValues(remoteConfigValues: remoteConfigValues);
-      verify(remoteConfig.setInitialValues(
-          remoteConfigValues: remoteConfigValues));
+      verify(
+        remoteConfig.setInitialValues(remoteConfigValues: remoteConfigValues),
+      );
       verifyNoMoreInteractions(remoteConfig);
     });
 
@@ -102,8 +103,10 @@ void main() {
 
     test('setConfigSettings', () {
       const time = Duration(milliseconds: 1000);
-      RemoteConfigSettings settings =
-          RemoteConfigSettings(fetchTimeout: time, minimumFetchInterval: time);
+      RemoteConfigSettings settings = RemoteConfigSettings(
+        fetchTimeout: time,
+        minimumFetchInterval: time,
+      );
       remoteConfig.setConfigSettings(settings);
       verify(remoteConfig.setConfigSettings(settings));
       verifyNoMoreInteractions(remoteConfig);
@@ -116,19 +119,28 @@ void main() {
       verifyNoMoreInteractions(remoteConfig);
     });
 
-    test('RemoteConfig.defaultConfig round-trips and returns unmodifiable Map',
-        () {
-      final jsRemoteConfig =
-          JSObject() as remote_config_interop.RemoteConfigJsImpl;
-      final wrapper = remote_config_interop_wrapper.RemoteConfig.getInstance(
-          jsRemoteConfig);
+    test(
+      'RemoteConfig.defaultConfig round-trips and returns unmodifiable Map',
+      () {
+        final jsRemoteConfig =
+            JSObject() as remote_config_interop.RemoteConfigJsImpl;
+        final wrapper = remote_config_interop_wrapper.RemoteConfig.getInstance(
+          jsRemoteConfig,
+        );
 
-      wrapper.defaultConfig = <String, dynamic>{'title': 'Hello', 'counter': 1};
-      final config = wrapper.defaultConfig;
+        wrapper.defaultConfig = <String, dynamic>{
+          'title': 'Hello',
+          'counter': 1,
+        };
+        final config = wrapper.defaultConfig;
 
-      expect(config, isA<Map<String, dynamic>>());
-      expect(config, equals(<String, dynamic>{'title': 'Hello', 'counter': 1}));
-      expect(() => config['x'] = 2, throwsUnsupportedError);
-    });
+        expect(config, isA<Map<String, dynamic>>());
+        expect(
+          config,
+          equals(<String, dynamic>{'title': 'Hello', 'counter': 1}),
+        );
+        expect(() => config['x'] = 2, throwsUnsupportedError);
+      },
+    );
   });
 }

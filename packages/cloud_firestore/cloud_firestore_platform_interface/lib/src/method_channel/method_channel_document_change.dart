@@ -9,16 +9,18 @@ import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_inte
 /// communicate with Firebase plugins.
 class MethodChannelDocumentChange extends DocumentChangePlatform {
   /// Creates a [MethodChannelDocumentChange] from the given [data]
-  MethodChannelDocumentChange(FirebaseFirestorePlatform firestore,
-      InternalDocumentChange documentChange)
-      : super(
-            documentChange.type,
-            documentChange.oldIndex,
-            documentChange.newIndex,
-            DocumentSnapshotPlatform(
-              firestore,
-              documentChange.document.path,
-              documentChange.document.data,
-              documentChange.document.metadata,
-            ));
+  MethodChannelDocumentChange(
+    FirebaseFirestorePlatform firestore,
+    InternalDocumentChange documentChange,
+  ) : super(
+        documentChange.type,
+        documentChange.oldIndex,
+        documentChange.newIndex,
+        DocumentSnapshotPlatform(
+          firestore,
+          documentChange.document.path,
+          documentChange.document.data,
+          documentChange.document.metadata,
+        ),
+      );
 }

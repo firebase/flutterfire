@@ -28,8 +28,10 @@ class _FakeReference extends Fake implements DatabaseReferencePlatform {
 }
 
 /// Minimal stand-in for the JS `DataSnapshot` object.
-JSObject _fakeSnapshot(String key,
-    [Map<String, JSObject> children = const {}]) {
+JSObject _fakeSnapshot(
+  String key, [
+  Map<String, JSObject> children = const {},
+]) {
   final snapshot = JSObject();
   snapshot['key'] = key.toJS;
   snapshot['val'] = (() => key.toJS).toJS;

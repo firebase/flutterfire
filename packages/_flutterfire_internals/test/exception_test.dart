@@ -16,7 +16,8 @@ void main() {
           message: 'a channel level message',
           details: {
             'code': 'permission-denied',
-            'message': "Client doesn't have permission to access the desired "
+            'message':
+                "Client doesn't have permission to access the desired "
                 'data.',
           },
         ),

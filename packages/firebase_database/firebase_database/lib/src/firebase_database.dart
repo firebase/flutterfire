@@ -8,7 +8,7 @@ part of '../firebase_database.dart';
 /// by calling `FirebaseDatabase.instance` or `FirebaseDatabase.instanceFor()`.
 class FirebaseDatabase extends FirebasePlugin {
   FirebaseDatabase._({required this.app, this.databaseURL})
-      : super(app.name, 'plugins.flutter.io/firebase_database') {
+    : super(app.name, 'plugins.flutter.io/firebase_database') {
     if (databaseURL != null && databaseURL!.endsWith('/')) {
       databaseURL = databaseURL!.substring(0, databaseURL!.length - 1);
     }
@@ -24,9 +24,7 @@ class FirebaseDatabase extends FirebasePlugin {
 
   /// Returns an instance using the default [FirebaseApp].
   static FirebaseDatabase get instance {
-    return FirebaseDatabase.instanceFor(
-      app: Firebase.app(),
-    );
+    return FirebaseDatabase.instanceFor(app: Firebase.app());
   }
 
   /// Returns an instance using a specified [FirebaseApp].
@@ -39,8 +37,10 @@ class FirebaseDatabase extends FirebasePlugin {
       return _cachedInstances[cacheKey]!;
     }
 
-    FirebaseDatabase newInstance =
-        FirebaseDatabase._(app: app, databaseURL: databaseURL);
+    FirebaseDatabase newInstance = FirebaseDatabase._(
+      app: app,
+      databaseURL: databaseURL,
+    );
     _cachedInstances[cacheKey] = newInstance;
 
     return newInstance;
@@ -52,8 +52,10 @@ class FirebaseDatabase extends FirebasePlugin {
   DatabasePlatform? _delegatePackingProperty;
 
   DatabasePlatform get _delegate {
-    return _delegatePackingProperty ??=
-        DatabasePlatform.instanceFor(app: app, databaseURL: databaseURL);
+    return _delegatePackingProperty ??= DatabasePlatform.instanceFor(
+      app: app,
+      databaseURL: databaseURL,
+    );
   }
 
   /// Changes this instance to point to a FirebaseDatabase emulator running locally.

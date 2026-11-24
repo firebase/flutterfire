@@ -4,7 +4,7 @@
 # customers of the plugin.
 cmake_minimum_required(VERSION 3.14)
 
-set(FIREBASE_SDK_VERSION "14.1.0")
+set(FIREBASE_SDK_VERSION "14.2.0")
 
 if (EXISTS $ENV{FIREBASE_CPP_SDK_DIR}/include/firebase/version.h)
     file(READ "$ENV{FIREBASE_CPP_SDK_DIR}/include/firebase/version.h" existing_version)
@@ -141,7 +141,7 @@ foreach(firebase_lib IN ITEMS ${FIREBASE_RELEASE_PATH_LIBS})
 endforeach()
 
 set(FIREBASE_LIBS firebase_app)
-set(ADDITIONAL_LIBS advapi32 ws2_32 crypt32 rpcrt4 ole32)
+set(ADDITIONAL_LIBS advapi32 ws2_32 crypt32 rpcrt4 ole32 bcrypt iphlpapi secur32)
 
 target_link_libraries(${PLUGIN_NAME} PUBLIC "${FIREBASE_LIBS}" "${ADDITIONAL_LIBS}")
 

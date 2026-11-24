@@ -63,10 +63,11 @@ class FirebaseFunctionsException extends FirebaseException
     StackTrace? stackTrace,
     this.details,
   }) : super(
-            plugin: 'firebase_functions',
-            message: message,
-            code: code,
-            stackTrace: stackTrace);
+         plugin: 'firebase_functions',
+         message: message,
+         code: code,
+         stackTrace: stackTrace,
+       );
 
   /// Additional data provided with the exception.
   final dynamic details;

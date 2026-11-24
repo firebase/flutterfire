@@ -18,14 +18,16 @@ class FirebaseMessaging extends FirebasePlugin {
 
   FirebaseMessagingPlatform get _delegate {
     return _delegatePackingProperty ??= FirebaseMessagingPlatform.instanceFor(
-        app: app, pluginConstants: pluginConstants);
+      app: app,
+      pluginConstants: pluginConstants,
+    );
   }
 
   /// The [FirebaseApp] for this current [FirebaseMessaging] instance.
   FirebaseApp app;
 
   FirebaseMessaging._({required this.app})
-      : super(app.name, 'plugins.flutter.io/firebase_messaging');
+    : super(app.name, 'plugins.flutter.io/firebase_messaging');
 
   /// Returns an instance using the default [FirebaseApp].
   static FirebaseMessaging get instance {
@@ -60,21 +62,22 @@ class FirebaseMessaging extends FirebasePlugin {
   // ignore: close_sinks, never closed
   static final StreamController<RemoteMessage> _onMessage =
       StreamController<RemoteMessage>.broadcast(
-    onListen: () {
-      _onMessageSubscription = FirebaseMessagingPlatform.onMessage.stream
-          .listen(_onMessage.add, onError: _onMessage.addError);
-      _setListeningToForegroundMessages(true);
-    },
-    onCancel: () {
-      _onMessageSubscription?.cancel();
-      _onMessageSubscription = null;
-      _setListeningToForegroundMessages(false);
-    },
-  );
+        onListen: () {
+          _onMessageSubscription = FirebaseMessagingPlatform.onMessage.stream
+              .listen(_onMessage.add, onError: _onMessage.addError);
+          _setListeningToForegroundMessages(true);
+        },
+        onCancel: () {
+          _onMessageSubscription?.cancel();
+          _onMessageSubscription = null;
+          _setListeningToForegroundMessages(false);
+        },
+      );
   static StreamSubscription<RemoteMessage>? _onMessageSubscription;
 
-  static const MethodChannel _channel =
-      MethodChannel('plugins.flutter.io/firebase_messaging');
+  static const MethodChannel _channel = MethodChannel(
+    'plugins.flutter.io/firebase_messaging',
+  );
   static bool _listeningToForegroundMessages = false;
   // False when the last state could not be sent, e.g. before the binding was
   // initialized; retried when the app uses `FirebaseMessaging.instance`.
@@ -94,18 +97,15 @@ class FirebaseMessaging extends FirebasePlugin {
     unawaited(
       _channel
           .invokeMethod<void>(
-        listening
-            ? 'Messaging#startForegroundMessages'
-            : 'Messaging#stopForegroundMessages',
-      )
-          .then(
-        (_) {
-          if (_listeningToForegroundMessages == listening) {
-            _foregroundMessagesStateSent = true;
-          }
-        },
-        onError: (Object _) {},
-      ),
+            listening
+                ? 'Messaging#startForegroundMessages'
+                : 'Messaging#stopForegroundMessages',
+          )
+          .then((_) {
+            if (_listeningToForegroundMessages == listening) {
+              _foregroundMessagesStateSent = true;
+            }
+          }, onError: (Object _) {}),
     );
   }
 
@@ -181,10 +181,7 @@ class FirebaseMessaging extends FirebasePlugin {
   /// Once registration completes, [onRegistered] provides the Firebase
   /// Installation ID (FID) that can be used as the direct-send target for this
   /// app instance.
-  Future<void> register({
-    String? vapidKey,
-    String? serviceWorkerScriptPath,
-  }) {
+  Future<void> register({String? vapidKey, String? serviceWorkerScriptPath}) {
     return _delegate.register(
       vapidKey: vapidKey,
       serviceWorkerScriptPath: serviceWorkerScriptPath,

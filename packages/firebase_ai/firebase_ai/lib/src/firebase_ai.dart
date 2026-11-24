@@ -33,12 +33,11 @@ class FirebaseAI extends FirebasePlugin {
   FirebaseAI._({
     required this.app,
     required this.location,
-    required bool useAgentPlatform,
+    required this._useAgentPlatform,
     this.appCheck,
     this.auth,
     this.useLimitedUseAppCheckTokens = false,
-  })  : _useAgentPlatform = useAgentPlatform,
-        super(app.name, 'plugins.flutter.io/firebase_vertexai') {
+  }) : super(app.name, 'plugins.flutter.io/firebase_vertexai') {
     registerWebLibraryVersion('flutter-fire-ai', packageVersion);
   }
 
@@ -192,11 +191,12 @@ class FirebaseAI extends FirebasePlugin {
   @experimental
   TemplateGenerativeModel templateGenerativeModel() {
     return createTemplateGenerativeModel(
-        app: app,
-        location: location,
-        useAgentPlatform: _useAgentPlatform,
-        useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens,
-        auth: auth,
-        appCheck: appCheck);
+      app: app,
+      location: location,
+      useAgentPlatform: _useAgentPlatform,
+      useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens,
+      auth: auth,
+      appCheck: appCheck,
+    );
   }
 }

@@ -37,8 +37,11 @@ Object? _extractReplyValueOrThrow(
   return replyList.firstOrNull;
 }
 
-List<Object?> wrapResponse(
-    {Object? result, PlatformException? error, bool empty = false}) {
+List<Object?> wrapResponse({
+  Object? result,
+  PlatformException? error,
+  bool empty = false,
+}) {
   if (empty) {
     return <Object?>[];
   }
@@ -60,8 +63,9 @@ bool _deepEquals(Object? a, Object? b) {
   }
   if (a is List && b is List) {
     return a.length == b.length &&
-        a.indexed
-            .every(((int, dynamic) item) => _deepEquals(item.$2, b[item.$1]));
+        a.indexed.every(
+          ((int, dynamic) item) => _deepEquals(item.$2, b[item.$1]),
+        );
   }
   if (a is Map && b is Map) {
     if (a.length != b.length) {
@@ -142,11 +146,7 @@ class FiamCampaignMetadata {
   bool isTestMessage;
 
   List<Object?> _toList() {
-    return <Object?>[
-      campaignId,
-      campaignName,
-      isTestMessage,
-    ];
+    return <Object?>[campaignId, campaignName, isTestMessage];
   }
 
   Object encode() {
@@ -183,20 +183,14 @@ class FiamCampaignMetadata {
 
 /// The action attached to the button a user tapped on an in-app message.
 class FiamAction {
-  FiamAction({
-    this.actionUrl,
-    this.buttonText,
-  });
+  FiamAction({this.actionUrl, this.buttonText});
 
   String? actionUrl;
 
   String? buttonText;
 
   List<Object?> _toList() {
-    return <Object?>[
-      actionUrl,
-      buttonText,
-    ];
+    return <Object?>[actionUrl, buttonText];
   }
 
   Object encode() {
@@ -231,20 +225,14 @@ class FiamAction {
 
 /// Styled text from a campaign, used by custom Flutter display.
 class FiamText {
-  FiamText({
-    required this.text,
-    this.hexColor,
-  });
+  FiamText({required this.text, this.hexColor});
 
   String text;
 
   String? hexColor;
 
   List<Object?> _toList() {
-    return <Object?>[
-      text,
-      hexColor,
-    ];
+    return <Object?>[text, hexColor];
   }
 
   Object encode() {
@@ -253,10 +241,7 @@ class FiamText {
 
   static FiamText decode(Object result) {
     result as List<Object?>;
-    return FiamText(
-      text: result[0]! as String,
-      hexColor: result[1] as String?,
-    );
+    return FiamText(text: result[0]! as String, hexColor: result[1] as String?);
   }
 
   @override
@@ -502,11 +487,13 @@ class FirebaseInAppMessagingHostApi {
   /// Constructor for [FirebaseInAppMessagingHostApi].  The [binaryMessenger] named argument is
   /// available for dependency injection.  If it is left null, the default
   /// BinaryMessenger will be used which routes to the host platform.
-  FirebaseInAppMessagingHostApi(
-      {BinaryMessenger? binaryMessenger, String messageChannelSuffix = ''})
-      : pigeonVar_binaryMessenger = binaryMessenger,
-        pigeonVar_messageChannelSuffix =
-            messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+  FirebaseInAppMessagingHostApi({
+    BinaryMessenger? binaryMessenger,
+    String messageChannelSuffix = '',
+  }) : pigeonVar_binaryMessenger = binaryMessenger,
+       pigeonVar_messageChannelSuffix = messageChannelSuffix.isNotEmpty
+           ? '.$messageChannelSuffix'
+           : '';
   final BinaryMessenger? pigeonVar_binaryMessenger;
 
   static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
@@ -521,8 +508,9 @@ class FirebaseInAppMessagingHostApi {
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[appName, eventName]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[appName, eventName],
+    );
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     _extractReplyValueOrThrow(
@@ -540,8 +528,9 @@ class FirebaseInAppMessagingHostApi {
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[appName, suppress]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[appName, suppress],
+    );
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     _extractReplyValueOrThrow(
@@ -552,7 +541,9 @@ class FirebaseInAppMessagingHostApi {
   }
 
   Future<void> setAutomaticDataCollectionEnabled(
-      String appName, bool enabled) async {
+    String appName,
+    bool enabled,
+  ) async {
     final pigeonVar_channelName =
         'dev.flutter.pigeon.firebase_in_app_messaging_platform_interface.FirebaseInAppMessagingHostApi.setAutomaticDataCollectionEnabled$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
@@ -560,8 +551,9 @@ class FirebaseInAppMessagingHostApi {
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[appName, enabled]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[appName, enabled],
+    );
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     _extractReplyValueOrThrow(
@@ -581,8 +573,9 @@ class FirebaseInAppMessagingHostApi {
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[appName]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[appName],
+    );
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     _extractReplyValueOrThrow(
@@ -600,8 +593,9 @@ class FirebaseInAppMessagingHostApi {
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[appName, enabled]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[appName, enabled],
+    );
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     _extractReplyValueOrThrow(
@@ -619,8 +613,9 @@ class FirebaseInAppMessagingHostApi {
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[campaignId]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[campaignId],
+    );
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     _extractReplyValueOrThrow(
@@ -638,8 +633,9 @@ class FirebaseInAppMessagingHostApi {
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[campaignId, actionId]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[campaignId, actionId],
+    );
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     _extractReplyValueOrThrow(
@@ -657,8 +653,9 @@ class FirebaseInAppMessagingHostApi {
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[campaignId, dismissType]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[campaignId, dismissType],
+    );
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     _extractReplyValueOrThrow(
@@ -676,8 +673,9 @@ class FirebaseInAppMessagingHostApi {
       pigeonChannelCodec,
       binaryMessenger: pigeonVar_binaryMessenger,
     );
-    final Future<Object?> pigeonVar_sendFuture =
-        pigeonVar_channel.send(<Object?>[campaignId, reason]);
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[campaignId, reason],
+    );
     final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
 
     _extractReplyValueOrThrow(
@@ -692,15 +690,21 @@ abstract class FirebaseInAppMessagingFlutterApi {
   static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
 
   void onMessageClicked(
-      FiamCampaignMetadata campaignMetadata, FiamAction action);
+    FiamCampaignMetadata campaignMetadata,
+    FiamAction action,
+  );
 
   void onMessageImpression(FiamCampaignMetadata campaignMetadata);
 
   void onMessageDismissed(
-      FiamCampaignMetadata campaignMetadata, FiamDismissType dismissType);
+    FiamCampaignMetadata campaignMetadata,
+    FiamDismissType dismissType,
+  );
 
   void onMessageDisplayError(
-      FiamCampaignMetadata campaignMetadata, String? errorMessage);
+    FiamCampaignMetadata campaignMetadata,
+    String? errorMessage,
+  );
 
   void onMessageDisplay(FiamDisplayMessage message);
 
@@ -709,13 +713,15 @@ abstract class FirebaseInAppMessagingFlutterApi {
     BinaryMessenger? binaryMessenger,
     String messageChannelSuffix = '',
   }) {
-    messageChannelSuffix =
-        messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+    messageChannelSuffix = messageChannelSuffix.isNotEmpty
+        ? '.$messageChannelSuffix'
+        : '';
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_in_app_messaging_platform_interface.FirebaseInAppMessagingFlutterApi.onMessageClicked$messageChannelSuffix',
-          pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.firebase_in_app_messaging_platform_interface.FirebaseInAppMessagingFlutterApi.onMessageClicked$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         pigeonVar_channel.setMessageHandler(null);
       } else {
@@ -731,16 +737,18 @@ abstract class FirebaseInAppMessagingFlutterApi {
             return wrapResponse(error: e);
           } catch (e) {
             return wrapResponse(
-                error: PlatformException(code: 'error', message: e.toString()));
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
           }
         });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_in_app_messaging_platform_interface.FirebaseInAppMessagingFlutterApi.onMessageImpression$messageChannelSuffix',
-          pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.firebase_in_app_messaging_platform_interface.FirebaseInAppMessagingFlutterApi.onMessageImpression$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         pigeonVar_channel.setMessageHandler(null);
       } else {
@@ -755,16 +763,18 @@ abstract class FirebaseInAppMessagingFlutterApi {
             return wrapResponse(error: e);
           } catch (e) {
             return wrapResponse(
-                error: PlatformException(code: 'error', message: e.toString()));
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
           }
         });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_in_app_messaging_platform_interface.FirebaseInAppMessagingFlutterApi.onMessageDismissed$messageChannelSuffix',
-          pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.firebase_in_app_messaging_platform_interface.FirebaseInAppMessagingFlutterApi.onMessageDismissed$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         pigeonVar_channel.setMessageHandler(null);
       } else {
@@ -780,16 +790,18 @@ abstract class FirebaseInAppMessagingFlutterApi {
             return wrapResponse(error: e);
           } catch (e) {
             return wrapResponse(
-                error: PlatformException(code: 'error', message: e.toString()));
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
           }
         });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_in_app_messaging_platform_interface.FirebaseInAppMessagingFlutterApi.onMessageDisplayError$messageChannelSuffix',
-          pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.firebase_in_app_messaging_platform_interface.FirebaseInAppMessagingFlutterApi.onMessageDisplayError$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         pigeonVar_channel.setMessageHandler(null);
       } else {
@@ -805,16 +817,18 @@ abstract class FirebaseInAppMessagingFlutterApi {
             return wrapResponse(error: e);
           } catch (e) {
             return wrapResponse(
-                error: PlatformException(code: 'error', message: e.toString()));
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
           }
         });
       }
     }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.firebase_in_app_messaging_platform_interface.FirebaseInAppMessagingFlutterApi.onMessageDisplay$messageChannelSuffix',
-          pigeonChannelCodec,
-          binaryMessenger: binaryMessenger);
+        'dev.flutter.pigeon.firebase_in_app_messaging_platform_interface.FirebaseInAppMessagingFlutterApi.onMessageDisplay$messageChannelSuffix',
+        pigeonChannelCodec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         pigeonVar_channel.setMessageHandler(null);
       } else {
@@ -828,7 +842,8 @@ abstract class FirebaseInAppMessagingFlutterApi {
             return wrapResponse(error: e);
           } catch (e) {
             return wrapResponse(
-                error: PlatformException(code: 'error', message: e.toString()));
+              error: PlatformException(code: 'error', message: e.toString()),
+            );
           }
         });
       }

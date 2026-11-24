@@ -7,7 +7,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_crashlytics/src/utils.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import './mock.dart';
@@ -60,8 +59,11 @@ void main() {
         const exception = 'foo exception';
         const exceptionReason = 'bar reason';
 
-        await crashlytics!
-            .recordError(exception, stack, reason: exceptionReason);
+        await crashlytics!.recordError(
+          exception,
+          stack,
+          reason: exceptionReason,
+        );
         expect(hostApi.calls, ['recordError']);
         expect(hostApi.lastRecordError!.exception, exception);
         expect(hostApi.lastRecordError!.reason, exceptionReason);
@@ -79,8 +81,11 @@ void main() {
         const exception = 'foo exception';
         const exceptionReason = 'bar reason';
 
-        await crashlytics!
-            .recordError(exception, null, reason: exceptionReason);
+        await crashlytics!.recordError(
+          exception,
+          null,
+          reason: exceptionReason,
+        );
         expect(hostApi.calls, ['recordError']);
         expect(hostApi.lastRecordError!.exception, exception);
         expect(hostApi.lastRecordError!.reason, exceptionReason);
@@ -120,8 +125,10 @@ void main() {
         expect(hostApi.lastRecordError!.exception, exception);
         expect(hostApi.lastRecordError!.reason, exceptionReason);
         expect(hostApi.lastRecordError!.fatal, isFalse);
-        expect(hostApi.lastRecordError!.information,
-            '$exceptionFirstMessage\n$exceptionSecondMessage');
+        expect(
+          hostApi.lastRecordError!.information,
+          '$exceptionFirstMessage\n$exceptionSecondMessage',
+        );
         expect(hostApi.lastRecordError!.buildId, '');
         expect(hostApi.lastRecordError!.loadingUnits, isEmpty);
         expect(
@@ -175,9 +182,13 @@ void main() {
     group('setCustomKey', () {
       test('should throw if null', () async {
         expect(
-            () => crashlytics!.setCustomKey('foo', []), throwsAssertionError);
+          () => crashlytics!.setCustomKey('foo', []),
+          throwsAssertionError,
+        );
         expect(
-            () => crashlytics!.setCustomKey('foo', {}), throwsAssertionError);
+          () => crashlytics!.setCustomKey('foo', {}),
+          throwsAssertionError,
+        );
       });
 
       test('should call delegate method', () async {
@@ -193,7 +204,7 @@ void main() {
     group('getStackTraceElements', () {
       test('with symbolic stack trace', () async {
         final List<String> lines = <String>[
-          '#0      StatefulElement.build (package:flutter/src/widgets/framework.dart:3825:27)'
+          '#0      StatefulElement.build (package:flutter/src/widgets/framework.dart:3825:27)',
         ];
         final StackTrace trace = StackTrace.fromString(lines.join('\n'));
         final List<Map<String, String>> elements = getStackTraceElements(trace);
@@ -208,7 +219,7 @@ void main() {
 
       test('with symbolic stack trace and without class', () async {
         final List<String> lines = <String>[
-          '#0      main (package:firebase_crashlytics/test/main.dart:12)'
+          '#0      main (package:firebase_crashlytics/test/main.dart:12)',
         ];
         final StackTrace trace = StackTrace.fromString(lines.join('\n'));
         final List<Map<String, String>> elements = getStackTraceElements(trace);

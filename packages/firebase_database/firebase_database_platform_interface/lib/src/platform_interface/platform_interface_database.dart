@@ -29,8 +29,10 @@ abstract class DatabasePlatform extends PlatformInterface {
     required FirebaseApp app,
     String? databaseURL,
   }) {
-    return DatabasePlatform.instance
-        .delegateFor(app: app, databaseURL: databaseURL);
+    return DatabasePlatform.instance.delegateFor(
+      app: app,
+      databaseURL: databaseURL,
+    );
   }
 
   /// The current default [DatabasePlatform] instance.

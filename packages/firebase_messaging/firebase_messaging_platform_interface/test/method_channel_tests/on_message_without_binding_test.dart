@@ -10,8 +10,10 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   test('listening to the message streams does not need a binding', () async {
     final onMessage = FirebaseMessagingPlatform.onMessage.stream.listen((_) {});
-    final onMessageOpenedApp =
-        FirebaseMessagingPlatform.onMessageOpenedApp.stream.listen((_) {});
+    final onMessageOpenedApp = FirebaseMessagingPlatform
+        .onMessageOpenedApp
+        .stream
+        .listen((_) {});
 
     await onMessage.cancel();
     await onMessageOpenedApp.cancel();

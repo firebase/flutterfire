@@ -14,7 +14,5 @@ class PersistenceSettings {
   final bool synchronizeTabs;
 
   /// Creates a [PersistenceSettings] instance.
-  const PersistenceSettings({
-    required this.synchronizeTabs,
-  });
+  const PersistenceSettings({required this.synchronizeTabs});
 }

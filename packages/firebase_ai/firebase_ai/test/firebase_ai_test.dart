@@ -56,14 +56,14 @@ void main() {
       customAuth = FirebaseAuth.instanceFor(app: customApp);
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMessageHandler(
-        'dev.flutter.pigeon.firebase_app_check_platform_interface.'
-        'FirebaseAppCheckHostApi.getToken',
-        (_) async {
-          return const StandardMessageCodec().encodeMessage(
-            <Object?>['app-check-token'],
+            'dev.flutter.pigeon.firebase_app_check_platform_interface.'
+            'FirebaseAppCheckHostApi.getToken',
+            (_) async {
+              return const StandardMessageCodec().encodeMessage(<Object?>[
+                'app-check-token',
+              ]);
+            },
           );
-        },
-      );
     });
 
     group('agentPlatform tests', () {
@@ -127,14 +127,18 @@ void main() {
         expect(agentPlatform.auth, equals(customAuth));
       });
 
-      test('Default location shares an instance with explicit global location',
-          () {
-        final defaultLocation = FirebaseAI.agentPlatform(app: app);
-        final globalLocation =
-            FirebaseAI.agentPlatform(app: app, location: 'global');
+      test(
+        'Default location shares an instance with explicit global location',
+        () {
+          final defaultLocation = FirebaseAI.agentPlatform(app: app);
+          final globalLocation = FirebaseAI.agentPlatform(
+            app: app,
+            location: 'global',
+          );
 
-        expect(identical(defaultLocation, globalLocation), isTrue);
-      });
+          expect(identical(defaultLocation, globalLocation), isTrue);
+        },
+      );
 
       test('Separate instances per useLimitedUseAppCheckTokens value', () {
         final regular = FirebaseAI.agentPlatform(app: app);
@@ -248,10 +252,7 @@ void main() {
       });
       final ai = FirebaseAI.googleAI(app: app);
 
-      final model = ai.generativeModel(
-        model: 'gemini-pro',
-        httpClient: client,
-      );
+      final model = ai.generativeModel(model: 'gemini-pro', httpClient: client);
 
       await model.generateContent([Content.text('prompt')]);
       await model.generateContentStream([Content.text('prompt')]).drain<void>();

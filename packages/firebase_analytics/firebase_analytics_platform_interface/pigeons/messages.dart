@@ -23,10 +23,7 @@ import 'package:pigeon/pigeon.dart';
   ),
 )
 class AnalyticsEvent {
-  const AnalyticsEvent({
-    required this.name,
-    required this.parameters,
-  });
+  const AnalyticsEvent({required this.name, required this.parameters});
 
   final String name;
   final Map<String?, Object?>? parameters;

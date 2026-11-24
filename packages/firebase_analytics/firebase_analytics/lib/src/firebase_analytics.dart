@@ -6,10 +6,8 @@ part of '../firebase_analytics.dart';
 
 /// Firebase Analytics API.
 class FirebaseAnalytics extends FirebasePlugin {
-  FirebaseAnalytics._({
-    required this.app,
-    this.webOptions,
-  }) : super(app.name, 'plugins.flutter.io/firebase_analytics');
+  FirebaseAnalytics._({required this.app, this.webOptions})
+    : super(app.name, 'plugins.flutter.io/firebase_analytics');
 
   static Map<String, FirebaseAnalytics> _firebaseAnalyticsInstances = {};
 
@@ -21,8 +19,10 @@ class FirebaseAnalytics extends FirebasePlugin {
   FirebaseAnalyticsPlatform? _delegatePackingProperty;
 
   FirebaseAnalyticsPlatform get _delegate {
-    return _delegatePackingProperty ??=
-        FirebaseAnalyticsPlatform.instanceFor(app: app, webOptions: webOptions);
+    return _delegatePackingProperty ??= FirebaseAnalyticsPlatform.instanceFor(
+      app: app,
+      webOptions: webOptions,
+    );
   }
 
   /// Returns an instance using a specified [FirebaseApp].
@@ -896,20 +896,18 @@ class FirebaseAnalytics extends FirebasePlugin {
 
     return _delegate.logEvent(
       name: 'search',
-      parameters: filterOutNulls(
-        <String, Object?>{
-          _SEARCH_TERM: searchTerm,
-          _NUMBER_OF_NIGHTS: numberOfNights,
-          _NUMBER_OF_ROOMS: numberOfRooms,
-          _NUMBER_OF_PASSENGERS: numberOfPassengers,
-          _ORIGIN: origin,
-          _DESTINATION: destination,
-          _START_DATE: startDate,
-          _END_DATE: endDate,
-          _TRAVEL_CLASS: travelClass,
-          if (parameters != null) ...parameters,
-        },
-      ),
+      parameters: filterOutNulls(<String, Object?>{
+        _SEARCH_TERM: searchTerm,
+        _NUMBER_OF_NIGHTS: numberOfNights,
+        _NUMBER_OF_ROOMS: numberOfRooms,
+        _NUMBER_OF_PASSENGERS: numberOfPassengers,
+        _ORIGIN: origin,
+        _DESTINATION: destination,
+        _START_DATE: startDate,
+        _END_DATE: endDate,
+        _TRAVEL_CLASS: travelClass,
+        if (parameters != null) ...parameters,
+      }),
       callOptions: callOptions,
     );
   }
@@ -1019,15 +1017,10 @@ class FirebaseAnalytics extends FirebasePlugin {
   /// users complete this process and move on to the full app experience.
   ///
   /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#TUTORIAL_BEGIN
-  Future<void> logTutorialBegin({
-    Map<String, Object>? parameters,
-  }) {
+  Future<void> logTutorialBegin({Map<String, Object>? parameters}) {
     _assertParameterTypesAreCorrect(parameters);
 
-    return _delegate.logEvent(
-      name: 'tutorial_begin',
-      parameters: parameters,
-    );
+    return _delegate.logEvent(name: 'tutorial_begin', parameters: parameters);
   }
 
   /// Logs the standard `tutorial_complete` event.
@@ -1037,9 +1030,7 @@ class FirebaseAnalytics extends FirebasePlugin {
   /// completion rate of your on-boarding process.
   ///
   /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#TUTORIAL_COMPLETE
-  Future<void> logTutorialComplete({
-    Map<String, Object>? parameters,
-  }) {
+  Future<void> logTutorialComplete({Map<String, Object>? parameters}) {
     _assertParameterTypesAreCorrect(parameters);
 
     return _delegate.logEvent(
@@ -1363,7 +1354,8 @@ Map<String, Object> filterOutNulls(Map<String, Object?> parameters) {
 }
 
 @visibleForTesting
-const String valueAndCurrencyMustBeTogetherError = 'If you supply the "value" '
+const String valueAndCurrencyMustBeTogetherError =
+    'If you supply the "value" '
     'parameter, you must also supply the "currency" parameter.';
 
 void _requireValueAndCurrencyTogether(double? value, String? currency) {
@@ -1400,13 +1392,12 @@ List<Map<String, dynamic>>? _marshalItems(List<AnalyticsEventItem>? items) {
 
 void _assertParameterTypesAreCorrect(
   Map<String, Object>? parameters,
-) =>
-    parameters?.forEach((key, value) {
-      assert(
-        value is String || value is num,
-        "'string' OR 'number' must be set as the value of the parameter: $key. $value found instead",
-      );
-    });
+) => parameters?.forEach((key, value) {
+  assert(
+    value is String || value is num,
+    "'string' OR 'number' must be set as the value of the parameter: $key. $value found instead",
+  );
+});
 
 void _assertItemsParameterTypesAreCorrect(List<AnalyticsEventItem>? items) =>
     items?.forEach((item) {

@@ -8,13 +8,12 @@ import 'package:firebase_storage_platform_interface/firebase_storage_platform_in
 import 'package:firebase_storage_web/src/utils/metadata_cache.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-final someMetadata = SettableMetadata(contentLanguage: 'es', customMetadata: {
-  'testing': '123',
-});
-
-final otherMetadata = SettableMetadata(
-  contentType: 'image/png',
+final someMetadata = SettableMetadata(
+  contentLanguage: 'es',
+  customMetadata: {'testing': '123'},
 );
+
+final otherMetadata = SettableMetadata(contentType: 'image/png');
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -37,24 +36,25 @@ void main() {
         final setMetadata = cache!.store(otherMetadata);
 
         expect(
-            setMetadata.contentLanguage, equals(someMetadata.contentLanguage));
+          setMetadata.contentLanguage,
+          equals(someMetadata.contentLanguage),
+        );
         expect(setMetadata.contentType, equals(otherMetadata.contentType));
       });
 
       test('New values replace the cached ones', () {
-        final setMetadata = cache!.store(SettableMetadata(
-          contentLanguage: 'fr',
-        ));
+        final setMetadata = cache!.store(
+          SettableMetadata(contentLanguage: 'fr'),
+        );
 
         expect(setMetadata.contentLanguage, equals('fr'));
         expect(setMetadata.customMetadata, equals({'testing': '123'}));
       });
 
       test('Shallowly merges customMetadata, new values win', () {
-        final withCustomMetadata = SettableMetadata(customMetadata: {
-          'testing': '456',
-          'more-testing': 'yes',
-        });
+        final withCustomMetadata = SettableMetadata(
+          customMetadata: {'testing': '456', 'more-testing': 'yes'},
+        );
 
         final setMetadata = cache!.store(withCustomMetadata);
         final customMetadata = setMetadata.customMetadata;
@@ -66,7 +66,9 @@ void main() {
         final setMetadata = cache!.store(null);
 
         expect(
-            setMetadata.contentLanguage, equals(someMetadata.contentLanguage));
+          setMetadata.contentLanguage,
+          equals(someMetadata.contentLanguage),
+        );
       });
     });
 

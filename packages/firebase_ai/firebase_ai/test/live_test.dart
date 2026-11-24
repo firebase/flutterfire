@@ -26,8 +26,8 @@ void main() {
       final speechConfigWithVoice = SpeechConfig(voiceName: 'Aoede');
       expect(speechConfigWithVoice.toJson(), {
         'voice_config': {
-          'prebuilt_voice_config': {'voice_name': 'Aoede'}
-        }
+          'prebuilt_voice_config': {'voice_name': 'Aoede'},
+        },
       });
 
       final speechConfigWithoutVoice = SpeechConfig();
@@ -35,19 +35,19 @@ void main() {
     });
 
     test('SpeechConfig with languageCode toJson() returns correct JSON', () {
-      final speechConfigWithLanguage =
-          SpeechConfig(voiceName: 'Aoede', languageCode: 'en-US');
+      final speechConfigWithLanguage = SpeechConfig(
+        voiceName: 'Aoede',
+        languageCode: 'en-US',
+      );
       expect(speechConfigWithLanguage.toJson(), {
         'voice_config': {
-          'prebuilt_voice_config': {'voice_name': 'Aoede'}
+          'prebuilt_voice_config': {'voice_name': 'Aoede'},
         },
         'language_code': 'en-US',
       });
 
       final speechConfigLanguageOnly = SpeechConfig(languageCode: 'fr-FR');
-      expect(speechConfigLanguageOnly.toJson(), {
-        'language_code': 'fr-FR',
-      });
+      expect(speechConfigLanguageOnly.toJson(), {'language_code': 'fr-FR'});
     });
 
     test('SpeechConfig.multiSpeaker toJson() returns correct JSON', () {
@@ -67,40 +67,30 @@ void main() {
             {
               'speaker': 'Joe',
               'voice_config': {
-                'prebuilt_voice_config': {'voice_name': 'Kore'}
-              }
+                'prebuilt_voice_config': {'voice_name': 'Kore'},
+              },
             },
             {
               'speaker': 'Jane',
               'voice_config': {
-                'prebuilt_voice_config': {'voice_name': 'Puck'}
-              }
-            }
-          ]
+                'prebuilt_voice_config': {'voice_name': 'Puck'},
+              },
+            },
+          ],
         },
         'language_code': 'en-US',
       });
     });
 
     test('SpeechMetadata toJson() returns correct JSON', () {
-      const metadataFull = SpeechMetadata(
-        speaker: 'Alice',
-        style: 'excitedly',
-      );
-      expect(metadataFull.toJson(), {
-        'speaker': 'Alice',
-        'style': 'excitedly',
-      });
+      const metadataFull = SpeechMetadata(speaker: 'Alice', style: 'excitedly');
+      expect(metadataFull.toJson(), {'speaker': 'Alice', 'style': 'excitedly'});
 
       const metadataSpeakerOnly = SpeechMetadata(speaker: 'Bob');
-      expect(metadataSpeakerOnly.toJson(), {
-        'speaker': 'Bob',
-      });
+      expect(metadataSpeakerOnly.toJson(), {'speaker': 'Bob'});
 
       const metadataStyleOnly = SpeechMetadata(style: 'whispering');
-      expect(metadataStyleOnly.toJson(), {
-        'style': 'whispering',
-      });
+      expect(metadataStyleOnly.toJson(), {'style': 'whispering'});
 
       const metadataEmpty = SpeechMetadata();
       expect(metadataEmpty.toJson(), <String, Object?>{});
@@ -130,8 +120,8 @@ void main() {
         'topK': 40,
         'speechConfig': {
           'voice_config': {
-            'prebuilt_voice_config': {'voice_name': 'Charon'}
-          }
+            'prebuilt_voice_config': {'voice_name': 'Charon'},
+          },
         },
         'responseModalities': ['TEXT', 'AUDIO'],
         'mediaResolution': 'MEDIA_RESOLUTION_LOW',
@@ -141,46 +131,48 @@ void main() {
       expect(liveGenerationConfigWithoutOptionals.toJson(), {});
     });
 
-    test('GenerationConfig with SpeechConfig toJson() returns correct JSON',
-        () {
-      final config = GenerationConfig(
-        speechConfig: SpeechConfig(voiceName: 'Aoede', languageCode: 'en-US'),
-      );
+    test(
+      'GenerationConfig with SpeechConfig toJson() returns correct JSON',
+      () {
+        final config = GenerationConfig(
+          speechConfig: SpeechConfig(voiceName: 'Aoede', languageCode: 'en-US'),
+        );
 
-      expect(config.toJson(), {
-        'speechConfig': {
-          'voice_config': {
-            'prebuilt_voice_config': {'voice_name': 'Aoede'}
+        expect(config.toJson(), {
+          'speechConfig': {
+            'voice_config': {
+              'prebuilt_voice_config': {'voice_name': 'Aoede'},
+            },
+            'language_code': 'en-US',
           },
-          'language_code': 'en-US',
-        }
-      });
+        });
 
-      final multiConfig = GenerationConfig(
-        speechConfig: SpeechConfig.multiSpeaker(
-          multiSpeakerVoiceConfig: MultiSpeakerVoiceConfig(
-            speakerVoiceConfigs: [
-              SpeakerVoiceConfig(speaker: 'Joe', voiceName: 'Kore'),
-            ],
+        final multiConfig = GenerationConfig(
+          speechConfig: SpeechConfig.multiSpeaker(
+            multiSpeakerVoiceConfig: MultiSpeakerVoiceConfig(
+              speakerVoiceConfigs: [
+                SpeakerVoiceConfig(speaker: 'Joe', voiceName: 'Kore'),
+              ],
+            ),
           ),
-        ),
-      );
+        );
 
-      expect(multiConfig.toJson(), {
-        'speechConfig': {
-          'multi_speaker_voice_config': {
-            'speaker_voice_configs': [
-              {
-                'speaker': 'Joe',
-                'voice_config': {
-                  'prebuilt_voice_config': {'voice_name': 'Kore'}
-                }
-              }
-            ]
-          }
-        }
-      });
-    });
+        expect(multiConfig.toJson(), {
+          'speechConfig': {
+            'multi_speaker_voice_config': {
+              'speaker_voice_configs': [
+                {
+                  'speaker': 'Joe',
+                  'voice_config': {
+                    'prebuilt_voice_config': {'voice_name': 'Kore'},
+                  },
+                },
+              ],
+            },
+          },
+        });
+      },
+    );
 
     test('SessionResumptionConfig toJson() returns correct JSON', () {
       final resumableConfig = SessionResumptionConfig();
@@ -233,20 +225,17 @@ void main() {
             {
               'role': 'user',
               'parts': [
-                {'text': 'some test input'}
-              ]
-            }
+                {'text': 'some test input'},
+              ],
+            },
           ],
           'turn_complete': true,
-        }
+        },
       });
 
       final message2 = LiveClientContent();
       expect(message2.toJson(), {
-        'client_content': {
-          'turns': null,
-          'turn_complete': null,
-        }
+        'client_content': {'turns': null, 'turn_complete': null},
       });
     });
 
@@ -256,14 +245,14 @@ void main() {
       expect(message.toJson(), {
         'toolResponse': {
           'functionResponses': [
-            {'name': 'test', 'response': {}}
-          ]
-        }
+            {'name': 'test', 'response': {}},
+          ],
+        },
       });
 
       final message2 = LiveClientToolResponse();
       expect(message2.toJson(), {
-        'toolResponse': {'functionResponses': null}
+        'toolResponse': {'functionResponses': null},
       });
     });
 
@@ -272,11 +261,11 @@ void main() {
         'serverContent': {
           'modelTurn': {
             'parts': [
-              {'text': 'Hello, world!'}
-            ]
+              {'text': 'Hello, world!'},
+            ],
           },
           'turnComplete': true,
-        }
+        },
       };
       final response = parseServerResponse(jsonObject);
       expect(response.message, isA<LiveServerContent>());
@@ -291,14 +280,14 @@ void main() {
           'functionCalls': [
             {
               'name': 'test1',
-              'args': {'foo1': 'bar1'}
+              'args': {'foo1': 'bar1'},
             },
             {
               'name': 'test2',
-              'args': {'foo2': 'bar2'}
-            }
-          ]
-        }
+              'args': {'foo2': 'bar2'},
+            },
+          ],
+        },
       };
       final response = parseServerResponse(jsonObject);
       expect(response.message, isA<LiveServerToolCall>());
@@ -306,21 +295,25 @@ void main() {
       expect(toolCallMessage.functionCalls, isA<List<FunctionCall>>());
     });
 
-    test('parseServerMessage parses toolCallCancellation message correctly',
-        () {
-      final jsonObject = jsonDecode('''
+    test(
+      'parseServerMessage parses toolCallCancellation message correctly',
+      () {
+        final jsonObject =
+            jsonDecode('''
         {
           "toolCallCancellation": {
             "ids": ["1", "2"]
           }
         }
-        ''') as Map<String, dynamic>;
-      final response = parseServerResponse(jsonObject);
-      expect(response.message, isA<LiveServerToolCallCancellation>());
-      final cancellationMessage =
-          response.message as LiveServerToolCallCancellation;
-      expect(cancellationMessage.functionIds, ['1', '2']);
-    });
+        ''')
+                as Map<String, dynamic>;
+        final response = parseServerResponse(jsonObject);
+        expect(response.message, isA<LiveServerToolCallCancellation>());
+        final cancellationMessage =
+            response.message as LiveServerToolCallCancellation;
+        expect(cancellationMessage.functionIds, ['1', '2']);
+      },
+    );
 
     test('parseServerMessage parses setupComplete message correctly', () {
       final jsonObject = {'setupComplete': {}};
@@ -330,7 +323,7 @@ void main() {
 
     test('parseServerMessage parses goAway message correctly', () {
       final jsonObject = {
-        'goAway': {'timeLeft': '50s'}
+        'goAway': {'timeLeft': '50s'},
       };
       final response = parseServerResponse(jsonObject);
       expect(response.message, isA<GoingAwayNotice>());
@@ -340,59 +333,193 @@ void main() {
 
     test('parseServerMessage throws VertexAIException for error message', () {
       final jsonObject = {'error': {}};
-      expect(() => parseServerResponse(jsonObject),
-          throwsA(isA<FirebaseAISdkException>()));
-    });
-
-    test('parseServerMessage returns an unknown message for unhandled format',
-        () {
-      for (final jsonObject in [
-        {'unknown': {}},
-        {
-          'voiceActivity': {
-            'type': 'ACTIVITY_START',
-            'audioOffset': '2.520s',
-          },
-        },
-      ]) {
-        final response = parseServerResponse(jsonObject);
-        expect(
-          response.message,
-          isNot(anyOf(
-            isA<LiveServerContent>(),
-            isA<LiveServerToolCall>(),
-            isA<LiveServerToolCallCancellation>(),
-            isA<LiveServerSetupComplete>(),
-            isA<GoingAwayNotice>(),
-            isA<SessionResumptionUpdate>(),
-          )),
-        );
-      }
+      expect(
+        () => parseServerResponse(jsonObject),
+        throwsA(isA<FirebaseAISdkException>()),
+      );
     });
 
     test(
-        'LiveGenerationConfig with transcriptions toJson() returns correct JSON',
-        () {
-      final liveGenerationConfig = LiveGenerationConfig(
-        inputAudioTranscription: AudioTranscriptionConfig(),
-        outputAudioTranscription: AudioTranscriptionConfig(),
-      );
-      // Explicitly, these two config should not exist in the toJson()
-      expect(liveGenerationConfig.toJson(), {});
+      'parseServerMessage returns an unknown message for unhandled format',
+      () {
+        final response = parseServerResponse({'unknown': {}});
+        expect(
+          response.message,
+          isNot(
+            anyOf(
+              isA<LiveServerContent>(),
+              isA<LiveServerToolCall>(),
+              isA<LiveServerToolCallCancellation>(),
+              isA<LiveServerSetupComplete>(),
+              isA<GoingAwayNotice>(),
+              isA<SessionResumptionUpdate>(),
+              isA<LiveServerVoiceActivity>(),
+            ),
+          ),
+        );
+      },
+    );
+
+    group('parseServerMessage voiceActivity', () {
+      late void Function(String message) previousLog;
+      late List<String> logs;
+
+      setUp(() {
+        previousLog = liveServerVoiceActivityLog;
+        logs = <String>[];
+        liveServerVoiceActivityLog = logs.add;
+      });
+
+      tearDown(() {
+        liveServerVoiceActivityLog = previousLog;
+      });
+
+      LiveServerVoiceActivity parseVoiceActivity(Map<String, Object?> fields) {
+        final response = parseServerResponse({'voiceActivity': fields});
+        expect(response.message, isA<LiveServerVoiceActivity>());
+        return response.message as LiveServerVoiceActivity;
+      }
+
+      test('parses speech start and end with the documented offset', () {
+        const witnesses = <String, Duration>{
+          '2.520s': Duration(microseconds: 2520000),
+          ' 2s': Duration(microseconds: 2000000),
+          '2s ': Duration(microseconds: 2000000),
+          '1.5s': Duration(microseconds: 1500000),
+          '3s': Duration(microseconds: 3000000),
+          '0.0000014s': Duration(microseconds: 1),
+          '0.0000015s': Duration(microseconds: 2),
+          '2e1s': Duration(microseconds: 20000000),
+          '+2s': Duration(microseconds: 2000000),
+        };
+
+        for (final entry in witnesses.entries) {
+          for (final type in ['ACTIVITY_START', 'ACTIVITY_END']) {
+            logs.clear();
+            final message = parseVoiceActivity({
+              'type': type,
+              'audioOffset': entry.key,
+            });
+            expect(
+              message.type,
+              type == 'ACTIVITY_START'
+                  ? VoiceActivityType.activityStart
+                  : VoiceActivityType.activityEnd,
+            );
+            expect(message.audioOffset, entry.value);
+            expect(logs, isEmpty);
+          }
+        }
+      });
+
+      test('keeps the speech type when the offset is missing or rejected', () {
+        for (final type in ['ACTIVITY_START', 'ACTIVITY_END']) {
+          final expected = type == 'ACTIVITY_START'
+              ? VoiceActivityType.activityStart
+              : VoiceActivityType.activityEnd;
+
+          logs.clear();
+          final missing = parseVoiceActivity({'type': type});
+          expect(missing.type, expected);
+          expect(missing.audioOffset, isNull);
+          expect(logs, isEmpty);
+
+          for (final offset in ['nope', 'foo', '1e308s', '-1e308s']) {
+            logs.clear();
+            final rejected = parseVoiceActivity({
+              'type': type,
+              'audioOffset': offset,
+            });
+            expect(rejected.type, expected);
+            expect(rejected.audioOffset, isNull);
+            expect(logs, isEmpty);
+          }
+        }
+      });
+
+      test('unknown types keep a valid offset and log only when present', () {
+        logs.clear();
+        final missingType = parseVoiceActivity({'audioOffset': '2.520s'});
+        expect(missingType.type, VoiceActivityType.unknown);
+        expect(missingType.audioOffset, const Duration(microseconds: 2520000));
+        expect(logs, isEmpty);
+
+        logs.clear();
+        final unspecified = parseVoiceActivity({
+          'type': 'TYPE_UNSPECIFIED',
+          'audioOffset': '2.520s',
+        });
+        expect(unspecified.type, VoiceActivityType.unknown);
+        expect(unspecified.audioOffset, const Duration(microseconds: 2520000));
+        expect(logs, isEmpty);
+
+        logs.clear();
+        final garbage = parseVoiceActivity({
+          'type': 'GARBAGE',
+          'audioOffset': '2.520s',
+        });
+        expect(garbage.type, VoiceActivityType.unknown);
+        expect(garbage.audioOffset, const Duration(microseconds: 2520000));
+        expect(logs, ['Ignoring unrecognized VoiceActivityType: GARBAGE']);
+
+        logs.clear();
+        final garbageNope = parseVoiceActivity({
+          'type': 'GARBAGE',
+          'audioOffset': 'nope',
+        });
+        expect(garbageNope.type, VoiceActivityType.unknown);
+        expect(garbageNope.audioOffset, isNull);
+        expect(logs, ['Ignoring unrecognized VoiceActivityType: GARBAGE']);
+      });
+
+      test('non-string types map to unknown without logging', () {
+        for (final rawType in <Object?>[1, true, null]) {
+          logs.clear();
+          final message = parseVoiceActivity({
+            'type': rawType,
+            'audioOffset': '2.520s',
+          });
+          expect(message.type, VoiceActivityType.unknown);
+          expect(message.audioOffset, const Duration(microseconds: 2520000));
+          expect(logs, isEmpty);
+        }
+      });
+
+      test('throws when audioOffset is not a string', () {
+        expect(
+          () => parseServerResponse({
+            'voiceActivity': {'type': 'ACTIVITY_START', 'audioOffset': 1},
+          }),
+          throwsA(isA<TypeError>()),
+        );
+        expect(logs, isEmpty);
+      });
     });
+
+    test(
+      'LiveGenerationConfig with transcriptions toJson() returns correct JSON',
+      () {
+        final liveGenerationConfig = LiveGenerationConfig(
+          inputAudioTranscription: AudioTranscriptionConfig(),
+          outputAudioTranscription: AudioTranscriptionConfig(),
+        );
+        // Explicitly, these two config should not exist in the toJson()
+        expect(liveGenerationConfig.toJson(), {});
+      },
+    );
 
     test('parseServerMessage parses serverContent with transcriptions', () {
       final jsonObject = {
         'serverContent': {
           'modelTurn': {
             'parts': [
-              {'text': 'Hello, world!'}
-            ]
+              {'text': 'Hello, world!'},
+            ],
           },
           'turnComplete': true,
           'inputTranscription': {'text': 'input', 'finished': true},
-          'outputTranscription': {'text': 'output', 'finished': false}
-        }
+          'outputTranscription': {'text': 'output', 'finished': false},
+        },
       };
       final response = parseServerResponse(jsonObject);
       expect(response.message, isA<LiveServerContent>());
@@ -422,9 +549,7 @@ void main() {
       });
 
       final disabledConfig = ActivityDetectionConfig.disabled();
-      expect(disabledConfig.toJson(), {
-        'disabled': true,
-      });
+      expect(disabledConfig.toJson(), {'disabled': true});
 
       final emptyConfig = ActivityDetectionConfig();
       expect(emptyConfig.toJson(), {});
@@ -447,30 +572,27 @@ void main() {
     });
 
     test(
-        'LiveGenerationConfig with realtimeInputConfig toJson() returns correct JSON',
-        () {
-      final liveGenerationConfig = LiveGenerationConfig(
-        realtimeInputConfig: RealtimeInputConfig(
-          automaticActivityDetection: ActivityDetectionConfig.disabled(),
-        ),
-      );
-      // Explicitly, realtimeInputConfig should not exist in generation_config toJson() directly
-      expect(liveGenerationConfig.toJson(), {});
-    });
+      'LiveGenerationConfig with realtimeInputConfig toJson() returns correct JSON',
+      () {
+        final liveGenerationConfig = LiveGenerationConfig(
+          realtimeInputConfig: RealtimeInputConfig(
+            automaticActivityDetection: ActivityDetectionConfig.disabled(),
+          ),
+        );
+        // Explicitly, realtimeInputConfig should not exist in generation_config toJson() directly
+        expect(liveGenerationConfig.toJson(), {});
+      },
+    );
 
     test('LiveClientRealtimeInput activityStart and activityEnd toJson()', () {
       final startMessage = LiveClientRealtimeInput.activityStart();
       expect(startMessage.toJson(), {
-        'realtime_input': {
-          'activity_start': {},
-        },
+        'realtime_input': {'activity_start': {}},
       });
 
       final stopMessage = LiveClientRealtimeInput.activityEnd();
       expect(stopMessage.toJson(), {
-        'realtime_input': {
-          'activity_end': {},
-        },
+        'realtime_input': {'activity_end': {}},
       });
     });
   });

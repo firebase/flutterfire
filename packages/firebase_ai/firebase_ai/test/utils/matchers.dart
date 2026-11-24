@@ -16,40 +16,46 @@ import 'package:http/http.dart' as http;
 import 'package:matcher/matcher.dart';
 
 Matcher matchesPart(Part part) => switch (part) {
-      TextPart(text: final text, speechMetadata: final speechMetadata) =>
-        isA<TextPart>().having((p) => p.text, 'text', text).having(
-              (p) => p.speechMetadata,
-              'speechMetadata',
-              speechMetadata == null
-                  ? isNull
-                  : matchesSpeechMetadata(speechMetadata),
-            ),
-      InlineDataPart(mimeType: final mimeType, bytes: final bytes) =>
-        isA<InlineDataPart>()
-            .having((p) => p.mimeType, 'mimeType', mimeType)
-            .having((p) => p.bytes, 'bytes', bytes),
-      FileData(mimeType: final mimeType, fileUri: final fileUri) =>
-        isA<FileData>()
-            .having((p) => p.mimeType, 'mimeType', mimeType)
-            .having((p) => p.fileUri, 'fileUri', fileUri),
-      FunctionCall(name: final name, args: final args) => isA<FunctionCall>()
-          .having((p) => p.name, 'name', name)
-          .having((p) => p.args, 'args', args),
-      FunctionResponse(name: final name, response: final response) =>
-        isA<FunctionResponse>()
-            .having((p) => p.name, 'name', name)
-            .having((p) => p.response, 'args', response),
-      CodeExecutionResultPart(outcome: final outcome, output: final output) =>
-        isA<CodeExecutionResultPart>()
-            .having((p) => p.outcome, 'outcome', outcome)
-            .having((p) => p.output, 'output', output),
-      ExecutableCodePart(language: final language, code: final code) =>
-        isA<ExecutableCodePart>()
-            .having((p) => p.language, 'language', language)
-            .having((p) => p.code, 'code', code),
-      UnknownPart(data: final data) =>
-        isA<UnknownPart>().having((p) => p.data, 'data', data),
-    };
+  TextPart(text: final text, speechMetadata: final speechMetadata) =>
+    isA<TextPart>()
+        .having((p) => p.text, 'text', text)
+        .having(
+          (p) => p.speechMetadata,
+          'speechMetadata',
+          speechMetadata == null
+              ? isNull
+              : matchesSpeechMetadata(speechMetadata),
+        ),
+  InlineDataPart(mimeType: final mimeType, bytes: final bytes) =>
+    isA<InlineDataPart>()
+        .having((p) => p.mimeType, 'mimeType', mimeType)
+        .having((p) => p.bytes, 'bytes', bytes),
+  FileData(mimeType: final mimeType, fileUri: final fileUri) =>
+    isA<FileData>()
+        .having((p) => p.mimeType, 'mimeType', mimeType)
+        .having((p) => p.fileUri, 'fileUri', fileUri),
+  FunctionCall(name: final name, args: final args) =>
+    isA<FunctionCall>()
+        .having((p) => p.name, 'name', name)
+        .having((p) => p.args, 'args', args),
+  FunctionResponse(name: final name, response: final response) =>
+    isA<FunctionResponse>()
+        .having((p) => p.name, 'name', name)
+        .having((p) => p.response, 'args', response),
+  CodeExecutionResultPart(outcome: final outcome, output: final output) =>
+    isA<CodeExecutionResultPart>()
+        .having((p) => p.outcome, 'outcome', outcome)
+        .having((p) => p.output, 'output', output),
+  ExecutableCodePart(language: final language, code: final code) =>
+    isA<ExecutableCodePart>()
+        .having((p) => p.language, 'language', language)
+        .having((p) => p.code, 'code', code),
+  UnknownPart(data: final data) => isA<UnknownPart>().having(
+    (p) => p.data,
+    'data',
+    data,
+  ),
+};
 
 Matcher matchesSpeechMetadata(SpeechMetadata speechMetadata) =>
     isA<SpeechMetadata>()
@@ -61,10 +67,10 @@ Matcher matchesContent(Content content) => isA<Content>()
     .having((c) => c.parts, 'parts', content.parts.map(matchesPart).toList());
 
 Matcher matchesCandidate(Candidate candidate) => isA<Candidate>().having(
-      (c) => c.content,
-      'content',
-      matchesContent(candidate.content),
-    );
+  (c) => c.content,
+  'content',
+  matchesContent(candidate.content),
+);
 
 Matcher matchesGenerateContentResponse(GenerateContentResponse response) =>
     isA<GenerateContentResponse>()
@@ -81,9 +87,7 @@ Matcher matchesGenerateContentResponse(GenerateContentResponse response) =>
               : matchesPromptFeedback(response.promptFeedback!),
         );
 
-Matcher matchesPromptFeedback(
-  PromptFeedback promptFeedback,
-) =>
+Matcher matchesPromptFeedback(PromptFeedback promptFeedback) =>
     isA<PromptFeedback>()
         .having((p) => p.blockReason, 'blockReason', promptFeedback.blockReason)
         .having(
@@ -95,7 +99,8 @@ Matcher matchesPromptFeedback(
           (p) => p.safetyRatings,
           'safetyRatings',
           unorderedMatches(
-              promptFeedback.safetyRatings.map(matchesSafetyRating)),
+            promptFeedback.safetyRatings.map(matchesSafetyRating),
+          ),
         );
 
 Matcher matchesSafetyRating(SafetyRating safetyRating) => isA<SafetyRating>()

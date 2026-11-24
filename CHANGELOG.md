@@ -3,6 +3,311 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2026-11-16 - [BoM 5.2.0](https://github.com/firebase/flutterfire/blob/main/VERSIONS.md#flutter-bom-520-2026-11-16)
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`_flutterfire_internals` - `v1.4.0`](#_flutterfire_internals---v140)
+ - [`cloud_firestore` - `v7.2.0`](#cloud_firestore---v720)
+ - [`cloud_firestore_platform_interface` - `v8.2.0`](#cloud_firestore_platform_interface---v820)
+ - [`cloud_firestore_web` - `v5.9.0`](#cloud_firestore_web---v590)
+ - [`cloud_functions` - `v7.1.0`](#cloud_functions---v710)
+ - [`cloud_functions_platform_interface` - `v6.2.0`](#cloud_functions_platform_interface---v620)
+ - [`cloud_functions_web` - `v5.2.0`](#cloud_functions_web---v520)
+ - [`firebase_ai` - `v5.2.0`](#firebase_ai---v520)
+ - [`firebase_analytics` - `v13.1.0`](#firebase_analytics---v1310)
+ - [`firebase_analytics_platform_interface` - `v6.1.0`](#firebase_analytics_platform_interface---v610)
+ - [`firebase_analytics_web` - `v0.6.4+16`](#firebase_analytics_web---v06416)
+ - [`firebase_app_check` - `v0.5.2`](#firebase_app_check---v052)
+ - [`firebase_app_check_platform_interface` - `v0.5.2+4`](#firebase_app_check_platform_interface---v0524)
+ - [`firebase_app_check_web` - `v0.3.2+4`](#firebase_app_check_web---v0324)
+ - [`firebase_app_installations` - `v0.5.2`](#firebase_app_installations---v052)
+ - [`firebase_app_installations_platform_interface` - `v0.1.8`](#firebase_app_installations_platform_interface---v018)
+ - [`firebase_app_installations_web` - `v0.1.10+16`](#firebase_app_installations_web---v011016)
+ - [`firebase_auth` - `v7.1.0`](#firebase_auth---v710)
+ - [`firebase_auth_platform_interface` - `v9.2.0`](#firebase_auth_platform_interface---v920)
+ - [`firebase_auth_web` - `v6.4.0`](#firebase_auth_web---v640)
+ - [`firebase_core` - `v5.2.0`](#firebase_core---v520)
+ - [`firebase_core_platform_interface` - `v8.2.0`](#firebase_core_platform_interface---v820)
+ - [`firebase_core_web` - `v4.2.0`](#firebase_core_web---v420)
+ - [`firebase_crashlytics` - `v6.1.0`](#firebase_crashlytics---v610)
+ - [`firebase_crashlytics_platform_interface` - `v3.10.0`](#firebase_crashlytics_platform_interface---v3100)
+ - [`firebase_data_connect` - `v0.4.2`](#firebase_data_connect---v042)
+ - [`firebase_database` - `v13.1.0`](#firebase_database---v1310)
+ - [`firebase_database_platform_interface` - `v0.4.3+10`](#firebase_database_platform_interface---v04310)
+ - [`firebase_database_web` - `v0.2.10+17`](#firebase_database_web---v021017)
+ - [`firebase_in_app_messaging` - `v0.10.2`](#firebase_in_app_messaging---v0102)
+ - [`firebase_in_app_messaging_platform_interface` - `v0.2.8+31`](#firebase_in_app_messaging_platform_interface---v02831)
+ - [`firebase_messaging` - `v17.1.0`](#firebase_messaging---v1710)
+ - [`firebase_messaging_platform_interface` - `v4.12.0`](#firebase_messaging_platform_interface---v4120)
+ - [`firebase_messaging_web` - `v4.4.0`](#firebase_messaging_web---v440)
+ - [`firebase_performance` - `v0.12.2`](#firebase_performance---v0122)
+ - [`firebase_performance_platform_interface` - `v0.2.3+10`](#firebase_performance_platform_interface---v02310)
+ - [`firebase_performance_web` - `v0.1.11+16`](#firebase_performance_web---v011116)
+ - [`firebase_remote_config` - `v7.1.0`](#firebase_remote_config---v710)
+ - [`firebase_remote_config_platform_interface` - `v3.1.0`](#firebase_remote_config_platform_interface---v310)
+ - [`firebase_remote_config_web` - `v1.11.0`](#firebase_remote_config_web---v1110)
+ - [`firebase_storage` - `v14.1.0`](#firebase_storage---v1410)
+ - [`firebase_storage_platform_interface` - `v6.1.0`](#firebase_storage_platform_interface---v610)
+ - [`firebase_storage_web` - `v3.12.0`](#firebase_storage_web---v3120)
+
+---
+
+#### `_flutterfire_internals` - `v1.4.0`
+
+ - **FEAT**(android): migrate plugins to built-in Kotlin on Flutter 3.44 ([#18922](https://github.com/firebase/flutterfire/issues/18922)). ([1abe0561](https://github.com/firebase/flutterfire/commit/1abe05614d03f22782f597f847c1fc9c8c57f016))
+
+#### `cloud_firestore` - `v7.2.0`
+
+ - **REFACTOR**(firestore,apple): migrate iOS/macOS plugin implementation to Swift ([#18607](https://github.com/firebase/flutterfire/issues/18607)). ([899ff091](https://github.com/firebase/flutterfire/commit/899ff091c3c7fe93668ba6d464042250eb4acb50))
+ - **FIX**(cloud_firestore): deliver query snapshots before snapshotsInSync ([#18921](https://github.com/firebase/flutterfire/issues/18921)). ([1c4cf490](https://github.com/firebase/flutterfire/commit/1c4cf490017939dbf10d36e377491029d02fa232))
+ - **FIX**(cloud_firestore,windows): forward persistenceEnabled on the Windows codec ([#18936](https://github.com/firebase/flutterfire/issues/18936)). ([99d0e9ed](https://github.com/firebase/flutterfire/commit/99d0e9ed94e0c9313c515b190c151b56cfdf3ac3))
+ - **FIX**: pass analyze and format on Flutter 3.50 ([#18950](https://github.com/firebase/flutterfire/issues/18950)). ([e5339880](https://github.com/firebase/flutterfire/commit/e53398808f6d78b293d4ac1455f296b9257a096d))
+ - **FIX**(firestore): drop Apple snapshot events queued after cancel ([#18935](https://github.com/firebase/flutterfire/issues/18935)). ([b2114885](https://github.com/firebase/flutterfire/commit/b2114885f2557393cd6495d5d07f59dc08721b63))
+ - **FIX**(firestore,windows): fail a timed-out transaction instead of using a destroyed object ([#18884](https://github.com/firebase/flutterfire/issues/18884)). ([4f2b11cb](https://github.com/firebase/flutterfire/commit/4f2b11cba67e26c441efcb34de1b047d78fbad02))
+ - **FEAT**(android): migrate plugins to built-in Kotlin on Flutter 3.44 ([#18922](https://github.com/firebase/flutterfire/issues/18922)). ([1abe0561](https://github.com/firebase/flutterfire/commit/1abe05614d03f22782f597f847c1fc9c8c57f016))
+
+#### `cloud_firestore_platform_interface` - `v8.2.0`
+
+ - **REFACTOR**(firestore,apple): migrate iOS/macOS plugin implementation to Swift ([#18607](https://github.com/firebase/flutterfire/issues/18607)). ([899ff091](https://github.com/firebase/flutterfire/commit/899ff091c3c7fe93668ba6d464042250eb4acb50))
+ - **FEAT**(android): migrate plugins to built-in Kotlin on Flutter 3.44 ([#18922](https://github.com/firebase/flutterfire/issues/18922)). ([1abe0561](https://github.com/firebase/flutterfire/commit/1abe05614d03f22782f597f847c1fc9c8c57f016))
+
+#### `cloud_firestore_web` - `v5.9.0`
+
+ - **FEAT**(android): migrate plugins to built-in Kotlin on Flutter 3.44 ([#18922](https://github.com/firebase/flutterfire/issues/18922)). ([1abe0561](https://github.com/firebase/flutterfire/commit/1abe05614d03f22782f597f847c1fc9c8c57f016))
+
+#### `cloud_functions` - `v7.1.0`
+
+ - **FIX**: pass analyze and format on Flutter 3.50 ([#18950](https://github.com/firebase/flutterfire/issues/18950)). ([e5339880](https://github.com/firebase/flutterfire/commit/e53398808f6d78b293d4ac1455f296b9257a096d))
+ - **FIX**(cloud_functions): surface httpsCallable stream errors as FirebaseFunctionsException ([#18834](https://github.com/firebase/flutterfire/issues/18834)). ([62218f41](https://github.com/firebase/flutterfire/commit/62218f41d0f5b71416361f7ba69477b8204b75b7))
+ - **FEAT**(android): detect built-in Kotlin instead of checking the AGP version ([#18355](https://github.com/firebase/flutterfire/issues/18355)). ([4376b824](https://github.com/firebase/flutterfire/commit/4376b824405005092630aef97a5b7f31a394aaa7))
+ - **FEAT**(android): migrate plugins to built-in Kotlin on Flutter 3.44 ([#18922](https://github.com/firebase/flutterfire/issues/18922)). ([1abe0561](https://github.com/firebase/flutterfire/commit/1abe05614d03f22782f597f847c1fc9c8c57f016))
+
+#### `cloud_functions_platform_interface` - `v6.2.0`
+
+ - **FIX**(cloud_functions): surface httpsCallable stream errors as FirebaseFunctionsException ([#18834](https://github.com/firebase/flutterfire/issues/18834)). ([62218f41](https://github.com/firebase/flutterfire/commit/62218f41d0f5b71416361f7ba69477b8204b75b7))
+ - **FEAT**(android): migrate plugins to built-in Kotlin on Flutter 3.44 ([#18922](https://github.com/firebase/flutterfire/issues/18922)). ([1abe0561](https://github.com/firebase/flutterfire/commit/1abe05614d03f22782f597f847c1fc9c8c57f016))
+
+#### `cloud_functions_web` - `v5.2.0`
+
+ - **FIX**(auth,functions,web): rethrow non-Firebase errors instead of crashing in the error mappers ([#18923](https://github.com/firebase/flutterfire/issues/18923)). ([77ebf863](https://github.com/firebase/flutterfire/commit/77ebf863877bf576c2b1b0f3e120a1164b27eb7a))
+ - **FEAT**(android): migrate plugins to built-in Kotlin on Flutter 3.44 ([#18922](https://github.com/firebase/flutterfire/issues/18922)). ([1abe0561](https://github.com/firebase/flutterfire/commit/1abe05614d03f22782f597f847c1fc9c8c57f016))
+
+#### `firebase_ai` - `v5.2.0`
+
+ - **FIX**(firebase_ai): default an omitted Vertex countTokens total to zero ([#18952](https://github.com/firebase/flutterfire/issues/18952)). ([4ce01987](https://github.com/firebase/flutterfire/commit/4ce0198712f2dfad06817bf0575dc0dc0b13ee8f))
+ - **FIX**: pass analyze and format on Flutter 3.50 ([#18950](https://github.com/firebase/flutterfire/issues/18950)). ([e5339880](https://github.com/firebase/flutterfire/commit/e53398808f6d78b293d4ac1455f296b9257a096d))
+ - **FIX**(firebase_ai): keep parsing when a URL retrieval status is omitted ([#18933](https://github.com/firebase/flutterfire/issues/18933)). ([8829ed7d](https://github.com/firebase/flutterfire/commit/8829ed7dad23b1d6916b29bed7b974848d56b279))
+ - **FIX**(firebase_ai): parse code execution results that omit output ([#18882](https://github.com/firebase/flutterfire/issues/18882)). ([0307fa2e](https://github.com/firebase/flutterfire/commit/0307fa2e9173fdd7ff03b9fec8aae76f2e4eeb69))
+ - **FIX**: make firebase_ai and firebase_data_connect Wasm-ready, and check is:wasm-ready in CI ([#18853](https://github.com/firebase/flutterfire/issues/18853)). ([b41a8b08](https://github.com/firebase/flutterfire/commit/b41a8b087292a6b236e8bd74e923f6a0f45119b7))
+ - **FEAT**(android): detect built-in Kotlin instead of checking the AGP version ([#18355](https://github.com/firebase/flutterfire/issues/18355)). ([4376b824](https://github.com/firebase/flutterfire/commit/4376b824405005092630aef97a5b7f31a394aaa7))
+ - **FEAT**(android): migrate plugins to built-in Kotlin on Flutter 3.44 ([#18922](https://github.com/firebase/flutterfire/issues/18922)). ([1abe0561](https://github.com/firebase/flutterfire/commit/1abe05614d03f22782f597f847c1fc9c8c57f016))
+ - **FEAT**(firebase_ai): expose Live API voice activity ([#18929](https://github.com/firebase/flutterfire/issues/18929)). ([8ce0ffa4](https://github.com/firebase/flutterfire/commit/8ce0ffa420b0d48b7ab3f7ad9c6cf9f552b691fd))
+
+#### `firebase_analytics` - `v13.1.0`
+
+ - **FIX**: pass analyze and format on Flutter 3.50 ([#18950](https://github.com/firebase/flutterfire/issues/18950)). ([e5339880](https://github.com/firebase/flutterfire/commit/e53398808f6d78b293d4ac1455f296b9257a096d))
+ - **FIX**(apple): resolve CocoaPods deps that skip the 12.19.3 patch release ([#18862](https://github.com/firebase/flutterfire/issues/18862)). ([4b422618](https://github.com/firebase/flutterfire/commit/4b422618d9b3719265211f1cb632d90335a6485a))
+ - **FEAT**(android): detect built-in Kotlin instead of checking the AGP version ([#18355](https://github.com/firebase/flutterfire/issues/18355)). ([4376b824](https://github.com/firebase/flutterfire/commit/4376b824405005092630aef97a5b7f31a394aaa7))
+ - **FEAT**(android): migrate plugins to built-in Kotlin on Flutter 3.44 ([#18922](https://github.com/firebase/flutterfire/issues/18922)). ([1abe0561](https://github.com/firebase/flutterfire/commit/1abe05614d03f22782f597f847c1fc9c8c57f016))
+
+#### `firebase_analytics_platform_interface` - `v6.1.0`
+
+ - **FEAT**(android): migrate plugins to built-in Kotlin on Flutter 3.44 ([#18922](https://github.com/firebase/flutterfire/issues/18922)). ([1abe0561](https://github.com/firebase/flutterfire/commit/1abe05614d03f22782f597f847c1fc9c8c57f016))
+
+#### `firebase_analytics_web` - `v0.6.4+16`
+
+ - **FEAT**(android): migrate plugins to built-in Kotlin on Flutter 3.44 ([#18922](https://github.com/firebase/flutterfire/issues/18922)). ([1abe0561](https://github.com/firebase/flutterfire/commit/1abe05614d03f22782f597f847c1fc9c8c57f016))
+
+#### `firebase_app_check` - `v0.5.2`
+
+ - **FIX**(app_check,apple): use the provider passed to activate() on Flutter 3.50 ([#18968](https://github.com/firebase/flutterfire/issues/18968)). ([d0fec9cc](https://github.com/firebase/flutterfire/commit/d0fec9cc817eb9d8e2cf72b543a2460fc3f66e2d))
+ - **FIX**: pass analyze and format on Flutter 3.50 ([#18950](https://github.com/firebase/flutterfire/issues/18950)). ([e5339880](https://github.com/firebase/flutterfire/commit/e53398808f6d78b293d4ac1455f296b9257a096d))
+ - **FIX**(appcheck,apple): map native error codes by enum case ([#18875](https://github.com/firebase/flutterfire/issues/18875)). ([f4c9ec10](https://github.com/firebase/flutterfire/commit/f4c9ec10cb76d49ce2831c1da878399a3a5c4d16))
+ - **FIX**(apple): resolve CocoaPods deps that skip the 12.19.3 patch release ([#18862](https://github.com/firebase/flutterfire/issues/18862)). ([4b422618](https://github.com/firebase/flutterfire/commit/4b422618d9b3719265211f1cb632d90335a6485a))
+ - **FEAT**(android): detect built-in Kotlin instead of checking the AGP version ([#18355](https://github.com/firebase/flutterfire/issues/18355)). ([4376b824](https://github.com/firebase/flutterfire/commit/4376b824405005092630aef97a5b7f31a394aaa7))
+ - **FEAT**(android): migrate plugins to built-in Kotlin on Flutter 3.44 ([#18922](https://github.com/firebase/flutterfire/issues/18922)). ([1abe0561](https://github.com/firebase/flutterfire/commit/1abe05614d03f22782f597f847c1fc9c8c57f016))
+
+#### `firebase_app_check_platform_interface` - `v0.5.2+4`
+
+ - **FEAT**(android): migrate plugins to built-in Kotlin on Flutter 3.44 ([#18922](https://github.com/firebase/flutterfire/issues/18922)). ([1abe0561](https://github.com/firebase/flutterfire/commit/1abe05614d03f22782f597f847c1fc9c8c57f016))
+
+#### `firebase_app_check_web` - `v0.3.2+4`
+
+ - **FIX**(core,appcheck,web): start when the browser blocks web storage ([#18946](https://github.com/firebase/flutterfire/issues/18946)). ([229e08e8](https://github.com/firebase/flutterfire/commit/229e08e8f0b197c1eef240db73a716d7f948c2a1))
+ - **FEAT**(android): migrate plugins to built-in Kotlin on Flutter 3.44 ([#18922](https://github.com/firebase/flutterfire/issues/18922)). ([1abe0561](https://github.com/firebase/flutterfire/commit/1abe05614d03f22782f597f847c1fc9c8c57f016))
+
+#### `firebase_app_installations` - `v0.5.2`
+
+ - **FIX**: pass analyze and format on Flutter 3.50 ([#18950](https://github.com/firebase/flutterfire/issues/18950)). ([e5339880](https://github.com/firebase/flutterfire/commit/e53398808f6d78b293d4ac1455f296b9257a096d))
+ - **FEAT**(android): detect built-in Kotlin instead of checking the AGP version ([#18355](https://github.com/firebase/flutterfire/issues/18355)). ([4376b824](https://github.com/firebase/flutterfire/commit/4376b824405005092630aef97a5b7f31a394aaa7))
+ - **FEAT**(android): migrate plugins to built-in Kotlin on Flutter 3.44 ([#18922](https://github.com/firebase/flutterfire/issues/18922)). ([1abe0561](https://github.com/firebase/flutterfire/commit/1abe05614d03f22782f597f847c1fc9c8c57f016))
+
+#### `firebase_app_installations_platform_interface` - `v0.1.8`
+
+ - **FEAT**(android): migrate plugins to built-in Kotlin on Flutter 3.44 ([#18922](https://github.com/firebase/flutterfire/issues/18922)). ([1abe0561](https://github.com/firebase/flutterfire/commit/1abe05614d03f22782f597f847c1fc9c8c57f016))
+
+#### `firebase_app_installations_web` - `v0.1.10+16`
+
+ - **FEAT**(android): migrate plugins to built-in Kotlin on Flutter 3.44 ([#18922](https://github.com/firebase/flutterfire/issues/18922)). ([1abe0561](https://github.com/firebase/flutterfire/commit/1abe05614d03f22782f597f847c1fc9c8c57f016))
+
+#### `firebase_auth` - `v7.1.0`
+
+ - **FIX**(auth,android): keep the Auth error code when getIdToken fails ([#18957](https://github.com/firebase/flutterfire/issues/18957)). ([4cc02f2b](https://github.com/firebase/flutterfire/commit/4cc02f2b82b4a8defe1b9cbf291446b104d300d0))
+ - **FIX**(auth,apple): clear Sign in with Apple state when the request ends ([#18941](https://github.com/firebase/flutterfire/issues/18941)). ([aed7f18d](https://github.com/firebase/flutterfire/commit/aed7f18d21d95198d12b3e62e14d045d607c5e98))
+ - **FIX**(auth): keep the web Auth emulator across a browser restart ([#18926](https://github.com/firebase/flutterfire/issues/18926)). ([cbf2ab9d](https://github.com/firebase/flutterfire/commit/cbf2ab9dad338c6076e8d214df963c00693d0bd1))
+ - **FIX**: pass analyze and format on Flutter 3.50 ([#18950](https://github.com/firebase/flutterfire/issues/18950)). ([e5339880](https://github.com/firebase/flutterfire/commit/e53398808f6d78b293d4ac1455f296b9257a096d))
+ - **FIX**(auth,ios): keep sign-in redirect URLs out of Flutter deep linking ([#18841](https://github.com/firebase/flutterfire/issues/18841)). ([bd8d3a3c](https://github.com/firebase/flutterfire/commit/bd8d3a3c6688832b86c6d00a98628b0bac4e9684))
+ - **FEAT**(android): detect built-in Kotlin instead of checking the AGP version ([#18355](https://github.com/firebase/flutterfire/issues/18355)). ([4376b824](https://github.com/firebase/flutterfire/commit/4376b824405005092630aef97a5b7f31a394aaa7))
+ - **FEAT**(android): migrate plugins to built-in Kotlin on Flutter 3.44 ([#18922](https://github.com/firebase/flutterfire/issues/18922)). ([1abe0561](https://github.com/firebase/flutterfire/commit/1abe05614d03f22782f597f847c1fc9c8c57f016))
+
+#### `firebase_auth_platform_interface` - `v9.2.0`
+
+ - **FEAT**(android): migrate plugins to built-in Kotlin on Flutter 3.44 ([#18922](https://github.com/firebase/flutterfire/issues/18922)). ([1abe0561](https://github.com/firebase/flutterfire/commit/1abe05614d03f22782f597f847c1fc9c8c57f016))
+
+#### `firebase_auth_web` - `v6.4.0`
+
+ - **FIX**(core,appcheck,web): start when the browser blocks web storage ([#18946](https://github.com/firebase/flutterfire/issues/18946)). ([229e08e8](https://github.com/firebase/flutterfire/commit/229e08e8f0b197c1eef240db73a716d7f948c2a1))
+ - **FIX**(auth): keep the web Auth emulator across a browser restart ([#18926](https://github.com/firebase/flutterfire/issues/18926)). ([cbf2ab9d](https://github.com/firebase/flutterfire/commit/cbf2ab9dad338c6076e8d214df963c00693d0bd1))
+ - **FIX**(auth,functions,web): rethrow non-Firebase errors instead of crashing in the error mappers ([#18923](https://github.com/firebase/flutterfire/issues/18923)). ([77ebf863](https://github.com/firebase/flutterfire/commit/77ebf863877bf576c2b1b0f3e120a1164b27eb7a))
+ - **FIX**(web): properly cast Map from JSAny?.dartify() ([#18855](https://github.com/firebase/flutterfire/issues/18855)). ([24ff83a3](https://github.com/firebase/flutterfire/commit/24ff83a3a9ca4e4e62130cb5e5f89edbc4351c7f))
+ - **FEAT**(android): migrate plugins to built-in Kotlin on Flutter 3.44 ([#18922](https://github.com/firebase/flutterfire/issues/18922)). ([1abe0561](https://github.com/firebase/flutterfire/commit/1abe05614d03f22782f597f847c1fc9c8c57f016))
+
+#### `firebase_core` - `v5.2.0`
+
+ - **FIX**(app_check,apple): use the provider passed to activate() on Flutter 3.50 ([#18968](https://github.com/firebase/flutterfire/issues/18968)). ([d0fec9cc](https://github.com/firebase/flutterfire/commit/d0fec9cc817eb9d8e2cf72b543a2460fc3f66e2d))
+ - **FIX**: pass analyze and format on Flutter 3.50 ([#18950](https://github.com/firebase/flutterfire/issues/18950)). ([e5339880](https://github.com/firebase/flutterfire/commit/e53398808f6d78b293d4ac1455f296b9257a096d))
+ - **FEAT**(android): detect built-in Kotlin instead of checking the AGP version ([#18355](https://github.com/firebase/flutterfire/issues/18355)). ([4376b824](https://github.com/firebase/flutterfire/commit/4376b824405005092630aef97a5b7f31a394aaa7))
+ - **FEAT**(core): bump Firebase Android SDK to 35.2.0 ([#18960](https://github.com/firebase/flutterfire/issues/18960)). ([fd7d1164](https://github.com/firebase/flutterfire/commit/fd7d1164a81237f7718360cd0fd504b6df1982fc))
+ - **FEAT**(android): migrate plugins to built-in Kotlin on Flutter 3.44 ([#18922](https://github.com/firebase/flutterfire/issues/18922)). ([1abe0561](https://github.com/firebase/flutterfire/commit/1abe05614d03f22782f597f847c1fc9c8c57f016))
+
+#### `firebase_core_platform_interface` - `v8.2.0`
+
+ - **FEAT**(android): migrate plugins to built-in Kotlin on Flutter 3.44 ([#18922](https://github.com/firebase/flutterfire/issues/18922)). ([1abe0561](https://github.com/firebase/flutterfire/commit/1abe05614d03f22782f597f847c1fc9c8c57f016))
+
+#### `firebase_core_web` - `v4.2.0`
+
+ - **FIX**(core,appcheck,web): start when the browser blocks web storage ([#18946](https://github.com/firebase/flutterfire/issues/18946)). ([229e08e8](https://github.com/firebase/flutterfire/commit/229e08e8f0b197c1eef240db73a716d7f948c2a1))
+ - **FEAT**(core): bump Firebase JS SDK to 13.3.0 ([#18961](https://github.com/firebase/flutterfire/issues/18961)). ([38d67566](https://github.com/firebase/flutterfire/commit/38d67566319392c4cda3563bbb5aca4c41491589))
+ - **FEAT**(android): migrate plugins to built-in Kotlin on Flutter 3.44 ([#18922](https://github.com/firebase/flutterfire/issues/18922)). ([1abe0561](https://github.com/firebase/flutterfire/commit/1abe05614d03f22782f597f847c1fc9c8c57f016))
+ - **FEAT**(core): bump Firebase JS SDK to 13.2.0 ([#18903](https://github.com/firebase/flutterfire/issues/18903)). ([c07bff58](https://github.com/firebase/flutterfire/commit/c07bff5834a3cdd101c51ee022202f3b3644e597))
+
+#### `firebase_crashlytics` - `v6.1.0`
+
+ - **FIX**: pass analyze and format on Flutter 3.50 ([#18950](https://github.com/firebase/flutterfire/issues/18950)). ([e5339880](https://github.com/firebase/flutterfire/commit/e53398808f6d78b293d4ac1455f296b9257a096d))
+ - **FEAT**(android): detect built-in Kotlin instead of checking the AGP version ([#18355](https://github.com/firebase/flutterfire/issues/18355)). ([4376b824](https://github.com/firebase/flutterfire/commit/4376b824405005092630aef97a5b7f31a394aaa7))
+ - **FEAT**(android): migrate plugins to built-in Kotlin on Flutter 3.44 ([#18922](https://github.com/firebase/flutterfire/issues/18922)). ([1abe0561](https://github.com/firebase/flutterfire/commit/1abe05614d03f22782f597f847c1fc9c8c57f016))
+
+#### `firebase_crashlytics_platform_interface` - `v3.10.0`
+
+ - **FEAT**(android): migrate plugins to built-in Kotlin on Flutter 3.44 ([#18922](https://github.com/firebase/flutterfire/issues/18922)). ([1abe0561](https://github.com/firebase/flutterfire/commit/1abe05614d03f22782f597f847c1fc9c8c57f016))
+
+#### `firebase_data_connect` - `v0.4.2`
+
+ - **FIX**: pass analyze and format on Flutter 3.50 ([#18950](https://github.com/firebase/flutterfire/issues/18950)). ([e5339880](https://github.com/firebase/flutterfire/commit/e53398808f6d78b293d4ac1455f296b9257a096d))
+ - **FIX**: make firebase_ai and firebase_data_connect Wasm-ready, and check is:wasm-ready in CI ([#18853](https://github.com/firebase/flutterfire/issues/18853)). ([b41a8b08](https://github.com/firebase/flutterfire/commit/b41a8b087292a6b236e8bd74e923f6a0f45119b7))
+ - **FEAT**(android): migrate plugins to built-in Kotlin on Flutter 3.44 ([#18922](https://github.com/firebase/flutterfire/issues/18922)). ([1abe0561](https://github.com/firebase/flutterfire/commit/1abe05614d03f22782f597f847c1fc9c8c57f016))
+ - **DOCS**(data_connect): declare supported platforms ([#18927](https://github.com/firebase/flutterfire/issues/18927)). ([13420bec](https://github.com/firebase/flutterfire/commit/13420beccd0f11aa120343a22420ef7bb27f06c2))
+
+#### `firebase_database` - `v13.1.0`
+
+ - **FIX**: pass analyze and format on Flutter 3.50 ([#18950](https://github.com/firebase/flutterfire/issues/18950)). ([e5339880](https://github.com/firebase/flutterfire/commit/e53398808f6d78b293d4ac1455f296b9257a096d))
+ - **FEAT**(android): detect built-in Kotlin instead of checking the AGP version ([#18355](https://github.com/firebase/flutterfire/issues/18355)). ([4376b824](https://github.com/firebase/flutterfire/commit/4376b824405005092630aef97a5b7f31a394aaa7))
+ - **FEAT**(android): migrate plugins to built-in Kotlin on Flutter 3.44 ([#18922](https://github.com/firebase/flutterfire/issues/18922)). ([1abe0561](https://github.com/firebase/flutterfire/commit/1abe05614d03f22782f597f847c1fc9c8c57f016))
+ - **DOCS**(database): mark Windows support as development-only ([#18910](https://github.com/firebase/flutterfire/issues/18910)). ([030cdbfb](https://github.com/firebase/flutterfire/commit/030cdbfbd2201da57d0f27a2a09971c0f48d60aa))
+
+#### `firebase_database_platform_interface` - `v0.4.3+10`
+
+ - **FEAT**(android): migrate plugins to built-in Kotlin on Flutter 3.44 ([#18922](https://github.com/firebase/flutterfire/issues/18922)). ([1abe0561](https://github.com/firebase/flutterfire/commit/1abe05614d03f22782f597f847c1fc9c8c57f016))
+
+#### `firebase_database_web` - `v0.2.10+17`
+
+ - **FEAT**(android): migrate plugins to built-in Kotlin on Flutter 3.44 ([#18922](https://github.com/firebase/flutterfire/issues/18922)). ([1abe0561](https://github.com/firebase/flutterfire/commit/1abe05614d03f22782f597f847c1fc9c8c57f016))
+
+#### `firebase_in_app_messaging` - `v0.10.2`
+
+ - **FIX**: pass analyze and format on Flutter 3.50 ([#18950](https://github.com/firebase/flutterfire/issues/18950)). ([e5339880](https://github.com/firebase/flutterfire/commit/e53398808f6d78b293d4ac1455f296b9257a096d))
+ - **FIX**(in_app_messaging): keep Android SDK artifacts off the app compile classpath ([#18873](https://github.com/firebase/flutterfire/issues/18873)). ([f3d7cf68](https://github.com/firebase/flutterfire/commit/f3d7cf68deac07af529655165fc282105f19cfc1))
+ - **FEAT**(android): detect built-in Kotlin instead of checking the AGP version ([#18355](https://github.com/firebase/flutterfire/issues/18355)). ([4376b824](https://github.com/firebase/flutterfire/commit/4376b824405005092630aef97a5b7f31a394aaa7))
+ - **FEAT**(android): migrate plugins to built-in Kotlin on Flutter 3.44 ([#18922](https://github.com/firebase/flutterfire/issues/18922)). ([1abe0561](https://github.com/firebase/flutterfire/commit/1abe05614d03f22782f597f847c1fc9c8c57f016))
+
+#### `firebase_in_app_messaging_platform_interface` - `v0.2.8+31`
+
+ - **FEAT**(android): migrate plugins to built-in Kotlin on Flutter 3.44 ([#18922](https://github.com/firebase/flutterfire/issues/18922)). ([1abe0561](https://github.com/firebase/flutterfire/commit/1abe05614d03f22782f597f847c1fc9c8c57f016))
+
+#### `firebase_messaging` - `v17.1.0`
+
+ - **FIX**(messaging,android): skip the background service when no handler is registered ([#18942](https://github.com/firebase/flutterfire/issues/18942)). ([e519caa7](https://github.com/firebase/flutterfire/commit/e519caa7710ba26b33a6cc71485bb198e31d2d84))
+ - **FIX**: pass analyze and format on Flutter 3.50 ([#18950](https://github.com/firebase/flutterfire/issues/18950)). ([e5339880](https://github.com/firebase/flutterfire/commit/e53398808f6d78b293d4ac1455f296b9257a096d))
+ - **FIX**(messaging,ios): read the APNs token type from the provisioning profile ([#18937](https://github.com/firebase/flutterfire/issues/18937)). ([37107eec](https://github.com/firebase/flutterfire/commit/37107eec1b53875c134d41893d94a9cd9acf414c))
+ - **FIX**(messaging,android): release the FCM run wake lock off the main thread ([#18867](https://github.com/firebase/flutterfire/issues/18867)). ([3bd8f6a1](https://github.com/firebase/flutterfire/commit/3bd8f6a1523dd779e98376dddd7768e13e02b4d6))
+ - **FIX**(messaging,android): ignore broadcasts that carry no message ([#18907](https://github.com/firebase/flutterfire/issues/18907)). ([1fb0a588](https://github.com/firebase/flutterfire/commit/1fb0a5888a538ab0930ee2ef143c88f39967dedf))
+ - **FIX**(messaging,android): deliver every foreground message to onMessage exactly once ([#18831](https://github.com/firebase/flutterfire/issues/18831)). ([9d457a5d](https://github.com/firebase/flutterfire/commit/9d457a5d18568004b288ed245678da9881168b5b))
+ - **FEAT**(android): migrate plugins to built-in Kotlin on Flutter 3.44 ([#18922](https://github.com/firebase/flutterfire/issues/18922)). ([1abe0561](https://github.com/firebase/flutterfire/commit/1abe05614d03f22782f597f847c1fc9c8c57f016))
+
+#### `firebase_messaging_platform_interface` - `v4.12.0`
+
+ - **FIX**: pass analyze and format on Flutter 3.50 ([#18950](https://github.com/firebase/flutterfire/issues/18950)). ([e5339880](https://github.com/firebase/flutterfire/commit/e53398808f6d78b293d4ac1455f296b9257a096d))
+ - **FEAT**(android): migrate plugins to built-in Kotlin on Flutter 3.44 ([#18922](https://github.com/firebase/flutterfire/issues/18922)). ([1abe0561](https://github.com/firebase/flutterfire/commit/1abe05614d03f22782f597f847c1fc9c8c57f016))
+
+#### `firebase_messaging_web` - `v4.4.0`
+
+ - **FEAT**(android): migrate plugins to built-in Kotlin on Flutter 3.44 ([#18922](https://github.com/firebase/flutterfire/issues/18922)). ([1abe0561](https://github.com/firebase/flutterfire/commit/1abe05614d03f22782f597f847c1fc9c8c57f016))
+
+#### `firebase_performance` - `v0.12.2`
+
+ - **FIX**: pass analyze and format on Flutter 3.50 ([#18950](https://github.com/firebase/flutterfire/issues/18950)). ([e5339880](https://github.com/firebase/flutterfire/commit/e53398808f6d78b293d4ac1455f296b9257a096d))
+ - **FEAT**(android): detect built-in Kotlin instead of checking the AGP version ([#18355](https://github.com/firebase/flutterfire/issues/18355)). ([4376b824](https://github.com/firebase/flutterfire/commit/4376b824405005092630aef97a5b7f31a394aaa7))
+ - **FEAT**(android): migrate plugins to built-in Kotlin on Flutter 3.44 ([#18922](https://github.com/firebase/flutterfire/issues/18922)). ([1abe0561](https://github.com/firebase/flutterfire/commit/1abe05614d03f22782f597f847c1fc9c8c57f016))
+
+#### `firebase_performance_platform_interface` - `v0.2.3+10`
+
+ - **FEAT**(android): migrate plugins to built-in Kotlin on Flutter 3.44 ([#18922](https://github.com/firebase/flutterfire/issues/18922)). ([1abe0561](https://github.com/firebase/flutterfire/commit/1abe05614d03f22782f597f847c1fc9c8c57f016))
+
+#### `firebase_performance_web` - `v0.1.11+16`
+
+ - **FIX**: pass analyze and format on Flutter 3.50 ([#18950](https://github.com/firebase/flutterfire/issues/18950)). ([e5339880](https://github.com/firebase/flutterfire/commit/e53398808f6d78b293d4ac1455f296b9257a096d))
+ - **FIX**(web): properly cast Map from JSAny?.dartify() ([#18855](https://github.com/firebase/flutterfire/issues/18855)). ([24ff83a3](https://github.com/firebase/flutterfire/commit/24ff83a3a9ca4e4e62130cb5e5f89edbc4351c7f))
+ - **FEAT**(android): migrate plugins to built-in Kotlin on Flutter 3.44 ([#18922](https://github.com/firebase/flutterfire/issues/18922)). ([1abe0561](https://github.com/firebase/flutterfire/commit/1abe05614d03f22782f597f847c1fc9c8c57f016))
+
+#### `firebase_remote_config` - `v7.1.0`
+
+ - **FIX**: pass analyze and format on Flutter 3.50 ([#18950](https://github.com/firebase/flutterfire/issues/18950)). ([e5339880](https://github.com/firebase/flutterfire/commit/e53398808f6d78b293d4ac1455f296b9257a096d))
+ - **FEAT**(android): detect built-in Kotlin instead of checking the AGP version ([#18355](https://github.com/firebase/flutterfire/issues/18355)). ([4376b824](https://github.com/firebase/flutterfire/commit/4376b824405005092630aef97a5b7f31a394aaa7))
+ - **FEAT**(android): migrate plugins to built-in Kotlin on Flutter 3.44 ([#18922](https://github.com/firebase/flutterfire/issues/18922)). ([1abe0561](https://github.com/firebase/flutterfire/commit/1abe05614d03f22782f597f847c1fc9c8c57f016))
+
+#### `firebase_remote_config_platform_interface` - `v3.1.0`
+
+ - **FEAT**(android): migrate plugins to built-in Kotlin on Flutter 3.44 ([#18922](https://github.com/firebase/flutterfire/issues/18922)). ([1abe0561](https://github.com/firebase/flutterfire/commit/1abe05614d03f22782f597f847c1fc9c8c57f016))
+
+#### `firebase_remote_config_web` - `v1.11.0`
+
+ - **FIX**(web): properly cast Map from JSAny?.dartify() ([#18855](https://github.com/firebase/flutterfire/issues/18855)). ([24ff83a3](https://github.com/firebase/flutterfire/commit/24ff83a3a9ca4e4e62130cb5e5f89edbc4351c7f))
+ - **FEAT**(android): migrate plugins to built-in Kotlin on Flutter 3.44 ([#18922](https://github.com/firebase/flutterfire/issues/18922)). ([1abe0561](https://github.com/firebase/flutterfire/commit/1abe05614d03f22782f597f847c1fc9c8c57f016))
+
+#### `firebase_storage` - `v14.1.0`
+
+ - **FIX**: pass analyze and format on Flutter 3.50 ([#18950](https://github.com/firebase/flutterfire/issues/18950)). ([e5339880](https://github.com/firebase/flutterfire/commit/e53398808f6d78b293d4ac1455f296b9257a096d))
+ - **FEAT**(android): detect built-in Kotlin instead of checking the AGP version ([#18355](https://github.com/firebase/flutterfire/issues/18355)). ([4376b824](https://github.com/firebase/flutterfire/commit/4376b824405005092630aef97a5b7f31a394aaa7))
+ - **FEAT**(android): migrate plugins to built-in Kotlin on Flutter 3.44 ([#18922](https://github.com/firebase/flutterfire/issues/18922)). ([1abe0561](https://github.com/firebase/flutterfire/commit/1abe05614d03f22782f597f847c1fc9c8c57f016))
+
+#### `firebase_storage_platform_interface` - `v6.1.0`
+
+ - **FEAT**(android): migrate plugins to built-in Kotlin on Flutter 3.44 ([#18922](https://github.com/firebase/flutterfire/issues/18922)). ([1abe0561](https://github.com/firebase/flutterfire/commit/1abe05614d03f22782f597f847c1fc9c8c57f016))
+
+#### `firebase_storage_web` - `v3.12.0`
+
+ - **FEAT**(android): migrate plugins to built-in Kotlin on Flutter 3.44 ([#18922](https://github.com/firebase/flutterfire/issues/18922)). ([1abe0561](https://github.com/firebase/flutterfire/commit/1abe05614d03f22782f597f847c1fc9c8c57f016))
+
+
 ## 2026-10-22 - [BoM 5.1.0](https://github.com/firebase/flutterfire/blob/main/VERSIONS.md#flutter-bom-510-2026-10-22)
 
 ### Changes

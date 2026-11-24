@@ -10,8 +10,8 @@ import 'package:meta/meta.dart';
 class GeoPoint {
   /// Create [GeoPoint] instance.
   const GeoPoint(this.latitude, this.longitude)
-      : assert(latitude >= -90 && latitude <= 90),
-        assert(longitude >= -180 && longitude <= 180);
+    : assert(latitude >= -90 && latitude <= 90),
+      assert(longitude >= -180 && longitude <= 180);
 
   final double latitude; // ignore: public_member_api_docs
   final double longitude; // ignore: public_member_api_docs

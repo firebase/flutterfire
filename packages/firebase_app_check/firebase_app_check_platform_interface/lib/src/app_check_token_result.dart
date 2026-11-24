@@ -5,10 +5,7 @@
 /// An App Check token and its associated metadata.
 class AppCheckTokenResult {
   /// Creates an App Check token result.
-  const AppCheckTokenResult({
-    required this.token,
-    this.expirationTime,
-  });
+  const AppCheckTokenResult({required this.token, this.expirationTime});
 
   /// The App Check token JWT string.
   final String token;

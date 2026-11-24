@@ -27,9 +27,7 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
 
   /// Stub initializer to allow the [registerWith] to create an instance without
   /// registering the web delegates or listeners.
-  FirebaseAppCheckWeb._()
-      : _webAppCheck = null,
-        super(appInstance: null);
+  FirebaseAppCheckWeb._() : _webAppCheck = null, super(appInstance: null);
 
   /// The entry point for the [FirebaseAuthWeb] class.
   FirebaseAppCheckWeb({required FirebaseApp app}) : super(appInstance: app);
@@ -45,28 +43,38 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
         final instance = FirebaseAppCheckWeb(
           app: Firebase.app(firebaseApp.name),
         );
-        var recaptchaType = web.window.localStorage.getItem(
-          _sessionKeyRecaptchaType(firebaseApp.name),
-        );
-        var recaptchaSiteKey = web.window.localStorage.getItem(
-          _sessionKeyRecaptchaSiteKey(firebaseApp.name),
-        );
-
-        // For backwards compatibility, with previously used session storage
-        if (recaptchaType == null || recaptchaSiteKey == null) {
-          recaptchaType = web.window.sessionStorage.getItem(
+        String? recaptchaType;
+        String? recaptchaSiteKey;
+        try {
+          recaptchaType = web.window.localStorage.getItem(
             _sessionKeyRecaptchaType(firebaseApp.name),
           );
-          recaptchaSiteKey = web.window.sessionStorage.getItem(
+          recaptchaSiteKey = web.window.localStorage.getItem(
             _sessionKeyRecaptchaSiteKey(firebaseApp.name),
           );
+
+          // For backwards compatibility, with previously used session storage
+          if (recaptchaType == null || recaptchaSiteKey == null) {
+            recaptchaType = web.window.sessionStorage.getItem(
+              _sessionKeyRecaptchaType(firebaseApp.name),
+            );
+            recaptchaSiteKey = web.window.sessionStorage.getItem(
+              _sessionKeyRecaptchaSiteKey(firebaseApp.name),
+            );
+          }
+        } catch (_) {
+          // Accessing web storage throws a SecurityError when the user blocks
+          // site data. Nothing can have been persisted then.
+          recaptchaType = null;
+          recaptchaSiteKey = null;
         }
 
         if (recaptchaType != null) {
           final WebProvider provider;
           if (recaptchaType == recaptchaTypeDebug) {
-            final debugToken =
-                recaptchaSiteKey?.isNotEmpty ?? false ? recaptchaSiteKey : null;
+            final debugToken = recaptchaSiteKey?.isNotEmpty ?? false
+                ? recaptchaSiteKey
+                : null;
             provider = WebDebugProvider(debugToken: debugToken);
           } else if (recaptchaSiteKey != null) {
             if (recaptchaType == recaptchaTypeV3) {
@@ -142,16 +150,21 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
       } else {
         throw Exception('Invalid web provider: $providerWeb');
       }
-      web.window.localStorage.setItem(
-        _sessionKeyRecaptchaType(app.name),
-        recaptchaType,
-      );
-      web.window.localStorage.setItem(
-        _sessionKeyRecaptchaSiteKey(app.name),
-        providerWeb is WebDebugProvider
-            ? providerWeb.debugToken ?? ''
-            : providerWeb.siteKey,
-      );
+      try {
+        web.window.localStorage.setItem(
+          _sessionKeyRecaptchaType(app.name),
+          recaptchaType,
+        );
+        web.window.localStorage.setItem(
+          _sessionKeyRecaptchaSiteKey(app.name),
+          providerWeb is WebDebugProvider
+              ? providerWeb.debugToken ?? ''
+              : providerWeb.siteKey,
+        );
+      } catch (_) {
+        // Accessing web storage throws a SecurityError when the user blocks
+        // site data. Persisting is only for the next startup, so continue.
+      }
     }
 
     // activate API no longer exists, recaptcha key has to be passed on initialization of app-check instance.
@@ -173,18 +186,20 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
           _delegate!.idTokenChangedController?.close();
         },
       );
-      _delegate!.onTokenChanged(app.name).listen(
-        (event) {
-          _tokenChangesListeners[app.name]!.add(event.token.toDart);
-        },
-        // Forward JS SDK errors (e.g. network failures during background
-        // token refresh) to the broadcast controller instead of letting them
-        // surface as unhandled zone errors. If nobody is listening on the
-        // broadcast stream the error is silently dropped.
-        onError: (Object error) {
-          _tokenChangesListeners[app.name]?.addError(error);
-        },
-      );
+      _delegate!
+          .onTokenChanged(app.name)
+          .listen(
+            (event) {
+              _tokenChangesListeners[app.name]!.add(event.token.toDart);
+            },
+            // Forward JS SDK errors (e.g. network failures during background
+            // token refresh) to the broadcast controller instead of letting them
+            // surface as unhandled zone errors. If nobody is listening on the
+            // broadcast stream the error is silently dropped.
+            onError: (Object error) {
+              _tokenChangesListeners[app.name]?.addError(error);
+            },
+          );
     }
   }
 
@@ -196,8 +211,8 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
   @override
   Future<AppCheckTokenResult?> getTokenResult(bool forceRefresh) async {
     return convertWebExceptions<Future<AppCheckTokenResult?>>(() async {
-      app_check_interop.AppCheckTokenResultJsImpl result =
-          await _delegate!.getToken(forceRefresh);
+      app_check_interop.AppCheckTokenResultJsImpl result = await _delegate!
+          .getToken(forceRefresh);
       return AppCheckTokenResult(token: result.token.toDart);
     });
   }
@@ -205,8 +220,8 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
   @override
   Future<String> getLimitedUseToken() async {
     return convertWebExceptions<Future<String>>(() async {
-      app_check_interop.AppCheckTokenResultJsImpl result =
-          await _delegate!.getLimitedUseToken();
+      app_check_interop.AppCheckTokenResultJsImpl result = await _delegate!
+          .getLimitedUseToken();
       return result.token.toDart;
     });
   }

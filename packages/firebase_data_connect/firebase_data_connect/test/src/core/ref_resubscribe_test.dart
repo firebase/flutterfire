@@ -37,15 +37,21 @@ class FakeCache extends Fake implements Cache {
 
   @override
   Future<Map<String, dynamic>?> resultTree(
-          String queryId, bool allowStale) async =>
-      _results[queryId];
+    String queryId,
+    bool allowStale,
+  ) async => _results[queryId];
 }
 
 /// Minimal in-memory transport that records subscribe/cancel and lets a test
 /// push events into whichever stream is currently listened to.
 class FakeStreamTransport implements DataConnectTransport {
-  FakeStreamTransport(this.transportOptions, this.options, this.appId,
-      this.sdkType, this.appCheck);
+  FakeStreamTransport(
+    this.transportOptions,
+    this.options,
+    this.appId,
+    this.sdkType,
+    this.appCheck,
+  );
 
   @override
   FirebaseAppCheck? appCheck;
@@ -108,8 +114,7 @@ class FakeStreamTransport implements DataConnectTransport {
     Serializer<Variables>? serialize,
     Variables? vars,
     String? token,
-  ) async =>
-      ServerResponse(<String, dynamic>{});
+  ) async => ServerResponse(<String, dynamic>{});
 
   @override
   Future<ServerResponse> invokeMutation<Data, Variables>(
@@ -119,8 +124,7 @@ class FakeStreamTransport implements DataConnectTransport {
     Serializer<Variables>? serializer,
     Variables? vars,
     String? token,
-  ) async =>
-      ServerResponse(<String, dynamic>{});
+  ) async => ServerResponse(<String, dynamic>{});
 }
 
 void main() {
@@ -150,14 +154,14 @@ void main() {
   });
 
   QueryRef<String, String?> buildRef() => QueryRef<String, String?>(
-        dataConnect,
-        'listMovies',
-        transport,
-        deserializer,
-        queryManager,
-        emptySerializer,
-        null,
-      );
+    dataConnect,
+    'listMovies',
+    transport,
+    deserializer,
+    queryManager,
+    emptySerializer,
+    null,
+  );
 
   /// Waits for a first event on [stream], returning false if it never arrives.
   Future<bool> firstEventArrives(
@@ -182,78 +186,98 @@ void main() {
   }
 
   group('QueryRef double subscribe', () {
-    test('two subscribe() calls on the same ref open exactly one server stream',
-        () async {
-      final ref = buildRef();
+    test(
+      'two subscribe() calls on the same ref open exactly one server stream',
+      () async {
+        final ref = buildRef();
 
-      // Exactly the shape of the `should be able to gracefully cancel` e2e
-      // test: two listeners for the same query, back to back, which
-      // `FirebaseDataConnect.query()` resolves to the *same* cached QueryRef.
-      final a = ref.subscribe().listen((_) {});
-      final b = ref.subscribe().listen((_) {});
+        // Exactly the shape of the `should be able to gracefully cancel` e2e
+        // test: two listeners for the same query, back to back, which
+        // `FirebaseDataConnect.query()` resolves to the *same* cached QueryRef.
+        final a = ref.subscribe().listen((_) {});
+        final b = ref.subscribe().listen((_) {});
 
-      await Future<void>.delayed(const Duration(milliseconds: 50));
+        await Future<void>.delayed(const Duration(milliseconds: 50));
 
-      expect(transport.subscribeCount, 1,
-          reason: 'the second subscriber must multiplex onto the existing '
-              'server stream, not open a second one that nothing can cancel');
+        expect(
+          transport.subscribeCount,
+          1,
+          reason:
+              'the second subscriber must multiplex onto the existing '
+              'server stream, not open a second one that nothing can cancel',
+        );
 
-      await a.cancel();
-      await b.cancel();
+        await a.cancel();
+        await b.cancel();
 
-      // Everything the ref opened must be cancelled once all subscribers go.
-      expect(transport.liveSubscriptions, 0,
-          reason: 'no server stream may outlive its last subscriber');
-    });
+        // Everything the ref opened must be cancelled once all subscribers go.
+        expect(
+          transport.liveSubscriptions,
+          0,
+          reason: 'no server stream may outlive its last subscriber',
+        );
+      },
+    );
   });
 
   group('QueryRef re-subscribe after cancel', () {
-    test('a query is re-subscribable after a double-subscribe generation',
-        () async {
-      final ref = buildRef();
+    test(
+      'a query is re-subscribable after a double-subscribe generation',
+      () async {
+        final ref = buildRef();
 
-      // Generation 1: two listeners, then both cancelled.
-      final a = ref.subscribe().listen((_) {});
-      final b = ref.subscribe().listen((_) {});
-      await Future<void>.delayed(const Duration(milliseconds: 50));
-      transport.emit({'movies': []});
-      await a.cancel();
-      await b.cancel();
-      await Future<void>.delayed(const Duration(milliseconds: 20));
+        // Generation 1: two listeners, then both cancelled.
+        final a = ref.subscribe().listen((_) {});
+        final b = ref.subscribe().listen((_) {});
+        await Future<void>.delayed(const Duration(milliseconds: 50));
+        transport.emit({'movies': []});
+        await a.cancel();
+        await b.cancel();
+        await Future<void>.delayed(const Duration(milliseconds: 20));
 
-      // Generation 2: a fresh ref, exactly as `query()` hands out once
-      // trackedQueries has been cleaned.
-      expect(
-        await firstEventArrives(
-            buildRef().subscribe(), () => transport.emit({'movies': []})),
-        isTrue,
-        reason: 'a later subscription to the same query must still receive '
-            'a first event',
-      );
-    });
-
-    test('re-subscribing the same ref after a plain cancel gets a first event',
-        () async {
-      final ref = buildRef();
-
-      expect(
-        await firstEventArrives(
-            ref.subscribe(), () => transport.emit({'movies': []})),
-        isTrue,
-        reason: 'first subscription should receive an event',
-      );
-
-      expect(
-        await firstEventArrives(
-            ref.subscribe(), () => transport.emit({'movies': []})),
-        isTrue,
-        reason: 're-subscribing the same QueryRef must restart the '
-            'server stream and deliver a first event',
-      );
-    });
+        // Generation 2: a fresh ref, exactly as `query()` hands out once
+        // trackedQueries has been cleaned.
+        expect(
+          await firstEventArrives(
+            buildRef().subscribe(),
+            () => transport.emit({'movies': []}),
+          ),
+          isTrue,
+          reason:
+              'a later subscription to the same query must still receive '
+              'a first event',
+        );
+      },
+    );
 
     test(
-        'a listener attached while the previous cancel is still pending is not '
+      're-subscribing the same ref after a plain cancel gets a first event',
+      () async {
+        final ref = buildRef();
+
+        expect(
+          await firstEventArrives(
+            ref.subscribe(),
+            () => transport.emit({'movies': []}),
+          ),
+          isTrue,
+          reason: 'first subscription should receive an event',
+        );
+
+        expect(
+          await firstEventArrives(
+            ref.subscribe(),
+            () => transport.emit({'movies': []}),
+          ),
+          isTrue,
+          reason:
+              're-subscribing the same QueryRef must restart the '
+              'server stream and deliver a first event',
+        );
+      },
+    );
+
+    test('a listener attached while the previous cancel is still pending is not '
         'stranded', () async {
       final ref = buildRef();
 
@@ -288,35 +312,44 @@ void main() {
       }
       await second.cancel();
 
-      expect(gotEvent, isTrue,
-          reason: 'the second subscriber must not be stranded on a '
-              'controller whose server stream was torn down');
-    });
-
-    test('cancelling from inside the event handler still allows re-subscribe',
-        () async {
-      final ref = buildRef();
-
-      // Cancelling from within delivery makes the broadcast controller defer
-      // onCancel until the firing loop finishes.
-      late StreamSubscription<QueryResult<String, String?>> first;
-      final delivered = Completer<void>();
-      first = ref.subscribe().listen((_) {
-        unawaited(first.cancel());
-        if (!delivered.isCompleted) delivered.complete();
-      });
-      await Future<void>.delayed(const Duration(milliseconds: 20));
-      transport.emit({'movies': []});
-      await delivered.future.timeout(const Duration(seconds: 1));
-
       expect(
-        await firstEventArrives(
-            ref.subscribe(), () => transport.emit({'movies': []})),
+        gotEvent,
         isTrue,
-        reason: 're-subscribing after a deferred cancel must restart the '
-            'server stream',
+        reason:
+            'the second subscriber must not be stranded on a '
+            'controller whose server stream was torn down',
       );
     });
+
+    test(
+      'cancelling from inside the event handler still allows re-subscribe',
+      () async {
+        final ref = buildRef();
+
+        // Cancelling from within delivery makes the broadcast controller defer
+        // onCancel until the firing loop finishes.
+        late StreamSubscription<QueryResult<String, String?>> first;
+        final delivered = Completer<void>();
+        first = ref.subscribe().listen((_) {
+          unawaited(first.cancel());
+          if (!delivered.isCompleted) delivered.complete();
+        });
+        await Future<void>.delayed(const Duration(milliseconds: 20));
+        transport.emit({'movies': []});
+        await delivered.future.timeout(const Duration(seconds: 1));
+
+        expect(
+          await firstEventArrives(
+            ref.subscribe(),
+            () => transport.emit({'movies': []}),
+          ),
+          isTrue,
+          reason:
+              're-subscribing after a deferred cancel must restart the '
+              'server stream',
+        );
+      },
+    );
   });
 
   group('QueryRef late subscriber', () {
@@ -336,10 +369,13 @@ void main() {
       final subB = ref.subscribe().listen((r) => b.add(r.data));
       await Future<void>.delayed(const Duration(milliseconds: 50));
 
-      expect(b, ['{"v":2}'],
-          reason: 'the new subscriber must get the latest result right away');
-      expect(a, ['{"v":1}', '{"v":2}'],
-          reason: 'the existing subscriber must not get it a second time');
+      expect(b, [
+        '{"v":2}',
+      ], reason: 'the new subscriber must get the latest result right away');
+      expect(a, [
+        '{"v":1}',
+        '{"v":2}',
+      ], reason: 'the existing subscriber must not get it a second time');
       expect(transport.subscribeCount, 1);
 
       transport.emit({'v': 3});
@@ -351,40 +387,47 @@ void main() {
       await subB.cancel();
     });
 
-    test('subscribers of a restarted server stream get no stale result',
-        () async {
-      final ref = buildRef();
-
-      final first = ref.subscribe().listen((_) {});
-      await Future<void>.delayed(const Duration(milliseconds: 20));
-      transport.emit({'v': 1});
-      await Future<void>.delayed(const Duration(milliseconds: 20));
-      await first.cancel();
-
-      final second = <String>[];
-      final third = <String>[];
-      final subSecond = ref.subscribe().listen((r) => second.add(r.data));
-      // Let subscribe() start the new server stream, then join it while it is
-      // still starting up.
-      await Future.microtask(() {});
-      final subThird = ref.subscribe().listen((r) => third.add(r.data));
-      await Future<void>.delayed(const Duration(milliseconds: 50));
-      expect(second, isEmpty,
-          reason: 'the result of a server stream that was torn down is stale');
-      expect(third, isEmpty,
-          reason: 'the result of a server stream that was torn down is stale');
-
-      transport.emit({'v': 2});
-      await Future<void>.delayed(const Duration(milliseconds: 20));
-      expect(second, ['{"v":2}']);
-      expect(third, ['{"v":2}']);
-
-      await subSecond.cancel();
-      await subThird.cancel();
-    });
-
     test(
-        'a late subscriber after a user switch gets no result of the previous '
+      'subscribers of a restarted server stream get no stale result',
+      () async {
+        final ref = buildRef();
+
+        final first = ref.subscribe().listen((_) {});
+        await Future<void>.delayed(const Duration(milliseconds: 20));
+        transport.emit({'v': 1});
+        await Future<void>.delayed(const Duration(milliseconds: 20));
+        await first.cancel();
+
+        final second = <String>[];
+        final third = <String>[];
+        final subSecond = ref.subscribe().listen((r) => second.add(r.data));
+        // Let subscribe() start the new server stream, then join it while it is
+        // still starting up.
+        await Future.microtask(() {});
+        final subThird = ref.subscribe().listen((r) => third.add(r.data));
+        await Future<void>.delayed(const Duration(milliseconds: 50));
+        expect(
+          second,
+          isEmpty,
+          reason: 'the result of a server stream that was torn down is stale',
+        );
+        expect(
+          third,
+          isEmpty,
+          reason: 'the result of a server stream that was torn down is stale',
+        );
+
+        transport.emit({'v': 2});
+        await Future<void>.delayed(const Duration(milliseconds: 20));
+        expect(second, ['{"v":2}']);
+        expect(third, ['{"v":2}']);
+
+        await subSecond.cancel();
+        await subThird.cancel();
+      },
+    );
+
+    test('a late subscriber after a user switch gets no result of the previous '
         'user', () async {
       final auth = MockFirebaseAuth();
       final userA = MockUser();
@@ -410,8 +453,11 @@ void main() {
       final b = <QueryResult<String, String?>>[];
       final subB = ref.subscribe().listen(b.add);
       await Future<void>.delayed(const Duration(milliseconds: 50));
-      expect(b, isEmpty,
-          reason: "a subscriber must not get the previous user's result");
+      expect(
+        b,
+        isEmpty,
+        reason: "a subscriber must not get the previous user's result",
+      );
 
       transport.emit({'user': 'b'});
       await Future<void>.delayed(const Duration(milliseconds: 20));
@@ -428,25 +474,27 @@ void main() {
       await subC.cancel();
     });
 
-    test('with a cache, a late subscriber gets the cached result only',
-        () async {
-      when(dataConnect.cacheManager).thenReturn(FakeCache());
-      final ref = buildRef();
-      final b = <QueryResult<String, String?>>[];
+    test(
+      'with a cache, a late subscriber gets the cached result only',
+      () async {
+        when(dataConnect.cacheManager).thenReturn(FakeCache());
+        final ref = buildRef();
+        final b = <QueryResult<String, String?>>[];
 
-      final subA = ref.subscribe().listen((_) {});
-      await Future<void>.delayed(const Duration(milliseconds: 20));
-      transport.emit({'v': 1});
-      await Future<void>.delayed(const Duration(milliseconds: 20));
+        final subA = ref.subscribe().listen((_) {});
+        await Future<void>.delayed(const Duration(milliseconds: 20));
+        transport.emit({'v': 1});
+        await Future<void>.delayed(const Duration(milliseconds: 20));
 
-      final subB = ref.subscribe().listen(b.add);
-      await Future<void>.delayed(const Duration(milliseconds: 50));
+        final subB = ref.subscribe().listen(b.add);
+        await Future<void>.delayed(const Duration(milliseconds: 50));
 
-      expect(b.map((r) => r.source), [DataSource.cache]);
-      expect(b.single.data, '{"v":1}');
+        expect(b.map((r) => r.source), [DataSource.cache]);
+        expect(b.single.data, '{"v":1}');
 
-      await subA.cancel();
-      await subB.cancel();
-    });
+        await subA.cancel();
+        await subB.cancel();
+      },
+    );
   });
 }

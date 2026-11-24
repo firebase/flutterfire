@@ -59,22 +59,22 @@ class FirebaseOptions {
   /// [FirebaseOptions] instance, for example when data is sent back from a
   /// [MethodChannel].
   FirebaseOptions.fromPigeon(CoreFirebaseOptions options)
-      : apiKey = options.apiKey,
-        appId = options.appId,
-        messagingSenderId = options.messagingSenderId,
-        projectId = options.projectId,
-        authDomain = options.authDomain,
-        databaseURL = options.databaseURL,
-        storageBucket = options.storageBucket,
-        measurementId = options.measurementId,
-        trackingId = options.trackingId,
-        deepLinkURLScheme = options.deepLinkURLScheme,
-        androidClientId = options.androidClientId,
-        iosClientId = options.iosClientId,
-        iosBundleId = options.iosBundleId,
-        appGroupId = options.appGroupId,
-        recaptchaSiteKey =
-            ''; // Placeholder to coordinate with fluttefire cli current operation.
+    : apiKey = options.apiKey,
+      appId = options.appId,
+      messagingSenderId = options.messagingSenderId,
+      projectId = options.projectId,
+      authDomain = options.authDomain,
+      databaseURL = options.databaseURL,
+      storageBucket = options.storageBucket,
+      measurementId = options.measurementId,
+      trackingId = options.trackingId,
+      deepLinkURLScheme = options.deepLinkURLScheme,
+      androidClientId = options.androidClientId,
+      iosClientId = options.iosClientId,
+      iosBundleId = options.iosBundleId,
+      appGroupId = options.appGroupId,
+      recaptchaSiteKey =
+          ''; // Placeholder to coordinate with fluttefire cli current operation.
 
   /// Returns a copy of this FirebaseOptions with the given fields replaced with
   /// the new values.

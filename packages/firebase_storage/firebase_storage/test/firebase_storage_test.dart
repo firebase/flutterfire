@@ -49,8 +49,10 @@ void main() {
 
     group('instanceFor()', () {
       test('instance', () async {
-        expect(storageSecondary.bucket,
-            kSecondaryBucket.replaceFirst('gs://', ''));
+        expect(
+          storageSecondary.bucket,
+          kSecondaryBucket.replaceFirst('gs://', ''),
+        );
         expect(storageSecondary.app.name, 'foo');
       });
 
@@ -109,16 +111,19 @@ void main() {
 
     group('.refFromURL()', () {
       test(
-          "throws AssertionError when value does not start with 'gs://' or 'http'",
-          () {
-        expect(() => storage.refFromURL('invalid.com'), throwsAssertionError);
-      });
+        "throws AssertionError when value does not start with 'gs://' or 'http'",
+        () {
+          expect(() => storage.refFromURL('invalid.com'), throwsAssertionError);
+        },
+      );
 
-      test('throws AssertionError when http url is not a valid storage url',
-          () {
-        const String url = 'https://test.com';
-        expect(() => storage.refFromURL(url), throwsAssertionError);
-      });
+      test(
+        'throws AssertionError when http url is not a valid storage url',
+        () {
+          const String url = 'https://test.com';
+          expect(() => storage.refFromURL(url), throwsAssertionError);
+        },
+      );
 
       test('verify delegate method is called for encoded http urls', () {
         const String customBucket = 'test.appspot.com';
@@ -167,6 +172,21 @@ void main() {
         verify(kMockStoragePlatform.ref(testPath));
       });
 
+      test(
+        'verify delegate method is called for a 127.0.0.1 emulator download URL',
+        () {
+          const String customBucket = 'demo-18988.appspot.com';
+          const String testPath = 'photos/hello world.txt';
+          const String url =
+              'http://127.0.0.1:9199/v0/b/$customBucket/o/photos%2Fhello%20world.txt?alt=media&token=d521a7a8-b252-4979-973f-88c8132e7ab7';
+
+          final ref = storage.refFromURL(url);
+
+          expect(ref, isA<Reference>());
+          verify(kMockStoragePlatform.ref(testPath));
+        },
+      );
+
       test('verify special characters are allowed in http path', () {
         const String customBucket = 'test.appspot.com';
         const String testPath = '[!@+= ^&*_+-= {};,.<> ].jpg';
@@ -187,7 +207,9 @@ void main() {
 
       test('throws AssertionError when port is negative', () {
         expect(
-            () => storage.useStorageEmulator('foo', -10), throwsAssertionError);
+          () => storage.useStorageEmulator('foo', -10),
+          throwsAssertionError,
+        );
       });
 
       test('verify delegate method is called with args', () {

@@ -346,20 +346,27 @@ InAppMessage inAppMessageFromPigeon(pigeon.FiamDisplayMessage message) {
     secondaryAction: mapAction(message.secondaryAction),
     data: data,
     onImpress: () {
-      return MethodChannelFirebaseInAppMessaging.instance
-          .reportImpression(campaignId);
+      return MethodChannelFirebaseInAppMessaging.instance.reportImpression(
+        campaignId,
+      );
     },
     onClick: (action) {
-      return MethodChannelFirebaseInAppMessaging.instance
-          .reportClick(campaignId, action.id);
+      return MethodChannelFirebaseInAppMessaging.instance.reportClick(
+        campaignId,
+        action.id,
+      );
     },
     onDismiss: (type) {
-      return MethodChannelFirebaseInAppMessaging.instance
-          .reportDismiss(campaignId, type.name);
+      return MethodChannelFirebaseInAppMessaging.instance.reportDismiss(
+        campaignId,
+        type.name,
+      );
     },
     onError: (reason) {
-      return MethodChannelFirebaseInAppMessaging.instance
-          .reportDisplayError(campaignId, reason);
+      return MethodChannelFirebaseInAppMessaging.instance.reportDisplayError(
+        campaignId,
+        reason,
+      );
     },
   );
 }

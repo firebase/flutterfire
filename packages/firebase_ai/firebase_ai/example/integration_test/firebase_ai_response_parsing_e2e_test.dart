@@ -36,8 +36,7 @@ void main() {
       );
     });
 
-    test('test against all json responses from vertexai-sdk-test-data',
-        () async {
+    test('test against all json responses from vertexai-sdk-test-data', () async {
       final treeUrl = Uri.parse(
         'https://api.github.com/repos/FirebaseExtended/vertexai-sdk-test-data/git/trees/main?recursive=1',
       );
@@ -73,8 +72,9 @@ void main() {
         final jsonData = jsonDecode(response.body);
 
         final isVertex = path.contains('vertexai');
-        final serializer =
-            isVertex ? AgentPlatformSerialization() : DeveloperSerialization();
+        final serializer = isVertex
+            ? AgentPlatformSerialization()
+            : DeveloperSerialization();
 
         try {
           if (path.contains('total-tokens') || path.contains('token')) {

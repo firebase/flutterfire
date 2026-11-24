@@ -34,17 +34,18 @@ void main() {
   setUpAll(() async {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMessageHandler('$_hostApiPrefix.registerIdChangeListener', (
-      ByteData? message,
-    ) async {
-      final List<Object?> args =
-          FirebaseAppInstallationsHostApi.pigeonChannelCodec.decodeMessage(
-        message,
-      ) as List<Object?>;
-      lastRegisterAppName = args[0]! as String;
-      return encodeSuccess(
-        'plugins.flutter.io/firebase_app_installations/token/$lastRegisterAppName',
-      );
-    });
+          ByteData? message,
+        ) async {
+          final List<Object?> args =
+              FirebaseAppInstallationsHostApi.pigeonChannelCodec.decodeMessage(
+                    message,
+                  )
+                  as List<Object?>;
+          lastRegisterAppName = args[0]! as String;
+          return encodeSuccess(
+            'plugins.flutter.io/firebase_app_installations/token/$lastRegisterAppName',
+          );
+        });
 
     app = await Firebase.initializeApp();
     installations = MethodChannelFirebaseAppInstallations(app: app);
@@ -54,9 +55,9 @@ void main() {
   tearDownAll(() {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMessageHandler(
-      '$_hostApiPrefix.registerIdChangeListener',
-      null,
-    );
+          '$_hostApiPrefix.registerIdChangeListener',
+          null,
+        );
   });
 
   setUp(() {
@@ -66,39 +67,44 @@ void main() {
     lastForceRefresh = null;
 
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMessageHandler('$_hostApiPrefix.delete',
-            (ByteData? message) async {
-      final List<Object?> args =
-          FirebaseAppInstallationsHostApi.pigeonChannelCodec.decodeMessage(
-        message,
-      ) as List<Object?>;
-      lastDeleteAppName = args[0]! as String;
-      return encodeSuccess();
-    });
+        .setMockMessageHandler('$_hostApiPrefix.delete', (
+          ByteData? message,
+        ) async {
+          final List<Object?> args =
+              FirebaseAppInstallationsHostApi.pigeonChannelCodec.decodeMessage(
+                    message,
+                  )
+                  as List<Object?>;
+          lastDeleteAppName = args[0]! as String;
+          return encodeSuccess();
+        });
 
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMessageHandler('$_hostApiPrefix.getId',
-            (ByteData? message) async {
-      final List<Object?> args =
-          FirebaseAppInstallationsHostApi.pigeonChannelCodec.decodeMessage(
-        message,
-      ) as List<Object?>;
-      lastGetIdAppName = args[0]! as String;
-      return encodeSuccess('test-installation-id');
-    });
+        .setMockMessageHandler('$_hostApiPrefix.getId', (
+          ByteData? message,
+        ) async {
+          final List<Object?> args =
+              FirebaseAppInstallationsHostApi.pigeonChannelCodec.decodeMessage(
+                    message,
+                  )
+                  as List<Object?>;
+          lastGetIdAppName = args[0]! as String;
+          return encodeSuccess('test-installation-id');
+        });
 
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMessageHandler('$_hostApiPrefix.getToken', (
-      ByteData? message,
-    ) async {
-      final List<Object?> args =
-          FirebaseAppInstallationsHostApi.pigeonChannelCodec.decodeMessage(
-        message,
-      ) as List<Object?>;
-      lastGetTokenAppName = args[0]! as String;
-      lastForceRefresh = args[1]! as bool;
-      return encodeSuccess('test-installation-token');
-    });
+          ByteData? message,
+        ) async {
+          final List<Object?> args =
+              FirebaseAppInstallationsHostApi.pigeonChannelCodec.decodeMessage(
+                    message,
+                  )
+                  as List<Object?>;
+          lastGetTokenAppName = args[0]! as String;
+          lastForceRefresh = args[1]! as bool;
+          return encodeSuccess('test-installation-token');
+        });
   });
 
   tearDown(() {

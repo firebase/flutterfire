@@ -46,6 +46,10 @@ import io.flutter.plugins.firebase.firestore.utils.PipelineParser
 import java.util.Locale
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.LinkedBlockingQueue
+import java.util.concurrent.ThreadPoolExecutor
+import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicReference
 
 class FlutterFirebaseFirestorePlugin :
@@ -60,6 +64,7 @@ class FlutterFirebaseFirestorePlugin :
   private val eventChannels: MutableMap<String, EventChannel> = HashMap()
   private val streamHandlers: MutableMap<String, StreamHandler> = HashMap()
   private val transactionHandlers: MutableMap<String, OnTransactionResultListener> = HashMap()
+  private val snapshotDeliveryExecutors: MutableMap<String, ExecutorService> = ConcurrentHashMap()
 
   @SuppressLint("RestrictedApi")
   override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
@@ -201,6 +206,13 @@ class FlutterFirebaseFirestorePlugin :
     }
     transactions.clear()
     transactionHandlers.clear()
+  }
+
+  private fun snapshotDeliveryExecutor(app: FirestorePigeonFirebaseApp): ExecutorService {
+    val key = "${app.appName}|${app.databaseURL}"
+    return snapshotDeliveryExecutors.computeIfAbsent(key) {
+      ThreadPoolExecutor(0, 1, 60L, TimeUnit.SECONDS, LinkedBlockingQueue())
+    }
   }
 
   override fun loadBundle(
@@ -363,7 +375,8 @@ class FlutterFirebaseFirestorePlugin :
     callback(
         Result.success(
             registerEventChannel(
-                "$METHOD_CHANNEL_NAME/snapshotsInSync", SnapshotsInSyncStreamHandler(firestore))))
+                "$METHOD_CHANNEL_NAME/snapshotsInSync",
+                SnapshotsInSyncStreamHandler(firestore, snapshotDeliveryExecutor(app)))))
   }
 
   override fun transactionCreate(
@@ -733,7 +746,7 @@ class FlutterFirebaseFirestorePlugin :
                     PigeonParser.parsePigeonServerTimestampBehavior(
                         options.serverTimestampBehavior),
                     PigeonParser.parseListenSource(source),
-                    cachedThreadPool))))
+                    snapshotDeliveryExecutor(app)))))
   }
 
   override fun documentReferenceSnapshot(
@@ -826,13 +839,27 @@ class FlutterFirebaseFirestorePlugin :
         databaseURL: String
     ): FirebaseFirestore? {
       synchronized(firestoreInstanceCache) {
-        for ((key, value) in firestoreInstanceCache) {
-          if (value.instance.app.name == appName && value.databaseURL == databaseURL) {
-            return key
+        val iterator = firestoreInstanceCache.entries.iterator()
+        var match: FirebaseFirestore? = null
+        while (iterator.hasNext()) {
+          val entry = iterator.next()
+          // getName() throws after delete(), and the SDK has no public check.
+          val cachedAppName =
+              try {
+                entry.value.instance.app.name
+              } catch (exception: IllegalStateException) {
+                if ("FirebaseApp was deleted" == exception.message) {
+                  iterator.remove()
+                  continue
+                }
+                throw exception
+              }
+          if (match == null && cachedAppName == appName && entry.value.databaseURL == databaseURL) {
+            match = entry.key
           }
         }
+        return match
       }
-      return null
     }
 
     private fun destroyCachedFirebaseFirestoreInstanceForKey(firestore: FirebaseFirestore) {
