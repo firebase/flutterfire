@@ -590,6 +590,47 @@ void main() {
           <Object?>['first', 'second', 'third'],
         );
       });
+
+      test(
+          'child() on a holed List-valued child skips null slots and keeps indices',
+          () {
+        final snapshot = MethodChannelDataSnapshot(
+          database.ref('root'),
+          <String, dynamic>{
+            'key': 'root',
+            'value': <String, dynamic>{
+              'items': <Object?>[null, 'bar', 'baz'],
+              'sparse': <Object?>['foo', null, 'baz'],
+            },
+            'priority': null,
+            'childKeys': <String>['items', 'sparse'],
+          },
+        );
+
+        final itemsChildren = snapshot.child('items').children.toList();
+        expect(itemsChildren.map((c) => c.key).toList(), <String>['1', '2']);
+        expect(
+          itemsChildren.map((c) => c.value).toList(),
+          <Object?>['bar', 'baz'],
+        );
+
+        final sparseChildren = snapshot.child('sparse').children.toList();
+        expect(sparseChildren.map((c) => c.key).toList(), <String>['0', '2']);
+        expect(
+          sparseChildren.map((c) => c.value).toList(),
+          <Object?>['foo', 'baz'],
+        );
+
+        final viaParentChildren = snapshot.children.first.children.toList();
+        expect(
+          viaParentChildren.map((c) => c.key).toList(),
+          <String>['1', '2'],
+        );
+        expect(
+          viaParentChildren.map((c) => c.value).toList(),
+          <Object?>['bar', 'baz'],
+        );
+      });
     });
   });
 }
