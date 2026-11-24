@@ -58,6 +58,21 @@ void main() {
       ); // Adjusts by the negative timezone offset
     });
 
+    test('fromJson keeps the second for fractional times before 1970', () {
+      final timestamp = Timestamp.fromJson('1969-12-31T23:59:59.500Z');
+      expect(timestamp.seconds, -1);
+      expect(timestamp.nanoseconds, 500000000);
+      expect(timestamp.toJson(), '1969-12-31T23:59:59.500000000Z');
+      expect(
+        timestamp.toDateTime(),
+        DateTime.utc(1969, 12, 31, 23, 59, 59, 500),
+      );
+
+      final withOffset = Timestamp.fromJson('1970-01-01T00:00:00.250+01:00');
+      expect(withOffset.seconds, -3600);
+      expect(withOffset.toJson(), '1969-12-31T23:00:00.250000000Z');
+    });
+
     test('toJson correctly serializes to ISO8601 string with nanoseconds', () {
       final timestamp = Timestamp(123456789, 864000); // Example timestamp
       final json = timestamp.toJson();

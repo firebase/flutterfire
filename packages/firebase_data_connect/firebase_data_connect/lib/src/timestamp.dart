@@ -27,7 +27,10 @@ class Timestamp {
       throw Exception('Invalid Date provided!');
     }
     DateTime dateTime = DateTime.parse(date);
-    seconds = dateTime.millisecondsSinceEpoch ~/ 1000;
+    // Round down, not toward zero: before 1970, `~/` alone would move a time
+    // with a fraction one second later. Dart's `%` is never negative here.
+    final milliseconds = dateTime.millisecondsSinceEpoch;
+    seconds = (milliseconds - milliseconds % 1000) ~/ 1000;
     String nanoStr = '';
     int dotIdx = date.indexOf('.');
     if (dotIdx > -1) {
