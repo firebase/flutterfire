@@ -21,15 +21,15 @@ import 'package:pigeon/pigeon.dart';
 )
 @HostApi()
 abstract class FirebaseAppInstallationsHostApi {
-  @async
+  @asyncCallback
   void delete(String appName);
 
-  @async
+  @asyncCallback
   String getId(String appName);
 
-  @async
+  @asyncCallback
   String getToken(String appName, bool forceRefresh);
 
-  @async
+  @asyncCallback
   String registerIdChangeListener(String appName);
 }

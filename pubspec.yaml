@@ -502,6 +502,7 @@ melos:
         melos exec -- "flutter pub run pigeon --input ./pigeons/messages.dart" && \
         melos run generate:pigeon:macos --no-select && \
         melos run generate:pigeon:android --no-select && \
+        melos run generate:pigeon:windows --no-select && \
         melos run generate:pigeon:dart-test --no-select && \
         melos run format-ci --no-select
       packageFilters:
@@ -533,6 +534,15 @@ melos:
       packageFilters:
         dirExists: 'android'
       description: Transform the method toList() into a public one to be used in EventChannel
+
+    generate:pigeon:windows:
+      run: |
+        melos exec -- "perl -0777 -i -pe 's/(\x20{2}static \w+ FromEncodableList\(\s*const ::flutter::EncodableList& list\);\n)(\x20{2}::flutter::EncodableList ToEncodableList\(\) const;\n)/\$1\n public:\n\$2\n private:\n/g' windows/messages.g.h"
+      packageFilters:
+        scope: 'firebase_auth'
+      description: |
+        Pigeon generates ToEncodableList() as private. firebase_auth_plugin.cpp
+        calls it to serialize user details, so make it public.
 
     # Additional cleanup lifecycle script, executed when `melos clean` is run.
     postclean: >
