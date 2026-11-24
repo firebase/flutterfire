@@ -43,8 +43,6 @@ class TransactionStreamHandler(
         .runTransaction(
             TransactionOptions.Builder().setMaxAttempts(maxAttempts.toInt()).build(),
             Transaction.Function { transaction ->
-              // A retry must not see the previous attempt. Cancelling this attempt before Dart
-              // answers would otherwise commit those commands.
               attemptState.beginAttempt()
               onTransactionStartedListener(transaction)
 
@@ -65,9 +63,6 @@ class TransactionStreamHandler(
                     FirebaseFirestoreException("interrupted", Code.DEADLINE_EXCEEDED))
               }
 
-              // Only an explicit SUCCESS with a command list may commit. A Dart failure, a
-              // cancel, or a retry that has not heard back yet aborts. Throw outside
-              // FirebaseFirestoreException so the SDK does not retry or commit (#18666).
               val resolvedCommands = attemptState.outcome()
               if (resolvedCommands.isEmpty()) {
                 return@Function FlutterFirebaseFirestoreTransactionResult.complete()
