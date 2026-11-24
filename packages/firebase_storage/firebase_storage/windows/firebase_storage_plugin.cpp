@@ -275,33 +275,35 @@ void FirebaseStoragePlugin::ReferenceDelete(
     const InternalStorageFirebaseApp& app,
     const InternalStorageReference& reference,
     std::function<void(std::optional<FlutterError> reply)> result) {
-  StorageReference cpp_reference =
-      GetCPPStorageReferenceFromPigeon(app, reference);
-  Future<void> future_result = cpp_reference.Delete();
-  ::Sleep(1);  // timing for c++ sdk grabbing a mutex
-  future_result.OnCompletion([result](const Future<void>& void_result) {
-    if (void_result.error() == firebase::storage::kErrorNone) {
-      result(std::nullopt);
-    } else {
-      result(FirebaseStoragePlugin::ParseError(void_result));
-    }
-  });
+  auto cpp_reference = std::make_shared<StorageReference>(
+      GetCPPStorageReferenceFromPigeon(app, reference));
+  Future<void> future_result = cpp_reference->Delete();
+  future_result.OnCompletion(
+      [result, cpp_reference](const Future<void>& void_result) mutable {
+        if (void_result.error() == firebase::storage::kErrorNone) {
+          result(std::nullopt);
+        } else {
+          result(FirebaseStoragePlugin::ParseError(void_result));
+        }
+        cpp_reference.reset();
+      });
 }
 void FirebaseStoragePlugin::ReferenceGetDownloadURL(
     const InternalStorageFirebaseApp& app,
     const InternalStorageReference& reference,
     std::function<void(ErrorOr<std::string> reply)> result) {
-  StorageReference cpp_reference =
-      GetCPPStorageReferenceFromPigeon(app, reference);
-  Future<std::string> future_result = cpp_reference.GetDownloadUrl();
-  ::Sleep(1);  // timing for c++ sdk grabbing a mutex
+  auto cpp_reference = std::make_shared<StorageReference>(
+      GetCPPStorageReferenceFromPigeon(app, reference));
+  Future<std::string> future_result = cpp_reference->GetDownloadUrl();
   future_result.OnCompletion(
-      [result](const Future<std::string>& string_result) {
+      [result,
+       cpp_reference](const Future<std::string>& string_result) mutable {
         if (string_result.error() == firebase::storage::kErrorNone) {
           result(*string_result.result());
         } else {
           result(FirebaseStoragePlugin::ParseError(string_result));
         }
+        cpp_reference.reset();
       });
 }
 
@@ -448,21 +450,22 @@ void FirebaseStoragePlugin::ReferenceGetMetaData(
     const InternalStorageFirebaseApp& app,
     const InternalStorageReference& reference,
     std::function<void(ErrorOr<InternalFullMetaData> reply)> result) {
-  StorageReference cpp_reference =
-      GetCPPStorageReferenceFromPigeon(app, reference);
-  Future<Metadata> future_result = cpp_reference.GetMetadata();
-  ::Sleep(1);  // timing for c++ sdk grabbing a mutex
-  future_result.OnCompletion([result](const Future<Metadata>& metadata_result) {
-    if (metadata_result.error() == firebase::storage::kErrorNone) {
-      InternalFullMetaData pigeon_meta = InternalFullMetaData();
-      pigeon_meta.set_metadata(
-          ConvertMedadataToPigeon(metadata_result.result()));
+  auto cpp_reference = std::make_shared<StorageReference>(
+      GetCPPStorageReferenceFromPigeon(app, reference));
+  Future<Metadata> future_result = cpp_reference->GetMetadata();
+  future_result.OnCompletion(
+      [result, cpp_reference](const Future<Metadata>& metadata_result) mutable {
+        if (metadata_result.error() == firebase::storage::kErrorNone) {
+          InternalFullMetaData pigeon_meta = InternalFullMetaData();
+          pigeon_meta.set_metadata(
+              ConvertMedadataToPigeon(metadata_result.result()));
 
-      result(pigeon_meta);
-    } else {
-      result(FirebaseStoragePlugin::ParseError(metadata_result));
-    }
-  });
+          result(pigeon_meta);
+        } else {
+          result(FirebaseStoragePlugin::ParseError(metadata_result));
+        }
+        cpp_reference.reset();
+      });
 }
 
 void FirebaseStoragePlugin::ReferenceList(
@@ -489,28 +492,28 @@ void FirebaseStoragePlugin::ReferenceGetData(
     const InternalStorageReference& reference, int64_t max_size,
     std::function<void(ErrorOr<std::optional<std::vector<uint8_t>>> reply)>
         result) {
-  StorageReference cpp_reference =
-      GetCPPStorageReferenceFromPigeon(app, reference);
+  auto cpp_reference = std::make_shared<StorageReference>(
+      GetCPPStorageReferenceFromPigeon(app, reference));
 
   // Use a shared pointer for automatic memory management and copyability
   auto byte_buffer = std::make_shared<std::vector<uint8_t>>(max_size);
 
   Future<size_t> future_result =
-      cpp_reference.GetBytes(byte_buffer->data(), max_size);
-  ::Sleep(1);  // timing for c++ sdk grabbing a mutex
+      cpp_reference->GetBytes(byte_buffer->data(), max_size);
 
-  future_result.OnCompletion(
-      [result, byte_buffer](const Future<size_t>& data_result) {
-        if (data_result.error() != firebase::storage::kErrorNone) {
-          result(FirebaseStoragePlugin::ParseError(data_result));
-        } else {
-          size_t vector_size = *data_result.result();
-          std::optional<std::vector<uint8_t>> vector_buffer;
-          vector_buffer = std::vector<uint8_t>(
-              byte_buffer->begin(), byte_buffer->begin() + vector_size);
-          result(vector_buffer);
-        }
-      });
+  future_result.OnCompletion([result, byte_buffer, cpp_reference](
+                                 const Future<size_t>& data_result) mutable {
+    if (data_result.error() != firebase::storage::kErrorNone) {
+      result(FirebaseStoragePlugin::ParseError(data_result));
+    } else {
+      size_t vector_size = *data_result.result();
+      std::optional<std::vector<uint8_t>> vector_buffer;
+      vector_buffer = std::vector<uint8_t>(byte_buffer->begin(),
+                                           byte_buffer->begin() + vector_size);
+      result(vector_buffer);
+    }
+    cpp_reference.reset();
+  });
 }
 
 std::string kTaskStateName = "taskState";
@@ -579,44 +582,49 @@ class PutDataStreamHandler
     events_ = std::move(events);
 
     TaskStateListener* putStringListener = new TaskStateListener(events_.get());
-    StorageReference reference = storage_->GetReference(reference_path_);
+    auto reference = std::make_shared<StorageReference>(
+        storage_->GetReference(reference_path_));
 
-    Metadata* storage_metadata =
-        FirebaseStoragePlugin::CreateStorageMetadataFromPigeon(&meta_data_);
+    std::shared_ptr<Metadata> storage_metadata(
+        FirebaseStoragePlugin::CreateStorageMetadataFromPigeon(&meta_data_));
     Future<Metadata> future_result;
     if (storage_metadata) {
       future_result =
-          reference.PutBytes(data_.data(), data_.size(), *storage_metadata,
-                             putStringListener, controller_);
+          reference->PutBytes(data_.data(), data_.size(), *storage_metadata,
+                              putStringListener, controller_);
     } else {
-      future_result = reference.PutBytes(data_.data(), data_.size(),
-                                         putStringListener, controller_);
+      future_result = reference->PutBytes(data_.data(), data_.size(),
+                                          putStringListener, controller_);
     }
 
-    ::Sleep(1);  // timing for c++ sdk grabbing a mutex
+    future_result.OnCompletion(
+        [this, reference,
+         storage_metadata](const Future<Metadata>& data_result) mutable {
+          if (data_result.error() == firebase::storage::kErrorNone) {
+            flutter::EncodableMap event = flutter::EncodableMap();
+            event[kTaskStateName] =
+                static_cast<int>(InternalStorageTaskState::kSuccess);
+            event[kTaskAppName] = std::string(storage_->app()->name());
+            flutter::EncodableMap snapshot = flutter::EncodableMap();
+            snapshot[kTaskSnapshotPath] = data_result.result()->path();
+            snapshot[kTaskSnapshotTotalBytes] =
+                data_result.result()->size_bytes();
+            snapshot[kTaskSnapshotBytesTransferred] =
+                data_result.result()->size_bytes();
+            snapshot[kMetadataName] =
+                ConvertMedadataToPigeon(data_result.result());
+            event[kTaskSnapshotName] = snapshot;
 
-    future_result.OnCompletion([this](const Future<Metadata>& data_result) {
-      if (data_result.error() == firebase::storage::kErrorNone) {
-        flutter::EncodableMap event = flutter::EncodableMap();
-        event[kTaskStateName] =
-            static_cast<int>(InternalStorageTaskState::kSuccess);
-        event[kTaskAppName] = std::string(storage_->app()->name());
-        flutter::EncodableMap snapshot = flutter::EncodableMap();
-        snapshot[kTaskSnapshotPath] = data_result.result()->path();
-        snapshot[kTaskSnapshotTotalBytes] = data_result.result()->size_bytes();
-        snapshot[kTaskSnapshotBytesTransferred] =
-            data_result.result()->size_bytes();
-        snapshot[kMetadataName] = ConvertMedadataToPigeon(data_result.result());
-        event[kTaskSnapshotName] = snapshot;
+            events_->Success(event);
+          } else {
+            flutter::EncodableMap map = FirebaseStoragePlugin::ErrorStreamEvent(
+                data_result, storage_->app()->name());
 
-        events_->Success(event);
-      } else {
-        flutter::EncodableMap map = FirebaseStoragePlugin::ErrorStreamEvent(
-            data_result, storage_->app()->name());
-
-        events_->Success(map);
-      }
-    });
+            events_->Success(map);
+          }
+          storage_metadata.reset();
+          reference.reset();
+        });
     return nullptr;
   }
 
@@ -657,44 +665,50 @@ class PutFileStreamHandler
     events_ = std::move(events);
 
     TaskStateListener* putFileListener = new TaskStateListener(events_.get());
-    StorageReference reference = storage_->GetReference(reference_path_);
+    auto reference = std::make_shared<StorageReference>(
+        storage_->GetReference(reference_path_));
 
-    Metadata* storage_metadata =
+    std::shared_ptr<Metadata> storage_metadata(
         FirebaseStoragePlugin::CreateStorageMetadataFromPigeon(
-            meta_data_.get());
+            meta_data_.get()));
     Future<Metadata> future_result;
 
     if (storage_metadata) {
-      future_result = reference.PutFile(file_path_.c_str(), *storage_metadata,
-                                        putFileListener, controller_);
+      future_result = reference->PutFile(file_path_.c_str(), *storage_metadata,
+                                         putFileListener, controller_);
     } else {
       future_result =
-          reference.PutFile(file_path_.c_str(), putFileListener, controller_);
+          reference->PutFile(file_path_.c_str(), putFileListener, controller_);
     }
 
-    ::Sleep(1);  // timing for c++ sdk grabbing a mutex
-    future_result.OnCompletion([this](const Future<Metadata>& data_result) {
-      if (data_result.error() == firebase::storage::kErrorNone) {
-        flutter::EncodableMap event = flutter::EncodableMap();
-        event[kTaskStateName] =
-            static_cast<int>(InternalStorageTaskState::kSuccess);
-        event[kTaskAppName] = std::string(storage_->app()->name());
-        flutter::EncodableMap snapshot = flutter::EncodableMap();
-        snapshot[kTaskSnapshotPath] = data_result.result()->path();
-        snapshot[kTaskSnapshotTotalBytes] = data_result.result()->size_bytes();
-        snapshot[kTaskSnapshotBytesTransferred] =
-            data_result.result()->size_bytes();
-        snapshot[kMetadataName] = ConvertMedadataToPigeon(data_result.result());
-        event[kTaskSnapshotName] = snapshot;
+    future_result.OnCompletion(
+        [this, reference,
+         storage_metadata](const Future<Metadata>& data_result) mutable {
+          if (data_result.error() == firebase::storage::kErrorNone) {
+            flutter::EncodableMap event = flutter::EncodableMap();
+            event[kTaskStateName] =
+                static_cast<int>(InternalStorageTaskState::kSuccess);
+            event[kTaskAppName] = std::string(storage_->app()->name());
+            flutter::EncodableMap snapshot = flutter::EncodableMap();
+            snapshot[kTaskSnapshotPath] = data_result.result()->path();
+            snapshot[kTaskSnapshotTotalBytes] =
+                data_result.result()->size_bytes();
+            snapshot[kTaskSnapshotBytesTransferred] =
+                data_result.result()->size_bytes();
+            snapshot[kMetadataName] =
+                ConvertMedadataToPigeon(data_result.result());
+            event[kTaskSnapshotName] = snapshot;
 
-        events_->Success(event);
-      } else {
-        flutter::EncodableMap map = FirebaseStoragePlugin::ErrorStreamEvent(
-            data_result, storage_->app()->name());
+            events_->Success(event);
+          } else {
+            flutter::EncodableMap map = FirebaseStoragePlugin::ErrorStreamEvent(
+                data_result, storage_->app()->name());
 
-        events_->Success(map);
-      }
-    });
+            events_->Success(map);
+          }
+          storage_metadata.reset();
+          reference.reset();
+        });
     return nullptr;
   }
 
@@ -733,34 +747,36 @@ class GetFileStreamHandler
     std::unique_lock<std::mutex> lock(mtx_);
 
     TaskStateListener* getFileListener = new TaskStateListener(events_.get());
-    StorageReference reference = storage_->GetReference(reference_path_);
+    auto reference = std::make_shared<StorageReference>(
+        storage_->GetReference(reference_path_));
     Future<size_t> future_result =
-        reference.GetFile(file_path_.c_str(), getFileListener, controller_);
+        reference->GetFile(file_path_.c_str(), getFileListener, controller_);
 
-    ::Sleep(1);  // timing for c++ sdk grabbing a mutex
-    future_result.OnCompletion([this](const Future<size_t>& data_result) {
-      if (data_result.error() == firebase::storage::kErrorNone) {
-        flutter::EncodableMap event = flutter::EncodableMap();
-        event[kTaskStateName] =
-            static_cast<int>(InternalStorageTaskState::kSuccess);
-        event[kTaskAppName] = std::string(storage_->app()->name());
-        flutter::EncodableMap snapshot = flutter::EncodableMap();
-        size_t data_size = *data_result.result();
-        snapshot[kTaskSnapshotTotalBytes] =
-            flutter::EncodableValue(static_cast<int64_t>(data_size));
-        snapshot[kTaskSnapshotBytesTransferred] =
-            flutter::EncodableValue(static_cast<int64_t>(data_size));
-        snapshot[kTaskSnapshotPath] = EncodableValue(reference_path_);
-        event[kTaskSnapshotName] = snapshot;
+    future_result.OnCompletion(
+        [this, reference](const Future<size_t>& data_result) mutable {
+          if (data_result.error() == firebase::storage::kErrorNone) {
+            flutter::EncodableMap event = flutter::EncodableMap();
+            event[kTaskStateName] =
+                static_cast<int>(InternalStorageTaskState::kSuccess);
+            event[kTaskAppName] = std::string(storage_->app()->name());
+            flutter::EncodableMap snapshot = flutter::EncodableMap();
+            size_t data_size = *data_result.result();
+            snapshot[kTaskSnapshotTotalBytes] =
+                flutter::EncodableValue(static_cast<int64_t>(data_size));
+            snapshot[kTaskSnapshotBytesTransferred] =
+                flutter::EncodableValue(static_cast<int64_t>(data_size));
+            snapshot[kTaskSnapshotPath] = EncodableValue(reference_path_);
+            event[kTaskSnapshotName] = snapshot;
 
-        events_->Success(event);
-      } else {
-        flutter::EncodableMap map = FirebaseStoragePlugin::ErrorStreamEvent(
-            data_result, storage_->app()->name());
+            events_->Success(event);
+          } else {
+            flutter::EncodableMap map = FirebaseStoragePlugin::ErrorStreamEvent(
+                data_result, storage_->app()->name());
 
-        events_->Success(map);
-      }
-    });
+            events_->Success(map);
+          }
+          reference.reset();
+        });
     return nullptr;
   }
 
@@ -871,14 +887,17 @@ void FirebaseStoragePlugin::ReferenceUpdateMetadata(
     const InternalStorageReference& reference,
     const InternalSettableMetadata& metadata,
     std::function<void(ErrorOr<InternalFullMetaData> reply)> result) {
-  StorageReference cpp_reference =
-      GetCPPStorageReferenceFromPigeon(app, reference);
-  Metadata* cpp_meta =
-      FirebaseStoragePlugin::CreateStorageMetadataFromPigeon(&metadata);
+  auto cpp_reference = std::make_shared<StorageReference>(
+      GetCPPStorageReferenceFromPigeon(app, reference));
+  std::shared_ptr<Metadata> cpp_meta(
+      FirebaseStoragePlugin::CreateStorageMetadataFromPigeon(&metadata));
+  if (!cpp_meta) {
+    cpp_meta = std::make_shared<Metadata>();
+  }
 
-  Future<Metadata> future_result = cpp_reference.UpdateMetadata(*cpp_meta);
-  ::Sleep(1);  // timing for c++ sdk grabbing a mutex
-  future_result.OnCompletion([result](const Future<Metadata>& data_result) {
+  Future<Metadata> future_result = cpp_reference->UpdateMetadata(*cpp_meta);
+  future_result.OnCompletion([result, cpp_reference, cpp_meta](
+                                 const Future<Metadata>& data_result) mutable {
     if (data_result.error() == firebase::storage::kErrorNone) {
       const Metadata* result_meta = data_result.result();
       InternalFullMetaData pigeonData;
@@ -888,6 +907,8 @@ void FirebaseStoragePlugin::ReferenceUpdateMetadata(
     } else {
       result(FirebaseStoragePlugin::ParseError(data_result));
     }
+    cpp_meta.reset();
+    cpp_reference.reset();
   });
 }
 
