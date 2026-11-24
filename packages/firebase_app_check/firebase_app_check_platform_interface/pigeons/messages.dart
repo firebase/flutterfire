@@ -33,7 +33,7 @@ class InternalAppCheckTokenResult {
 )
 @HostApi(dartHostTestHandler: 'TestFirebaseAppCheckHostApi')
 abstract class FirebaseAppCheckHostApi {
-  @async
+  @asyncCallback
   void activate(
     String appName,
     String? androidProvider,
@@ -43,25 +43,25 @@ abstract class FirebaseAppCheckHostApi {
     String? windowsProvider,
   );
 
-  @async
+  @asyncCallback
   String? getToken(String appName, bool forceRefresh);
 
-  @async
+  @asyncCallback
   InternalAppCheckTokenResult? getTokenResult(
     String appName,
     bool forceRefresh,
   );
 
-  @async
+  @asyncCallback
   void setTokenAutoRefreshEnabled(
     String appName,
     bool isTokenAutoRefreshEnabled,
   );
 
-  @async
+  @asyncCallback
   String registerTokenListener(String appName);
 
-  @async
+  @asyncCallback
   String getLimitedUseAppCheckToken(String appName);
 }
 
@@ -90,6 +90,6 @@ class CustomAppCheckToken {
 /// Firebase backend requests (Firestore, Functions, Storage, Auth, RTDB).
 @FlutterApi()
 abstract class FirebaseAppCheckFlutterApi {
-  @async
+  @asyncCallback
   CustomAppCheckToken getCustomToken();
 }

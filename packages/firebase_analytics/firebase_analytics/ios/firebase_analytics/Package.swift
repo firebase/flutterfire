@@ -8,8 +8,6 @@
 import Foundation
 import PackageDescription
 
-let firebaseSdkVersion: Version = "13.2.0"
-
 // Set FIREBASE_ANALYTICS_WITHOUT_ADID=true to use FirebaseAnalyticsCore.
 // e.g. FIREBASE_ANALYTICS_WITHOUT_ADID=true flutter build ios
 let useWithoutAdId = ProcessInfo.processInfo.environment["FIREBASE_ANALYTICS_WITHOUT_ADID"] != nil
@@ -24,7 +22,7 @@ let package = Package(
     .library(name: "firebase-analytics", targets: ["firebase_analytics"])
   ],
   dependencies: [
-    .package(url: "https://github.com/firebase/firebase-ios-sdk", exact: firebaseSdkVersion),
+    .package(url: "https://github.com/firebase/firebase-ios-sdk", from: "13.2.0"),
     .package(name: "firebase_core", path: "../firebase_core"),
     .package(name: "FlutterFramework", path: "../FlutterFramework"),
   ],

@@ -57,6 +57,7 @@ jobs:
           melos-run-bootstrap: 'true'
       - name: 'Validate Generated SPM Versions'
         run: |
+          melos run test:spm-generator
           dart run scripts/generate_versions_spm.dart
           git diff --exit-code -- ':(glob)packages/**/Package.swift'
       - name: 'Run Analyze'
@@ -274,6 +275,17 @@ jobs:
       - name: 'Flutter Test - Browser'
         if: ${{ !cancelled() }}
         run: melos run test:browser --no-select
+
+  # Resolves a local Swift package fixture. The rewrite unit test runs in
+  # analyze; this job needs Xcode, and it does not bootstrap Flutter.
+  # `melos run test:spm-sdk-pin` is the same script.
+  spm_sdk_pin:
+    runs-on: macos-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - name: Check firebase_core selects the Swift package SDK version
+        run: ./scripts/verify_spm_sdk_pin.sh
 
   # Ruby, not Dart: crashlytics_add_upload_symbols_test.rb checks the generated
   # Xcode Run Script. It only needs the xcodeproj gem, so it stays off the

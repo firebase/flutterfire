@@ -7,8 +7,6 @@
 
 import PackageDescription
 
-let firebaseSdkVersion: Version = "13.2.0"
-
 let package = Package(
   name: "firebase_in_app_messaging",
   platforms: [
@@ -18,7 +16,7 @@ let package = Package(
     .library(name: "firebase-in-app-messaging", targets: ["firebase_in_app_messaging"])
   ],
   dependencies: [
-    .package(url: "https://github.com/firebase/firebase-ios-sdk", exact: firebaseSdkVersion),
+    .package(url: "https://github.com/firebase/firebase-ios-sdk", from: "13.2.0"),
     .package(name: "firebase_core", path: "../firebase_core"),
     .package(name: "FlutterFramework", path: "../FlutterFramework"),
   ],
