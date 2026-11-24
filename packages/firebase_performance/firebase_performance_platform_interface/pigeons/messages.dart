@@ -56,21 +56,21 @@ class TraceAttributes {
 
 @HostApi(dartHostTestHandler: 'TestFirebasePerformanceHostApi')
 abstract class FirebasePerformanceHostApi {
-  @async
+  @asyncCallback
   void setPerformanceCollectionEnabled(bool enabled);
 
-  @async
+  @asyncCallback
   bool isPerformanceCollectionEnabled();
 
-  @async
+  @asyncCallback
   int startTrace(String name);
 
-  @async
+  @asyncCallback
   void stopTrace(int handle, TraceAttributes attributes);
 
-  @async
+  @asyncCallback
   int startHttpMetric(HttpMetricOptions options);
 
-  @async
+  @asyncCallback
   void stopHttpMetric(int handle, HttpMetricAttributes attributes);
 }

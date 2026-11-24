@@ -275,126 +275,126 @@ class InternalVerifyPhoneNumberRequest {
 
 @HostApi(dartHostTestHandler: 'TestFirebaseAuthHostApi')
 abstract class FirebaseAuthHostApi {
-  @async
+  @asyncCallback
   String registerIdTokenListener(AuthPigeonFirebaseApp app);
 
-  @async
+  @asyncCallback
   String registerAuthStateListener(AuthPigeonFirebaseApp app);
 
-  @async
+  @asyncCallback
   void useEmulator(AuthPigeonFirebaseApp app, String host, int port);
 
-  @async
+  @asyncCallback
   void applyActionCode(AuthPigeonFirebaseApp app, String code);
 
-  @async
+  @asyncCallback
   InternalActionCodeInfo checkActionCode(
     AuthPigeonFirebaseApp app,
     String code,
   );
 
-  @async
+  @asyncCallback
   void confirmPasswordReset(
     AuthPigeonFirebaseApp app,
     String code,
     String newPassword,
   );
 
-  @async
+  @asyncCallback
   InternalUserCredential createUserWithEmailAndPassword(
     AuthPigeonFirebaseApp app,
     String email,
     String password,
   );
 
-  @async
+  @asyncCallback
   InternalUserCredential signInAnonymously(AuthPigeonFirebaseApp app);
 
-  @async
+  @asyncCallback
   InternalUserCredential signInWithCredential(
     AuthPigeonFirebaseApp app,
     Map<String?, Object?> input,
   );
 
-  @async
+  @asyncCallback
   InternalUserCredential signInWithCustomToken(
     AuthPigeonFirebaseApp app,
     String token,
   );
 
-  @async
+  @asyncCallback
   InternalUserCredential signInWithEmailAndPassword(
     AuthPigeonFirebaseApp app,
     String email,
     String password,
   );
 
-  @async
+  @asyncCallback
   InternalUserCredential signInWithEmailLink(
     AuthPigeonFirebaseApp app,
     String email,
     String emailLink,
   );
 
-  @async
+  @asyncCallback
   InternalUserCredential signInWithProvider(
     AuthPigeonFirebaseApp app,
     InternalSignInProvider signInProvider,
   );
 
-  @async
+  @asyncCallback
   void signOut(AuthPigeonFirebaseApp app);
 
-  @async
+  @asyncCallback
   List<String> fetchSignInMethodsForEmail(
     AuthPigeonFirebaseApp app,
     String email,
   );
 
-  @async
+  @asyncCallback
   void sendPasswordResetEmail(
     AuthPigeonFirebaseApp app,
     String email,
     InternalActionCodeSettings? actionCodeSettings,
   );
 
-  @async
+  @asyncCallback
   void sendSignInLinkToEmail(
     AuthPigeonFirebaseApp app,
     String email,
     InternalActionCodeSettings actionCodeSettings,
   );
 
-  @async
+  @asyncCallback
   String setLanguageCode(AuthPigeonFirebaseApp app, String? languageCode);
 
   /// Applies auth settings. When [InternalFirebaseAuthSettings.migrateCurrentUser]
   /// is true and a user was migrated, returns that user so Dart can reconcile
   /// [currentUser] before auth-state events arrive. Otherwise returns null.
-  @async
+  @asyncCallback
   InternalUserDetails? setSettings(
     AuthPigeonFirebaseApp app,
     InternalFirebaseAuthSettings settings,
   );
 
-  @async
+  @asyncCallback
   String verifyPasswordResetCode(AuthPigeonFirebaseApp app, String code);
 
-  @async
+  @asyncCallback
   String verifyPhoneNumber(
     AuthPigeonFirebaseApp app,
     InternalVerifyPhoneNumberRequest request,
   );
-  @async
+  @asyncCallback
   void revokeTokenWithAuthorizationCode(
     AuthPigeonFirebaseApp app,
     String authorizationCode,
   );
 
-  @async
+  @asyncCallback
   void revokeAccessToken(AuthPigeonFirebaseApp app, String accessToken);
 
-  @async
+  @asyncCallback
   void initializeRecaptchaConfig(AuthPigeonFirebaseApp app);
 }
 
@@ -434,73 +434,73 @@ class InternalUserProfile {
 
 @HostApi(dartHostTestHandler: 'TestFirebaseAuthUserHostApi')
 abstract class FirebaseAuthUserHostApi {
-  @async
+  @asyncCallback
   void delete(AuthPigeonFirebaseApp app);
 
-  @async
+  @asyncCallback
   InternalIdTokenResult getIdToken(
     AuthPigeonFirebaseApp app,
     bool forceRefresh,
   );
 
-  @async
+  @asyncCallback
   InternalUserCredential linkWithCredential(
     AuthPigeonFirebaseApp app,
     Map<String?, Object?> input,
   );
 
-  @async
+  @asyncCallback
   InternalUserCredential linkWithProvider(
     AuthPigeonFirebaseApp app,
     InternalSignInProvider signInProvider,
   );
 
-  @async
+  @asyncCallback
   InternalUserCredential reauthenticateWithCredential(
     AuthPigeonFirebaseApp app,
     Map<String?, Object?> input,
   );
 
-  @async
+  @asyncCallback
   InternalUserCredential reauthenticateWithProvider(
     AuthPigeonFirebaseApp app,
     InternalSignInProvider signInProvider,
   );
 
-  @async
+  @asyncCallback
   InternalUserDetails reload(AuthPigeonFirebaseApp app);
 
-  @async
+  @asyncCallback
   void sendEmailVerification(
     AuthPigeonFirebaseApp app,
     InternalActionCodeSettings? actionCodeSettings,
   );
 
-  @async
+  @asyncCallback
   InternalUserCredential unlink(AuthPigeonFirebaseApp app, String providerId);
 
-  @async
+  @asyncCallback
   InternalUserDetails updateEmail(AuthPigeonFirebaseApp app, String newEmail);
 
-  @async
+  @asyncCallback
   InternalUserDetails updatePassword(
     AuthPigeonFirebaseApp app,
     String newPassword,
   );
 
-  @async
+  @asyncCallback
   InternalUserDetails updatePhoneNumber(
     AuthPigeonFirebaseApp app,
     Map<String?, Object?> input,
   );
 
-  @async
+  @asyncCallback
   InternalUserDetails updateProfile(
     AuthPigeonFirebaseApp app,
     InternalUserProfile profile,
   );
 
-  @async
+  @asyncCallback
   void verifyBeforeUpdateEmail(
     AuthPigeonFirebaseApp app,
     String newEmail,
@@ -510,33 +510,33 @@ abstract class FirebaseAuthUserHostApi {
 
 @HostApi(dartHostTestHandler: 'TestMultiFactorUserHostApi')
 abstract class MultiFactorUserHostApi {
-  @async
+  @asyncCallback
   void enrollPhone(
     AuthPigeonFirebaseApp app,
     InternalPhoneMultiFactorAssertion assertion,
     String? displayName,
   );
 
-  @async
+  @asyncCallback
   void enrollTotp(
     AuthPigeonFirebaseApp app,
     String assertionId,
     String? displayName,
   );
 
-  @async
+  @asyncCallback
   InternalMultiFactorSession getSession(AuthPigeonFirebaseApp app);
 
-  @async
+  @asyncCallback
   void unenroll(AuthPigeonFirebaseApp app, String factorUid);
 
-  @async
+  @asyncCallback
   List<InternalMultiFactorInfo> getEnrolledFactors(AuthPigeonFirebaseApp app);
 }
 
 @HostApi(dartHostTestHandler: 'TestMultiFactoResolverHostApi')
 abstract class MultiFactoResolverHostApi {
-  @async
+  @asyncCallback
   InternalUserCredential resolveSignIn(
     String resolverId,
     InternalPhoneMultiFactorAssertion? assertion,
@@ -562,26 +562,26 @@ class InternalTotpSecret {
 
 @HostApi(dartHostTestHandler: 'TestMultiFactoResolverHostApi')
 abstract class MultiFactorTotpHostApi {
-  @async
+  @asyncCallback
   InternalTotpSecret generateSecret(String sessionId);
 
-  @async
+  @asyncCallback
   String getAssertionForEnrollment(String secretKey, String oneTimePassword);
 
-  @async
+  @asyncCallback
   String getAssertionForSignIn(String enrollmentId, String oneTimePassword);
 }
 
 @HostApi(dartHostTestHandler: 'TestMultiFactoResolverHostApi')
 abstract class MultiFactorTotpSecretHostApi {
-  @async
+  @asyncCallback
   String generateQrCodeUrl(
     String secretKey,
     String? accountName,
     String? issuer,
   );
 
-  @async
+  @asyncCallback
   void openInOtpApp(String secretKey, String qrCodeUrl);
 }
 
