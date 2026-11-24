@@ -1,3 +1,8 @@
+## 8.2.0
+
+ - **REFACTOR**(firestore,apple): migrate iOS/macOS plugin implementation to Swift ([#18607](https://github.com/firebase/flutterfire/issues/18607)). ([899ff091](https://github.com/firebase/flutterfire/commit/899ff091c3c7fe93668ba6d464042250eb4acb50))
+ - **FEAT**(android): migrate plugins to built-in Kotlin on Flutter 3.44 ([#18922](https://github.com/firebase/flutterfire/issues/18922)). ([1abe0561](https://github.com/firebase/flutterfire/commit/1abe05614d03f22782f597f847c1fc9c8c57f016))
+
 ## 8.1.0
 
  - **FIX**(cloud_firestore): stop dropping filters, settings and instance on copies ([#18819](https://github.com/firebase/flutterfire/issues/18819)). ([b9c4a8ec](https://github.com/firebase/flutterfire/commit/b9c4a8ecee23701cf43051abd6264a2d7dcc69fd))

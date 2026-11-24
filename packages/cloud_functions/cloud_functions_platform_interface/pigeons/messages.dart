@@ -24,9 +24,9 @@ import 'package:pigeon/pigeon.dart';
 )
 @HostApi(dartHostTestHandler: 'TestCloudFunctionsHostApi')
 abstract class CloudFunctionsHostApi {
-  @async
+  @asyncCallback
   Object? call(Map<String, Object?> arguments);
 
-  @async
+  @asyncCallback
   void registerEventChannel(Map<String, Object> arguments);
 }

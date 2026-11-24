@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import 'dart:math';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:waveform_flutter/waveform_flutter.dart';
 
 class CenterCircle extends StatelessWidget {

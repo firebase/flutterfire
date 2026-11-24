@@ -6,7 +6,9 @@
 
 import 'package:melos/melos.dart' as melos;
 import 'package:glob/glob.dart';
+
 import 'dart:io';
+
 import 'package:cli_util/cli_logging.dart' as logging;
 import 'package:yaml/yaml.dart';
 
@@ -17,8 +19,10 @@ import 'firebase_sdk_version_spm.dart';
 void main(List<String> args) async {
   final workspace = await getMelosWorkspace();
 
-  // Update hard-coded versions in all plugin Package.swift files.
-  // CocoaPods keeps its own pin in firebase_sdk_version.rb.
+  // firebase_core keeps an exact pin. Other plugins accept that version up
+  // to the next major, so SwiftPM selects the pin from firebase_core and
+  // rejects an older one. CocoaPods keeps its own pin in
+  // firebase_sdk_version.rb.
   updatePluginPackageSwiftVersions(workspace, firebaseSpmSdkVersion);
   // Update plugin version in Constants.swift for pure Swift plugins. Unable to pass macros in pure Swift implementations
   updateLibraryVersionPureSwiftPlugins();
@@ -27,11 +31,7 @@ void main(List<String> args) async {
 Future<melos.MelosWorkspace> getMelosWorkspace() async {
   final packageFilters = melos.PackageFilters(
     includePrivatePackages: false,
-    ignore: [
-      Glob('*web*'),
-      Glob('*platform*'),
-      Glob('*internals*'),
-    ],
+    ignore: [Glob('*web*'), Glob('*platform*'), Glob('*internals*')],
   );
   final workspace = await melos.MelosWorkspace.fromConfig(
     await melos.MelosWorkspaceConfig.fromWorkspaceRoot(Directory.current),
@@ -41,23 +41,116 @@ Future<melos.MelosWorkspace> getMelosWorkspace() async {
   return workspace;
 }
 
+/// Rewrites the `firebase-ios-sdk` requirement in one `Package.swift`.
+///
+/// [pinExact] is true for `firebase_core`, which is the package every other
+/// plugin depends on. Its exact version is the one SwiftPM must select.
+/// Other plugins get `from` the SDK version they were generated against.
+/// `from` stops before the next major, so a current `firebase_core` pin still
+/// resolves, and an older pin conflicts instead of compiling the plugin
+/// against an SDK that is missing APIs it uses.
+String rewritePackageSwiftFirebaseSdkPin(
+  String content, {
+  required String sdkVersion,
+  required bool pinExact,
+}) {
+  final requirement = pinExact
+      ? '.package(url: "$_firebaseIosSdkUrl", exact: firebaseSdkVersion)'
+      : '.package(url: "$_firebaseIosSdkUrl", from: "${_spmFromVersion(sdkVersion)}")';
+
+  if (!content.contains(_firebaseSdkRequirement)) {
+    if (content.contains('firebase-ios-sdk')) {
+      throw StateError(
+        'Package.swift depends on firebase-ios-sdk in a form this generator '
+        'does not know how to rewrite.',
+      );
+    }
+    return content;
+  }
+
+  final withRequirement = content.replaceAll(
+    _firebaseSdkRequirement,
+    requirement,
+  );
+
+  if (pinExact) {
+    if (!withRequirement.contains('let firebaseSdkVersion: Version =')) {
+      throw StateError(
+        'firebase_core Package.swift is missing its firebaseSdkVersion pin.',
+      );
+    }
+    return withRequirement.replaceAll(
+      RegExp('let firebaseSdkVersion: Version = "[^"]+"'),
+      'let firebaseSdkVersion: Version = "$sdkVersion"',
+    );
+  }
+
+  final pinDeclaration = RegExp(
+    '\nlet firebaseSdkVersion: Version = "[^"]+"\n',
+  );
+  final match = pinDeclaration.firstMatch(withRequirement);
+  if (match == null) {
+    return withRequirement;
+  }
+
+  final removed = withRequirement.replaceRange(match.start, match.end, '\n');
+  return _collapseBlankLinesAt(removed, match.start);
+}
+
+/// Collapses the newline run at [index] to one blank line.
+///
+/// Removing `firebaseSdkVersion` can leave the blank line that surrounded
+/// that declaration. Blank lines anywhere else in the manifest stay put.
+String _collapseBlankLinesAt(String content, int index) {
+  var start = index;
+  var end = index;
+  while (start > 0 && content[start - 1] == '\n') {
+    start--;
+  }
+  while (end < content.length && content[end] == '\n') {
+    end++;
+  }
+  if (end - start <= 2) {
+    return content;
+  }
+  return content.replaceRange(start, end, '\n\n');
+}
+
+String _spmFromVersion(String sdkVersion) {
+  final parts = sdkVersion.split('.');
+  if (parts.length != 3 ||
+      parts.any((part) => part.isEmpty || int.tryParse(part) == null)) {
+    throw FormatException(
+      'Invalid Swift Package Manager SDK version: $sdkVersion',
+    );
+  }
+  return sdkVersion;
+}
+
+const _firebaseIosSdkUrl = 'https://github.com/firebase/firebase-ios-sdk';
+
+final _firebaseSdkRequirement = RegExp(
+  r'\.package\(url: "https://github.com/firebase/firebase-ios-sdk", (?:exact: firebaseSdkVersion|from: "[0-9]+\.[0-9]+\.[0-9]+")\)',
+);
+
 void updatePluginPackageSwiftVersions(
   melos.MelosWorkspace workspace,
   String firebaseiOSVersion,
 ) {
   for (final package in workspace.filteredPackages.values) {
     for (final platform in ['ios', 'macos']) {
-      final packageSwiftFile =
-          File('${package.path}/$platform/${package.name}/Package.swift');
+      final packageSwiftFile = File(
+        '${package.path}/$platform/${package.name}/Package.swift',
+      );
 
       if (!packageSwiftFile.existsSync()) continue;
 
       var content = packageSwiftFile.readAsStringSync();
 
-      // Update firebaseSdkVersion (matches Package.swift naming).
-      content = content.replaceAll(
-        RegExp(r'let firebaseSdkVersion: Version = "[^"]+"'),
-        'let firebaseSdkVersion: Version = "$firebaseiOSVersion"',
+      content = rewritePackageSwiftFirebaseSdkPin(
+        content,
+        sdkVersion: firebaseiOSVersion,
+        pinExact: package.name == 'firebase_core',
       );
 
       // Update libraryVersion / libraryVersionString from pubspec version.
@@ -68,11 +161,11 @@ void updatePluginPackageSwiftVersions(
         if (version != null) {
           final spmVersion = version.replaceAll('+', '-');
           content = content.replaceAll(
-            RegExp(r'let libraryVersionString = "[^"]+"'),
+            RegExp('let libraryVersionString = "[^"]+"'),
             'let libraryVersionString = "$spmVersion"',
           );
           content = content.replaceAll(
-            RegExp(r'let libraryVersion = "[^"]+"'),
+            RegExp('let libraryVersion = "[^"]+"'),
             'let libraryVersion = "$spmVersion"',
           );
         }

@@ -946,6 +946,73 @@ void main() {
       );
     });
 
+    test('url context missing urlRetrievalStatus', () {
+      final jsonResponse = {
+        'candidates': [
+          {
+            'content': {
+              'role': 'model',
+              'parts': [
+                {'text': 'hello'},
+              ],
+            },
+            'finishReason': 'STOP',
+            'urlContextMetadata': {
+              'urlMetadata': [
+                {'retrievedUrl': 'https://example.com'},
+              ],
+            },
+          },
+        ],
+      };
+      final generateContentResponse = DeveloperSerialization()
+          .parseGenerateContentResponse(jsonResponse);
+      expect(generateContentResponse.text, 'hello');
+      final urlMetadata = generateContentResponse
+          .candidates
+          .first
+          .urlContextMetadata!
+          .urlMetadata
+          .single;
+      expect(urlMetadata.retrievedUrl, Uri.parse('https://example.com'));
+      expect(urlMetadata.urlRetrievalStatus, UrlRetrievalStatus.unspecified);
+    });
+
+    test('url context null urlRetrievalStatus', () {
+      final jsonResponse = {
+        'candidates': [
+          {
+            'content': {
+              'role': 'model',
+              'parts': [
+                {'text': 'hello'},
+              ],
+            },
+            'finishReason': 'STOP',
+            'urlContextMetadata': {
+              'urlMetadata': [
+                {
+                  'retrievedUrl': 'https://example.com',
+                  'urlRetrievalStatus': null,
+                },
+              ],
+            },
+          },
+        ],
+      };
+      final generateContentResponse = DeveloperSerialization()
+          .parseGenerateContentResponse(jsonResponse);
+      expect(generateContentResponse.text, 'hello');
+      final urlMetadata = generateContentResponse
+          .candidates
+          .first
+          .urlContextMetadata!
+          .urlMetadata
+          .single;
+      expect(urlMetadata.retrievedUrl, Uri.parse('https://example.com'));
+      expect(urlMetadata.urlRetrievalStatus, UrlRetrievalStatus.unspecified);
+    });
+
     test('allows missing content', () async {
       const response = '''
 {
@@ -1076,30 +1143,27 @@ void main() {
 }
 ''';
       final decoded = jsonDecode(response) as Object;
-      final generateContentResponse =
-          DeveloperSerialization().parseGenerateContentResponse(decoded);
+      final generateContentResponse = DeveloperSerialization()
+          .parseGenerateContentResponse(decoded);
       expect(
         generateContentResponse,
         matchesGenerateContentResponse(
-          GenerateContentResponse(
-            [
-              Candidate(
-                Content.model([
-                  ExecutableCodePart(
-                    language: CodeLanguage.python,
-                    code: 'x = 1 + 1',
-                  ),
-                  CodeExecutionResultPart(outcome: Outcome.ok, output: ''),
-                  const TextPart('The answer is 2.'),
-                ]),
-                null,
-                null,
-                FinishReason.stop,
-                null,
-              ),
-            ],
-            null,
-          ),
+          GenerateContentResponse([
+            Candidate(
+              Content.model([
+                ExecutableCodePart(
+                  language: CodeLanguage.python,
+                  code: 'x = 1 + 1',
+                ),
+                CodeExecutionResultPart(outcome: Outcome.ok, output: ''),
+                const TextPart('The answer is 2.'),
+              ]),
+              null,
+              null,
+              FinishReason.stop,
+              null,
+            ),
+          ], null),
         ),
       );
       expect(generateContentResponse.text, 'The answer is 2.');

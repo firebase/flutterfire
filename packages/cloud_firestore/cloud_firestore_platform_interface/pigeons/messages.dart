@@ -307,89 +307,89 @@ class AggregateQueryResponse {
 
 @HostApi(dartHostTestHandler: 'TestFirebaseFirestoreHostApi')
 abstract class FirebaseFirestoreHostApi {
-  @async
+  @asyncCallback
   String loadBundle(FirestorePigeonFirebaseApp app, Uint8List bundle);
 
-  @async
+  @asyncCallback
   InternalQuerySnapshot namedQueryGet(
     FirestorePigeonFirebaseApp app,
     String name,
     InternalGetOptions options,
   );
 
-  @async
+  @asyncCallback
   void clearPersistence(FirestorePigeonFirebaseApp app);
 
-  @async
+  @asyncCallback
   void disableNetwork(FirestorePigeonFirebaseApp app);
 
-  @async
+  @asyncCallback
   void enableNetwork(FirestorePigeonFirebaseApp app);
 
-  @async
+  @asyncCallback
   void terminate(FirestorePigeonFirebaseApp app);
 
-  @async
+  @asyncCallback
   void waitForPendingWrites(FirestorePigeonFirebaseApp app);
 
-  @async
+  @asyncCallback
   void setIndexConfiguration(
     FirestorePigeonFirebaseApp app,
     String indexConfiguration,
   );
 
-  @async
+  @asyncCallback
   void setLoggingEnabled(bool loggingEnabled);
 
-  @async
+  @asyncCallback
   String snapshotsInSyncSetup(FirestorePigeonFirebaseApp app);
 
-  @async
+  @asyncCallback
   String transactionCreate(
     FirestorePigeonFirebaseApp app,
     int timeout,
     int maxAttempts,
   );
 
-  @async
+  @asyncCallback
   void transactionStoreResult(
     String transactionId,
     InternalTransactionResult resultType,
     List<InternalTransactionCommand?>? commands,
   );
 
-  @async
+  @asyncCallback
   InternalDocumentSnapshot transactionGet(
     FirestorePigeonFirebaseApp app,
     String transactionId,
     String path,
   );
 
-  @async
+  @asyncCallback
   void documentReferenceSet(
     FirestorePigeonFirebaseApp app,
     DocumentReferenceRequest request,
   );
 
-  @async
+  @asyncCallback
   void documentReferenceUpdate(
     FirestorePigeonFirebaseApp app,
     DocumentReferenceRequest request,
   );
 
-  @async
+  @asyncCallback
   InternalDocumentSnapshot documentReferenceGet(
     FirestorePigeonFirebaseApp app,
     DocumentReferenceRequest request,
   );
 
-  @async
+  @asyncCallback
   void documentReferenceDelete(
     FirestorePigeonFirebaseApp app,
     DocumentReferenceRequest request,
   );
 
-  @async
+  @asyncCallback
   InternalQuerySnapshot queryGet(
     FirestorePigeonFirebaseApp app,
     String path,
@@ -398,7 +398,7 @@ abstract class FirebaseFirestoreHostApi {
     InternalGetOptions options,
   );
 
-  @async
+  @asyncCallback
   List<AggregateQueryResponse?> aggregateQuery(
     FirestorePigeonFirebaseApp app,
     String path,
@@ -408,13 +408,13 @@ abstract class FirebaseFirestoreHostApi {
     bool isCollectionGroup,
   );
 
-  @async
+  @asyncCallback
   void writeBatchCommit(
     FirestorePigeonFirebaseApp app,
     List<InternalTransactionCommand?> writes,
   );
 
-  @async
+  @asyncCallback
   String querySnapshot(
     FirestorePigeonFirebaseApp app,
     String path,
@@ -425,7 +425,7 @@ abstract class FirebaseFirestoreHostApi {
     ListenSource source,
   );
 
-  @async
+  @asyncCallback
   String documentReferenceSnapshot(
     FirestorePigeonFirebaseApp app,
     DocumentReferenceRequest parameters,
@@ -433,13 +433,13 @@ abstract class FirebaseFirestoreHostApi {
     ListenSource source,
   );
 
-  @async
+  @asyncCallback
   void persistenceCacheIndexManagerRequest(
     FirestorePigeonFirebaseApp app,
     PersistenceCacheIndexManagerRequest request,
   );
 
-  @async
+  @asyncCallback
   InternalPipelineSnapshot executePipeline(
     FirestorePigeonFirebaseApp app,
     List<Map<String?, Object?>?> stages,

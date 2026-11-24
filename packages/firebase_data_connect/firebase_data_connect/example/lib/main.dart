@@ -20,7 +20,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_data_connect/firebase_data_connect.dart';
 import 'package:firebase_data_connect_example/firebase_options.dart';
 import 'package:firebase_data_connect_example/login.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 import 'generated/movies.dart';

@@ -147,7 +147,8 @@ class RecaptchaVerifierFactoryWeb extends RecaptchaVerifierFactoryPlatform {
   Future<String> verify() {
     try {
       return _delegate.verify();
-    } catch (e) {
+    } catch (e, stackTrace) {
+      if (!isJSObject(e)) Error.throwWithStackTrace(e, stackTrace);
       throw getFirebaseAuthException(e);
     }
   }
@@ -156,7 +157,8 @@ class RecaptchaVerifierFactoryWeb extends RecaptchaVerifierFactoryPlatform {
   Future<int> render() async {
     try {
       return await _delegate.render();
-    } catch (e) {
+    } catch (e, stackTrace) {
+      if (!isJSObject(e)) Error.throwWithStackTrace(e, stackTrace);
       throw getFirebaseAuthException(e);
     }
   }

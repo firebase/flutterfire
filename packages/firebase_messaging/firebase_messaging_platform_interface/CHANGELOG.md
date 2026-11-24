@@ -1,3 +1,8 @@
+## 4.12.0
+
+ - **FIX**: pass analyze and format on Flutter 3.50 ([#18950](https://github.com/firebase/flutterfire/issues/18950)). ([e5339880](https://github.com/firebase/flutterfire/commit/e53398808f6d78b293d4ac1455f296b9257a096d))
+ - **FEAT**(android): migrate plugins to built-in Kotlin on Flutter 3.44 ([#18922](https://github.com/firebase/flutterfire/issues/18922)). ([1abe0561](https://github.com/firebase/flutterfire/commit/1abe05614d03f22782f597f847c1fc9c8c57f016))
+
 ## 4.11.1
 
  - **FIX**(messaging,ios): deliver background messages exactly once and stop dropping them at startup ([#18830](https://github.com/firebase/flutterfire/issues/18830)). ([04045d2a](https://github.com/firebase/flutterfire/commit/04045d2a040a1c2d0cf09a25b3d879659ac310fb))

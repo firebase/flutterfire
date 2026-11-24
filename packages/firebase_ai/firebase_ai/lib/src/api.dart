@@ -494,7 +494,7 @@ enum UrlRetrievalStatus {
   String toJson() => _jsonString;
 
   // ignore: unused_element
-  static UrlRetrievalStatus _parseValue(Object jsonObject) {
+  static UrlRetrievalStatus _parseValue(Object? jsonObject) {
     return switch (jsonObject) {
       'URL_RETRIEVAL_STATUS_UNSPECIFIED' => UrlRetrievalStatus.unspecified,
       'URL_RETRIEVAL_STATUS_SUCCESS' => UrlRetrievalStatus.success,
@@ -1568,7 +1568,15 @@ final class AgentPlatformSerialization implements SerializationStrategy {
       throw unhandledFormat('CountTokensResponse', jsonObject);
     }
 
-    final totalTokens = jsonObject['totalTokens'] as int;
+    final totalTokens = switch (jsonObject) {
+      {'totalTokens': final int totalTokens} => totalTokens,
+      {'totalTokens': null} => 0,
+      {'totalTokens': _} => throw unhandledFormat(
+        'CountTokensResponse',
+        jsonObject,
+      ),
+      _ => 0,
+    };
     final promptTokensDetails = switch (jsonObject) {
       {'promptTokensDetails': final List<Object?> promptTokensDetails} =>
         promptTokensDetails.map(_parseModalityTokenCount).toList(),

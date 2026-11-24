@@ -3,10 +3,9 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
-  cloud_firestore
+  firebase_core
   firebase_app_check
   firebase_auth
-  firebase_core
   firebase_database
   firebase_remote_config
   firebase_storage

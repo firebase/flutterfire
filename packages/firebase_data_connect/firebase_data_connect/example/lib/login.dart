@@ -16,7 +16,7 @@ import 'dart:math';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_data_connect_example/main.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});

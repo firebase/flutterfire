@@ -1,3 +1,7 @@
+## 6.1.0
+
+ - **FEAT**(android): migrate plugins to built-in Kotlin on Flutter 3.44 ([#18922](https://github.com/firebase/flutterfire/issues/18922)). ([1abe0561](https://github.com/firebase/flutterfire/commit/1abe05614d03f22782f597f847c1fc9c8c57f016))
+
 ## 6.0.9
 
  - **FIX**(firebase_storage): keep task metadata on errors and let new web metadata win ([#18821](https://github.com/firebase/flutterfire/issues/18821)). ([efd7131c](https://github.com/firebase/flutterfire/commit/efd7131cafc609386c7e65881dbb9fca340c7f6f))
