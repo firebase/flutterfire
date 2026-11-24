@@ -72,8 +72,7 @@ public class FLTFirebaseFirestorePlugin: NSObject, FlutterPlugin, FLTFirebasePlu
   }
 
   public func didReinitializeFirebaseCore(_ completion: @escaping () -> Void) {
-    cleanupEventListeners()
-    cleanupFirestoreInstances(completion)
+    completion()
   }
 
   public func pluginConstants(for firebaseApp: FirebaseApp) -> [AnyHashable: Any] {
@@ -121,14 +120,6 @@ public class FLTFirebaseFirestorePlugin: NSObject, FlutterPlugin, FLTFirebasePlu
     // onCancel calls this, and setStreamHandler(nil) re-enters onCancel.
     DispatchQueue.main.async {
       channel?.setStreamHandler(nil)
-    }
-  }
-
-  private func cleanupFirestoreInstances(_ completion: (() -> Void)?) {
-    if FirebaseFirestoreUtils.count > 0 {
-      FirebaseFirestoreUtils.cleanupFirestoreInstances(completion)
-    } else {
-      completion?()
     }
   }
 
