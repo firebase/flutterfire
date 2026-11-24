@@ -58,8 +58,9 @@ void main() {
         );
 
         expect(
-          web.window.sessionStorage
-              .getItem('flutterfire-flutter-fire-late-test-1.2.3'),
+          web.window.sessionStorage.getItem(
+            'flutterfire-flutter-fire-late-test-1.2.3',
+          ),
           '1.2.3',
         );
         expect(
@@ -74,8 +75,9 @@ void main() {
           '2.0.0',
         );
         expect(
-          web.window.sessionStorage
-              .getItem('flutterfire-flutter-fire-late-test-2-2.0.0'),
+          web.window.sessionStorage.getItem(
+            'flutterfire-flutter-fire-late-test-2-2.0.0',
+          ),
           '2.0.0',
         );
         expect(

@@ -80,10 +80,7 @@ void main() {
         campaignName: 'campaign-name',
         isTestMessage: true,
       ),
-      pigeon.FiamAction(
-        actionUrl: 'https://example.com',
-        buttonText: 'Open',
-      ),
+      pigeon.FiamAction(actionUrl: 'https://example.com', buttonText: 'Open'),
     ]);
 
     final clickEvent = await event;
@@ -197,11 +194,11 @@ Future<void> _sendFlutterApiMessage(
 
   return TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
       .handlePlatformMessage(
-    'dev.flutter.pigeon.firebase_in_app_messaging_platform_interface'
-    '.FirebaseInAppMessagingFlutterApi.$methodName',
-    codec.encodeMessage(arguments),
-    (_) {},
-  );
+        'dev.flutter.pigeon.firebase_in_app_messaging_platform_interface'
+        '.FirebaseInAppMessagingFlutterApi.$methodName',
+        codec.encodeMessage(arguments),
+        (_) {},
+      );
 }
 
 class _TestFirebaseInAppMessagingHostApi

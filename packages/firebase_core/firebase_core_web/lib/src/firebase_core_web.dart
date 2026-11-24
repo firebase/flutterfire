@@ -27,9 +27,8 @@ class FirebaseWebService {
   });
 }
 
-typedef EnsurePluginInitialized = Future<void> Function(
-  firebase.App firebaseApp,
-)?;
+typedef EnsurePluginInitialized =
+    Future<void> Function(firebase.App firebaseApp)?;
 
 /// The entry point for accessing Firebase.
 ///
@@ -78,11 +77,15 @@ class FirebaseCoreWeb extends FirebasePlatform {
     String packageVersion,
   ) {
     final sessionKey = 'flutterfire-$libraryName-$packageVersion';
-    final sessionItem = web.window.sessionStorage.getItem(sessionKey);
-    if (sessionItem == null) {
+    try {
+      if (web.window.sessionStorage.getItem(sessionKey) != null) return;
       web.window.sessionStorage.setItem(sessionKey, packageVersion);
-      firebase.registerVersion(libraryName, packageVersion);
+    } catch (_) {
+      // Accessing `window.sessionStorage` throws a SecurityError when the user
+      // blocks site data. The cache only avoids duplicate registrations, so
+      // register anyway instead of failing `initializeApp`.
     }
+    firebase.registerVersion(libraryName, packageVersion);
   }
 
   static void registerLibraryVersion(String libraryName, String version) {
@@ -120,15 +123,18 @@ class FirebaseCoreWeb extends FirebasePlatform {
   /// You must ensure the Firebase script is injected before using the service.
   List<String> get _ignoredServiceScripts {
     try {
-      final ignored =
-          globalContext.getProperty('flutterfire_ignore_scripts'.toJS);
+      final ignored = globalContext.getProperty(
+        'flutterfire_ignore_scripts'.toJS,
+      );
       if (ignored != null && ignored.isA<JSArray>()) {
-        return (ignored as JSArray<JSAny?>).toDart.map((entry) {
-          if (entry != null && entry.isA<JSString>()) {
-            return (entry as JSString).toDart;
-          }
-          return entry?.toString() ?? 'null';
-        }).toList(growable: false);
+        return (ignored as JSArray<JSAny?>).toDart
+            .map((entry) {
+              if (entry != null && entry.isA<JSString>()) {
+                return (entry as JSString).toDart;
+              }
+              return entry?.toString() ?? 'null';
+            })
+            .toList(growable: false);
       }
     } catch (e) {
       // Noop
@@ -158,25 +164,23 @@ class FirebaseCoreWeb extends FirebasePlatform {
         'TrustedTypes available. Creating policy: $trustedTypePolicyName'.toJS,
       );
       try {
-        final web.TrustedTypePolicy policy =
-            web.window.trustedTypes.createPolicy(
-          trustedTypePolicyName,
-          web.TrustedTypePolicyOptions(
-            createScriptURL: ((JSString url) => src).toJS,
-            createScript: ((JSString script, JSString? type) => script).toJS,
-          ),
-        );
+        final web.TrustedTypePolicy policy = web.window.trustedTypes
+            .createPolicy(
+              trustedTypePolicyName,
+              web.TrustedTypePolicyOptions(
+                createScriptURL: ((JSString url) => src).toJS,
+                createScript:
+                    ((JSString script, JSString? type) => script).toJS,
+              ),
+            );
         final trustedUrl = policy.createScriptURLNoArgs(src);
         final stringUrl = (trustedUrl as JSObject).callMethod('toString'.toJS);
-        final trustedScript = policy.createScript(
-          '''
+        final trustedScript = policy.createScript('''
             window.ff_trigger_$windowVar = async (callback) => {
               console.debug("Initializing Firebase $windowVar");
               callback(await import("$stringUrl"));
             };
-          ''',
-          null,
-        );
+          ''', null);
 
         script.trustedScript = trustedScript;
 
@@ -186,7 +190,8 @@ class FirebaseCoreWeb extends FirebasePlatform {
       }
     } else {
       final stringUrl = src;
-      script.text = '''
+      script.text =
+          '''
       window.ff_trigger_$windowVar = async (callback) => {
         console.debug("Initializing Firebase $windowVar");
         callback(await import("$stringUrl"));
@@ -306,12 +311,10 @@ class FirebaseCoreWeb extends FirebasePlatform {
     await _initializeCore();
     guardNotInitialized(() => firebase.SDK_VERSION);
 
-    assert(
-      () {
-        if (firebase.SDK_VERSION != supportedFirebaseJsSdkVersion) {
-          // ignore: avoid_print
-          print(
-            '''
+    assert(() {
+      if (firebase.SDK_VERSION != supportedFirebaseJsSdkVersion) {
+        // ignore: avoid_print
+        print('''
             WARNING: FlutterFire for Web is explicitly tested against Firebase JS SDK version "$supportedFirebaseJsSdkVersion"
             but your currently specifying "${firebase.SDK_VERSION}" by either the imported Firebase JS SDKs in your web/index.html
             file or by providing an override - this may lead to unexpected issues in your application. It is recommended that you change all of the versions of the
@@ -326,13 +329,11 @@ class FirebaseCoreWeb extends FirebasePlatform {
             If you import the Firebase scripts in index.html, instead allow FlutterFire to manage this for you by removing
             any Firebase scripts in your web/index.html file:
                 e.g. remove: <script src="https://www.gstatic.com/firebasejs/${firebase.SDK_VERSION}/firebase-app.js"></script>
-          ''',
-          );
-        }
+          ''');
+      }
 
-        return true;
-      }(),
-    );
+      return true;
+    }());
 
     firebase.App? app;
 
@@ -482,9 +483,7 @@ R guardNotInitialized<R>(R Function() cb) {
     final value = cb();
 
     if (value is Future) {
-      return value.catchError(
-        _handleException,
-      ) as R;
+      return value.catchError(_handleException) as R;
     }
 
     return value;

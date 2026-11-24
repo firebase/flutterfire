@@ -32,10 +32,7 @@ Future<void> _signInTestUser() async {
       return;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'email-already-in-use') {
-        await auth.signInWithEmailAndPassword(
-          email: email,
-          password: password,
-        );
+        await auth.signInWithEmailAndPassword(email: email, password: password);
         return;
       }
 
@@ -71,8 +68,9 @@ void main() {
 
       final connector = MoviesConnector.connectorConfig;
 
-      FirebaseDataConnect.instanceFor(connectorConfig: connector)
-          .useDataConnectEmulator('127.0.0.1', 9399);
+      FirebaseDataConnect.instanceFor(
+        connectorConfig: connector,
+      ).useDataConnectEmulator('127.0.0.1', 9399);
       await FirebaseAuth.instance.useAuthEmulator('127.0.0.1', 9099);
 
       await _signInTestUser();

@@ -9,9 +9,7 @@ import 'package:cloud_firestore_web/src/interop/firestore.dart'
 
 class PersistentCacheIndexManagerWeb
     extends PersistentCacheIndexManagerPlatform {
-  PersistentCacheIndexManagerWeb(
-    this._delegate,
-  ) : super();
+  PersistentCacheIndexManagerWeb(this._delegate) : super();
 
   final firestore_interop.Firestore _delegate;
   @override

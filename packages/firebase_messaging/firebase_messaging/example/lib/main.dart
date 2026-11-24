@@ -8,7 +8,7 @@ import 'dart:convert';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:http/http.dart' as http;
 
@@ -79,7 +79,8 @@ Future<void> setupFlutterNotifications() async {
   /// default FCM channel to enable heads up notifications.
   await flutterLocalNotificationsPlugin
       .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin>()
+        AndroidFlutterLocalNotificationsPlugin
+      >()
       ?.createNotificationChannel(channel);
 
   /// Update the iOS foreground notification presentation options to allow
@@ -183,13 +184,11 @@ class _Application extends State<Application> {
     // Delay getInitialMessage call by 3 seconds
     Future.delayed(const Duration(seconds: 3), () {
       FirebaseMessaging.instance.getInitialMessage().then(
-            (value) => setState(
-              () {
-                _resolved = true;
-                initialMessage = value?.data.toString();
-              },
-            ),
-          );
+        (value) => setState(() {
+          _resolved = true;
+          initialMessage = value?.data.toString();
+        }),
+      );
     });
 
     FirebaseMessaging.onMessage.listen(showFlutterNotification);
@@ -351,10 +350,7 @@ class _Application extends State<Application> {
                     if (fid == null)
                       const Text('No FID registered yet.')
                     else
-                      SelectableText(
-                        fid,
-                        style: const TextStyle(fontSize: 12),
-                      ),
+                      SelectableText(fid, style: const TextStyle(fontSize: 12)),
                     const SizedBox(height: 12),
                     Wrap(
                       spacing: 8,
@@ -377,9 +373,9 @@ class _Application extends State<Application> {
             ),
             ElevatedButton(
               onPressed: () {
-                FirebaseMessaging.instance
-                    .getInitialMessage()
-                    .then((RemoteMessage? message) {
+                FirebaseMessaging.instance.getInitialMessage().then((
+                  RemoteMessage? message,
+                ) {
                   if (message != null) {
                     Navigator.pushNamed(
                       context,

@@ -28,22 +28,22 @@ void main() {
       );
     });
 
-    test('mergeFields are set as a [FieldPath] & preserve current FieldPaths',
-        () {
-      expect(
-        SetOptions(
-          mergeFields: [
-            'foo.bar',
-            FieldPath(const ['foo', 'bar', 'baz'])
-          ],
-        ).mergeFields,
-        equals(
-          [
+    test(
+      'mergeFields are set as a [FieldPath] & preserve current FieldPaths',
+      () {
+        expect(
+          SetOptions(
+            mergeFields: [
+              'foo.bar',
+              FieldPath(const ['foo', 'bar', 'baz']),
+            ],
+          ).mergeFields,
+          equals([
             FieldPath(const ['foo', 'bar']),
             FieldPath(const ['foo', 'bar', 'baz']),
-          ],
-        ),
-      );
-    });
+          ]),
+        );
+      },
+    );
   });
 }

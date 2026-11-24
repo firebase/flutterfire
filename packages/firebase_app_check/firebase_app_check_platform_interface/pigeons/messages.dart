@@ -5,10 +5,7 @@
 import 'package:pigeon/pigeon.dart';
 
 class InternalAppCheckTokenResult {
-  InternalAppCheckTokenResult({
-    required this.token,
-    this.expirationTimestamp,
-  });
+  InternalAppCheckTokenResult({required this.token, this.expirationTimestamp});
 
   String token;
 
@@ -34,7 +31,7 @@ class InternalAppCheckTokenResult {
 )
 @HostApi(dartHostTestHandler: 'TestFirebaseAppCheckHostApi')
 abstract class FirebaseAppCheckHostApi {
-  @async
+  @asyncCallback
   void activate(
     String appName,
     String? androidProvider,
@@ -43,24 +40,24 @@ abstract class FirebaseAppCheckHostApi {
     String? recaptchaSiteKey,
   );
 
-  @async
+  @asyncCallback
   String? getToken(String appName, bool forceRefresh);
 
-  @async
+  @asyncCallback
   InternalAppCheckTokenResult? getTokenResult(
     String appName,
     bool forceRefresh,
   );
 
-  @async
+  @asyncCallback
   void setTokenAutoRefreshEnabled(
     String appName,
     bool isTokenAutoRefreshEnabled,
   );
 
-  @async
+  @asyncCallback
   String registerTokenListener(String appName);
 
-  @async
+  @asyncCallback
   String getLimitedUseAppCheckToken(String appName);
 }

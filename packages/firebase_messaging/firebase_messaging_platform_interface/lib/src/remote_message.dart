@@ -8,21 +8,22 @@ import 'package:firebase_messaging_platform_interface/firebase_messaging_platfor
 /// A class representing a message sent from Firebase Cloud Messaging.
 class RemoteMessage {
   // ignore: public_member_api_docs
-  const RemoteMessage(
-      {this.senderId,
-      this.category,
-      this.actionIdentifier,
-      this.collapseKey,
-      this.contentAvailable = false,
-      this.data = const <String, dynamic>{},
-      this.from,
-      this.messageId,
-      this.messageType,
-      this.mutableContent = false,
-      this.notification,
-      this.sentTime,
-      this.threadId,
-      this.ttl});
+  const RemoteMessage({
+    this.senderId,
+    this.category,
+    this.actionIdentifier,
+    this.collapseKey,
+    this.contentAvailable = false,
+    this.data = const <String, dynamic>{},
+    this.from,
+    this.messageId,
+    this.messageType,
+    this.mutableContent = false,
+    this.notification,
+    this.sentTime,
+    this.threadId,
+    this.ttl,
+  });
 
   /// Constructs a [RemoteMessage] from a raw Map.
   factory RemoteMessage.fromMap(Map<String, dynamic> map) {
@@ -42,7 +43,8 @@ class RemoteMessage {
       mutableContent: _asBool(map['mutableContent']),
       notification: map['notification'] is Map
           ? RemoteNotification.fromMap(
-              Map<String, dynamic>.from(map['notification'] as Map))
+              Map<String, dynamic>.from(map['notification'] as Map),
+            )
           : null,
       sentTime: _parseSentTime(map['sentTime']),
       threadId: map['threadId']?.toString(),

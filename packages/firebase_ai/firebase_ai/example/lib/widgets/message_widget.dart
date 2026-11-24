@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import 'dart:typed_data';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
 class MessageData {
@@ -60,8 +60,9 @@ class MessageWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment:
-          isFromUser ? MainAxisAlignment.end : MainAxisAlignment.start,
+      mainAxisAlignment: isFromUser
+          ? MainAxisAlignment.end
+          : MainAxisAlignment.start,
       children: [
         Flexible(
           child: Container(
@@ -70,14 +71,11 @@ class MessageWidget extends StatelessWidget {
               color: isThought
                   ? Theme.of(context).colorScheme.secondaryContainer
                   : isFromUser
-                      ? Theme.of(context).colorScheme.primaryContainer
-                      : Theme.of(context).colorScheme.surfaceContainerHighest,
+                  ? Theme.of(context).colorScheme.primaryContainer
+                  : Theme.of(context).colorScheme.surfaceContainerHighest,
               borderRadius: BorderRadius.circular(18),
             ),
-            padding: const EdgeInsets.symmetric(
-              vertical: 15,
-              horizontal: 20,
-            ),
+            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
             margin: const EdgeInsets.only(bottom: 8),
             child: Column(
               children: [

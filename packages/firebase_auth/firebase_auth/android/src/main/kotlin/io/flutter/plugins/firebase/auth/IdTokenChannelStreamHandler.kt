@@ -21,8 +21,8 @@ class IdTokenChannelStreamHandler(private val firebaseAuth: FirebaseAuth) : Stre
 
     idTokenListener =
         FirebaseAuth.IdTokenListener { auth: FirebaseAuth ->
-          if (initialAuthState.get()) {
-            initialAuthState.set(false)
+          // Forward a null first callback after sign-out before subscription.
+          if (initialAuthState.getAndSet(false) && auth.currentUser != null) {
             return@IdTokenListener
           }
 

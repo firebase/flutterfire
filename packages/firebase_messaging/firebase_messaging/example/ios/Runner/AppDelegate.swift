@@ -15,5 +15,11 @@ import UIKit
 
   func didInitializeImplicitFlutterEngine(_ engineBridge: FlutterImplicitEngineBridge) {
     GeneratedPluginRegistrant.register(with: engineBridge.pluginRegistry)
+    // Only used by integration_test/e2e_test.dart.
+    if let registrar = engineBridge.pluginRegistry.registrar(
+      forPlugin: "RemoteNotificationTestChannel")
+    {
+      RemoteNotificationTestChannel.register(with: registrar)
+    }
   }
 }

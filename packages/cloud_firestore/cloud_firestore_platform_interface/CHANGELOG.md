@@ -1,3 +1,14 @@
+## 8.2.0
+
+ - **REFACTOR**(firestore,apple): migrate iOS/macOS plugin implementation to Swift ([#18607](https://github.com/firebase/flutterfire/issues/18607)). ([899ff091](https://github.com/firebase/flutterfire/commit/899ff091c3c7fe93668ba6d464042250eb4acb50))
+ - **FEAT**(android): migrate plugins to built-in Kotlin on Flutter 3.44 ([#18922](https://github.com/firebase/flutterfire/issues/18922)). ([1abe0561](https://github.com/firebase/flutterfire/commit/1abe05614d03f22782f597f847c1fc9c8c57f016))
+
+## 8.1.0
+
+ - **FIX**(cloud_firestore): stop dropping filters, settings and instance on copies ([#18819](https://github.com/firebase/flutterfire/issues/18819)). ([b9c4a8ec](https://github.com/firebase/flutterfire/commit/b9c4a8ecee23701cf43051abd6264a2d7dcc69fd))
+ - **FIX**(firestore): drop snapshot listeners cancelled while they register ([#18809](https://github.com/firebase/flutterfire/issues/18809)). ([f09c359f](https://github.com/firebase/flutterfire/commit/f09c359f44b4dff28a25210cc522c44413552a81))
+ - **FEAT**(firestore): add FieldValue.minimum and FieldValue.maximum ([#18697](https://github.com/firebase/flutterfire/issues/18697)). ([387c707b](https://github.com/firebase/flutterfire/commit/387c707b25bc9b27825a436f11202664a5634fe0))
+
 ## 8.0.8
 
  - **REFACTOR**(firestore): deprecate setIndexConfigurationFromJSON ([#18801](https://github.com/firebase/flutterfire/issues/18801)). ([caf683df](https://github.com/firebase/flutterfire/commit/caf683dfaefcdd2eea5a9d667b35e149bd916928))

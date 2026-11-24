@@ -2,11 +2,9 @@ part of 'movies.dart';
 
 class ListPersonsVariablesBuilder {
   final FirebaseDataConnect _dataConnect;
-  ListPersonsVariablesBuilder(
-    this._dataConnect,
-  );
-  Deserializer<ListPersonsData> dataDeserializer =
-      (dynamic json) => ListPersonsData.fromJson(jsonDecode(json));
+  ListPersonsVariablesBuilder(this._dataConnect);
+  Deserializer<ListPersonsData> dataDeserializer = (dynamic json) =>
+      ListPersonsData.fromJson(jsonDecode(json));
 
   Future<QueryResult<ListPersonsData, void>> execute() {
     return ref().execute();
@@ -14,7 +12,11 @@ class ListPersonsVariablesBuilder {
 
   QueryRef<ListPersonsData, void> ref() {
     return _dataConnect.query(
-        "ListPersons", dataDeserializer, emptySerializer, null);
+      "ListPersons",
+      dataDeserializer,
+      emptySerializer,
+      null,
+    );
   }
 }
 
@@ -23,8 +25,8 @@ class ListPersonsPeople {
   final String id;
   final String name;
   ListPersonsPeople.fromJson(dynamic json)
-      : id = nativeFromJson<String>(json['id']),
-        name = nativeFromJson<String>(json['name']);
+    : id = nativeFromJson<String>(json['id']),
+      name = nativeFromJson<String>(json['name']);
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) {
@@ -48,19 +50,16 @@ class ListPersonsPeople {
     return json;
   }
 
-  ListPersonsPeople({
-    required this.id,
-    required this.name,
-  });
+  ListPersonsPeople({required this.id, required this.name});
 }
 
 @immutable
 class ListPersonsData {
   final List<ListPersonsPeople> people;
   ListPersonsData.fromJson(dynamic json)
-      : people = (json['people'] as List<dynamic>)
-            .map((e) => ListPersonsPeople.fromJson(e))
-            .toList();
+    : people = (json['people'] as List<dynamic>)
+          .map((e) => ListPersonsPeople.fromJson(e))
+          .toList();
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) {
@@ -83,7 +82,5 @@ class ListPersonsData {
     return json;
   }
 
-  ListPersonsData({
-    required this.people,
-  });
+  ListPersonsData({required this.people});
 }

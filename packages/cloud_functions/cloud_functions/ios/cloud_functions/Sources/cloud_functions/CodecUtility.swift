@@ -12,38 +12,32 @@ public struct AnyEncodable: Encodable {
 
   public func encode(to encoder: Encoder) throws {
     var container = encoder.singleValueContainer()
+    try encodeAny(value, into: &container, encoder: encoder)
+  }
+
+  /// Encodes a method-channel value.
+  ///
+  /// Flutter delivers numbers and booleans as `NSNumber`. Swift's `as Bool`
+  /// succeeds for numeric `0` and `1`, so a boolean is recognized only when
+  /// the value is a `CFBoolean`. Numeric `0` and `1` stay JSON numbers.
+  private func encodeAny(
+    _ value: Any?,
+    into container: inout SingleValueEncodingContainer,
+    encoder: Encoder
+  ) throws {
+    if value == nil || value is NSNull {
+      try container.encodeNil()
+      return
+    }
+
+    if let number = value as? NSNumber {
+      try encode(number, into: &container)
+      return
+    }
 
     switch value {
-    case is NSNull:
-      try container.encodeNil()
     case let stringValue as String:
       try container.encode(stringValue)
-    case let boolValue as Bool:
-      try container.encode(boolValue)
-    case let intValue as Int:
-      try container.encode(intValue)
-    case let int8Value as Int8:
-      try container.encode(int8Value)
-    case let int16Value as Int16:
-      try container.encode(int16Value)
-    case let int32Value as Int32:
-      try container.encode(int32Value)
-    case let int64Value as Int64:
-      try container.encode(int64Value)
-    case let uintValue as UInt:
-      try container.encode(uintValue)
-    case let uint8Value as UInt8:
-      try container.encode(uint8Value)
-    case let uint16Value as UInt16:
-      try container.encode(uint16Value)
-    case let uint32Value as UInt32:
-      try container.encode(uint32Value)
-    case let uint64Value as UInt64:
-      try container.encode(uint64Value)
-    case let doubleValue as Double:
-      try container.encode(doubleValue)
-    case let floatValue as Float:
-      try container.encode(floatValue)
     case let arrayValue as [Any]:
       try container.encode(arrayValue.map { AnyEncodable($0) })
     case let dictionaryValue as [String: Any]:
@@ -56,6 +50,30 @@ public struct AnyEncodable: Encodable {
           debugDescription: "Unsupported type: \(type(of: value))"
         )
       )
+    }
+  }
+
+  /// `NSNumber` reports `Q` for unsigned values above `Int64.max` and `f` for
+  /// `Float`. Those keep their own width so they do not wrap or gain digits.
+  private func encode(
+    _ number: NSNumber,
+    into container: inout SingleValueEncodingContainer
+  ) throws {
+    if CFGetTypeID(number) == CFBooleanGetTypeID() {
+      try container.encode(number.boolValue)
+      return
+    }
+    switch String(cString: number.objCType) {
+    case "Q":
+      try container.encode(number.uint64Value)
+    case "f":
+      try container.encode(number.floatValue)
+    default:
+      if CFNumberIsFloatType(number) {
+        try container.encode(number.doubleValue)
+      } else {
+        try container.encode(number.int64Value)
+      }
     }
   }
 }

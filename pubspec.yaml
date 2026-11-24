@@ -1,7 +1,7 @@
 name: flutterfire_workspace
 
 environment:
-  sdk: '^3.6.0'
+  sdk: '^3.12.0'
 
 workspace:
   - packages/_flutterfire_internals
@@ -67,6 +67,7 @@ workspace:
   - tests
 
 dev_dependencies:
+  analyzer: '>=12.0.0 <15.0.0'
   cli_util: ^0.5.0
   glob: ^2.1.2
   intl: ^0.20.2
@@ -112,6 +113,21 @@ melos:
     validate:workspace:
       run: dart scripts/validate_workspace.dart
       description: Validate that all packages are listed in the workspace.
+
+    validate:wasm-imports:
+      run: dart scripts/validate_wasm_imports.dart
+      description: Validate that published packages only depend on libraries available on Wasm.
+
+    test:spm-generator:
+      run: dart run scripts/generate_versions_spm_test.dart
+      description: Check the Swift package firebase-ios-sdk rewrite.
+
+    test:spm-sdk-pin:
+      run: ./scripts/verify_spm_sdk_pin.sh
+      description: >
+        Check that firebase_core's exact pin selects the Swift package SDK
+        version, and that an older pin conflicts with a plugin built against
+        a newer one.
 
     analyze-ci:
       # We are setting the concurrency to 1 because a higher concurrency can crash
@@ -204,6 +220,8 @@ melos:
       run: |
         melos run test --no-select && \
         melos run test:web --no-select && \
+        melos run test:web:wasm --no-select && \
+        melos run test:browser --no-select && \
         melos run test:e2e --no-select
       description: |
         Run all tests available.
@@ -229,6 +247,33 @@ melos:
         dirExists:
           - test
         scope: '*web*'
+
+    test:web:wasm:
+      # Same suites as test:web, compiled with dart2wasm. Interop casts that
+      # erasure lets through on JS (e.g. `List<String>.from(jsArray.toDart)`)
+      # only fail here.
+      run: |
+        melos exec -c 1 --fail-fast -- \
+          "flutter test --platform=chrome --wasm"
+      description: Run `flutter test --platform=chrome --wasm` for a specific '*web' package.
+      packageFilters:
+        dirExists:
+          - test
+        scope: '*web*'
+
+    test:browser:
+      # Browser tests of the other packages live in test/web, so that their
+      # VM-only tests (dart:io, sqlite3, ...) are not compiled for the browser.
+      run: |
+        melos exec -c 1 --fail-fast -- \
+          "flutter test --platform=chrome test/web && flutter test --platform=chrome --wasm test/web"
+      description: Run the `test/web` tests of a non-'*web*' package on Chrome, compiled to JS and to Wasm.
+      packageFilters:
+        dirExists:
+          - test/web
+        ignore:
+          - '*web*'
+          - '*example*'
 
     test:e2e:
       run: |
@@ -457,6 +502,7 @@ melos:
         melos exec -- "flutter pub run pigeon --input ./pigeons/messages.dart" && \
         melos run generate:pigeon:macos --no-select && \
         melos run generate:pigeon:android --no-select && \
+        melos run generate:pigeon:windows --no-select && \
         melos run generate:pigeon:dart-test --no-select && \
         melos run format-ci --no-select
       packageFilters:
@@ -488,6 +534,15 @@ melos:
       packageFilters:
         dirExists: 'android'
       description: Transform the method toList() into a public one to be used in EventChannel
+
+    generate:pigeon:windows:
+      run: |
+        melos exec -- "perl -0777 -i -pe 's/(\x20{2}static \w+ FromEncodableList\(\s*const ::flutter::EncodableList& list\);\n)(\x20{2}::flutter::EncodableList ToEncodableList\(\) const;\n)/\$1\n public:\n\$2\n private:\n/g' windows/messages.g.h"
+      packageFilters:
+        scope: 'firebase_auth'
+      description: |
+        Pigeon generates ToEncodableList() as private. firebase_auth_plugin.cpp
+        calls it to serialize user details, so make it public.
 
     # Additional cleanup lifecycle script, executed when `melos clean` is run.
     postclean: >

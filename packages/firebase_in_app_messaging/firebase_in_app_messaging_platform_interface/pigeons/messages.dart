@@ -19,7 +19,6 @@ import 'package:pigeon/pigeon.dart';
     copyrightHeader: 'pigeons/copyright.txt',
   ),
 )
-
 /// How an in-app message was dismissed.
 enum FiamDismissType {
   /// The message was swiped away. Only reported on iOS, for banner messages.
@@ -116,52 +115,59 @@ class FiamDisplayMessage {
 
 @HostApi(dartHostTestHandler: 'TestFirebaseInAppMessagingHostApi')
 abstract class FirebaseInAppMessagingHostApi {
-  @async
+  @asyncCallback
   void triggerEvent(String appName, String eventName);
 
-  @async
+  @asyncCallback
   void setMessagesSuppressed(String appName, bool suppress);
 
-  @async
+  @asyncCallback
   void setAutomaticDataCollectionEnabled(String appName, bool enabled);
 
   /// Attaches the native message lifecycle listeners that forward events to
   /// [FirebaseInAppMessagingFlutterApi]. Calling this more than once is a no-op.
-  @async
+  @asyncCallback
   void addEventListeners(String appName);
 
-  @async
+  @asyncCallback
   void setCustomDisplayEnabled(String appName, bool enabled);
 
-  @async
+  @asyncCallback
   void reportImpression(String campaignId);
 
-  @async
+  @asyncCallback
   void reportClick(String campaignId, String actionId);
 
-  @async
+  @asyncCallback
   void reportDismiss(String campaignId, String dismissType);
 
-  @async
+  @asyncCallback
   void reportDisplayError(String campaignId, String reason);
 }
 
 @FlutterApi()
 abstract class FirebaseInAppMessagingFlutterApi {
+  @asyncCallback
   void onMessageClicked(
-      FiamCampaignMetadata campaignMetadata, FiamAction action);
+    FiamCampaignMetadata campaignMetadata,
+    FiamAction action,
+  );
 
+  @asyncCallback
   void onMessageImpression(FiamCampaignMetadata campaignMetadata);
 
+  @asyncCallback
   void onMessageDismissed(
     FiamCampaignMetadata campaignMetadata,
     FiamDismissType dismissType,
   );
 
+  @asyncCallback
   void onMessageDisplayError(
     FiamCampaignMetadata campaignMetadata,
     String? errorMessage,
   );
 
+  @asyncCallback
   void onMessageDisplay(FiamDisplayMessage message);
 }

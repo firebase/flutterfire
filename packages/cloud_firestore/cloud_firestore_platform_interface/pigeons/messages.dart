@@ -16,10 +16,8 @@ import 'package:pigeon/pigeon.dart';
       package: 'io.flutter.plugins.firebase.firestore',
       className: 'GeneratedAndroidFirebaseFirestore',
     ),
-    objcHeaderOut:
-        '../cloud_firestore/ios/cloud_firestore/Sources/cloud_firestore/include/cloud_firestore/Public/FirestoreMessages.g.h',
-    objcSourceOut:
-        '../cloud_firestore/ios/cloud_firestore/Sources/cloud_firestore/FirestoreMessages.g.m',
+    swiftOut:
+        '../cloud_firestore/ios/cloud_firestore/Sources/cloud_firestore/FirestoreMessages.g.swift',
     cppHeaderOut: '../cloud_firestore/windows/messages.g.h',
     cppSourceOut: '../cloud_firestore/windows/messages.g.cpp',
     cppOptions: CppOptions(namespace: 'cloud_firestore_windows'),
@@ -200,7 +198,7 @@ enum AggregateSource {
 enum PersistenceCacheIndexManagerRequest {
   enableIndexAutoCreation,
   disableIndexAutoCreation,
-  deleteAllIndexes
+  deleteAllIndexes,
 }
 
 class InternalGetOptions {
@@ -213,10 +211,7 @@ class InternalGetOptions {
   final ServerTimestampBehavior serverTimestampBehavior;
 }
 
-enum InternalTransactionResult {
-  success,
-  failure,
-}
+enum InternalTransactionResult { success, failure }
 
 enum InternalTransactionType {
   get,
@@ -289,17 +284,10 @@ class InternalQueryParameters {
   final Map<String?, Object?>? filters;
 }
 
-enum AggregateType {
-  count,
-  sum,
-  average,
-}
+enum AggregateType { count, sum, average }
 
 class AggregateQuery {
-  const AggregateQuery({
-    required this.type,
-    required this.field,
-  });
+  const AggregateQuery({required this.type, required this.field});
 
   final AggregateType type;
   final String? field;
@@ -319,106 +307,89 @@ class AggregateQueryResponse {
 
 @HostApi(dartHostTestHandler: 'TestFirebaseFirestoreHostApi')
 abstract class FirebaseFirestoreHostApi {
-  @async
-  String loadBundle(
-    FirestorePigeonFirebaseApp app,
-    Uint8List bundle,
-  );
+  @asyncCallback
+  String loadBundle(FirestorePigeonFirebaseApp app, Uint8List bundle);
 
-  @async
+  @asyncCallback
   InternalQuerySnapshot namedQueryGet(
     FirestorePigeonFirebaseApp app,
     String name,
     InternalGetOptions options,
   );
 
-  @async
-  void clearPersistence(
-    FirestorePigeonFirebaseApp app,
-  );
+  @asyncCallback
+  void clearPersistence(FirestorePigeonFirebaseApp app);
 
-  @async
-  void disableNetwork(
-    FirestorePigeonFirebaseApp app,
-  );
+  @asyncCallback
+  void disableNetwork(FirestorePigeonFirebaseApp app);
 
-  @async
-  void enableNetwork(
-    FirestorePigeonFirebaseApp app,
-  );
+  @asyncCallback
+  void enableNetwork(FirestorePigeonFirebaseApp app);
 
-  @async
-  void terminate(
-    FirestorePigeonFirebaseApp app,
-  );
+  @asyncCallback
+  void terminate(FirestorePigeonFirebaseApp app);
 
-  @async
-  void waitForPendingWrites(
-    FirestorePigeonFirebaseApp app,
-  );
+  @asyncCallback
+  void waitForPendingWrites(FirestorePigeonFirebaseApp app);
 
-  @async
+  @asyncCallback
   void setIndexConfiguration(
     FirestorePigeonFirebaseApp app,
     String indexConfiguration,
   );
 
-  @async
-  void setLoggingEnabled(
-    bool loggingEnabled,
-  );
+  @asyncCallback
+  void setLoggingEnabled(bool loggingEnabled);
 
-  @async
-  String snapshotsInSyncSetup(
-    FirestorePigeonFirebaseApp app,
-  );
+  @asyncCallback
+  String snapshotsInSyncSetup(FirestorePigeonFirebaseApp app);
 
-  @async
+  @asyncCallback
   String transactionCreate(
     FirestorePigeonFirebaseApp app,
     int timeout,
     int maxAttempts,
   );
 
-  @async
+  @asyncCallback
   void transactionStoreResult(
     String transactionId,
     InternalTransactionResult resultType,
     List<InternalTransactionCommand?>? commands,
   );
 
-  @async
+  @asyncCallback
   InternalDocumentSnapshot transactionGet(
     FirestorePigeonFirebaseApp app,
     String transactionId,
     String path,
   );
 
-  @async
+  @asyncCallback
   void documentReferenceSet(
     FirestorePigeonFirebaseApp app,
     DocumentReferenceRequest request,
   );
 
-  @async
+  @asyncCallback
   void documentReferenceUpdate(
     FirestorePigeonFirebaseApp app,
     DocumentReferenceRequest request,
   );
 
-  @async
+  @asyncCallback
   InternalDocumentSnapshot documentReferenceGet(
     FirestorePigeonFirebaseApp app,
     DocumentReferenceRequest request,
   );
 
-  @async
+  @asyncCallback
   void documentReferenceDelete(
     FirestorePigeonFirebaseApp app,
     DocumentReferenceRequest request,
   );
 
-  @async
+  @asyncCallback
   InternalQuerySnapshot queryGet(
     FirestorePigeonFirebaseApp app,
     String path,
@@ -427,7 +398,7 @@ abstract class FirebaseFirestoreHostApi {
     InternalGetOptions options,
   );
 
-  @async
+  @asyncCallback
   List<AggregateQueryResponse?> aggregateQuery(
     FirestorePigeonFirebaseApp app,
     String path,
@@ -437,13 +408,13 @@ abstract class FirebaseFirestoreHostApi {
     bool isCollectionGroup,
   );
 
-  @async
+  @asyncCallback
   void writeBatchCommit(
     FirestorePigeonFirebaseApp app,
     List<InternalTransactionCommand?> writes,
   );
 
-  @async
+  @asyncCallback
   String querySnapshot(
     FirestorePigeonFirebaseApp app,
     String path,
@@ -454,7 +425,7 @@ abstract class FirebaseFirestoreHostApi {
     ListenSource source,
   );
 
-  @async
+  @asyncCallback
   String documentReferenceSnapshot(
     FirestorePigeonFirebaseApp app,
     DocumentReferenceRequest parameters,
@@ -462,13 +433,13 @@ abstract class FirebaseFirestoreHostApi {
     ListenSource source,
   );
 
-  @async
+  @asyncCallback
   void persistenceCacheIndexManagerRequest(
     FirestorePigeonFirebaseApp app,
     PersistenceCacheIndexManagerRequest request,
   );
 
-  @async
+  @asyncCallback
   InternalPipelineSnapshot executePipeline(
     FirestorePigeonFirebaseApp app,
     List<Map<String?, Object?>?> stages,

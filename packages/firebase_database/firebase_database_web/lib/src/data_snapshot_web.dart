@@ -9,15 +9,15 @@ class DataSnapshotWeb extends DataSnapshotPlatform {
   final database_interop.DataSnapshot _delegate;
 
   DataSnapshotWeb(DatabaseReferencePlatform ref, this._delegate)
-      : super(ref, <String, dynamic>{
-          'key': _delegate.key,
-          'value': _delegate.val(),
-          'priority': _delegate.getPriority(),
-        });
+    : super(ref, <String, dynamic>{
+        'key': _delegate.key,
+        'value': _delegate.val(),
+        'priority': _delegate.getPriority(),
+      });
 
   @override
   DataSnapshotPlatform child(String childPath) {
-    return DataSnapshotWeb(ref, _delegate.child(childPath));
+    return DataSnapshotWeb(ref.child(childPath), _delegate.child(childPath));
   }
 
   @override
@@ -29,8 +29,9 @@ class DataSnapshotWeb extends DataSnapshotPlatform {
       snapshots.add(snapshot);
     });
 
-    return Iterable<DataSnapshotPlatform>.generate(snapshots.length,
-        (int index) {
+    return Iterable<DataSnapshotPlatform>.generate(snapshots.length, (
+      int index,
+    ) {
       database_interop.DataSnapshot snapshot = snapshots[index];
       return DataSnapshotWeb(ref.child(snapshot.key!), snapshot);
     });

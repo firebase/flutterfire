@@ -14,7 +14,7 @@
 import 'dart:async';
 import 'dart:developer' as developer;
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:firebase_ai/firebase_ai.dart';
 import 'package:waveform_flutter/waveform_flutter.dart';
 
@@ -106,13 +106,10 @@ class BidiMediaManager {
     // Wait for Mac Camera to Settle (Prevent audio hijack)
     await Future.delayed(const Duration(milliseconds: 1000));
 
-    _videoSubscription = _videoInput.startStreamingImages().listen(
-      (data) {
-        String mimeType = 'image/jpeg';
-        onData(data, mimeType);
-      },
-      onError: (e) => developer.log('Video Stream Error: $e'),
-    );
+    _videoSubscription = _videoInput.startStreamingImages().listen((data) {
+      String mimeType = 'image/jpeg';
+      onData(data, mimeType);
+    }, onError: (e) => developer.log('Video Stream Error: $e'));
   }
 
   Future<void> stopVideo() async {
@@ -180,6 +177,12 @@ class BidiSessionController extends ChangeNotifier {
   /// Number of successful [LiveSession.resumeSession] calls on this session.
   int resumeCount = 0;
 
+  /// Whether new sessions request limited-use App Check tokens.
+  ///
+  /// Limited-use tokens are rejected on replay, so resuming with them checks
+  /// that [LiveSession.resumeSession] fetches fresh headers for each reconnect.
+  bool useLimitedUseAppCheckTokens = true;
+
   void updateRealtimeConfig({
     bool? disableVAD,
     ActivityHandling? activityHandling,
@@ -212,6 +215,12 @@ class BidiSessionController extends ChangeNotifier {
     } else if (endSensitivity != null) {
       selectedEndSensitivity = endSensitivity;
     }
+    _initLiveModel();
+    notifyListeners();
+  }
+
+  void setUseLimitedUseAppCheckTokens(bool value) {
+    useLimitedUseAppCheckTokens = value;
     _initLiveModel();
     notifyListeners();
   }
@@ -261,14 +270,14 @@ class BidiSessionController extends ChangeNotifier {
 
     _liveModel = useVertexBackend
         ? FirebaseAI.agentPlatform(
-            useLimitedUseAppCheckTokens: kUseLimitedUseAppCheckTokens,
+            useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens,
           ).liveGenerativeModel(
             model: ExampleModels.liveAgentPlatform,
             liveGenerationConfig: config,
             tools: tools,
           )
         : FirebaseAI.googleAI(
-            useLimitedUseAppCheckTokens: kUseLimitedUseAppCheckTokens,
+            useLimitedUseAppCheckTokens: useLimitedUseAppCheckTokens,
           ).liveGenerativeModel(
             model: ExampleModels.liveGoogleAI,
             liveGenerationConfig: config,
@@ -400,7 +409,7 @@ class BidiSessionController extends ChangeNotifier {
     notifyListeners();
     _addSystemMessage(
       'Calling resumeSession() '
-      '(limited-use App Check: $kUseLimitedUseAppCheckTokens)...',
+      '(limited-use App Check: $useLimitedUseAppCheckTokens)...',
     );
 
     try {
@@ -804,9 +813,7 @@ class _BidiPageState extends State<BidiPage> {
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         Text(
-                          'App Check: '
-                          '${kUseLimitedUseAppCheckTokens ? 'limited-use' : 'standard'}'
-                          ' · resumes: ${_controller.resumeCount}',
+                          'Resumes: ${_controller.resumeCount}',
                           style: const TextStyle(fontSize: 11),
                         ),
                       ],
@@ -820,8 +827,8 @@ class _BidiPageState extends State<BidiPage> {
                     ),
                     onPressed:
                         _controller.isSessionActive && !_controller.isLoading
-                            ? () => _controller.resumeSession()
-                            : null,
+                        ? () => _controller.resumeSession()
+                        : null,
                   ),
                   const SizedBox(width: 8),
                   ElevatedButton.icon(
@@ -835,6 +842,16 @@ class _BidiPageState extends State<BidiPage> {
                         : null,
                   ),
                 ],
+              ),
+              SwitchListTile(
+                dense: true,
+                contentPadding: EdgeInsets.zero,
+                title: const Text('Limited-use App Check tokens'),
+                subtitle: const Text('Applies to the next session'),
+                value: _controller.useLimitedUseAppCheckTokens,
+                onChanged: _controller.isSessionActive || _controller.isLoading
+                    ? null
+                    : _controller.setUseLimitedUseAppCheckTokens,
               ),
               const SizedBox(height: 8),
               Card(
@@ -1012,7 +1029,8 @@ class _BidiPageState extends State<BidiPage> {
                   height: 200,
                   color: Colors.black,
                   alignment: Alignment.center,
-                  child: (_controller.mediaManager.cameraController != null &&
+                  child:
+                      (_controller.mediaManager.cameraController != null &&
                           _controller.mediaManager.controllerInitialized)
                       ? FullCameraPreview(
                           controller: _controller.mediaManager.cameraController,
@@ -1043,8 +1061,10 @@ class _BidiPageState extends State<BidiPage> {
                 ),
               ),
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 25, horizontal: 15),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 25,
+                  horizontal: 15,
+                ),
                 child: Row(
                   children: [
                     Expanded(

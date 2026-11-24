@@ -21,6 +21,10 @@ import FirebaseCore
 let kFirebaseAppCheckChannelName = "plugins.flutter.io/firebase_app_check"
 let kFirebaseAppCheckTokenChannelPrefix = "plugins.flutter.io/firebase_app_check/token/"
 
+/// Has a fixed Objective-C name because `firebase_core` looks this class up by
+/// name. Keep it in sync with `installAppCheckProviderFactoryIfLinked` in
+/// FLTFirebaseCorePlugin.
+@objc(FirebaseAppCheckPlugin)
 public class FirebaseAppCheckPlugin: NSObject, FlutterPlugin,
   FLTFirebasePluginProtocol, FirebaseAppCheckHostApi
 {
@@ -28,10 +32,23 @@ public class FirebaseAppCheckPlugin: NSObject, FlutterPlugin,
   private var streamHandlers: [String: AppCheckTokenStreamHandler] = [:]
   private var providerFactory: FlutterAppCheckProviderFactory?
 
+  /// The Apple SDK asks the installed factory for a provider during
+  /// `FirebaseApp.configure()` and keeps that provider. `activate()`
+  /// reconfigures the provider this factory handed out, so there must only
+  /// ever be one factory.
+  static let sharedProviderFactory = FlutterAppCheckProviderFactory()
+
+  /// `firebase_core` calls this immediately before `FirebaseApp.configure()`.
+  /// Flutter registers `firebase_core` first, so installing the factory from
+  /// `register(with:)` alone would be too late.
+  @objc static func installProviderFactory() {
+    AppCheck.setAppCheckProviderFactory(sharedProviderFactory)
+  }
+
   static let shared: FirebaseAppCheckPlugin = {
     let instance = FirebaseAppCheckPlugin()
-    instance.providerFactory = FlutterAppCheckProviderFactory()
-    AppCheck.setAppCheckProviderFactory(instance.providerFactory)
+    instance.providerFactory = sharedProviderFactory
+    installProviderFactory()
     FLTFirebasePluginRegistry.sharedInstance().register(instance)
     return instance
   }()
@@ -256,17 +273,19 @@ public class FirebaseAppCheckPlugin: NSObject, FlutterPlugin,
   private func createFlutterError(_ error: Error) -> FlutterError {
     let nsError = error as NSError
     var code = "unknown"
-    switch nsError.code {
-    case 0:  // FIRAppCheckErrorCodeServerUnreachable
-      code = "server-unreachable"
-    case 1:  // FIRAppCheckErrorCodeInvalidConfiguration
-      code = "invalid-configuration"
-    case 2:  // FIRAppCheckErrorCodeKeychain
-      code = "code-keychain"
-    case 3:  // FIRAppCheckErrorCodeUnsupported
-      code = "code-unsupported"
-    default:
-      code = "unknown"
+    if nsError.domain == AppCheckErrorDomain {
+      switch AppCheckErrorCode.Code(rawValue: nsError.code) {
+      case .serverUnreachable:
+        code = "server-unreachable"
+      case .invalidConfiguration:
+        code = "invalid-configuration"
+      case .keychain:
+        code = "code-keychain"
+      case .unsupported:
+        code = "code-unsupported"
+      default:
+        code = "unknown"
+      }
     }
     return FlutterError(
       code: code,

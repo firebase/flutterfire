@@ -36,15 +36,18 @@ class RemoteNotification {
       bodyLocKey: map['bodyLocKey']?.toString(),
       android: map['android'] is Map
           ? AndroidNotification.fromMap(
-              Map<String, dynamic>.from(map['android'] as Map))
+              Map<String, dynamic>.from(map['android'] as Map),
+            )
           : null,
       apple: map['apple'] is Map
           ? AppleNotification.fromMap(
-              Map<String, dynamic>.from(map['apple'] as Map))
+              Map<String, dynamic>.from(map['apple'] as Map),
+            )
           : null,
       web: map['web'] is Map
           ? WebNotification.fromMap(
-              Map<String, dynamic>.from(map['web'] as Map))
+              Map<String, dynamic>.from(map['web'] as Map),
+            )
           : null,
     );
   }
@@ -126,8 +129,9 @@ class AndroidNotification {
       sound: map['sound']?.toString(),
       ticker: map['ticker']?.toString(),
       tag: map['tag']?.toString(),
-      visibility:
-          convertToAndroidNotificationVisibility(_asInt(map['visibility'])),
+      visibility: convertToAndroidNotificationVisibility(
+        _asInt(map['visibility']),
+      ),
     );
   }
 
@@ -217,7 +221,8 @@ class AppleNotification {
       imageUrl: map['imageUrl']?.toString(),
       sound: map['sound'] is Map
           ? AppleNotificationSound.fromMap(
-              Map<String, dynamic>.from(map['sound'] as Map))
+              Map<String, dynamic>.from(map['sound'] as Map),
+            )
           : null,
     );
   }
@@ -327,11 +332,7 @@ num? _asNum(Object? value) {
 
 /// Web specific properties of a [RemoteNotification].
 class WebNotification {
-  const WebNotification({
-    this.analyticsLabel,
-    this.image,
-    this.link,
-  });
+  const WebNotification({this.analyticsLabel, this.image, this.link});
 
   /// Constructs a [WebNotification] from a raw Map.
   factory WebNotification.fromMap(Map<String, dynamic> map) {

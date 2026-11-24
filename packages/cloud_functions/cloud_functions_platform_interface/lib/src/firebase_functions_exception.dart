@@ -52,9 +52,7 @@ import 'package:meta/meta.dart';
 /// code, [message] its message and [details] its details. See
 /// [Handle errors](https://firebase.google.com/docs/functions/callable#handle-errors-client).
 ///
-/// Errors from `HttpsCallable.stream` are reported with these codes on web
-/// only. On Apple platforms, stream errors have the code `unknown`. On
-/// Android, a stream that fails ends without an error.
+/// Errors from `HttpsCallable.stream` are reported with these codes too.
 class FirebaseFunctionsException extends FirebaseException
     implements Exception {
   // ignore: public_member_api_docs
@@ -65,10 +63,11 @@ class FirebaseFunctionsException extends FirebaseException
     StackTrace? stackTrace,
     this.details,
   }) : super(
-            plugin: 'firebase_functions',
-            message: message,
-            code: code,
-            stackTrace: stackTrace);
+         plugin: 'firebase_functions',
+         message: message,
+         code: code,
+         stackTrace: stackTrace,
+       );
 
   /// Additional data provided with the exception.
   final dynamic details;

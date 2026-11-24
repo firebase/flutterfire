@@ -103,115 +103,106 @@ void runLoadBundleTests() {
         skip: kIsWeb,
       );
 
-      test(
-        'loadBundle(): error handling for malformed bundle',
-        () async {
-          final Uint8List buffer = await _fetchFixture(
-            Uri.https(
-              'api.rnfirebase.io',
-              '/firestore/e2e-tests/malformed-bundle',
+      test('loadBundle(): error handling for malformed bundle', () async {
+        final Uint8List buffer = await _fetchFixture(
+          Uri.https(
+            'api.rnfirebase.io',
+            '/firestore/e2e-tests/malformed-bundle',
+          ),
+        );
+
+        LoadBundleTask task = firestore.loadBundle(buffer);
+
+        await expectLater(
+          task.stream.last,
+          throwsA(
+            isA<FirebaseException>().having(
+              (e) => e.code,
+              'code',
+              'load-bundle-error',
             ),
-          );
+          ),
+        );
+      });
 
-          LoadBundleTask task = firestore.loadBundle(buffer);
+      test('loadBundle(): pause and resume stream', () async {
+        Uint8List buffer = await loadBundleSetup(3);
+        LoadBundleTask task = firestore.loadBundle(buffer);
+        // Illustrates the pause() & resume() function.
+        // A single stream will stop sending events once the listener is unsubscribed
 
-          await expectLater(
-            task.stream.last,
-            throwsA(
-              isA<FirebaseException>()
-                  .having((e) => e.code, 'code', 'load-bundle-error'),
+        // Will listen & pause after first event received
+        await expectLater(
+          task.stream,
+          emits(
+            isA<LoadBundleTaskSnapshot>().having(
+              (ts) => ts.taskState,
+              'taskState',
+              LoadBundleTaskState.running,
             ),
-          );
-        },
-      );
+          ),
+        );
 
-      test(
-        'loadBundle(): pause and resume stream',
-        () async {
-          Uint8List buffer = await loadBundleSetup(3);
-          LoadBundleTask task = firestore.loadBundle(buffer);
-          // Illustrates the pause() & resume() function.
-          // A single stream will stop sending events once the listener is unsubscribed
+        await Future.delayed(const Duration(milliseconds: 1));
 
-          // Will listen & pause after first event received
-          await expectLater(
-            task.stream,
-            emits(
-              isA<LoadBundleTaskSnapshot>().having(
-                (ts) => ts.taskState,
-                'taskState',
-                LoadBundleTaskState.running,
-              ),
+        // Will resume & pause after second event received
+        await expectLater(
+          task.stream,
+          emits(
+            isA<LoadBundleTaskSnapshot>().having(
+              (ts) => ts.taskState,
+              'taskState',
+              anyOf(LoadBundleTaskState.running, LoadBundleTaskState.success),
             ),
-          );
-
-          await Future.delayed(const Duration(milliseconds: 1));
-
-          // Will resume & pause after second event received
-          await expectLater(
-            task.stream,
-            emits(
-              isA<LoadBundleTaskSnapshot>().having(
-                (ts) => ts.taskState,
-                'taskState',
-                anyOf(LoadBundleTaskState.running, LoadBundleTaskState.success),
-              ),
-            ),
-          );
-        },
-        skip: defaultTargetPlatform == TargetPlatform.windows,
-      );
+          ),
+        );
+      }, skip: defaultTargetPlatform == TargetPlatform.windows);
     });
 
     group('FirebaseFirestore.namedQueryGet()', () {
-      test(
-        'namedQueryGet() successful',
-        () async {
-          const int number = 4;
-          Uint8List buffer = await loadBundleSetup(number);
-          LoadBundleTask task = firestore.loadBundle(buffer);
+      test('namedQueryGet() successful', () async {
+        const int number = 4;
+        Uint8List buffer = await loadBundleSetup(number);
+        LoadBundleTask task = firestore.loadBundle(buffer);
 
-          // ensure the bundle has been completely cached
-          await task.stream.last;
+        // ensure the bundle has been completely cached
+        await task.stream.last;
 
-          // namedQuery 'named-bundle-test' which returns a QuerySnaphot of the same 3 documents
-          // with 'number' property
-          QuerySnapshot<Map<String, Object?>> snapshot =
-              await firestore.namedQueryGet(
-            'named-bundle-test-$number',
-            options: const GetOptions(source: Source.cache),
-          );
-
-          expect(
-            snapshot.docs.map((document) => document['number']),
-            everyElement(anyOf(1, 2, 3)),
-          );
-        },
-        skip: kIsWeb,
-      );
-
-      test(
-        'namedQueryGet() error',
-        () async {
-          Uint8List buffer = await loadBundleSetup(4);
-          LoadBundleTask task = firestore.loadBundle(buffer);
-
-          // ensure the bundle has been completely cached
-          await task.stream.last;
-
-          await expectLater(
-            firestore.namedQueryGet(
-              'wrong-name',
+        // namedQuery 'named-bundle-test' which returns a QuerySnaphot of the same 3 documents
+        // with 'number' property
+        QuerySnapshot<Map<String, Object?>> snapshot = await firestore
+            .namedQueryGet(
+              'named-bundle-test-$number',
               options: const GetOptions(source: Source.cache),
+            );
+
+        expect(
+          snapshot.docs.map((document) => document['number']),
+          everyElement(anyOf(1, 2, 3)),
+        );
+      }, skip: kIsWeb);
+
+      test('namedQueryGet() error', () async {
+        Uint8List buffer = await loadBundleSetup(4);
+        LoadBundleTask task = firestore.loadBundle(buffer);
+
+        // ensure the bundle has been completely cached
+        await task.stream.last;
+
+        await expectLater(
+          firestore.namedQueryGet(
+            'wrong-name',
+            options: const GetOptions(source: Source.cache),
+          ),
+          throwsA(
+            isA<FirebaseException>().having(
+              (e) => e.code,
+              'code',
+              'non-existent-named-query',
             ),
-            throwsA(
-              isA<FirebaseException>()
-                  .having((e) => e.code, 'code', 'non-existent-named-query'),
-            ),
-          );
-        },
-        skip: defaultTargetPlatform == TargetPlatform.windows,
-      );
+          ),
+        );
+      }, skip: defaultTargetPlatform == TargetPlatform.windows);
     });
 
     group('FirebaeFirestore.namedQueryWithConverterGet()', () {
@@ -225,13 +216,13 @@ void runLoadBundleTests() {
 
         // namedQuery 'named-bundle-test' which returns a QuerySnaphot of the same 3 documents
         // with 'number' property
-        QuerySnapshot<ConverterPlaceholder> snapshot =
-            await firestore.namedQueryWithConverterGet<ConverterPlaceholder>(
-          'named-bundle-test-$number',
-          options: const GetOptions(source: Source.cache),
-          fromFirestore: ConverterPlaceholder.new,
-          toFirestore: (value, options) => value.toFirestore(),
-        );
+        QuerySnapshot<ConverterPlaceholder> snapshot = await firestore
+            .namedQueryWithConverterGet<ConverterPlaceholder>(
+              'named-bundle-test-$number',
+              options: const GetOptions(source: Source.cache),
+              fromFirestore: ConverterPlaceholder.new,
+              toFirestore: (value, options) => value.toFirestore(),
+            );
 
         expect(
           snapshot.docs.map((document) => document['number']),
@@ -239,30 +230,29 @@ void runLoadBundleTests() {
         );
       });
 
-      test(
-        'namedQueryWithConverterGet() error',
-        () async {
-          Uint8List buffer = await loadBundleSetup(4);
-          LoadBundleTask task = firestore.loadBundle(buffer);
+      test('namedQueryWithConverterGet() error', () async {
+        Uint8List buffer = await loadBundleSetup(4);
+        LoadBundleTask task = firestore.loadBundle(buffer);
 
-          // ensure the bundle has been completely cached
-          await task.stream.last;
+        // ensure the bundle has been completely cached
+        await task.stream.last;
 
-          await expectLater(
-            firestore.namedQueryWithConverterGet<ConverterPlaceholder>(
-              'wrong-name',
-              options: const GetOptions(source: Source.cache),
-              fromFirestore: ConverterPlaceholder.new,
-              toFirestore: (value, options) => value.toFirestore(),
+        await expectLater(
+          firestore.namedQueryWithConverterGet<ConverterPlaceholder>(
+            'wrong-name',
+            options: const GetOptions(source: Source.cache),
+            fromFirestore: ConverterPlaceholder.new,
+            toFirestore: (value, options) => value.toFirestore(),
+          ),
+          throwsA(
+            isA<FirebaseException>().having(
+              (e) => e.code,
+              'code',
+              'non-existent-named-query',
             ),
-            throwsA(
-              isA<FirebaseException>()
-                  .having((e) => e.code, 'code', 'non-existent-named-query'),
-            ),
-          );
-        },
-        skip: defaultTargetPlatform == TargetPlatform.windows,
-      );
+          ),
+        );
+      }, skip: defaultTargetPlatform == TargetPlatform.windows);
     });
   });
 }

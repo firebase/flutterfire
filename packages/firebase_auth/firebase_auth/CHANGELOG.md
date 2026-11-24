@@ -1,3 +1,20 @@
+## 7.1.0
+
+ - **FIX**(auth,android): keep the Auth error code when getIdToken fails ([#18957](https://github.com/firebase/flutterfire/issues/18957)). ([4cc02f2b](https://github.com/firebase/flutterfire/commit/4cc02f2b82b4a8defe1b9cbf291446b104d300d0))
+ - **FIX**(auth,apple): clear Sign in with Apple state when the request ends ([#18941](https://github.com/firebase/flutterfire/issues/18941)). ([aed7f18d](https://github.com/firebase/flutterfire/commit/aed7f18d21d95198d12b3e62e14d045d607c5e98))
+ - **FIX**(auth): keep the web Auth emulator across a browser restart ([#18926](https://github.com/firebase/flutterfire/issues/18926)). ([cbf2ab9d](https://github.com/firebase/flutterfire/commit/cbf2ab9dad338c6076e8d214df963c00693d0bd1))
+ - **FIX**: pass analyze and format on Flutter 3.50 ([#18950](https://github.com/firebase/flutterfire/issues/18950)). ([e5339880](https://github.com/firebase/flutterfire/commit/e53398808f6d78b293d4ac1455f296b9257a096d))
+ - **FIX**(auth,ios): keep sign-in redirect URLs out of Flutter deep linking ([#18841](https://github.com/firebase/flutterfire/issues/18841)). ([bd8d3a3c](https://github.com/firebase/flutterfire/commit/bd8d3a3c6688832b86c6d00a98628b0bac4e9684))
+ - **FEAT**(android): detect built-in Kotlin instead of checking the AGP version ([#18355](https://github.com/firebase/flutterfire/issues/18355)). ([4376b824](https://github.com/firebase/flutterfire/commit/4376b824405005092630aef97a5b7f31a394aaa7))
+ - **FEAT**(android): migrate plugins to built-in Kotlin on Flutter 3.44 ([#18922](https://github.com/firebase/flutterfire/issues/18922)). ([1abe0561](https://github.com/firebase/flutterfire/commit/1abe05614d03f22782f597f847c1fc9c8c57f016))
+
+## 7.0.1
+
+ - **FIX**(auth): forward signed-out initial native callbacks ([#18797](https://github.com/firebase/flutterfire/issues/18797)). ([6cfdb79d](https://github.com/firebase/flutterfire/commit/6cfdb79db49e8a85cc20f389b890b81efa5951da))
+ - **FIX**(android): replace Groovy space-assignment in plugin build.gradle files ([#18837](https://github.com/firebase/flutterfire/issues/18837)). ([09e913ac](https://github.com/firebase/flutterfire/commit/09e913acd98fa25ea6ff547141e7caf421b7b02d))
+ - **FIX**(firebase_auth): stop dropping profile, provider and action code fields ([#18820](https://github.com/firebase/flutterfire/issues/18820)). ([2572d82b](https://github.com/firebase/flutterfire/commit/2572d82b760b2800dd53c454474381d3ddbe6d9f))
+ - **DOCS**(auth,functions): document all FirebaseAuthException and FirebaseFunctionsException codes ([#18713](https://github.com/firebase/flutterfire/issues/18713)). ([b4feba95](https://github.com/firebase/flutterfire/commit/b4feba95a65f650c91cb6d3863f8b7467ef099b7))
+
 ## 7.0.0
 
 > Note: This release has breaking changes.

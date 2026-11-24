@@ -23,10 +23,7 @@ import 'package:pigeon/pigeon.dart';
   ),
 )
 class AnalyticsEvent {
-  const AnalyticsEvent({
-    required this.name,
-    required this.parameters,
-  });
+  const AnalyticsEvent({required this.name, required this.parameters});
 
   final String name;
   final Map<String?, Object?>? parameters;
@@ -34,39 +31,39 @@ class AnalyticsEvent {
 
 @HostApi(dartHostTestHandler: 'TestFirebaseAnalyticsHostApi')
 abstract class FirebaseAnalyticsHostApi {
-  @async
+  @asyncCallback
   void logEvent(Map<String, Object?> event);
 
-  @async
+  @asyncCallback
   void setUserId(String? userId);
 
-  @async
+  @asyncCallback
   void setUserProperty(String name, String? value);
 
-  @async
+  @asyncCallback
   void setAnalyticsCollectionEnabled(bool enabled);
 
-  @async
+  @asyncCallback
   void resetAnalyticsData();
 
-  @async
+  @asyncCallback
   void setSessionTimeoutDuration(int timeout);
 
-  @async
+  @asyncCallback
   void setConsent(Map<String, bool?> consent);
 
-  @async
+  @asyncCallback
   void setDefaultEventParameters(Map<String, Object?>? parameters);
 
-  @async
+  @asyncCallback
   String? getAppInstanceId();
 
-  @async
+  @asyncCallback
   int? getSessionId();
 
-  @async
+  @asyncCallback
   void initiateOnDeviceConversionMeasurement(Map<String, String?> arguments);
 
-  @async
+  @asyncCallback
   void logTransaction(String transactionId);
 }
