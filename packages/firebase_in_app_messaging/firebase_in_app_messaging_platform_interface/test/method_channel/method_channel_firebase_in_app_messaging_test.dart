@@ -7,6 +7,7 @@ import 'package:firebase_in_app_messaging_platform_interface/firebase_in_app_mes
 import 'package:firebase_in_app_messaging_platform_interface/src/method_channel/method_channel_firebase_in_app_messaging.dart';
 import 'package:firebase_in_app_messaging_platform_interface/src/pigeon/messages.pigeon.dart'
     as pigeon;
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../mock.dart';
@@ -183,6 +184,173 @@ void main() {
     await message.impress();
     expect(hostApi.campaignId, 'campaign-id');
   });
+
+  group('onMessageDisplay without a listener', () {
+    final defaultTimeout =
+        MethodChannelFirebaseInAppMessaging.pendingDisplayTimeout;
+
+    setUp(() async {
+      MethodChannelFirebaseInAppMessaging.pendingDisplayTimeout =
+          const Duration(milliseconds: 50);
+      await inAppMessaging.setCustomDisplayEnabled(true);
+      hostApi.reset();
+    });
+
+    tearDown(() {
+      MethodChannelFirebaseInAppMessaging.pendingDisplayTimeout =
+          defaultTimeout;
+      debugDefaultTargetPlatformOverride = null;
+    });
+
+    for (final platform in [TargetPlatform.android, TargetPlatform.iOS]) {
+      group(platform.name, () {
+        setUp(() => debugDefaultTargetPlatformOverride = platform);
+
+        test('holds the message for the first listener', () async {
+          await _sendFlutterApiMessage('onMessageDisplay', [
+            _displayMessage('held-campaign'),
+          ]);
+
+          final messages = <InAppMessage>[];
+          final subscription = inAppMessaging.onMessageDisplay.listen(
+            messages.add,
+          );
+          addTearDown(subscription.cancel);
+          await pumpEventQueue();
+
+          expect(messages, hasLength(1));
+          expect(messages.single.campaignMetadata.campaignId, 'held-campaign');
+
+          // The held message was delivered, so it is not reported.
+          await Future<void>.delayed(_pastPendingDisplayTimeout);
+          expect(hostApi.campaignId, isNull);
+        });
+
+        test(
+          'does not report a held message that its campaign replaces',
+          () async {
+            await _sendFlutterApiMessage('onMessageDisplay', [
+              _displayMessage('same-campaign'),
+            ]);
+            await _sendFlutterApiMessage('onMessageDisplay', [
+              _displayMessage('same-campaign'),
+            ]);
+
+            final message = await inAppMessaging.onMessageDisplay.first;
+            expect(message.campaignMetadata.campaignId, 'same-campaign');
+            await Future<void>.delayed(_pastPendingDisplayTimeout);
+            expect(hostApi.campaignId, isNull);
+          },
+        );
+
+        test(
+          'drops the held message when custom display is disabled',
+          () async {
+            await _sendFlutterApiMessage('onMessageDisplay', [
+              _displayMessage('disabled-campaign'),
+            ]);
+            await inAppMessaging.setCustomDisplayEnabled(false);
+
+            final messages = <InAppMessage>[];
+            final subscription = inAppMessaging.onMessageDisplay.listen(
+              messages.add,
+            );
+            addTearDown(subscription.cancel);
+            await Future<void>.delayed(_pastPendingDisplayTimeout);
+
+            expect(messages, isEmpty);
+            expect(hostApi.campaignId, isNull);
+          },
+        );
+      });
+    }
+
+    // iOS shows no other campaign until the message is reported, and a display
+    // error records no impression there.
+    group('iOS', () {
+      setUp(() => debugDefaultTargetPlatformOverride = TargetPlatform.iOS);
+
+      test('reports a display error when nobody listens', () async {
+        await _sendFlutterApiMessage('onMessageDisplay', [
+          _displayMessage('unheard-campaign'),
+        ]);
+
+        await Future<void>.delayed(_pastPendingDisplayTimeout);
+
+        expect(hostApi.campaignId, 'unheard-campaign');
+        expect(hostApi.errorReason, isNotNull);
+        expect(hostApi.dismissType, isNull);
+      });
+
+      test('reports a held message that a newer one replaces', () async {
+        await _sendFlutterApiMessage('onMessageDisplay', [
+          _displayMessage('older-campaign'),
+        ]);
+        await _sendFlutterApiMessage('onMessageDisplay', [
+          _displayMessage('newer-campaign'),
+        ]);
+        await pumpEventQueue();
+
+        expect(hostApi.campaignId, 'older-campaign');
+        expect(hostApi.errorReason, isNotNull);
+
+        final message = await inAppMessaging.onMessageDisplay.first;
+        expect(message.campaignMetadata.campaignId, 'newer-campaign');
+      });
+    });
+
+    // Android counts a display error as an impression, and caps app open
+    // campaigns at one a day, so a message nobody saw is not reported.
+    group('Android', () {
+      setUp(() => debugDefaultTargetPlatformOverride = TargetPlatform.android);
+
+      test('drops the message without reporting it', () async {
+        await _sendFlutterApiMessage('onMessageDisplay', [
+          _displayMessage('unheard-campaign'),
+        ]);
+
+        await Future<void>.delayed(_pastPendingDisplayTimeout);
+        expect(hostApi.campaignId, isNull);
+
+        // The message is no longer held either.
+        final messages = <InAppMessage>[];
+        final subscription = inAppMessaging.onMessageDisplay.listen(
+          messages.add,
+        );
+        addTearDown(subscription.cancel);
+        await pumpEventQueue();
+        expect(messages, isEmpty);
+      });
+
+      test('drops a held message that a newer one replaces', () async {
+        await _sendFlutterApiMessage('onMessageDisplay', [
+          _displayMessage('older-campaign'),
+        ]);
+        await _sendFlutterApiMessage('onMessageDisplay', [
+          _displayMessage('newer-campaign'),
+        ]);
+        await pumpEventQueue();
+
+        expect(hostApi.campaignId, isNull);
+
+        final message = await inAppMessaging.onMessageDisplay.first;
+        expect(message.campaignMetadata.campaignId, 'newer-campaign');
+      });
+    });
+  });
+}
+
+const _pastPendingDisplayTimeout = Duration(milliseconds: 100);
+
+pigeon.FiamDisplayMessage _displayMessage(String campaignId) {
+  return pigeon.FiamDisplayMessage(
+    campaignMetadata: pigeon.FiamCampaignMetadata(
+      campaignId: campaignId,
+      campaignName: 'campaign-name',
+      isTestMessage: false,
+    ),
+    messageType: 'BANNER',
+  );
 }
 
 /// Simulates the native side calling [pigeon.FirebaseInAppMessagingFlutterApi].
