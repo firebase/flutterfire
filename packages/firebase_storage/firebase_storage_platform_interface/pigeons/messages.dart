@@ -154,20 +154,20 @@ class InternalListResult {
 
 @HostApi(dartHostTestHandler: 'TestFirebaseStorageHostApi')
 abstract class FirebaseStorageHostApi {
-  @async
+  @asyncCallback
   InternalStorageReference getReferencebyPath(
     InternalStorageFirebaseApp app,
     String path,
     String? bucket,
   );
-  @async
+  @asyncCallback
   void setMaxOperationRetryTime(InternalStorageFirebaseApp app, int time);
-  @async
+  @asyncCallback
   void setMaxUploadRetryTime(InternalStorageFirebaseApp app, int time);
-  @async
+  @asyncCallback
   void setMaxDownloadRetryTime(InternalStorageFirebaseApp app, int time);
 
-  @async
+  @asyncCallback
   void useStorageEmulator(
     InternalStorageFirebaseApp app,
     String host,
@@ -176,45 +176,45 @@ abstract class FirebaseStorageHostApi {
 
   // APIs for Reference class
 
-  @async
+  @asyncCallback
   void referenceDelete(
     InternalStorageFirebaseApp app,
     InternalStorageReference reference,
   );
 
-  @async
+  @asyncCallback
   String referenceGetDownloadURL(
     InternalStorageFirebaseApp app,
     InternalStorageReference reference,
   );
 
-  @async
+  @asyncCallback
   InternalFullMetaData referenceGetMetaData(
     InternalStorageFirebaseApp app,
     InternalStorageReference reference,
   );
 
-  @async
+  @asyncCallback
   InternalListResult referenceList(
     InternalStorageFirebaseApp app,
     InternalStorageReference reference,
     InternalListOptions options,
   );
 
-  @async
+  @asyncCallback
   InternalListResult referenceListAll(
     InternalStorageFirebaseApp app,
     InternalStorageReference reference,
   );
 
-  @async
+  @asyncCallback
   Uint8List? referenceGetData(
     InternalStorageFirebaseApp app,
     InternalStorageReference reference,
     int maxSize,
   );
 
-  @async
+  @asyncCallback
   String referencePutData(
     InternalStorageFirebaseApp app,
     InternalStorageReference reference,
@@ -223,7 +223,7 @@ abstract class FirebaseStorageHostApi {
     int handle,
   );
 
-  @async
+  @asyncCallback
   String referencePutString(
     InternalStorageFirebaseApp app,
     InternalStorageReference reference,
@@ -233,7 +233,7 @@ abstract class FirebaseStorageHostApi {
     int handle,
   );
 
-  @async
+  @asyncCallback
   String referencePutFile(
     InternalStorageFirebaseApp app,
     InternalStorageReference reference,
@@ -242,7 +242,7 @@ abstract class FirebaseStorageHostApi {
     int handle,
   );
 
-  @async
+  @asyncCallback
   String referenceDownloadFile(
     InternalStorageFirebaseApp app,
     InternalStorageReference reference,
@@ -250,7 +250,7 @@ abstract class FirebaseStorageHostApi {
     int handle,
   );
 
-  @async
+  @asyncCallback
   InternalFullMetaData referenceUpdateMetadata(
     InternalStorageFirebaseApp app,
     InternalStorageReference reference,
@@ -258,12 +258,12 @@ abstract class FirebaseStorageHostApi {
   );
 
   // APIs for Task class
-  @async
+  @asyncCallback
   Map<String, Object> taskPause(InternalStorageFirebaseApp app, int handle);
 
-  @async
+  @asyncCallback
   Map<String, Object> taskResume(InternalStorageFirebaseApp app, int handle);
 
-  @async
+  @asyncCallback
   Map<String, Object> taskCancel(InternalStorageFirebaseApp app, int handle);
 }
