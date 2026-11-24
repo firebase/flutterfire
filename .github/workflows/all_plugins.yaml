@@ -57,6 +57,7 @@ jobs:
           melos-run-bootstrap: 'true'
       - name: 'Validate Generated SPM Versions'
         run: |
+          melos run test:spm-generator
           dart run scripts/generate_versions_spm.dart
           git diff --exit-code -- ':(glob)packages/**/Package.swift'
       - name: 'Run Analyze'
@@ -154,6 +155,9 @@ jobs:
           swiftformat --version
       - name: 'Dart, Java, Objective-C and Swift'
         run: |
+          # See prime_format_package_config.dart. Without this, Flutter 3.50
+          # makes the formatter pub-get every package and the job times out.
+          dart .github/workflows/scripts/prime_format_package_config.dart
           flutter pub global run flutter_plugin_tools format --base-branch=origin/main
           ./.github/workflows/scripts/validate-formatting.sh
 
@@ -317,6 +321,17 @@ jobs:
           dart pub get
           dart compile js -o build/main.js web/main.dart
           dart compile wasm -o build/main.wasm web/main.dart
+
+  # Resolves a local Swift package fixture. The rewrite unit test runs in
+  # analyze; this job needs Xcode, and it does not bootstrap Flutter.
+  # `melos run test:spm-sdk-pin` is the same script.
+  spm_sdk_pin:
+    runs-on: macos-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - name: Check firebase_core selects the Swift package SDK version
+        run: ./scripts/verify_spm_sdk_pin.sh
 
   # Ruby, not Dart: crashlytics_add_upload_symbols_test.rb checks the generated
   # Xcode Run Script. It only needs the xcodeproj gem, so it stays off the

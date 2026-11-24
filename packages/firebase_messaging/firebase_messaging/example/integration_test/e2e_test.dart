@@ -390,5 +390,18 @@ void main() {
         skip: kIsWeb,
       );
     });
+
+    test('a background message with no registered handler does not start '
+        'the background service', () async {
+      final probe = await probeBackgroundDelivery(
+        'no-handler-${DateTime.now().microsecondsSinceEpoch}',
+      );
+
+      expect(probe['background'], isTrue);
+      expect(probe['receiverRan'], isTrue);
+      expect(probe['serviceRan'], isFalse);
+      expect(probe['jobScheduled'], isFalse);
+      expect(probe['serviceRunning'], isFalse);
+    }, skip: kIsWeb || defaultTargetPlatform != TargetPlatform.android);
   });
 }

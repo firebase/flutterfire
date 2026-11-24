@@ -106,8 +106,7 @@ final class TemplateAutoFunctionDeclaration
 /// Config for template tools to use with server prompts.
 final class TemplateToolConfig {
   // ignore: public_member_api_docs
-  TemplateToolConfig({RetrievalConfig? retrievalConfig})
-    : _retrievalConfig = retrievalConfig;
+  TemplateToolConfig({this._retrievalConfig});
 
   final RetrievalConfig? _retrievalConfig;
 

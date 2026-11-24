@@ -775,11 +775,9 @@ static const NSInteger kFLTFirebaseMessagingChannelBufferSize = 64;
     _apnsToken = deviceToken;
     return;
   }
-#ifdef DEBUG
-  [messaging setAPNSToken:deviceToken type:FIRMessagingAPNSTokenTypeSandbox];
-#else
-  [messaging setAPNSToken:deviceToken type:FIRMessagingAPNSTokenTypeProd];
-#endif
+  // Unknown reads aps-environment from the provisioning profile. DEBUG is not
+  // that environment: a release build can still be development-signed.
+  [messaging setAPNSToken:deviceToken type:FIRMessagingAPNSTokenTypeUnknown];
 }
 
 #if TARGET_OS_OSX
@@ -1513,11 +1511,8 @@ static const NSInteger kFLTFirebaseMessagingChannelBufferSize = 64;
   FIRMessaging *messaging = [FIRMessaging messaging];
 
   if (messaging.isAutoInitEnabled && messaging.APNSToken == nil && _apnsToken != nil) {
-#ifdef DEBUG
-    [messaging setAPNSToken:_apnsToken type:FIRMessagingAPNSTokenTypeSandbox];
-#else
-    [messaging setAPNSToken:_apnsToken type:FIRMessagingAPNSTokenTypeProd];
-#endif
+    // Same profile detection as didRegisterForRemoteNotificationsWithDeviceToken:.
+    [messaging setAPNSToken:_apnsToken type:FIRMessagingAPNSTokenTypeUnknown];
     _apnsToken = nil;
   }
 }

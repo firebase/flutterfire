@@ -124,22 +124,61 @@ void main() {
       },
     );
 
-    test(
-      'parses HTTP URL correctly when using standard localhost (127.0.0.1)',
-      () {
-        final result = partsFromHttpUrl(
-          'http://localhost:9199/v0/b/myapp.appspot.com/o/path/to/foo_bar.jpg',
-        );
+    test('parses HTTP URL correctly when using localhost', () {
+      final result = partsFromHttpUrl(
+        'http://localhost:9199/v0/b/myapp.appspot.com/o/path/to/foo_bar.jpg',
+      );
 
-        expect(
-          result,
-          isNotNull,
-          reason: 'partsFromHttpUrl should not return null for localhost URLs',
-        );
-        expect(result?['bucket'], 'myapp.appspot.com');
-        expect(result?['path'], 'path/to/foo_bar.jpg');
-      },
-    );
+      expect(
+        result,
+        isNotNull,
+        reason: 'partsFromHttpUrl should not return null for localhost URLs',
+      );
+      expect(result?['bucket'], 'myapp.appspot.com');
+      expect(result?['path'], 'path/to/foo_bar.jpg');
+    });
+
+    test('parses a Storage emulator download URL on 127.0.0.1', () {
+      final result = partsFromHttpUrl(
+        'http://127.0.0.1:9199/v0/b/demo-18988.appspot.com/o/photos%2Fhello%20world.txt?alt=media&token=d521a7a8-b252-4979-973f-88c8132e7ab7',
+      );
+
+      expect(
+        result,
+        isNotNull,
+        reason:
+            'partsFromHttpUrl should not return null for 127.0.0.1 emulator download URLs',
+      );
+      expect(result?['bucket'], 'demo-18988.appspot.com');
+      expect(result?['path'], 'photos/hello world.txt');
+    });
+
+    test('parses an https Storage emulator download URL', () {
+      final result = partsFromHttpUrl(
+        'https://127.0.0.1:9199/v0/b/myapp.appspot.com/o/path/to/foo_bar.jpg',
+      );
+
+      expect(result?['bucket'], 'myapp.appspot.com');
+      expect(result?['path'], 'path/to/foo_bar.jpg');
+    });
+
+    test('parses a Storage emulator download URL on a LAN address', () {
+      final result = partsFromHttpUrl(
+        'http://192.168.1.20:9199/v0/b/myapp.appspot.com/o/path/to/foo_bar.jpg',
+      );
+
+      expect(result?['bucket'], 'myapp.appspot.com');
+      expect(result?['path'], 'path/to/foo_bar.jpg');
+    });
+
+    test('parses a Storage emulator download URL on IPv6 localhost', () {
+      final result = partsFromHttpUrl(
+        'http://[::1]:9199/v0/b/myapp.appspot.com/o/path/to/foo_bar.jpg',
+      );
+
+      expect(result?['bucket'], 'myapp.appspot.com');
+      expect(result?['path'], 'path/to/foo_bar.jpg');
+    });
 
     // TODO(helenaford): regexp can't handle no paths
     // test('sets path to default if null', () {

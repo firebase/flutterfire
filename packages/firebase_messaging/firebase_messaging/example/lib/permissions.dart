@@ -6,7 +6,7 @@
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Requests & displays the current user permissions for this device.
 class Permissions extends StatefulWidget {
