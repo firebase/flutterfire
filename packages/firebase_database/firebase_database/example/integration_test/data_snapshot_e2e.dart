@@ -180,29 +180,29 @@ void setupDataSnapshotTests() {
 
       final children = s.child('items').children.toList();
       expect(children.map((c) => c.key).toList(), ['0', '1', '2']);
-      expect(
-        children.map((c) => c.value).toList(),
-        ['first', 'second', 'third'],
-      );
+      expect(children.map((c) => c.value).toList(), [
+        'first',
+        'second',
+        'third',
+      ]);
     });
 
-    test('children skips null slots for a nested holed list snapshot',
-        () async {
-      final ref = getRef('nested-holed-list-children');
-      await ref.set({
-        'items': [null, 'bar', 'baz'],
-      });
-      final s = await ref.get();
+    test(
+      'children skips null slots for a nested holed list snapshot',
+      () async {
+        final ref = getRef('nested-holed-list-children');
+        await ref.set({
+          'items': [null, 'bar', 'baz'],
+        });
+        final s = await ref.get();
 
-      final items = s.child('items');
-      expect(items.value, [null, 'bar', 'baz']);
+        final items = s.child('items');
+        expect(items.value, [null, 'bar', 'baz']);
 
-      final children = items.children.toList();
-      expect(children.map((c) => c.key).toList(), ['1', '2']);
-      expect(
-        children.map((c) => c.value).toList(),
-        ['bar', 'baz'],
-      );
-    });
+        final children = items.children.toList();
+        expect(children.map((c) => c.key).toList(), ['1', '2']);
+        expect(children.map((c) => c.value).toList(), ['bar', 'baz']);
+      },
+    );
   });
 }

@@ -514,70 +514,73 @@ void main() {
 
     group('MethodChannelDataSnapshot', () {
       test(
-          'child() on a List-valued child generates 0-based childKeys and iterates children without RangeError',
-          () {
-        final snapshot = MethodChannelDataSnapshot(
-          database.ref('root'),
-          <String, dynamic>{
-            'key': 'root',
-            'value': <String, dynamic>{
-              'items': <Object?>['first', 'second', 'third'],
+        'child() on a List-valued child generates 0-based childKeys and iterates children without RangeError',
+        () {
+          final snapshot = MethodChannelDataSnapshot(
+            database.ref('root'),
+            <String, dynamic>{
+              'key': 'root',
+              'value': <String, dynamic>{
+                'items': <Object?>['first', 'second', 'third'],
+              },
+              'priority': null,
+              'childKeys': <String>['items'],
             },
-            'priority': null,
-            'childKeys': <String>['items'],
-          },
-        );
+          );
 
-        final itemsSnapshot = snapshot.child('items');
-        final children = itemsSnapshot.children.toList();
+          final itemsSnapshot = snapshot.child('items');
+          final children = itemsSnapshot.children.toList();
 
-        expect(children.map((c) => c.key).toList(), <String>['0', '1', '2']);
-        expect(
-          children.map((c) => c.value).toList(),
-          <Object?>['first', 'second', 'third'],
-        );
-      });
+          expect(children.map((c) => c.key).toList(), <String>['0', '1', '2']);
+          expect(children.map((c) => c.value).toList(), <Object?>[
+            'first',
+            'second',
+            'third',
+          ]);
+        },
+      );
 
       test(
-          'child() on a holed List-valued child skips null slots and keeps indices',
-          () {
-        final snapshot = MethodChannelDataSnapshot(
-          database.ref('root'),
-          <String, dynamic>{
-            'key': 'root',
-            'value': <String, dynamic>{
-              'items': <Object?>[null, 'bar', 'baz'],
-              'sparse': <Object?>['foo', null, 'baz'],
+        'child() on a holed List-valued child skips null slots and keeps indices',
+        () {
+          final snapshot = MethodChannelDataSnapshot(
+            database.ref('root'),
+            <String, dynamic>{
+              'key': 'root',
+              'value': <String, dynamic>{
+                'items': <Object?>[null, 'bar', 'baz'],
+                'sparse': <Object?>['foo', null, 'baz'],
+              },
+              'priority': null,
+              'childKeys': <String>['items', 'sparse'],
             },
-            'priority': null,
-            'childKeys': <String>['items', 'sparse'],
-          },
-        );
+          );
 
-        final itemsChildren = snapshot.child('items').children.toList();
-        expect(itemsChildren.map((c) => c.key).toList(), <String>['1', '2']);
-        expect(
-          itemsChildren.map((c) => c.value).toList(),
-          <Object?>['bar', 'baz'],
-        );
+          final itemsChildren = snapshot.child('items').children.toList();
+          expect(itemsChildren.map((c) => c.key).toList(), <String>['1', '2']);
+          expect(itemsChildren.map((c) => c.value).toList(), <Object?>[
+            'bar',
+            'baz',
+          ]);
 
-        final sparseChildren = snapshot.child('sparse').children.toList();
-        expect(sparseChildren.map((c) => c.key).toList(), <String>['0', '2']);
-        expect(
-          sparseChildren.map((c) => c.value).toList(),
-          <Object?>['foo', 'baz'],
-        );
+          final sparseChildren = snapshot.child('sparse').children.toList();
+          expect(sparseChildren.map((c) => c.key).toList(), <String>['0', '2']);
+          expect(sparseChildren.map((c) => c.value).toList(), <Object?>[
+            'foo',
+            'baz',
+          ]);
 
-        final viaParentChildren = snapshot.children.first.children.toList();
-        expect(
-          viaParentChildren.map((c) => c.key).toList(),
-          <String>['1', '2'],
-        );
-        expect(
-          viaParentChildren.map((c) => c.value).toList(),
-          <Object?>['bar', 'baz'],
-        );
-      });
+          final viaParentChildren = snapshot.children.first.children.toList();
+          expect(viaParentChildren.map((c) => c.key).toList(), <String>[
+            '1',
+            '2',
+          ]);
+          expect(viaParentChildren.map((c) => c.value).toList(), <Object?>[
+            'bar',
+            'baz',
+          ]);
+        },
+      );
     });
   });
 }
