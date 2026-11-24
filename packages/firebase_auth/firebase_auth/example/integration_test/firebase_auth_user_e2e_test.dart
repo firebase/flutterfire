@@ -579,7 +579,8 @@ void main() {
               ['http://photo.url/provider.jpg'],
             );
           },
-          skip: kIsWeb ||
+          skip:
+              kIsWeb ||
               defaultTargetPlatform == TargetPlatform.macOS ||
               defaultTargetPlatform == TargetPlatform.windows,
         );
