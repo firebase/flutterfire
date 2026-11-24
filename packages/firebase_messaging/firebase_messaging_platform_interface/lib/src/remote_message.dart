@@ -61,7 +61,7 @@ class RemoteMessage {
 
   static int? _asInt(Object? value) {
     if (value is int) return value;
-    if (value is num) return value.toInt();
+    if (value is num) return value.isFinite ? value.toInt() : null;
     if (value is String) return int.tryParse(value);
     return null;
   }

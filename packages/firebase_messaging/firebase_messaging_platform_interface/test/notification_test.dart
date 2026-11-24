@@ -747,6 +747,21 @@ void main() {
         expect(notification.apple!.sound!.critical, isTrue);
         expect(notification.apple!.sound!.name, '505');
         expect(notification.apple!.sound!.volume, 0.75);
+
+        final nonFiniteAndroid = AndroidNotification.fromMap(<String, dynamic>{
+          'count': double.nan,
+          'priority': double.infinity,
+          'visibility': double.negativeInfinity,
+        });
+        expect(nonFiniteAndroid.count, isNull);
+        expect(
+          nonFiniteAndroid.priority,
+          AndroidNotificationPriority.defaultPriority,
+        );
+        expect(
+          nonFiniteAndroid.visibility,
+          AndroidNotificationVisibility.private,
+        );
       },
     );
   });

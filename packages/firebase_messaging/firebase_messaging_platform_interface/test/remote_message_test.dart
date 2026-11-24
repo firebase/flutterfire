@@ -271,6 +271,13 @@ void main() {
           <String, dynamic>{'sentTime': 8640000000000001},
         );
         expect(outOfRangeSentTimeMessage.sentTime, isNull);
+
+        final nonFiniteMessage = RemoteMessage.fromMap(<String, dynamic>{
+          'sentTime': double.nan,
+          'ttl': double.infinity,
+        });
+        expect(nonFiniteMessage.sentTime, isNull);
+        expect(nonFiniteMessage.ttl, isNull);
       },
     );
   });
