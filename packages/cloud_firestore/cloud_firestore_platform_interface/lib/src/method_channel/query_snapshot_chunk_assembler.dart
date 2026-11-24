@@ -2,12 +2,11 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import '../pigeon/messages.pigeon.dart';
+import 'package:cloud_firestore_platform_interface/src/pigeon/messages.pigeon.dart';
+import 'package:meta/meta.dart';
 
-// These map keys and chunk kinds are mirrored by QuerySnapshotsStreamHandler
-// on Android. The chunk protocol deliberately uses types already supported by
-// PigeonCodec so older Apple and desktop implementations can continue emitting
-// InternalQuerySnapshot directly.
+// Kept in sync with QuerySnapshotChunkProtocol.java.
+const String _listenChunkedArgKey = 'firestoreQuerySnapshotChunked';
 const String _chunkMarkerKey = 'firestoreQuerySnapshotChunk';
 const String _snapshotIdKey = 'snapshotId';
 const String _kindKey = 'kind';
@@ -20,184 +19,17 @@ const int _documentsKind = 1;
 const int _documentChangesKind = 2;
 const int _endKind = 3;
 
-/// Reassembles the bounded Android transport messages for one logical query
-/// snapshot.
-///
-/// Other platforms still emit [InternalQuerySnapshot] directly, which is
-/// passed through unchanged. A chunked snapshot is returned only after its end
-/// marker and declared item counts have been received, preserving the public
-/// stream's atomic snapshot contract.
-class QuerySnapshotChunkAssembler {
-  _ActiveQuerySnapshot? _active;
+const Map<String, Object?> querySnapshotChunkListenArguments =
+    <String, Object?>{_listenChunkedArgKey: true};
 
-  /// Adds one decoded event-channel [message].
-  ///
-  /// Returns a complete snapshot, or `null` while a chunked snapshot is still
-  /// being assembled. Throws [StateError] when the transport protocol is
-  /// malformed or interleaved.
-  InternalQuerySnapshot? add(Object? message) {
-    if (message is InternalQuerySnapshot) {
-      if (_active != null) {
-        throw StateError(
-          'Received a complete query snapshot while chunk assembly was active.',
-        );
-      }
-      return message;
-    }
-
-    if (message is! Map<Object?, Object?> || message[_chunkMarkerKey] != true) {
-      throw StateError('Received an unknown query snapshot message.');
-    }
-
-    final snapshotId = _requiredInt(message, _snapshotIdKey);
-    final kind = _requiredInt(message, _kindKey);
-
-    switch (kind) {
-      case _startKind:
-        _start(message, snapshotId);
-      case _documentsKind:
-        _appendDocuments(message, snapshotId);
-      case _documentChangesKind:
-        _appendDocumentChanges(message, snapshotId);
-      case _endKind:
-        return _finish(snapshotId);
-      default:
-        throw StateError('Unknown query snapshot chunk kind: $kind.');
-    }
-
-    return null;
-  }
-
-  /// Abandons an interrupted snapshot after cancellation or a stream error.
-  void reset() {
-    _active = null;
-  }
-
-  void _start(Map<Object?, Object?> message, int snapshotId) {
-    if (_active != null) {
-      throw StateError(
-        'Query snapshot $snapshotId started before the active snapshot ended.',
-      );
-    }
-
-    final documentCount = _requiredInt(message, _documentCountKey);
-    final documentChangeCount = _requiredInt(message, _documentChangeCountKey);
-    final metadata = message[_payloadKey];
-    if (documentCount < 0 || documentChangeCount < 0) {
-      throw StateError('Query snapshot item counts cannot be negative.');
-    }
-    if (metadata is! InternalSnapshotMetadata) {
-      throw StateError('Query snapshot start is missing metadata.');
-    }
-
-    _active = _ActiveQuerySnapshot(
-      id: snapshotId,
-      expectedDocumentCount: documentCount,
-      expectedDocumentChangeCount: documentChangeCount,
-      metadata: metadata,
-    );
-  }
-
-  void _appendDocuments(Map<Object?, Object?> message, int snapshotId) {
-    final active = _requireActive(snapshotId);
-    final payload = message[_payloadKey];
-    if (payload is! List<Object?>) {
-      throw StateError('Query snapshot document chunk has an invalid payload.');
-    }
-
-    active.documents.addAll(payload.cast<InternalDocumentSnapshot?>());
-    if (active.documents.length > active.expectedDocumentCount) {
-      throw StateError('Query snapshot received too many documents.');
-    }
-  }
-
-  void _appendDocumentChanges(Map<Object?, Object?> message, int snapshotId) {
-    final active = _requireActive(snapshotId);
-    final payload = message[_payloadKey];
-    if (payload is! List<Object?>) {
-      throw StateError(
-        'Query snapshot document-change chunk has an invalid payload.',
-      );
-    }
-
-    active.documentChanges.addAll(payload.cast<InternalDocumentChange?>());
-    if (active.documentChanges.length > active.expectedDocumentChangeCount) {
-      throw StateError('Query snapshot received too many document changes.');
-    }
-  }
-
-  InternalQuerySnapshot _finish(int snapshotId) {
-    final active = _requireActive(snapshotId);
-    _active = null;
-
-    if (active.documents.length != active.expectedDocumentCount ||
-        active.documentChanges.length != active.expectedDocumentChangeCount) {
-      throw StateError(
-        'Query snapshot $snapshotId ended with '
-        '${active.documents.length}/${active.expectedDocumentCount} documents '
-        'and ${active.documentChanges.length}/'
-        '${active.expectedDocumentChangeCount} document changes.',
-      );
-    }
-
-    return InternalQuerySnapshot(
-      documents: active.documents,
-      documentChanges: active.documentChanges,
-      metadata: active.metadata,
-    );
-  }
-
-  _ActiveQuerySnapshot _requireActive(int snapshotId) {
-    final active = _active;
-    if (active == null) {
-      throw StateError(
-        'Received a chunk for query snapshot $snapshotId before its start.',
-      );
-    }
-    if (active.id != snapshotId) {
-      throw StateError(
-        'Received a chunk for query snapshot $snapshotId while assembling '
-        '${active.id}.',
-      );
-    }
-    return active;
-  }
-}
-
-class _ActiveQuerySnapshot {
-  _ActiveQuerySnapshot({
-    required this.id,
-    required this.expectedDocumentCount,
-    required this.expectedDocumentChangeCount,
-    required this.metadata,
-  });
-
-  final int id;
-  final int expectedDocumentCount;
-  final int expectedDocumentChangeCount;
-  final InternalSnapshotMetadata metadata;
-  final List<InternalDocumentSnapshot?> documents =
-      <InternalDocumentSnapshot?>[];
-  final List<InternalDocumentChange?> documentChanges =
-      <InternalDocumentChange?>[];
-}
-
-int _requiredInt(Map<Object?, Object?> message, String key) {
-  final value = message[key];
-  if (value is! int) {
-    throw StateError('Query snapshot chunk is missing integer "$key".');
-  }
-  return value;
-}
-
-/// Creates an Android query-snapshot start message for protocol tests.
-Map<Object?, Object?> querySnapshotChunkStart({
+@visibleForTesting
+Map<String, Object?> querySnapshotChunkStartMessage({
   required int snapshotId,
+  required InternalSnapshotMetadata metadata,
   required int documentCount,
   required int documentChangeCount,
-  required InternalSnapshotMetadata metadata,
 }) {
-  return <Object?, Object?>{
+  return <String, Object?>{
     _chunkMarkerKey: true,
     _snapshotIdKey: snapshotId,
     _kindKey: _startKind,
@@ -207,40 +39,231 @@ Map<Object?, Object?> querySnapshotChunkStart({
   };
 }
 
-/// Creates an Android query-snapshot document message for protocol tests.
-Map<Object?, Object?> querySnapshotDocumentChunk(
-  int snapshotId,
-  List<Object?> documents,
-) {
-  return _itemChunk(snapshotId, _documentsKind, documents);
+@visibleForTesting
+Map<String, Object?> querySnapshotChunkDocumentsMessage({
+  required int snapshotId,
+  required List<InternalDocumentSnapshot> items,
+}) {
+  return <String, Object?>{
+    _chunkMarkerKey: true,
+    _snapshotIdKey: snapshotId,
+    _kindKey: _documentsKind,
+    _payloadKey: items,
+  };
 }
 
-/// Creates an Android query-snapshot change message for protocol tests.
-Map<Object?, Object?> querySnapshotDocumentChangeChunk(
-  int snapshotId,
-  List<Object?> documentChanges,
-) {
-  return _itemChunk(snapshotId, _documentChangesKind, documentChanges);
+@visibleForTesting
+Map<String, Object?> querySnapshotChunkDocumentChangesMessage({
+  required int snapshotId,
+  required List<InternalDocumentChange> items,
+}) {
+  return <String, Object?>{
+    _chunkMarkerKey: true,
+    _snapshotIdKey: snapshotId,
+    _kindKey: _documentChangesKind,
+    _payloadKey: items,
+  };
 }
 
-/// Creates an Android query-snapshot end message for protocol tests.
-Map<Object?, Object?> querySnapshotChunkEnd(int snapshotId) {
-  return <Object?, Object?>{
+@visibleForTesting
+Map<String, Object?> querySnapshotChunkEndMessage({required int snapshotId}) {
+  return <String, Object?>{
     _chunkMarkerKey: true,
     _snapshotIdKey: snapshotId,
     _kindKey: _endKind,
   };
 }
 
-Map<Object?, Object?> _itemChunk(
-  int snapshotId,
-  int kind,
-  List<Object?> payload,
-) {
-  return <Object?, Object?>{
-    _chunkMarkerKey: true,
-    _snapshotIdKey: snapshotId,
-    _kindKey: kind,
-    _payloadKey: payload,
-  };
+class QuerySnapshotChunkAssembler {
+  _PendingQuerySnapshot? _active;
+
+  bool get hasPendingSnapshot => _active != null;
+
+  void reset() {
+    _active = null;
+  }
+
+  InternalQuerySnapshot? add(Object? event) {
+    if (event is InternalQuerySnapshot) {
+      if (_active != null) {
+        throw StateError(
+          'Received unchunked query snapshot while snapshot '
+          '${_active!.snapshotId} was incomplete.',
+        );
+      }
+      return event;
+    }
+
+    if (event is! Map<Object?, Object?> || event[_chunkMarkerKey] != true) {
+      throw StateError('Unexpected query snapshot event: ${event.runtimeType}');
+    }
+
+    final snapshotId = _requireInt(event, _snapshotIdKey);
+    final kind = _requireInt(event, _kindKey);
+
+    switch (kind) {
+      case _startKind:
+        if (_active != null) {
+          throw StateError(
+            'Received query snapshot $snapshotId start before snapshot '
+            '${_active!.snapshotId} completed.',
+          );
+        }
+        final metadata = event[_payloadKey];
+        if (metadata is! InternalSnapshotMetadata) {
+          throw StateError(
+            'Missing or invalid metadata for query snapshot $snapshotId.',
+          );
+        }
+        final documentCount = _requireNonNegativeInt(event, _documentCountKey);
+        final documentChangeCount = _requireNonNegativeInt(
+          event,
+          _documentChangeCountKey,
+        );
+        _active = _PendingQuerySnapshot(
+          snapshotId: snapshotId,
+          metadata: metadata,
+          expectedDocumentCount: documentCount,
+          expectedDocumentChangeCount: documentChangeCount,
+        );
+        return null;
+
+      case _documentsKind:
+        final active = _requireActiveSnapshot(snapshotId, 'document chunk');
+        final items = _requireList<InternalDocumentSnapshot>(
+          event,
+          _payloadKey,
+          'InternalDocumentSnapshot',
+        );
+        if (active.documents.length + items.length >
+            active.expectedDocumentCount) {
+          throw StateError(
+            'Query snapshot $snapshotId received more documents than '
+            'expected (${active.documents.length + items.length} > '
+            '${active.expectedDocumentCount}).',
+          );
+        }
+        active.documents.addAll(items);
+        return null;
+
+      case _documentChangesKind:
+        final active = _requireActiveSnapshot(
+          snapshotId,
+          'document change chunk',
+        );
+        final items = _requireList<InternalDocumentChange>(
+          event,
+          _payloadKey,
+          'InternalDocumentChange',
+        );
+        if (active.documentChanges.length + items.length >
+            active.expectedDocumentChangeCount) {
+          throw StateError(
+            'Query snapshot $snapshotId received more document changes than '
+            'expected (${active.documentChanges.length + items.length} > '
+            '${active.expectedDocumentChangeCount}).',
+          );
+        }
+        active.documentChanges.addAll(items);
+        return null;
+
+      case _endKind:
+        final active = _requireActiveSnapshot(snapshotId, 'end marker');
+        _active = null;
+        if (active.documents.length != active.expectedDocumentCount ||
+            active.documentChanges.length !=
+                active.expectedDocumentChangeCount) {
+          throw StateError(
+            'Query snapshot $snapshotId ended incomplete: expected '
+            '${active.expectedDocumentCount} documents and '
+            '${active.expectedDocumentChangeCount} document changes, got '
+            '${active.documents.length} and ${active.documentChanges.length}.',
+          );
+        }
+        return InternalQuerySnapshot(
+          documents: active.documents,
+          documentChanges: active.documentChanges,
+          metadata: active.metadata,
+        );
+
+      default:
+        throw StateError('Unknown query snapshot chunk kind: $kind');
+    }
+  }
+
+  _PendingQuerySnapshot _requireActiveSnapshot(
+    int snapshotId,
+    String frameName,
+  ) {
+    final active = _active;
+    if (active == null) {
+      throw StateError(
+        'Received query snapshot $snapshotId $frameName before its start.',
+      );
+    }
+    if (active.snapshotId != snapshotId) {
+      throw StateError(
+        'Received query snapshot $snapshotId $frameName while snapshot '
+        '${active.snapshotId} was active.',
+      );
+    }
+    return active;
+  }
+
+  static int _requireInt(Map<Object?, Object?> map, String key) {
+    final value = map[key];
+    if (value is! int) {
+      throw StateError('Query snapshot chunk field "$key" must be an int.');
+    }
+    return value;
+  }
+
+  static int _requireNonNegativeInt(Map<Object?, Object?> map, String key) {
+    final value = _requireInt(map, key);
+    if (value < 0) {
+      throw StateError(
+        'Query snapshot chunk field "$key" must be non-negative.',
+      );
+    }
+    return value;
+  }
+
+  static List<T> _requireList<T>(
+    Map<Object?, Object?> map,
+    String key,
+    String elementTypeName,
+  ) {
+    final value = map[key];
+    if (value is! List<Object?>) {
+      throw StateError('Query snapshot chunk field "$key" must be a List.');
+    }
+    final result = <T>[];
+    for (final item in value) {
+      if (item is! T) {
+        throw StateError(
+          'Query snapshot chunk field "$key" contains non-$elementTypeName '
+          'element: ${item.runtimeType}.',
+        );
+      }
+      result.add(item);
+    }
+    return result;
+  }
+}
+
+class _PendingQuerySnapshot {
+  _PendingQuerySnapshot({
+    required this.snapshotId,
+    required this.metadata,
+    required this.expectedDocumentCount,
+    required this.expectedDocumentChangeCount,
+  });
+
+  final int snapshotId;
+  final InternalSnapshotMetadata metadata;
+  final int expectedDocumentCount;
+  final int expectedDocumentChangeCount;
+  final List<InternalDocumentSnapshot> documents = <InternalDocumentSnapshot>[];
+  final List<InternalDocumentChange> documentChanges =
+      <InternalDocumentChange>[];
 }

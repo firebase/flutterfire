@@ -58,6 +58,10 @@ android {
         disable 'InvalidPackage'
     }
 
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
+
     dependencies {
         api firebaseCoreProject
         implementation platform("com.google.firebase:firebase-bom:${getRootProjectExtOrCoreProperty("FirebaseSDKVersion", firebaseCoreProject)}")

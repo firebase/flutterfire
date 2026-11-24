@@ -50,6 +50,7 @@ import io.flutter.plugins.firebase.firestore.streamhandler.DocumentSnapshotsStre
 import io.flutter.plugins.firebase.firestore.streamhandler.LoadBundleStreamHandler;
 import io.flutter.plugins.firebase.firestore.streamhandler.OnTransactionResultListener;
 import io.flutter.plugins.firebase.firestore.streamhandler.QuerySnapshotsStreamHandler;
+import io.flutter.plugins.firebase.firestore.streamhandler.SnapshotDeliveryExecutor;
 import io.flutter.plugins.firebase.firestore.streamhandler.SnapshotsInSyncStreamHandler;
 import io.flutter.plugins.firebase.firestore.streamhandler.TransactionStreamHandler;
 import io.flutter.plugins.firebase.firestore.utils.ExceptionConverter;
@@ -64,7 +65,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -95,7 +95,8 @@ public class FlutterFirebaseFirestorePlugin
   private final Map<String, EventChannel> eventChannels = new HashMap<>();
   private final Map<String, StreamHandler> streamHandlers = new HashMap<>();
   private final Map<String, OnTransactionResultListener> transactionHandlers = new HashMap<>();
-  private final Map<String, ExecutorService> snapshotDeliveryExecutors = new ConcurrentHashMap<>();
+  private final Map<String, SnapshotDeliveryExecutor> snapshotDeliveryExecutors =
+      new ConcurrentHashMap<>();
 
   // Used in the decoder to know which ServerTimestampBehavior to use
   public static final Map<Integer, DocumentSnapshot.ServerTimestampBehavior>
@@ -381,13 +382,14 @@ public class FlutterFirebaseFirestorePlugin
     }
   }
 
-  private ExecutorService snapshotDeliveryExecutor(
+  private SnapshotDeliveryExecutor snapshotDeliveryExecutor(
       GeneratedAndroidFirebaseFirestore.FirestorePigeonFirebaseApp app) {
     String key = app.getAppName() + "|" + app.getDatabaseURL();
     return snapshotDeliveryExecutors.computeIfAbsent(
         key,
         ignored ->
-            new ThreadPoolExecutor(0, 1, 60L, TimeUnit.SECONDS, new LinkedBlockingQueue<>()));
+            new SnapshotDeliveryExecutor(
+                new ThreadPoolExecutor(0, 1, 60L, TimeUnit.SECONDS, new LinkedBlockingQueue<>())));
   }
 
   @Override

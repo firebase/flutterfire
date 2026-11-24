@@ -203,34 +203,37 @@ class MethodChannelQuery extends QueryPlatform {
           listenSource,
         );
 
-    // Keep assembly state local to this listener generation. A cancel or
-    // re-listen while Pigeon setup is pending must not reuse partial chunks.
-    final snapshotAssembler = QuerySnapshotChunkAssembler();
-    try {
-      yield* MethodChannelFirebaseFirestore.querySnapshotChannel(observerId)
-          .receiveGuardedBroadcastStream(onError: convertPlatformException)
-          .transform(
-            StreamTransformer<dynamic, QuerySnapshotPlatform>.fromHandlers(
-              handleData: (snapshot, sink) {
-                try {
-                  final result = snapshotAssembler.add(snapshot);
-                  if (result != null) {
-                    sink.add(MethodChannelQuerySnapshot(firestore, result));
-                  }
-                } catch (error, stackTrace) {
-                  snapshotAssembler.reset();
-                  sink.addError(error, stackTrace);
+    final assembler = QuerySnapshotChunkAssembler();
+    yield* MethodChannelFirebaseFirestore.querySnapshotChannel(observerId)
+        .receiveGuardedBroadcastStream(
+          arguments: querySnapshotChunkListenArguments,
+          onError: convertPlatformException,
+        )
+        .transform(
+          StreamTransformer<dynamic, QuerySnapshotPlatform>.fromHandlers(
+            handleData: (Object? event, EventSink<QuerySnapshotPlatform> sink) {
+              try {
+                final snapshot = assembler.add(event);
+                if (snapshot != null) {
+                  sink.add(MethodChannelQuerySnapshot(firestore, snapshot));
                 }
-              },
-              handleError: (error, stackTrace, sink) {
-                snapshotAssembler.reset();
+              } catch (error, stackTrace) {
+                assembler.reset();
                 sink.addError(error, stackTrace);
-              },
-            ),
-          );
-    } finally {
-      snapshotAssembler.reset();
-    }
+                sink.close();
+              }
+            },
+            handleError:
+                (
+                  Object error,
+                  StackTrace stackTrace,
+                  EventSink<QuerySnapshotPlatform> sink,
+                ) {
+                  assembler.reset();
+                  sink.addError(error, stackTrace);
+                },
+          ),
+        );
   }
 
   @override

@@ -32,7 +32,7 @@ jobs:
       - uses: ./.github/actions/setup-flutterfire
         with:
           node: 'false'
-          bootstrap-scope: 'tests'
+          bootstrap-scope: 'tests cloud_firestore_example'
       - name: Gradle cache
         uses: gradle/actions/setup-gradle@90ddb51e90a5fd9ba75f40cf85156b7b41bf76a3
       - name: Robolectric android-all cache
@@ -45,22 +45,22 @@ jobs:
       - name: 'Generate Gradle build files'
         # The Gradle wrapper and local.properties are gitignored, and Flutter injects
         # both. --config-only does that without building any Dart artifacts.
-        run: cd tests && flutter build apk --debug --config-only
+        run: |
+          (cd tests && flutter build apk --debug --config-only)
+          (cd packages/cloud_firestore/cloud_firestore/example && flutter build apk --debug --config-only)
       - name: 'Run Android unit tests'
         # Tasks are listed per package rather than using the root testDebugUnitTest
         # task, which would also build the Dart sources of the aggregate test app.
         # Add a task here when a package gains an android/src/test directory.
         run: |
-          cd tests/android
-          ./gradlew \
-            :cloud_firestore:testDebugUnitTest \
-            :cloud_functions:testDebugUnitTest \
-            :firebase_crashlytics:testDebugUnitTest \
-            :firebase_messaging:testDebugUnitTest
+          (cd tests/android && ./gradlew :firebase_crashlytics:testDebugUnitTest :cloud_functions:testDebugUnitTest :firebase_messaging:testDebugUnitTest)
+          (cd packages/cloud_firestore/cloud_firestore/example/android && ./gradlew :cloud_firestore:testDebugUnitTest)
       - name: 'Upload test reports'
         if: failure()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: android-unit-test-reports
-          path: tests/build/*/reports/tests/
+          path: |
+            tests/build/*/reports/tests/
+            packages/cloud_firestore/cloud_firestore/example/build/*/reports/tests/
           retention-days: 5

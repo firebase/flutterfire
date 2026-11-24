@@ -14,15 +14,6 @@ import java.util.NoSuchElementException;
 import java.util.function.Function;
 import java.util.function.ToIntFunction;
 
-/**
- * Incrementally converts and partitions snapshot items without retaining a converted copy of the
- * complete query snapshot.
- *
- * <p>The inexpensive per-item size estimate chooses an initial boundary. The exact envelope sizer
- * then removes tail items until the actual platform message fits. A single item is always allowed
- * through even when it exceeds the target, because Firestore already bounds an individual document
- * to 1 MiB and the stream must continue making progress.
- */
 final class QuerySnapshotChunker<S, T> {
   private final Iterator<S> source;
   private final Function<S, T> converter;

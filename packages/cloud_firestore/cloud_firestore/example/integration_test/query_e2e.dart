@@ -344,6 +344,47 @@ void runQueryTests() {
         await expectLater(value2, completion('value2'));
       });
 
+      test('receives large query snapshots exceeding chunk boundary', () async {
+        final collection = await initializeTest('large-chunked-snapshot');
+        const documentCount = 30;
+        final payload = 'a' * (24 * 1024);
+
+        final writeBatch = firestore.batch();
+        for (var i = 0; i < documentCount; i++) {
+          writeBatch.set(
+            collection.doc('doc-${i.toString().padLeft(3, '0')}'),
+            {'index': i, 'payload': payload},
+          );
+        }
+        await writeBatch.commit();
+
+        addTearDown(() async {
+          final deleteBatch = firestore.batch();
+          for (var i = 0; i < documentCount; i++) {
+            deleteBatch.delete(
+              collection.doc('doc-${i.toString().padLeft(3, '0')}'),
+            );
+          }
+          await deleteBatch.commit();
+        });
+
+        final snapshot = await collection
+            .orderBy('index')
+            .snapshots()
+            .firstWhere((s) => s.docs.length == documentCount)
+            .timeout(const Duration(seconds: 30));
+
+        expect(snapshot.docs.length, documentCount);
+        expect(snapshot.docChanges.length, documentCount);
+        for (var i = 0; i < documentCount; i++) {
+          final data = snapshot.docs[i].data();
+          expect(data['index'], i);
+          expect(data['payload'], payload);
+          expect(snapshot.docChanges[i].type, DocumentChangeType.added);
+          expect(snapshot.docChanges[i].newIndex, i);
+        }
+      });
+
       test('listens to a multiple changes response', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('get-multiple');

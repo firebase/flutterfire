@@ -6,16 +6,15 @@
 
 package io.flutter.plugins.firebase.firestore.streamhandler;
 
-import io.flutter.plugin.common.StandardMethodCodec;
 import io.flutter.plugins.firebase.firestore.GeneratedAndroidFirebaseFirestore;
-import java.nio.ByteBuffer;
+import io.flutter.plugins.firebase.firestore.PigeonCodecSizer;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-/** Wire messages for bounded Android query-snapshot transport. */
 final class QuerySnapshotChunkProtocol {
-  // Keep these values in sync with query_snapshot_chunk_assembler.dart.
+  // Kept in sync with query_snapshot_chunk_assembler.dart.
+  static final String LISTEN_CHUNKED_ARG_KEY = "firestoreQuerySnapshotChunked";
   private static final String CHUNK_MARKER_KEY = "firestoreQuerySnapshotChunk";
   private static final String SNAPSHOT_ID_KEY = "snapshotId";
   private static final String KIND_KEY = "kind";
@@ -28,17 +27,16 @@ final class QuerySnapshotChunkProtocol {
   static final int DOCUMENT_CHANGES_KIND = 2;
   static final int END_KIND = 3;
 
-  /**
-   * Keeps the transient platform-channel envelope far below the 18–31 MiB allocations observed in
-   * the crash report. A single Firestore document may exceed this target, but Firestore itself
-   * bounds that exceptional message to one 1 MiB document plus codec overhead.
-   */
   static final int MAX_ENCODED_ENVELOPE_BYTES = 512 * 1024;
 
-  private static final StandardMethodCodec METHOD_CODEC =
-      new StandardMethodCodec(GeneratedAndroidFirebaseFirestore.PigeonCodec.INSTANCE);
-
   private QuerySnapshotChunkProtocol() {}
+
+  static boolean supportsChunking(Object arguments) {
+    if (!(arguments instanceof Map<?, ?>)) {
+      return false;
+    }
+    return Boolean.TRUE.equals(((Map<?, ?>) arguments).get(LISTEN_CHUNKED_ARG_KEY));
+  }
 
   static Map<String, Object> start(
       long snapshotId,
@@ -63,14 +61,11 @@ final class QuerySnapshotChunkProtocol {
   }
 
   static int encodedMessageSize(Object message) {
-    ByteBuffer encoded =
-        GeneratedAndroidFirebaseFirestore.PigeonCodec.INSTANCE.encodeMessage(message);
-    return encoded == null ? 0 : encoded.position();
+    return PigeonCodecSizer.encodedMessageSize(message);
   }
 
   static int encodedEnvelopeSize(Object message) {
-    ByteBuffer encoded = METHOD_CODEC.encodeSuccessEnvelope(message);
-    return encoded.position();
+    return PigeonCodecSizer.encodedSuccessEnvelopeSize(message);
   }
 
   private static Map<String, Object> base(long snapshotId, int kind) {

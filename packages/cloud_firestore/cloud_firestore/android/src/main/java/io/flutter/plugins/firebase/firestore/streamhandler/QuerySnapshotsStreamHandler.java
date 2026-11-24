@@ -24,6 +24,7 @@ import io.flutter.plugins.firebase.firestore.GeneratedAndroidFirebaseFirestore;
 import io.flutter.plugins.firebase.firestore.utils.ExceptionConverter;
 import io.flutter.plugins.firebase.firestore.utils.PigeonParser;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -41,10 +42,14 @@ public class QuerySnapshotsStreamHandler implements StreamHandler {
   Executor snapshotExecutor;
   private final Executor eventExecutor;
   private final AtomicLong nextSnapshotId = new AtomicLong();
-  private final ArrayDeque<QuerySnapshot> pendingSnapshots = new ArrayDeque<>();
+  private final ArrayDeque<QueuedSnapshot> pendingSnapshots = new ArrayDeque<>();
+  private Runnable activeTurnRelease;
   private EventSink eventSink;
   private boolean emissionActive;
-  private boolean cancelled;
+  private boolean chunkedTransport;
+  private boolean aborted;
+  private Exception pendingError;
+  private long listenerGeneration;
 
   public QuerySnapshotsStreamHandler(
       Query query,
@@ -79,12 +84,25 @@ public class QuerySnapshotsStreamHandler implements StreamHandler {
 
   @Override
   public void onListen(Object arguments, EventSink events) {
+    ListenerRegistration previousRegistration;
+    List<Runnable> turnsToRelease;
+    final long generation;
     synchronized (this) {
-      cancelled = false;
+      previousRegistration = listenerRegistration;
+      listenerRegistration = null;
+      generation = ++listenerGeneration;
       emissionActive = false;
-      pendingSnapshots.clear();
+      aborted = false;
+      pendingError = null;
+      turnsToRelease = drainHeldTurnsLocked();
       eventSink = events;
+      chunkedTransport = QuerySnapshotChunkProtocol.supportsChunking(arguments);
     }
+
+    if (previousRegistration != null) {
+      previousRegistration.remove();
+    }
+    runAll(turnsToRelease);
 
     SnapshotListenOptions.Builder optionsBuilder = new SnapshotListenOptions.Builder();
     optionsBuilder.setMetadataChanges(metadataChanges);
@@ -96,19 +114,20 @@ public class QuerySnapshotsStreamHandler implements StreamHandler {
             optionsBuilder.build(),
             (querySnapshot, exception) -> {
               if (exception != null) {
-                emitError(exception);
+                onNativeError(exception, generation);
               } else {
-                enqueueSnapshot(Objects.requireNonNull(querySnapshot));
+                enqueueSnapshot(Objects.requireNonNull(querySnapshot), generation);
               }
             });
 
-    retainListenerRegistration(registration);
+    retainListenerRegistration(registration, generation);
   }
 
-  void retainListenerRegistration(ListenerRegistration registration) {
+  private void retainListenerRegistration(ListenerRegistration registration, long generation) {
     boolean removeRegistration;
     synchronized (this) {
-      removeRegistration = cancelled;
+      removeRegistration =
+          listenerGeneration != generation || eventSink == null || aborted || pendingError != null;
       if (!removeRegistration) {
         listenerRegistration = registration;
       }
@@ -118,61 +137,91 @@ public class QuerySnapshotsStreamHandler implements StreamHandler {
     }
   }
 
-  void emitSnapshotForTesting(QuerySnapshot snapshot, EventSink events) {
-    synchronized (this) {
-      if (eventSink != null && eventSink != events) {
-        throw new IllegalStateException("A different event sink is already active");
-      }
-      cancelled = false;
-      eventSink = events;
-    }
-    enqueueSnapshot(snapshot);
-  }
-
-  private void enqueueSnapshot(QuerySnapshot snapshot) {
+  private void enqueueSnapshot(QuerySnapshot snapshot, long generation) {
     boolean shouldStart;
+    boolean useChunked;
     synchronized (this) {
-      if (cancelled) {
+      if (listenerGeneration != generation
+          || eventSink == null
+          || aborted
+          || pendingError != null) {
         return;
       }
-      pendingSnapshots.addLast(snapshot);
-      shouldStart = !emissionActive;
-      if (shouldStart) {
-        emissionActive = true;
+      useChunked = chunkedTransport;
+      if (!useChunked) {
+        shouldStart = false;
+      } else {
+        Runnable releaseTurn = null;
+        if (snapshotExecutor instanceof SnapshotDeliveryExecutor) {
+          releaseTurn = ((SnapshotDeliveryExecutor) snapshotExecutor).deferNext();
+        }
+        pendingSnapshots.addLast(new QueuedSnapshot(snapshot, releaseTurn));
+        shouldStart = !emissionActive;
+        if (shouldStart) {
+          emissionActive = true;
+        }
       }
+    }
+
+    if (!useChunked) {
+      try {
+        Object pigeonSnapshot =
+            PigeonParser.toPigeonQuerySnapshot(snapshot, serverTimestampBehavior);
+        postSuccess(pigeonSnapshot, generation, null);
+      } catch (Exception exception) {
+        emitErrorImmediately(exception, generation);
+      }
+      return;
     }
 
     if (shouldStart) {
-      emitNextSnapshot();
+      emitNextSnapshot(generation);
     }
   }
 
-  private void emitNextSnapshot() {
-    QuerySnapshot snapshot;
+  private void emitNextSnapshot(long generation) {
+    QueuedSnapshot queued;
+    Exception errorToDeliver = null;
     synchronized (this) {
-      if (cancelled) {
+      if (listenerGeneration != generation || eventSink == null || aborted) {
         return;
       }
-      snapshot = pendingSnapshots.pollFirst();
-      if (snapshot == null) {
+      queued = pendingSnapshots.pollFirst();
+      if (queued == null) {
         emissionActive = false;
-        return;
+        activeTurnRelease = null;
+        errorToDeliver = pendingError;
+      } else {
+        activeTurnRelease = queued.releaseTurn;
       }
+    }
+
+    if (queued == null) {
+      if (errorToDeliver != null) {
+        scheduleErrorDelivery(errorToDeliver, generation);
+      }
+      return;
     }
 
     try {
-      SnapshotEmission emission = new SnapshotEmission(nextSnapshotId.incrementAndGet(), snapshot);
+      SnapshotEmission emission =
+          new SnapshotEmission(
+              nextSnapshotId.incrementAndGet(), queued.snapshot, queued.releaseTurn);
       postSuccess(
           QuerySnapshotChunkProtocol.start(
               emission.id, emission.documentCount, emission.documentChangeCount, emission.metadata),
-          () -> emitNextChunk(emission));
+          generation,
+          () -> emitNextChunk(emission, generation));
     } catch (Exception exception) {
-      emitError(exception);
+      emitErrorImmediately(exception, generation);
+    } catch (Error error) {
+      releaseAllTurns();
+      throw error;
     }
   }
 
-  private void emitNextChunk(SnapshotEmission emission) {
-    if (isCancelled()) {
+  private void emitNextChunk(SnapshotEmission emission, long generation) {
+    if (!isActive(generation)) {
       return;
     }
 
@@ -187,7 +236,8 @@ public class QuerySnapshotsStreamHandler implements StreamHandler {
         postSuccess(
             QuerySnapshotChunkProtocol.itemChunk(
                 emission.id, QuerySnapshotChunkProtocol.DOCUMENTS_KIND, chunk),
-            () -> emitNextChunk(emission));
+            generation,
+            () -> emitNextChunk(emission, generation));
         return;
       }
 
@@ -203,20 +253,62 @@ public class QuerySnapshotsStreamHandler implements StreamHandler {
         postSuccess(
             QuerySnapshotChunkProtocol.itemChunk(
                 emission.id, QuerySnapshotChunkProtocol.DOCUMENT_CHANGES_KIND, chunk),
-            () -> emitNextChunk(emission));
+            generation,
+            () -> emitNextChunk(emission, generation));
         return;
       }
 
-      postSuccess(QuerySnapshotChunkProtocol.end(emission.id), this::emitNextSnapshot);
+      postSuccess(
+          QuerySnapshotChunkProtocol.end(emission.id),
+          generation,
+          () -> finishSnapshotEmission(emission, generation));
     } catch (Exception exception) {
-      emitError(exception);
+      emitErrorImmediately(exception, generation);
+    } catch (Error error) {
+      releaseAllTurns();
+      throw error;
     }
   }
 
-  private void postSuccess(Object message, Runnable afterSuccess) {
+  private void finishSnapshotEmission(SnapshotEmission emission, long generation) {
+    Runnable toRelease;
+    Exception errorToDeliver = null;
+    boolean continueDraining;
+    synchronized (this) {
+      if (activeTurnRelease == emission.releaseTurn) {
+        activeTurnRelease = null;
+      }
+      toRelease = emission.releaseTurn;
+      if (listenerGeneration != generation || eventSink == null || aborted) {
+        continueDraining = false;
+      } else if (pendingSnapshots.isEmpty()) {
+        emissionActive = false;
+        continueDraining = false;
+        errorToDeliver = pendingError;
+      } else {
+        continueDraining = true;
+      }
+    }
+
+    try {
+      if (errorToDeliver != null) {
+        scheduleErrorDelivery(errorToDeliver, generation);
+      }
+    } finally {
+      if (toRelease != null) {
+        toRelease.run();
+      }
+    }
+
+    if (continueDraining) {
+      emitNextSnapshot(generation);
+    }
+  }
+
+  private void postSuccess(Object message, long generation, Runnable afterSuccess) {
     EventSink sink;
     synchronized (this) {
-      if (cancelled || eventSink == null) {
+      if (listenerGeneration != generation || eventSink == null || aborted) {
         return;
       }
       sink = eventSink;
@@ -224,60 +316,152 @@ public class QuerySnapshotsStreamHandler implements StreamHandler {
 
     eventExecutor.execute(
         () -> {
-          if (isCancelled()) {
+          if (!isActive(generation)) {
             return;
           }
           try {
             sink.success(message);
-            snapshotExecutor.execute(afterSuccess);
+            if (afterSuccess != null && isActive(generation)) {
+              executeSnapshotContinuation(afterSuccess);
+            }
           } catch (Exception exception) {
-            emitError(exception);
+            emitErrorImmediately(exception, generation);
+          } catch (Error error) {
+            releaseAllTurns();
+            throw error;
           }
         });
   }
 
-  private void emitError(Exception exception) {
-    EventSink sink;
+  private void executeSnapshotContinuation(Runnable command) {
+    if (snapshotExecutor instanceof SnapshotDeliveryExecutor) {
+      ((SnapshotDeliveryExecutor) snapshotExecutor).executeContinuation(command);
+    } else {
+      snapshotExecutor.execute(command);
+    }
+  }
+
+  private void onNativeError(Exception exception, long generation) {
     ListenerRegistration registration;
+    boolean deliverNow;
     synchronized (this) {
-      if (cancelled) {
+      if (listenerGeneration != generation
+          || eventSink == null
+          || aborted
+          || pendingError != null) {
         return;
       }
-      cancelled = true;
-      pendingSnapshots.clear();
-      emissionActive = false;
-      sink = eventSink;
-      eventSink = null;
+      pendingError = exception;
       registration = listenerRegistration;
       listenerRegistration = null;
+      deliverNow = !(chunkedTransport && emissionActive);
     }
 
     if (registration != null) {
       registration.remove();
     }
-    if (sink == null) {
-      return;
+
+    if (deliverNow) {
+      scheduleErrorDelivery(exception, generation);
+    }
+  }
+
+  private void emitErrorImmediately(Exception exception, long generation) {
+    ListenerRegistration registration;
+    List<Runnable> turnsToRelease;
+    synchronized (this) {
+      if (listenerGeneration != generation || eventSink == null || aborted) {
+        return;
+      }
+      aborted = true;
+      pendingError = exception;
+      turnsToRelease = drainHeldTurnsLocked();
+      emissionActive = false;
+      registration = listenerRegistration;
+      listenerRegistration = null;
     }
 
+    try {
+      if (registration != null) {
+        registration.remove();
+      }
+      scheduleErrorDelivery(exception, generation);
+    } finally {
+      runAll(turnsToRelease);
+    }
+  }
+
+  private void scheduleErrorDelivery(Exception exception, long generation) {
     Map<String, String> exceptionDetails = ExceptionConverter.createDetails(exception);
     eventExecutor.execute(
         () -> {
-          sink.error(DEFAULT_ERROR_CODE, exception.getMessage(), exceptionDetails);
-          sink.endOfStream();
+          EventSink sink;
+          List<Runnable> turnsToRelease;
+          synchronized (this) {
+            if (listenerGeneration != generation || eventSink == null) {
+              return;
+            }
+            listenerGeneration++;
+            turnsToRelease = drainHeldTurnsLocked();
+            emissionActive = false;
+            aborted = false;
+            pendingError = null;
+            sink = eventSink;
+            eventSink = null;
+          }
+          try {
+            sink.error(DEFAULT_ERROR_CODE, exception.getMessage(), exceptionDetails);
+            sink.endOfStream();
+          } finally {
+            runAll(turnsToRelease);
+          }
         });
   }
 
-  private synchronized boolean isCancelled() {
-    return cancelled;
+  private List<Runnable> drainHeldTurnsLocked() {
+    List<Runnable> turns = new ArrayList<>();
+    if (activeTurnRelease != null) {
+      turns.add(activeTurnRelease);
+      activeTurnRelease = null;
+    }
+    while (!pendingSnapshots.isEmpty()) {
+      QueuedSnapshot queued = pendingSnapshots.pollFirst();
+      if (queued.releaseTurn != null) {
+        turns.add(queued.releaseTurn);
+      }
+    }
+    return turns;
+  }
+
+  private void releaseAllTurns() {
+    List<Runnable> turns;
+    synchronized (this) {
+      turns = drainHeldTurnsLocked();
+      emissionActive = false;
+    }
+    runAll(turns);
+  }
+
+  private static void runAll(List<Runnable> callbacks) {
+    for (Runnable callback : callbacks) {
+      callback.run();
+    }
+  }
+
+  private synchronized boolean isActive(long generation) {
+    return listenerGeneration == generation && eventSink != null && !aborted;
   }
 
   @Override
   public void onCancel(Object arguments) {
     ListenerRegistration registration;
+    List<Runnable> turnsToRelease;
     synchronized (this) {
-      cancelled = true;
-      pendingSnapshots.clear();
+      listenerGeneration++;
+      turnsToRelease = drainHeldTurnsLocked();
       emissionActive = false;
+      aborted = false;
+      pendingError = null;
       eventSink = null;
       registration = listenerRegistration;
       listenerRegistration = null;
@@ -285,11 +469,22 @@ public class QuerySnapshotsStreamHandler implements StreamHandler {
     if (registration != null) {
       registration.remove();
     }
+    runAll(turnsToRelease);
   }
 
   private static Executor mainThreadExecutor() {
     Handler mainHandler = new Handler(Looper.getMainLooper());
-    return command -> mainHandler.post(command);
+    return mainHandler::post;
+  }
+
+  private static final class QueuedSnapshot {
+    final QuerySnapshot snapshot;
+    final Runnable releaseTurn;
+
+    QueuedSnapshot(QuerySnapshot snapshot, Runnable releaseTurn) {
+      this.snapshot = snapshot;
+      this.releaseTurn = releaseTurn;
+    }
   }
 
   private final class SnapshotEmission {
@@ -303,9 +498,11 @@ public class QuerySnapshotsStreamHandler implements StreamHandler {
     final QuerySnapshotChunker<
             DocumentChange, GeneratedAndroidFirebaseFirestore.InternalDocumentChange>
         documentChanges;
+    final Runnable releaseTurn;
 
-    SnapshotEmission(long id, QuerySnapshot snapshot) {
+    SnapshotEmission(long id, QuerySnapshot snapshot, Runnable releaseTurn) {
       this.id = id;
+      this.releaseTurn = releaseTurn;
       List<DocumentSnapshot> nativeDocuments = snapshot.getDocuments();
       List<DocumentChange> nativeDocumentChanges = snapshot.getDocumentChanges();
       documentCount = nativeDocuments.size();
