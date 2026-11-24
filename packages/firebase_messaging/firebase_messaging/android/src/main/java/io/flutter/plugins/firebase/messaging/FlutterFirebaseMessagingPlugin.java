@@ -42,10 +42,14 @@ import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry.NewIntentListener;
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin;
 import java.util.ArrayDeque;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Queue;
+import java.util.Set;
+import java.util.concurrent.ExecutionException;
 
 /** FlutterFirebaseMessagingPlugin */
 public class FlutterFirebaseMessagingPlugin
@@ -662,22 +666,68 @@ public class FlutterFirebaseMessagingPlugin
             Exception exception = task.getException();
             result.error(
                 "firebase_messaging",
-                exception != null ? exception.getMessage() : null,
+                formatExceptionMessage(exception),
                 getExceptionDetails(exception));
           }
         });
   }
 
-  private Map<String, Object> getExceptionDetails(@Nullable Exception exception) {
+  @VisibleForTesting
+  static Map<String, Object> getExceptionDetails(@Nullable Exception exception) {
     Map<String, Object> details = new HashMap<>();
     details.put("code", "unknown");
-    if (exception != null) {
-      details.put("message", exception.getMessage());
+    String message = formatExceptionMessage(exception);
+    if (message != null) {
+      details.put("message", message);
     } else {
       details.put("message", "An unknown error has occurred.");
     }
 
     return details;
+  }
+
+  @Nullable
+  @VisibleForTesting
+  static String formatExceptionMessage(@Nullable Exception exception) {
+    if (exception == null) {
+      return null;
+    }
+
+    String outerMessage = exception.getMessage();
+    StringBuilder builder = new StringBuilder();
+    if (outerMessage != null && !outerMessage.isEmpty()) {
+      builder.append(outerMessage);
+    }
+
+    Set<Throwable> visited = Collections.newSetFromMap(new IdentityHashMap<>());
+    visited.add(exception);
+    Throwable cause = exception.getCause();
+    while (cause != null && visited.add(cause)) {
+      if (!isWrapperExecutionException(cause)) {
+        String causeText = cause.toString();
+        if (causeText != null && !causeText.isEmpty() && builder.indexOf(causeText) == -1) {
+          if (builder.length() > 0) {
+            builder.append(" Caused by: ");
+          }
+          builder.append(causeText);
+        }
+      }
+      cause = cause.getCause();
+    }
+
+    return builder.length() > 0 ? builder.toString() : outerMessage;
+  }
+
+  private static boolean isWrapperExecutionException(Throwable throwable) {
+    if (!(throwable instanceof ExecutionException)) {
+      return false;
+    }
+    Throwable cause = throwable.getCause();
+    if (cause == null) {
+      return false;
+    }
+    String message = throwable.getMessage();
+    return message == null || message.equals(cause.toString());
   }
 
   @Override

@@ -149,6 +149,39 @@ class MainActivity : FlutterActivity() {
                 // The probe reports background=false when the app stays in front.
               }
             }
+            "setGmsNetworkingEnabled" -> {
+              val enabled = call.argument<Boolean>("enabled")
+              if (enabled == null) {
+                result.error("INVALID_ARG", "enabled is required", null)
+                return@setMethodCallHandler
+              }
+              try {
+                if (enabled) {
+                  try {
+                    executeShell(
+                        "cmd connectivity set-package-networking-enabled true com.google.android.gms",
+                    )
+                  } finally {
+                    executeShell("cmd connectivity set-chain3-enabled false")
+                  }
+                } else {
+                  executeShell("cmd connectivity set-chain3-enabled true")
+                  try {
+                    executeShell(
+                        "cmd connectivity set-package-networking-enabled false com.google.android.gms",
+                    )
+                  } catch (e: Exception) {
+                    try {
+                      executeShell("cmd connectivity set-chain3-enabled false")
+                    } catch (_: Exception) {}
+                    throw e
+                  }
+                }
+                result.success(null)
+              } catch (e: Exception) {
+                result.error("NETWORK_FAILED", errorMessage(e), null)
+              }
+            }
             else -> result.notImplemented()
           }
         }

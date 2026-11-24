@@ -56,6 +56,12 @@ Future<bool> resetAndroidPermission(String permission) async {
   }
 }
 
+Future<void> setAndroidGmsNetworkingEnabled(bool enabled) async {
+  await const MethodChannel(
+    'tests/remote_notifications',
+  ).invokeMethod<void>('setGmsNetworkingEnabled', {'enabled': enabled});
+}
+
 // ignore: do_not_use_environment
 const bool skipTestsOnCI = bool.fromEnvironment('CI');
 
@@ -304,6 +310,34 @@ void main() {
             (defaultTargetPlatform == TargetPlatform.iOS && skipTestsOnCI) ||
             (defaultTargetPlatform != TargetPlatform.android &&
                 defaultTargetPlatform != TargetPlatform.iOS),
+      );
+
+      test(
+        'includes the underlying cause when registration fails on Android',
+        () async {
+          if ((sdkInt ?? 0) < 34) {
+            markTestSkipped('Requires Android API 34+');
+            return;
+          }
+          await messaging.unregister();
+          addTearDown(() => setAndroidGmsNetworkingEnabled(true));
+          await setAndroidGmsNetworkingEnabled(false);
+
+          try {
+            await messaging.register();
+            fail('Expected FirebaseException when GMS networking is blocked');
+          } on FirebaseException catch (e) {
+            expect(e.plugin, 'firebase_messaging');
+            expect(
+              e.message,
+              matches(RegExp(r'FCM Registration failed! Caused by: \S+')),
+            );
+          } finally {
+            await setAndroidGmsNetworkingEnabled(true);
+          }
+        },
+        timeout: const Timeout(Duration(seconds: 90)),
+        skip: kIsWeb || defaultTargetPlatform != TargetPlatform.android,
       );
     });
 
