@@ -63,33 +63,33 @@ class RecordErrorRequest {
 
 @HostApi(dartHostTestHandler: 'TestFirebaseCrashlyticsHostApi')
 abstract class FirebaseCrashlyticsHostApi {
-  @async
+  @asyncCallback
   bool checkForUnsentReports();
 
-  @async
+  @asyncCallback
   void crash();
 
-  @async
+  @asyncCallback
   void deleteUnsentReports();
 
-  @async
+  @asyncCallback
   bool didCrashOnPreviousExecution();
 
-  @async
+  @asyncCallback
   void recordError(RecordErrorRequest request);
 
-  @async
+  @asyncCallback
   void log(String message);
 
-  @async
+  @asyncCallback
   void sendUnsentReports();
 
-  @async
+  @asyncCallback
   bool setCrashlyticsCollectionEnabled(bool enabled);
 
-  @async
+  @asyncCallback
   void setUserIdentifier(String identifier);
 
-  @async
+  @asyncCallback
   void setCustomKey(String key, String value);
 }

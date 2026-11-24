@@ -87,27 +87,27 @@ class CoreInitializeResponse {
 
 @HostApi(dartHostTestHandler: 'TestFirebaseCoreHostApi')
 abstract class FirebaseCoreHostApi {
-  @async
+  @asyncCallback
   CoreInitializeResponse initializeApp(
     String appName,
     CoreFirebaseOptions initializeAppRequest,
   );
 
-  @async
+  @asyncCallback
   List<CoreInitializeResponse> initializeCore();
 
-  @async
+  @asyncCallback
   CoreFirebaseOptions optionsFromResource();
 }
 
 @HostApi(dartHostTestHandler: 'TestFirebaseAppHostApi')
 abstract class FirebaseAppHostApi {
-  @async
+  @asyncCallback
   void setAutomaticDataCollectionEnabled(String appName, bool enabled);
 
-  @async
+  @asyncCallback
   void setAutomaticResourceManagementEnabled(String appName, bool enabled);
 
-  @async
+  @asyncCallback
   void delete(String appName);
 }
