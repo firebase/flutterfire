@@ -189,6 +189,7 @@ void updateLibraryVersionPureSwiftPlugins() {
     'firebase_core',
     'firebase_ai',
     'cloud_firestore',
+    'firebase_storage',
   ];
 
   for (final package in packages) {
