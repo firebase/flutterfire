@@ -159,8 +159,16 @@ Note that real-time Remote Config is not available for Web.
       await remoteConfig.activate();
 
       // Use the new config values here.
+    }, onError: (error) {
+      // The real-time connection failed. The stream stays open and the SDK
+      // retries, so this can be called more than once.
     });
    ```
+
+   Always pass `onError`. Real-time connection errors are added to the stream
+   as a `FirebaseException`, with a code such as `config-update-stream-error`,
+   and an error with no handler is reported as uncaught, which Crashlytics
+   records as a fatal crash.
 
 2. The next time you publish a new version of your Remote Config, devices that
    are running your app and listening for changes will activate the new config.

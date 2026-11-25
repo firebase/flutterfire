@@ -197,6 +197,9 @@ abstract class FirebaseRemoteConfigPlatform extends PlatformInterface {
   }
 
   /// Get a [Stream] of [RemoteConfigUpdate]s.
+  ///
+  /// Real-time connection errors are added to the stream as [FirebaseException]s
+  /// with a `config-update-*` or `unknown` code, and do not close it.
   Stream<RemoteConfigUpdate> get onConfigUpdated {
     throw UnimplementedError('onConfigUpdated getter not implemented');
   }
