@@ -10,6 +10,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_storage_example/firebase_options.dart';
 
@@ -465,6 +466,50 @@ void setupTaskTests() {
           expect(streamError, isA<FirebaseException>());
         },
       );
+
+      test('completes the task after its only `snapshotEvents` listener is '
+          'cancelled', () async {
+        const size = 5000000;
+        final ref = storage.ref('flutter-tests/listener-cancel.txt');
+        final task = ref.putString('A' * size);
+
+        // For example, a progress dialog that is closed mid-upload, before
+        // the app awaits the task.
+        await task.snapshotEvents.first.timeout(_completerTimeout);
+        await Future<void>.delayed(const Duration(milliseconds: 100));
+
+        final snapshot = await task.timeout(_completerTimeout);
+        expect(snapshot.state, TaskState.success);
+        expect(task.snapshot.state, TaskState.success);
+        expect((await ref.getMetadata()).size, size);
+      });
     });
+
+    test('detaching firebase_storage from another engine does not affect tasks '
+        'of this engine', () async {
+      // Big enough to still be uploading when the other engine is
+      // destroyed, small enough to finish well within the timeout.
+      final task = storage
+          .ref('flutter-tests/engine-detach.txt')
+          .putString('A' * 10000000);
+      final started = Completer<void>();
+      final subscription = task.snapshotEvents.listen((_) {
+        if (!started.isCompleted) started.complete();
+      }, onError: (_) {});
+
+      try {
+        await started.future.timeout(_completerTimeout);
+        // Background engines (e.g. workmanager) attach their own plugin
+        // instances and detach them when their work is done.
+        await const MethodChannel(
+          'tests/engines',
+        ).invokeMethod<void>('attachAndDetachSecondEngine');
+
+        final snapshot = await task.timeout(_completerTimeout);
+        expect(snapshot.state, TaskState.success);
+      } finally {
+        await subscription.cancel();
+      }
+    }, skip: kIsWeb || defaultTargetPlatform != TargetPlatform.android);
   });
 }
