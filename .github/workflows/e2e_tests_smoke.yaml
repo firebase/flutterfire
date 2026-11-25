@@ -204,7 +204,7 @@ jobs:
     permissions:
       contents: read
     runs-on: xcode-27
-    timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 35 }}
+    timeout-minutes: ${{ inputs.nightly_test_mode && 5 || 60 }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       - uses: ./.github/actions/setup-flutterfire
@@ -290,18 +290,33 @@ jobs:
         working-directory: ./.github/workflows/scripts
         # Covers booting the emulator suite as well as the tests themselves, since
         # `emulators:exec` now owns both.
-        timeout-minutes: 20
+        # Fits one cold (15 min) and two warm (10 min) alarm-bounded test
+        # attempts plus one simulator recycle, matching reusable_e2e_ios.yaml.
+        timeout-minutes: 45
         env:
           SIMULATOR: ${{ steps.simulator.outputs.udid }}
           STORAGE_EMULATOR_DEBUG: 'true'
+          TEST_TARGET: integration_test/core_shard_test.dart
         run: |
-          # Uncomment following line to have simulator logs printed out for debugging purposes.
-          # xcrun simctl spawn booted log stream --predicate 'eventMessage contains "flutter"' &
-          # Once the integration test runner has launched, leave it running rather
-          # than starting a second app instance from a retry.
           # `emulators:exec` boots the suite, runs the command and tears the suite
-          # down, exiting with the command's exit code.
-          firebase emulators:exec --project flutterfire-e2e-tests "cd ${GITHUB_WORKSPACE}/tests && flutter test integration_test/core_shard_test.dart -d \"$SIMULATOR\" --timeout 10x --dart-define=CI=true"
+          # down, exiting with the command's exit code. The retry script decides
+          # whether launch failures are retried and whether the tally passes.
+          firebase emulators:exec --project flutterfire-e2e-tests "cd ${GITHUB_WORKSPACE}/tests && ${GITHUB_WORKSPACE}/.github/workflows/scripts/flutter-test-ios-retry.sh"
+      - name: Dump crash reports
+        # The recurring "Unable to start the app on the device" launch failures
+        # give the Flutter tool nothing to print; simulator app crashes land in
+        # the host's crash reporter with the real reason. Only runs on failure.
+        if: failure()
+        run: |
+          found=0
+          while IFS= read -r report; do
+            found=1
+            echo "::group::$(basename "$report")"
+            head -c 20000 "$report"
+            echo
+            echo "::endgroup::"
+          done < <(find "$HOME/Library/Logs/DiagnosticReports" -name '*.ips' -newermt '-2 hours' 2>/dev/null)
+          [ "$found" -eq 1 ] || echo "No crash reports in the last two hours."
       - name: Save Firestore Emulator Cache
         # Branches can read main cache but main cannot read branch cache. Avoid LRU eviction with main-only cache.
         if: github.ref == 'refs/heads/main'
