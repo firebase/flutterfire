@@ -4,7 +4,6 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
@@ -142,10 +141,10 @@ abstract class ReferencePlatform extends PlatformInterface {
     throw UnimplementedError('putBlob() is not implemented');
   }
 
-  /// Upload a [File] from the filesystem. The file must exist.
+  /// Upload a `dart:io` `File` from the filesystem. The file must exist.
   ///
   /// Optionally, you can also set metadata onto the uploaded object.
-  TaskPlatform putFile(File file, [SettableMetadata? metadata]) {
+  TaskPlatform putFile(covariant Object file, [SettableMetadata? metadata]) {
     throw UnimplementedError('putFile() is not implemented');
   }
 
@@ -174,8 +173,9 @@ abstract class ReferencePlatform extends PlatformInterface {
 
   /// Writes a remote storage object to the local filesystem.
   ///
-  /// If a file already exists at the given location, it will be overwritten.
-  TaskPlatform writeToFile(File file) {
+  /// [file] must be a `dart:io` `File`. If a file already exists at the given
+  /// location, it will be overwritten.
+  TaskPlatform writeToFile(covariant Object file) {
     throw UnimplementedError('writeToFile() is not implemented');
   }
 }

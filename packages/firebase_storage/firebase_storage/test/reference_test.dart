@@ -257,6 +257,10 @@ Future<void> main() async {
 
         expect(() => testRef.putFile(file), throwsAssertionError);
       });
+
+      test('throws ArgumentError if file is not a File', () {
+        expect(() => testRef.putFile('not-a-file'), throwsArgumentError);
+      });
     });
 
     group('putString()', () {
@@ -357,6 +361,10 @@ Future<void> main() async {
         expect(result, isA<Task>());
 
         verify(mockReference.writeToFile(testFile));
+      });
+
+      test('throws ArgumentError if file is not a File', () {
+        expect(() => testRef.writeToFile('not-a-file'), throwsArgumentError);
       });
     });
 
