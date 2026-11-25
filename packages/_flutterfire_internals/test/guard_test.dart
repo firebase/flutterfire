@@ -3,61 +3,25 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:_flutterfire_internals/_flutterfire_internals.dart';
-import 'package:_flutterfire_internals/src/interop_shimmer.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+// The JS error mapping is tested in `firebase_core_js`, which owns it.
 void main() {
   group('guardWebException', () {
-    test(
-      'preserves stacktrace on futures that fail with FirebaseError',
-      () async {
-        final current = StackTrace.current;
-        try {
-          await guardWebExceptions(
-            () => Future.error(_FirebaseError(), current),
-            plugin: 'test',
-            codeParser: (c) => c,
-          );
-          fail('dead code');
-        } catch (err, stack) {
-          expect(stack, current);
-        }
-      },
-    );
-
-    test(
-      'preserves stacktrace on streams that fail with FirebaseError',
-      () async {
-        final current = StackTrace.current;
-        try {
-          await guardWebExceptions(
-            () => Stream.error(_FirebaseError(), current),
-            plugin: 'test',
-            codeParser: (c) => c,
-          ).first;
-          fail('dead code');
-        } catch (err, stack) {
-          expect(stack, current);
-        }
-      },
-    );
-
-    test(
-      'preserves stacktrace on functions that throw a FirebaseError',
-      () async {
-        final current = StackTrace.current;
-        try {
-          guardWebExceptions<void>(
-            () => Error.throwWithStackTrace(_FirebaseError(), current),
-            plugin: 'test',
-            codeParser: (c) => c,
-          );
-          fail('dead code');
-        } catch (err, stack) {
-          expect(stack, current);
-        }
-      },
-    );
+    test('returns the callback result', () async {
+      expect(
+        guardWebExceptions(() => 42, plugin: 'test', codeParser: (c) => c),
+        42,
+      );
+      expect(
+        await guardWebExceptions(
+          () => Future.value(42),
+          plugin: 'test',
+          codeParser: (c) => c,
+        ),
+        42,
+      );
+    });
 
     test(
       'propagates plain Dart errors from Futures (e.g. ArgumentError on web)',
@@ -73,21 +37,4 @@ void main() {
       },
     );
   });
-}
-
-class _FirebaseError implements JSError {
-  @override
-  String get code => '';
-
-  @override
-  String get message => '';
-
-  @override
-  String get name => '';
-
-  @override
-  String get serverResponse => '';
-
-  @override
-  String get stack => '';
 }

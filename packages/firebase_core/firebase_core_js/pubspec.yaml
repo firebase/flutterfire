@@ -1,0 +1,20 @@
+name: firebase_core_js
+description: Firebase Core for Dart web apps, built on the Firebase JS SDK. Works without Flutter.
+homepage: https://github.com/firebase/flutterfire/tree/main/packages/firebase_core/firebase_core_js
+repository: https://github.com/firebase/flutterfire/tree/main/packages/firebase_core/firebase_core_js
+version: 1.0.0
+resolution: workspace
+
+# No `flutter:` constraint or section: either one makes `dart pub get` fail for
+# Dart web apps that do not use Flutter. `firebase_core_web` is the Flutter
+# plugin built on this package.
+environment:
+  sdk: '^3.10.0'
+
+dependencies:
+  firebase_core_interface: ^1.0.0
+  meta: ^1.8.0
+  web: ^1.0.0
+
+dev_dependencies:
+  test: ^1.25.0

@@ -21,7 +21,7 @@ const androidVersionFile =
 const iosVersionFile =
     '$packagesDir/firebase_core/firebase_core/ios/firebase_sdk_version.rb';
 const webVersionFile =
-    '$packagesDir/firebase_core/firebase_core_web/lib/src/firebase_sdk_version.dart';
+    '$packagesDir/firebase_core/firebase_core_js/lib/src/firebase_sdk_version.dart';
 const windowsVersionFile =
     '$packagesDir/firebase_core/firebase_core/windows/CMakeLists.txt';
 

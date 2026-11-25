@@ -3,13 +3,13 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart'
-    hide MethodChannelFirebaseApp, MethodChannelFirebase;
 import 'package:flutter/foundation.dart';
 
+// `Firebase` and `FirebaseApp` are pure Dart, so that Dart apps without Flutter
+// can use them through `firebase_core_js`.
+export 'package:firebase_core_interface/firebase_core_interface.dart'
+    show Firebase, FirebaseApp, FirebaseService;
 export 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart'
     show FirebaseOptions, defaultFirebaseAppName, FirebaseException;
 
-part 'src/firebase.dart';
-part 'src/firebase_app.dart';
 part 'src/port_mapping.dart';

@@ -1,0 +1,96 @@
+// ignore_for_file: require_trailing_commas
+// Copyright 2020 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+import 'dart:async';
+import 'dart:js_interop';
+import 'dart:js_interop_unsafe';
+
+import 'package:firebase_core_interface/firebase_core_interface.dart';
+import 'package:firebase_core_js/src/interop/package_web_tweaks.dart';
+import 'package:firebase_core_js/src/interop/utils/es6_interop.dart';
+import 'package:meta/meta.dart';
+import 'package:web/web.dart' as web;
+
+import 'src/firebase_core_version.dart';
+import 'src/interop/core.dart' as firebase;
+
+export 'src/firebase.dart';
+
+// The same names `firebase_core` exports, so that Dart web apps without
+// Flutter only need this import. This `Firebase` registers [FirebaseCoreWeb]
+// itself.
+export 'package:firebase_core_interface/firebase_core_interface.dart'
+    show
+        FirebaseApp,
+        FirebaseException,
+        FirebaseOptions,
+        FirebaseService,
+        defaultFirebaseAppName;
+
+part 'src/firebase_app_web.dart';
+part 'src/firebase_core_web.dart';
+part 'src/firebase_sdk_version.dart';
+
+/// Returns a [FirebaseAppWeb] instance from [firebase.App].
+FirebaseAppPlatform _createFromJsApp(firebase.App jsApp) {
+  return FirebaseAppWeb._(jsApp.name, _createFromJsOptions(jsApp.options));
+}
+
+String? _safeToDart(JSString? jsString) {
+  if (jsString == null || jsString.isUndefinedOrNull) return null;
+  return jsString.toDart;
+}
+
+/// Returns a [FirebaseOptions] instance from [firebase.FirebaseOptions].
+FirebaseOptions _createFromJsOptions(firebase.FirebaseOptions options) {
+  return FirebaseOptions(
+    apiKey: _safeToDart(options.apiKey) ?? '',
+    projectId: _safeToDart(options.projectId) ?? '',
+    authDomain: _safeToDart(options.authDomain),
+    databaseURL: _safeToDart(options.databaseURL),
+    storageBucket: _safeToDart(options.storageBucket),
+    messagingSenderId: _safeToDart(options.messagingSenderId) ?? '',
+    appId: _safeToDart(options.appId) ?? '',
+    measurementId: _safeToDart(options.measurementId),
+  );
+}
+
+/// Returns a code from a JavaScript error.
+///
+/// When the Firebase JS SDK throws an error, it contains a code which can be
+/// used to identify the specific type of error. This helper function is used
+/// to keep error messages consistent across different platforms.
+String _getJSErrorCode(JSError e) {
+  if (e.name?.toDart == 'FirebaseError') {
+    return e.code?.toDart ?? '';
+  }
+
+  return '';
+}
+
+/// Returns a [FirebaseException] if the error is a Firebase Error.
+///
+/// If a JavaScript error is thrown and not manually handled using the code,
+/// this function ensures that if the error is Firebase related, it is instead
+/// re-created as a [FirebaseException] with a familiar code and message.
+FirebaseException _catchJSError(JSError e) {
+  if (e.name?.toDart == 'FirebaseError') {
+    String code = e.code?.toDart ?? '';
+    String message = e.message?.toDart ?? '';
+
+    if (code.contains('/')) {
+      List<String> chunks = code.split('/');
+      code = chunks[chunks.length - 1];
+    }
+
+    return FirebaseException(
+      plugin: 'core',
+      code: code,
+      message: message.replaceAll(' ($code)', ''),
+    );
+  }
+
+  throw e;
+}

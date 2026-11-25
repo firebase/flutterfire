@@ -19,6 +19,7 @@ on:
     paths:
       - 'packages/firebase_app_installations/**'
       - 'packages/firebase_core/**'
+      - 'packages/firebase_common/**'
       - '.github/workflows/e2e_tests_app_installations.yaml'
       - '.github/workflows/reusable_e2e_*.yaml'
       - '.github/actions/setup-flutterfire/**'
@@ -29,6 +30,7 @@ on:
     paths:
       - 'packages/firebase_app_installations/**'
       - 'packages/firebase_core/**'
+      - 'packages/firebase_common/**'
       - '.github/workflows/e2e_tests_app_installations.yaml'
       - '.github/workflows/reusable_e2e_*.yaml'
       - '.github/actions/setup-flutterfire/**'

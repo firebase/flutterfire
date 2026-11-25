@@ -29,6 +29,9 @@ Future<melos.MelosWorkspace> getMelosWorkspace() async {
       Glob('*web*'),
       Glob('*platform*'),
       Glob('*internals*'),
+      Glob('firebase_common'),
+      Glob('firebase_core_interface'),
+      Glob('*_js'),
     ],
   );
   final workspace = await melos.MelosWorkspace.fromConfig(

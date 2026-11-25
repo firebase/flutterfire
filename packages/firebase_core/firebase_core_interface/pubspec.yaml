@@ -1,0 +1,22 @@
+name: firebase_core_interface
+description: Pure-Dart contracts and types that Firebase Core implementations share, for Flutter and other Dart apps.
+homepage: https://github.com/firebase/flutterfire/tree/main/packages/firebase_core/firebase_core_interface
+repository: https://github.com/firebase/flutterfire/tree/main/packages/firebase_core/firebase_core_interface
+version: 1.0.0
+resolution: workspace
+
+# No `flutter:` constraint or dependency: a Flutter SDK constraint alone makes
+# `dart pub get` fail for apps that do not use Flutter.
+environment:
+  sdk: '^3.10.0'
+
+# Keep lower bounds at or below what Flutter stable pins, so a pub workspace
+# with a Flutter app and a server package still resolves.
+dependencies:
+  collection: ^1.15.0
+  firebase_common: ^1.0.0
+  meta: ^1.8.0
+  plugin_platform_interface: ^2.1.3
+
+dev_dependencies:
+  test: ^1.25.0

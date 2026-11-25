@@ -12,6 +12,7 @@ on:
     paths:
       - 'packages/cloud_firestore/**'
       - 'packages/firebase_core/**'
+      - 'packages/firebase_common/**'
       - '.github/workflows/e2e_tests_pipeline.yaml'
       - '.github/actions/setup-flutterfire/**'
   push:
@@ -20,6 +21,7 @@ on:
     paths:
       - 'packages/cloud_firestore/**'
       - 'packages/firebase_core/**'
+      - 'packages/firebase_common/**'
       - '.github/workflows/e2e_tests_pipeline.yaml'
       - '.github/actions/setup-flutterfire/**'
   workflow_call:

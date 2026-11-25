@@ -67,8 +67,9 @@ jobs:
         id: filter
         with:
           # `packages/*/*` is every plugin package - main, platform interface
-          # and web implementation alike. `packages/_flutterfire_internals` is
-          # the one package that sits a level higher, so it needs its own entry.
+          # and web implementation alike. `packages/_flutterfire_internals` and
+          # `packages/firebase_common` sit a level higher, so they need their
+          # own entries.
           #
           # Any change under `.github/workflows` runs everything. The filters
           # here decide what CI skips, so a change to how CI works must not be
@@ -83,6 +84,7 @@ jobs:
               - 'packages/*/*/lib/**'
               - 'packages/*/*/pubspec.yaml'
               - 'packages/_flutterfire_internals/**'
+              - 'packages/firebase_common/**'
               - '${{ inputs.app-path }}/lib/**'
               - '${{ inputs.app-path }}/pubspec.yaml'
               - '${{ inputs.app-path }}/integration_test/**'

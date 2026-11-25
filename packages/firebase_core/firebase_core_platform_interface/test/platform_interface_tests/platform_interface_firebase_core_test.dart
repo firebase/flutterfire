@@ -4,6 +4,7 @@
 // found in the LICENSE file.
 
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
+import 'package:firebase_core_platform_interface/test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
@@ -13,7 +14,8 @@ void main() {
 
   group('$FirebasePlatform', () {
     // should allow read of default app from native
-    test('$MethodChannelFirebase is the default instance', () {
+    test('$MethodChannelFirebase is the default instance with core mocks', () {
+      setupFirebaseCoreMocks();
       expect(FirebasePlatform.instance, isA<MethodChannelFirebase>());
     });
 
