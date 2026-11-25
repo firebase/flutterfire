@@ -278,7 +278,8 @@ class QueryRef<Data, Variables> extends OperationRef<Data, Variables> {
   Future<QueryResult<Data, Variables>> execute({
     QueryFetchPolicy fetchPolicy = QueryFetchPolicy.preferCache,
   }) async {
-    if (dataConnect.cacheManager != null) {
+    if (fetchPolicy == QueryFetchPolicy.cacheOnly ||
+        dataConnect.cacheManager != null) {
       switch (fetchPolicy) {
         case QueryFetchPolicy.cacheOnly:
           return _executeFromCache(fetchPolicy);

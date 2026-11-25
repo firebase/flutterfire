@@ -156,6 +156,44 @@ void main() {
       transport.setHttp(mockHttpClient);
       mockDataConnect.transport = transport;
     });
+    test('cacheOnly returns a cache miss without a configured cache', () async {
+      when(mockUser.getIdToken()).thenAnswer((_) async => 'token');
+      when(
+        mockHttpClient.post(
+          any,
+          headers: anyNamed('headers'),
+          body: anyNamed('body'),
+        ),
+      ).thenAnswer((_) async => http.Response('{"data":{"movies":[]}}', 200));
+      final ref = QueryRef<Map<String, dynamic>, void>(
+        mockDataConnect,
+        'ListMovies',
+        transport,
+        (data) => jsonDecode(data) as Map<String, dynamic>,
+        QueryManager(mockDataConnect),
+        emptySerializer,
+        null,
+      );
+
+      await expectLater(
+        ref.execute(fetchPolicy: QueryFetchPolicy.cacheOnly),
+        throwsA(
+          isA<DataConnectError>().having(
+            (error) => error.dataConnectErrorCode,
+            'dataConnectErrorCode',
+            DataConnectErrorCode.cacheMiss,
+          ),
+        ),
+      );
+      verifyNever(
+        mockHttpClient.post(
+          any,
+          headers: anyNamed('headers'),
+          body: anyNamed('body'),
+        ),
+      );
+    });
+
     test('executeQuery should gracefully handle getIdToken failures', () async {
       String deserializer(String data) => 'Deserialized Data';
       final mockResponseSuccess = http.Response('{"success": true}', 200);
