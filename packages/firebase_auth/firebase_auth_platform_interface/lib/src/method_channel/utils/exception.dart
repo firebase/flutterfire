@@ -178,8 +178,7 @@ FirebaseAuthMultiFactorExceptionPlatform parseMultiFactorError(
   }
 
   final pigeonMultiFactorInfo =
-      (additionalData['multiFactorHints'] as List<Object?>? ?? [])
-          .nonNulls
+      (additionalData['multiFactorHints'] as List<Object?>? ?? []).nonNulls
           .map(InternalMultiFactorInfo.decode)
           .toList();
 

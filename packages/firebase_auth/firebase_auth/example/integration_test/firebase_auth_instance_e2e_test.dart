@@ -530,7 +530,8 @@ void main() {
             expect(FirebaseAuth.instance.currentUser, isNull);
           },
           // This regression covers the shared Android and Apple error code.
-          skip: kIsWeb ||
+          skip:
+              kIsWeb ||
               (!Platform.isAndroid && !Platform.isIOS && !Platform.isMacOS),
         );
 
