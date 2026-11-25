@@ -240,6 +240,19 @@ void main() {
     });
 
     group('emulator', () {
+      test('persistWebEmulatorOrigin defaults to kDebugMode', () {
+        final bool previous = FirebaseAuth.persistWebEmulatorOrigin;
+        addTearDown(() => FirebaseAuth.persistWebEmulatorOrigin = previous);
+        expect(FirebaseAuth.persistWebEmulatorOrigin, kDebugMode);
+        expect(
+          FirebaseAuthPlatform.persistWebEmulatorOrigin,
+          FirebaseAuth.persistWebEmulatorOrigin,
+        );
+        FirebaseAuth.persistWebEmulatorOrigin = !kDebugMode;
+        expect(FirebaseAuthPlatform.persistWebEmulatorOrigin, !kDebugMode);
+        expect(FirebaseAuth.persistWebEmulatorOrigin, !kDebugMode);
+      });
+
       test('useAuthEmulator() should call delegate method', () async {
         // Necessary as we otherwise get a "null is not a Future<void>" error
         when(

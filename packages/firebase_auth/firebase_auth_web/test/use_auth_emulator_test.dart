@@ -156,6 +156,38 @@ void main() {
     );
   });
 
+  test('does not store the origin when persistence is off', () async {
+    final bool previous = FirebaseAuthPlatform.persistWebEmulatorOrigin;
+    FirebaseAuthPlatform.persistWebEmulatorOrigin = false;
+    addTearDown(() => FirebaseAuthPlatform.persistWebEmulatorOrigin = previous);
+    final auth = stubFirebaseAuthJsSdk();
+    auth['connectAuthEmulator'] = ((JSAny? _, JSAny? _) {}).toJS;
+
+    await FirebaseAuthWeb.instance.useAuthEmulator('localhost', 9099);
+
+    expect(web.window.localStorage.getItem(_originKey), isNull);
+    expect(web.window.sessionStorage.getItem(_originKey), isNull);
+  });
+
+  test('swallows emulator-config-failed when persistence is off', () async {
+    final bool previous = FirebaseAuthPlatform.persistWebEmulatorOrigin;
+    FirebaseAuthPlatform.persistWebEmulatorOrigin = false;
+    addTearDown(() => FirebaseAuthPlatform.persistWebEmulatorOrigin = previous);
+    connectAuthEmulatorThrows(
+      jsError(
+        'Firebase: Error (auth/emulator-config-failed).',
+        code: 'auth/emulator-config-failed',
+      ),
+    );
+
+    await expectLater(
+      FirebaseAuthWeb.instance.useAuthEmulator('localhost', 9099),
+      completes,
+    );
+    expect(web.window.sessionStorage.getItem(_originKey), isNull);
+    expect(web.window.localStorage.getItem(_originKey), isNull);
+  });
+
   test('rethrows a Dart error unchanged', () async {
     connectAuthEmulatorThrows(StateError('boom'));
 
