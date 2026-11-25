@@ -105,7 +105,7 @@ final class DeveloperSerialization implements SerializationStrategy {
     }
     final totalTokens = switch (jsonObject) {
       {'totalTokens': final int totalTokens} => totalTokens,
-      {'totalTokens': final Object _} => throw unhandledFormat(
+      {'totalTokens': _} => throw unhandledFormat(
         'CountTokensResponse',
         jsonObject,
       ),
@@ -116,7 +116,7 @@ final class DeveloperSerialization implements SerializationStrategy {
         parseUsageMetadata({
           'promptTokensDetails': details,
         }).promptTokensDetails,
-      {'promptTokensDetails': final Object _} => throw unhandledFormat(
+      {'promptTokensDetails': _} => throw unhandledFormat(
         'CountTokensResponse',
         jsonObject,
       ),

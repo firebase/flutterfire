@@ -693,7 +693,9 @@ void main() {
         for (final invalid in <Object>[
           'not a map',
           {'totalTokens': 'invalid'},
+          {'totalTokens': null},
           {'promptTokensDetails': 'invalid'},
+          {'promptTokensDetails': null},
         ]) {
           expect(
             () => DeveloperSerialization().parseCountTokensResponse(invalid),
