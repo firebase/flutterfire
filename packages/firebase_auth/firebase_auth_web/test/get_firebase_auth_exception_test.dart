@@ -58,4 +58,11 @@ void main() {
     expect(exception.code, 'invalid-credential');
     expect(exception.email, 'user@example.com');
   });
+
+  test('returns an unknown error for a Dart error instead of throwing', () {
+    final exception = getFirebaseAuthException(StateError('boom'));
+
+    expect(exception.code, 'unknown');
+    expect(exception.message, contains('boom'));
+  });
 }

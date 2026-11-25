@@ -2,6 +2,8 @@
 --maxwidth 100
 --wrapparameters afterfirst
 # Apple swift-format from flutter_plugin_tools requires `case .success(let value)` instead of `case let .success(value)`.
---disable sortedImports,unusedArguments,wrapMultilineStatementBraces,hoistPatternLet
+# typeSugar rewrites Pigeon's `Optional<Any>.some(Optional<Any>.none)` pattern to
+# `Any?.none`, which does not compile ('Any' cannot conform to 'Equatable').
+--disable sortedImports,unusedArguments,wrapMultilineStatementBraces,hoistPatternLet,typeSugar
 --exclude Pods,**/MainFlutterWindow.swift,**/AppDelegate.swift,**/.symlinks/**
 --swiftversion 5.7

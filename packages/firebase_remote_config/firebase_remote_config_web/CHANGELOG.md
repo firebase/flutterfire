@@ -1,3 +1,8 @@
+## 1.11.0
+
+ - **FIX**(web): properly cast Map from JSAny?.dartify() ([#18855](https://github.com/firebase/flutterfire/issues/18855)). ([24ff83a3](https://github.com/firebase/flutterfire/commit/24ff83a3a9ca4e4e62130cb5e5f89edbc4351c7f))
+ - **FEAT**(android): migrate plugins to built-in Kotlin on Flutter 3.44 ([#18922](https://github.com/firebase/flutterfire/issues/18922)). ([1abe0561](https://github.com/firebase/flutterfire/commit/1abe05614d03f22782f597f847c1fc9c8c57f016))
+
 ## 1.10.16
 
  - Update a dependency to the latest release.

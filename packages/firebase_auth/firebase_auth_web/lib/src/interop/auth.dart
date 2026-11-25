@@ -325,6 +325,10 @@ class IdTokenResult extends JsObjectWrapper<auth_interop.IdTokenResultImpl> {
   /// Note, this does not map to provider IDs.
   String? get signInProvider => jsObject.signInProvider?.toDart;
 
+  /// The type of second factor associated with this session, provided the
+  /// user was multi-factor authenticated (for example, phone or totp).
+  String? get signInSecondFactor => jsObject.signInSecondFactor?.toDart;
+
   /// The Firebase Auth ID token JWT string.
   String get token => jsObject.token.toDart;
 }

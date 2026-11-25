@@ -1,3 +1,12 @@
+## 0.5.2
+
+ - **FIX**(app_check,apple): use the provider passed to activate() on Flutter 3.50 ([#18968](https://github.com/firebase/flutterfire/issues/18968)). ([d0fec9cc](https://github.com/firebase/flutterfire/commit/d0fec9cc817eb9d8e2cf72b543a2460fc3f66e2d))
+ - **FIX**: pass analyze and format on Flutter 3.50 ([#18950](https://github.com/firebase/flutterfire/issues/18950)). ([e5339880](https://github.com/firebase/flutterfire/commit/e53398808f6d78b293d4ac1455f296b9257a096d))
+ - **FIX**(appcheck,apple): map native error codes by enum case ([#18875](https://github.com/firebase/flutterfire/issues/18875)). ([f4c9ec10](https://github.com/firebase/flutterfire/commit/f4c9ec10cb76d49ce2831c1da878399a3a5c4d16))
+ - **FIX**(apple): resolve CocoaPods deps that skip the 12.19.3 patch release ([#18862](https://github.com/firebase/flutterfire/issues/18862)). ([4b422618](https://github.com/firebase/flutterfire/commit/4b422618d9b3719265211f1cb632d90335a6485a))
+ - **FEAT**(android): detect built-in Kotlin instead of checking the AGP version ([#18355](https://github.com/firebase/flutterfire/issues/18355)). ([4376b824](https://github.com/firebase/flutterfire/commit/4376b824405005092630aef97a5b7f31a394aaa7))
+ - **FEAT**(android): migrate plugins to built-in Kotlin on Flutter 3.44 ([#18922](https://github.com/firebase/flutterfire/issues/18922)). ([1abe0561](https://github.com/firebase/flutterfire/commit/1abe05614d03f22782f597f847c1fc9c8c57f016))
+
 ## 0.5.1
 
  - **FIX**(android): replace Groovy space-assignment in plugin build.gradle files ([#18837](https://github.com/firebase/flutterfire/issues/18837)). ([09e913ac](https://github.com/firebase/flutterfire/commit/09e913acd98fa25ea6ff547141e7caf421b7b02d))

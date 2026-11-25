@@ -295,6 +295,7 @@ cloud_firestore_windows::FirestoreCodec::ReadValueOfType(
           }
         }
 
+        settings.set_persistence_enabled(persistEnabled);
         if (persistEnabled) {
           settings.set_cache_size_bytes(size);
         }

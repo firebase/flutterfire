@@ -27,6 +27,13 @@ on:
         description: 'Integration test entrypoint, relative to the example directory.'
         type: string
         default: 'integration_test/e2e_test.dart'
+      android-manifest-metadata:
+        description: >-
+          Space-separated application meta-data entries to set on the example
+          manifest before the APK is built, as name=true or name=false. Empty
+          leaves the manifest unchanged.
+        type: string
+        default: ''
       native-config-args:
         description: >-
           Arguments for generate-dummy-firebase-configs.dart, e.g.
@@ -102,6 +109,7 @@ jobs:
       PACKAGE_PATH: ${{ inputs.package-path }}
       TEST_TARGET: ${{ inputs.test-target }}
       NATIVE_CONFIG_ARGS: ${{ inputs.native-config-args }}
+      ANDROID_MANIFEST_METADATA: ${{ inputs.android-manifest-metadata }}
       AVD_ARCH: x86_64
       AVD_API_LEVEL: 34
       AVD_TARGET: google_apis
@@ -193,6 +201,35 @@ jobs:
           mkdir -p "$HOME/.android"
           rm -rf "$HOME/.android/avd"
           ln -s /mnt/avd "$HOME/.android/avd"
+      - name: Apply Android manifest metadata
+        if: inputs.android-manifest-metadata != ''
+        run: |
+          python3 - <<'PY'
+          import os, re
+          from pathlib import Path
+          raw = os.environ.get("ANDROID_MANIFEST_METADATA", "").strip()
+          manifest = Path(os.environ["PACKAGE_PATH"]) / "example/android/app/src/main/AndroidManifest.xml"
+          text = manifest.read_text()
+          for item in raw.split():
+              key, _, value = item.partition("=")
+              if not re.fullmatch(r"[a-z0-9_]+", key) or value not in ("true", "false"):
+                  raise SystemExit(
+                      f"Invalid Android manifest metadata {item!r}, expected name=true|false."
+                  )
+              meta = f'<meta-data android:name="{key}" android:value="{value}" />'
+              pattern = re.compile(
+                  rf'[ \t]*<meta-data\s+android:name="{re.escape(key)}"\s+android:value="(?:true|false)"\s*/>\n?'
+              )
+              if pattern.search(text):
+                  text = pattern.sub("        " + meta + "\n", text, count=1)
+              else:
+                  needle = "</application>"
+                  if needle not in text:
+                      raise SystemExit(f"{manifest} has no </application>")
+                  text = text.replace(needle, "        " + meta + "\n    " + needle, 1)
+              print(f"AndroidManifest: {key} = {value}")
+          manifest.write_text(text)
+          PY
       - name: Pre-build APK
         # Build outside the emulator so the AVD does not boot and idle through the
         # whole Gradle build. `flutter test` below reuses this warm build cache.

@@ -5,6 +5,7 @@
 // ignore_for_file: do_not_use_environment
 
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -124,6 +125,28 @@ void main() {
       );
     }, skip: defaultTargetPlatform != TargetPlatform.iOS);
 
+    test('getToken uses the provider passed to activate', () async {
+      await FirebaseAppCheck.instance.activate(
+        providerApple: const AppleAppAttestProvider(),
+      );
+
+      // No simulator supports App Attest, so the error names App Attest
+      // only when the provider passed to activate() is the one asked for a
+      // token. The native SDK used to keep the provider it created while
+      // firebase_core configured Firebase, before activate() ran. On a
+      // simulator that is the debug provider, which fails differently.
+      await expectLater(
+        FirebaseAppCheck.instance.getToken(true),
+        throwsA(
+          isA<FirebaseException>().having(
+            (e) => e.message,
+            'message',
+            contains('AppAttestProvider'),
+          ),
+        ),
+      );
+    }, skip: _isIosSimulator ? null : 'iOS simulator only.');
+
     test(
       'appAttestWithDeviceCheckFallback falls back rather than erroring',
       () async {
@@ -197,8 +220,121 @@ void main() {
                 'APP_CHECK_APPLE_DEBUG_TOKEN dart-defines.'
           : null,
     );
+
+    group('WindowsCustomProvider', () {
+      int farFutureExpireTimeMillis() {
+        return DateTime.now()
+            .add(const Duration(hours: 1))
+            .millisecondsSinceEpoch;
+      }
+
+      test(
+        'getToken invokes fetchToken and returns the synthetic token',
+        () async {
+          var fetchCount = 0;
+          const token = 'windows-custom-e2e-token';
+          final expireTimeMillis = farFutureExpireTimeMillis();
+
+          await FirebaseAppCheck.instance.activate(
+            providerWindows: WindowsCustomProvider(
+              fetchToken: () async {
+                fetchCount++;
+                return CustomAppCheckToken(
+                  token: token,
+                  expireTimeMillis: expireTimeMillis,
+                );
+              },
+            ),
+          );
+
+          expect(await FirebaseAppCheck.instance.getToken(true), token);
+          expect(
+            fetchCount,
+            greaterThan(0),
+            reason:
+                'native must call GetCustomToken so fetchToken runs; '
+                'a zero count means the debug provider path was used',
+          );
+        },
+      );
+
+      test('isolates fetchToken by Firebase app name', () async {
+        var defaultFetchCount = 0;
+        var secondaryFetchCount = 0;
+        const defaultToken = 'windows-custom-default-app-token';
+        const secondaryToken = 'windows-custom-secondary-app-token';
+        final expireTimeMillis = farFutureExpireTimeMillis();
+
+        final secondaryApp = await Firebase.initializeApp(
+          name: 'app-check-secondary',
+          options: DefaultFirebaseOptions.currentPlatform,
+        );
+        addTearDown(secondaryApp.delete);
+
+        final defaultAppCheck = FirebaseAppCheck.instance;
+        final secondaryAppCheck = FirebaseAppCheck.instanceFor(
+          app: secondaryApp,
+        );
+
+        await defaultAppCheck.activate(
+          providerWindows: WindowsCustomProvider(
+            fetchToken: () async {
+              defaultFetchCount++;
+              return CustomAppCheckToken(
+                token: defaultToken,
+                expireTimeMillis: expireTimeMillis,
+              );
+            },
+          ),
+        );
+        await secondaryAppCheck.activate(
+          providerWindows: WindowsCustomProvider(
+            fetchToken: () async {
+              secondaryFetchCount++;
+              return CustomAppCheckToken(
+                token: secondaryToken,
+                expireTimeMillis: expireTimeMillis,
+              );
+            },
+          ),
+        );
+
+        expect(await defaultAppCheck.getToken(true), defaultToken);
+        expect(defaultFetchCount, greaterThan(0));
+        expect(
+          secondaryFetchCount,
+          0,
+          reason:
+              'fetching the default app must not invoke the '
+              'secondary app fetchToken',
+        );
+
+        final defaultCountAfterDefaultFetch = defaultFetchCount;
+        expect(await secondaryAppCheck.getToken(true), secondaryToken);
+        expect(secondaryFetchCount, greaterThan(0));
+        expect(
+          defaultFetchCount,
+          defaultCountAfterDefaultFetch,
+          reason:
+              'fetching the secondary app must not invoke the '
+              'default app fetchToken',
+        );
+
+        final secondaryCountAfterSecondaryFetch = secondaryFetchCount;
+        expect(await defaultAppCheck.getToken(true), defaultToken);
+        expect(defaultFetchCount, greaterThan(defaultCountAfterDefaultFetch));
+        expect(secondaryFetchCount, secondaryCountAfterSecondaryFetch);
+      });
+    }, skip: kIsWeb || defaultTargetPlatform != TargetPlatform.windows);
   });
 }
+
+/// A simulator app runs out of the host's CoreSimulator directory. iOS gives
+/// Dart no environment variables to check instead.
+bool get _isIosSimulator =>
+    !kIsWeb &&
+    defaultTargetPlatform == TargetPlatform.iOS &&
+    Platform.resolvedExecutable.contains('CoreSimulator');
 
 /// The lifetime (`exp` - `iat`) of an App Check token, read from its JWT claims.
 Duration _tokenTtl(String token) {

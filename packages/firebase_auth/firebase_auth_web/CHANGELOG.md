@@ -1,3 +1,11 @@
+## 6.4.0
+
+ - **FIX**(core,appcheck,web): start when the browser blocks web storage ([#18946](https://github.com/firebase/flutterfire/issues/18946)). ([229e08e8](https://github.com/firebase/flutterfire/commit/229e08e8f0b197c1eef240db73a716d7f948c2a1))
+ - **FIX**(auth): keep the web Auth emulator across a browser restart ([#18926](https://github.com/firebase/flutterfire/issues/18926)). ([cbf2ab9d](https://github.com/firebase/flutterfire/commit/cbf2ab9dad338c6076e8d214df963c00693d0bd1))
+ - **FIX**(auth,functions,web): rethrow non-Firebase errors instead of crashing in the error mappers ([#18923](https://github.com/firebase/flutterfire/issues/18923)). ([77ebf863](https://github.com/firebase/flutterfire/commit/77ebf863877bf576c2b1b0f3e120a1164b27eb7a))
+ - **FIX**(web): properly cast Map from JSAny?.dartify() ([#18855](https://github.com/firebase/flutterfire/issues/18855)). ([24ff83a3](https://github.com/firebase/flutterfire/commit/24ff83a3a9ca4e4e62130cb5e5f89edbc4351c7f))
+ - **FEAT**(android): migrate plugins to built-in Kotlin on Flutter 3.44 ([#18922](https://github.com/firebase/flutterfire/issues/18922)). ([1abe0561](https://github.com/firebase/flutterfire/commit/1abe05614d03f22782f597f847c1fc9c8c57f016))
+
 ## 6.3.2
 
  - **FIX**(firebase_auth_web): fix Wasm string list cast and dart:io import ([#18847](https://github.com/firebase/flutterfire/issues/18847)). ([0f72c66b](https://github.com/firebase/flutterfire/commit/0f72c66bd23cd98a5b8031400390d7e203d729d6))

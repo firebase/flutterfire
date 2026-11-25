@@ -5,3 +5,11 @@
 void setAuthEmulatorOrigin(String appName, String origin) {}
 
 void clearAuthEmulatorOrigin(String appName) {}
+
+String? getAuthEmulatorOrigin(String appName) => null;
+
+String? getAuthEmulatorOriginLocal(String appName) => null;
+
+void clearAuthEmulatorOriginLocal(String appName) {}
+
+void lockAuthInstanceOnProduction(String appName) {}

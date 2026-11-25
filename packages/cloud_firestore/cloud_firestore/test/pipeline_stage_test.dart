@@ -574,5 +574,202 @@ void main() {
         expect(pipeline.stages[4]['stage'], 'offset');
       });
     });
+
+    group('data manipulation stages', () {
+      test('serializes delete with empty args', () {
+        final pipeline = firestore.pipeline().collection('books').delete();
+        expect(pipeline.stages.last, {
+          'stage': 'delete',
+          'args': <String, dynamic>{},
+        });
+      });
+
+      test('serializes update with no transformed fields', () {
+        final pipeline = firestore.pipeline().collection('books').update();
+        expect(pipeline.stages.last, {
+          'stage': 'update',
+          'args': {'expressions': <Map<String, dynamic>>[]},
+        });
+      });
+
+      test('serializes update transformed fields', () {
+        final pipeline = firestore.pipeline().collection('books').update([
+          Expression.field('rating').as('score'),
+        ]);
+        expect(pipeline.stages.last['stage'], 'update');
+        expect(pipeline.stages.last['args']['expressions'], [
+          {
+            'name': 'alias',
+            'args': {
+              'alias': 'score',
+              'expression': {
+                'name': 'field',
+                'args': {'field': 'rating'},
+              },
+            },
+          },
+        ]);
+      });
+
+      test(
+        'serializes insert with a collection and document id expression',
+        () {
+          final pipeline = firestore
+              .pipeline()
+              .literals([
+                {'title': 'Dune'},
+              ])
+              .insert(
+                collectionPath: 'books',
+                documentId: Expression.constant('dune'),
+              );
+          expect(pipeline.stages.last, {
+            'stage': 'insert',
+            'args': {
+              'collection': 'books',
+              'document_id': {
+                'name': 'constant',
+                'args': {'value': 'dune'},
+              },
+            },
+          });
+        },
+      );
+
+      test('serializes upsert additional fields', () {
+        final pipeline = firestore
+            .pipeline()
+            .collection('books')
+            .upsert(additionalFields: [Expression.field('title').as('name')]);
+        expect(pipeline.stages.last['stage'], 'upsert');
+        expect(pipeline.stages.last['args']['additional_fields'], [
+          {
+            'name': 'alias',
+            'args': {
+              'alias': 'name',
+              'expression': {
+                'name': 'field',
+                'args': {'field': 'title'},
+              },
+            },
+          },
+        ]);
+      });
+
+      test('throws when insert collection path is empty', () {
+        expect(
+          () => firestore
+              .pipeline()
+              .collection('books')
+              .insert(collectionPath: ''),
+          throwsArgumentError,
+        );
+      });
+
+      test('throws when insert collection path is a document path', () {
+        expect(
+          () => firestore
+              .pipeline()
+              .collection('books')
+              .insert(collectionPath: 'books/dune'),
+          throwsArgumentError,
+        );
+      });
+
+      test('accepts a nested collection path', () {
+        final pipeline = firestore
+            .pipeline()
+            .collection('books')
+            .insert(collectionPath: 'books/dune/reviews');
+        expect(
+          pipeline.stages.last['args']['collection'],
+          'books/dune/reviews',
+        );
+      });
+
+      test('serializes insert with only a document id', () {
+        final pipeline = firestore
+            .pipeline()
+            .collection('books')
+            .insert(documentId: Expression.constant('dune'));
+        expect(pipeline.stages.last['args'], {
+          'document_id': {
+            'name': 'constant',
+            'args': {'value': 'dune'},
+          },
+        });
+      });
+
+      test('throws when upsert sets a document id without a collection', () {
+        expect(
+          () => firestore
+              .pipeline()
+              .collection('books')
+              .upsert(documentId: Expression.constant('dune')),
+          throwsArgumentError,
+        );
+      });
+
+      test('write stages fail on non-web before a write is sent', () {
+        final pipelines = [
+          firestore.pipeline().collection('books').delete(),
+          firestore.pipeline().collection('books').update(),
+          firestore.pipeline().collection('books').insert(),
+          firestore.pipeline().collection('books').upsert(),
+          firestore.pipeline().literals([
+            {'name': 'Ada'},
+          ]),
+          firestore
+              .pipeline()
+              .collection('books')
+              .union(
+                firestore.pipeline().literals([
+                  {'name': 'Ada'},
+                ]),
+              ),
+          firestore
+              .pipeline()
+              .collection('books')
+              .union(firestore.pipeline().collection('archive').delete()),
+          firestore
+              .pipeline()
+              .collection('books')
+              .union(firestore.pipeline().collection('archive').update()),
+          firestore
+              .pipeline()
+              .collection('books')
+              .union(firestore.pipeline().collection('archive').insert()),
+          firestore
+              .pipeline()
+              .collection('books')
+              .union(firestore.pipeline().collection('archive').upsert()),
+          firestore
+              .pipeline()
+              .collection('a')
+              .union(
+                firestore
+                    .pipeline()
+                    .collection('b')
+                    .union(
+                      firestore.pipeline().literals([
+                        {'name': 'Ada'},
+                      ]),
+                    ),
+              ),
+        ];
+        for (final pipeline in pipelines) {
+          expect(
+            pipeline.execute(),
+            throwsA(
+              isA<UnsupportedError>().having(
+                (error) => error.message,
+                'message',
+                contains('web only'),
+              ),
+            ),
+          );
+        }
+      });
+    });
   });
 }

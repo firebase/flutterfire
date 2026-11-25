@@ -946,6 +946,73 @@ void main() {
       );
     });
 
+    test('url context missing urlRetrievalStatus', () {
+      final jsonResponse = {
+        'candidates': [
+          {
+            'content': {
+              'role': 'model',
+              'parts': [
+                {'text': 'hello'},
+              ],
+            },
+            'finishReason': 'STOP',
+            'urlContextMetadata': {
+              'urlMetadata': [
+                {'retrievedUrl': 'https://example.com'},
+              ],
+            },
+          },
+        ],
+      };
+      final generateContentResponse = DeveloperSerialization()
+          .parseGenerateContentResponse(jsonResponse);
+      expect(generateContentResponse.text, 'hello');
+      final urlMetadata = generateContentResponse
+          .candidates
+          .first
+          .urlContextMetadata!
+          .urlMetadata
+          .single;
+      expect(urlMetadata.retrievedUrl, Uri.parse('https://example.com'));
+      expect(urlMetadata.urlRetrievalStatus, UrlRetrievalStatus.unspecified);
+    });
+
+    test('url context null urlRetrievalStatus', () {
+      final jsonResponse = {
+        'candidates': [
+          {
+            'content': {
+              'role': 'model',
+              'parts': [
+                {'text': 'hello'},
+              ],
+            },
+            'finishReason': 'STOP',
+            'urlContextMetadata': {
+              'urlMetadata': [
+                {
+                  'retrievedUrl': 'https://example.com',
+                  'urlRetrievalStatus': null,
+                },
+              ],
+            },
+          },
+        ],
+      };
+      final generateContentResponse = DeveloperSerialization()
+          .parseGenerateContentResponse(jsonResponse);
+      expect(generateContentResponse.text, 'hello');
+      final urlMetadata = generateContentResponse
+          .candidates
+          .first
+          .urlContextMetadata!
+          .urlMetadata
+          .single;
+      expect(urlMetadata.retrievedUrl, Uri.parse('https://example.com'));
+      expect(urlMetadata.urlRetrievalStatus, UrlRetrievalStatus.unspecified);
+    });
+
     test('allows missing content', () async {
       const response = '''
 {

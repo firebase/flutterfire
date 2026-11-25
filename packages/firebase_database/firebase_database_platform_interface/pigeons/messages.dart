@@ -97,107 +97,107 @@ class QueryRequest {
 
 @HostApi(dartHostTestHandler: 'TestFirebaseDatabaseHostApi')
 abstract class FirebaseDatabaseHostApi {
-  @async
+  @asyncCallback
   void goOnline(DatabasePigeonFirebaseApp app);
 
-  @async
+  @asyncCallback
   void goOffline(DatabasePigeonFirebaseApp app);
 
-  @async
+  @asyncCallback
   void setPersistenceEnabled(DatabasePigeonFirebaseApp app, bool enabled);
 
-  @async
+  @asyncCallback
   void setPersistenceCacheSizeBytes(
     DatabasePigeonFirebaseApp app,
     int cacheSize,
   );
 
-  @async
+  @asyncCallback
   void setLoggingEnabled(DatabasePigeonFirebaseApp app, bool enabled);
 
-  @async
+  @asyncCallback
   void useDatabaseEmulator(
     DatabasePigeonFirebaseApp app,
     String host,
     int port,
   );
 
-  @async
+  @asyncCallback
   DatabaseReferencePlatform ref(DatabasePigeonFirebaseApp app, [String? path]);
 
-  @async
+  @asyncCallback
   DatabaseReferencePlatform refFromURL(
     DatabasePigeonFirebaseApp app,
     String url,
   );
 
-  @async
+  @asyncCallback
   void purgeOutstandingWrites(DatabasePigeonFirebaseApp app);
 
   // DatabaseReference methods
-  @async
+  @asyncCallback
   void databaseReferenceSet(
     DatabasePigeonFirebaseApp app,
     DatabaseReferenceRequest request,
   );
 
-  @async
+  @asyncCallback
   void databaseReferenceSetWithPriority(
     DatabasePigeonFirebaseApp app,
     DatabaseReferenceRequest request,
   );
 
-  @async
+  @asyncCallback
   void databaseReferenceUpdate(
     DatabasePigeonFirebaseApp app,
     UpdateRequest request,
   );
 
-  @async
+  @asyncCallback
   void databaseReferenceSetPriority(
     DatabasePigeonFirebaseApp app,
     DatabaseReferenceRequest request,
   );
 
-  @async
+  @asyncCallback
   void databaseReferenceRunTransaction(
     DatabasePigeonFirebaseApp app,
     TransactionRequest request,
   );
 
-  @async
+  @asyncCallback
   Map<String, Object?> databaseReferenceGetTransactionResult(
     DatabasePigeonFirebaseApp app,
     int transactionKey,
   );
 
   // OnDisconnect methods
-  @async
+  @asyncCallback
   void onDisconnectSet(
     DatabasePigeonFirebaseApp app,
     DatabaseReferenceRequest request,
   );
 
-  @async
+  @asyncCallback
   void onDisconnectSetWithPriority(
     DatabasePigeonFirebaseApp app,
     DatabaseReferenceRequest request,
   );
 
-  @async
+  @asyncCallback
   void onDisconnectUpdate(DatabasePigeonFirebaseApp app, UpdateRequest request);
 
-  @async
+  @asyncCallback
   void onDisconnectCancel(DatabasePigeonFirebaseApp app, String path);
 
   // Query methods
-  @async
+  @asyncCallback
   String queryObserve(DatabasePigeonFirebaseApp app, QueryRequest request);
 
-  @async
+  @asyncCallback
   void queryKeepSynced(DatabasePigeonFirebaseApp app, QueryRequest request);
 
-  @async
+  @asyncCallback
   Map<String, Object?> queryGet(
     DatabasePigeonFirebaseApp app,
     QueryRequest request,
@@ -219,7 +219,7 @@ class TransactionHandlerResult {
 @FlutterApi()
 // ignore: one_member_abstracts
 abstract class FirebaseDatabaseFlutterApi {
-  @async
+  @asyncCallback
   TransactionHandlerResult callTransactionHandler(
     int transactionKey,
     Object? snapshotValue,
