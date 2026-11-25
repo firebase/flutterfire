@@ -77,6 +77,7 @@ public class FlutterFirebaseMessagingBackgroundGateTest {
   }
 
   @Test
+  @Config(sdk = {28, 33, 34})
   public void manifestFalseSkipsAStoredHandlerAndClearsIt() throws Exception {
     lockKeyguard();
     writeHandles(42L, 99L);
@@ -105,6 +106,7 @@ public class FlutterFirebaseMessagingBackgroundGateTest {
   }
 
   @Test
+  @Config(sdk = {28, 33, 34})
   public void manifestStringFalseSkipsAStoredHandler() throws Exception {
     lockKeyguard();
     writeHandles(42L, 99L);
@@ -116,6 +118,7 @@ public class FlutterFirebaseMessagingBackgroundGateTest {
   }
 
   @Test
+  @Config(sdk = {28, 33, 34})
   public void manifestTrueKeepsAStoredHandler() throws Exception {
     lockKeyguard();
     writeHandles(42L, 99L);
