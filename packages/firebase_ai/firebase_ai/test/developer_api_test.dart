@@ -615,7 +615,6 @@ void main() {
           json,
         );
         expect(response.totalTokens, 123);
-        // ignore: deprecated_member_use_from_same_package
         expect(response.promptTokensDetails, isNull);
       });
 
@@ -631,7 +630,6 @@ void main() {
           json,
         );
         expect(response.totalTokens, 123);
-        // ignore: deprecated_member_use_from_same_package
         final details = response.promptTokensDetails;
         expect(details, isNotNull);
         if (details != null) {
@@ -648,7 +646,6 @@ void main() {
           <String, Object?>{},
         );
         expect(response.totalTokens, 0);
-        // ignore: deprecated_member_use_from_same_package
         expect(response.promptTokensDetails, isNull);
       });
 
@@ -664,7 +661,6 @@ void main() {
             json,
           );
           expect(response.totalTokens, 0);
-          // ignore: deprecated_member_use_from_same_package
           final details = response.promptTokensDetails;
           expect(details, isNotNull);
           if (details != null) {
@@ -685,10 +681,17 @@ void main() {
         );
       });
 
+      test('defaults totalTokens to 0 when neither field is present', () {
+        final response = DeveloperSerialization().parseCountTokensResponse({
+          'wrongKey': 123,
+        });
+        expect(response.totalTokens, 0);
+        expect(response.promptTokensDetails, isNull);
+      });
+
       test('throws unhandledFormat on invalid JSON', () {
         for (final invalid in <Object>[
           'not a map',
-          {'wrongKey': 123},
           {'totalTokens': 'invalid'},
           {'promptTokensDetails': 'invalid'},
         ]) {

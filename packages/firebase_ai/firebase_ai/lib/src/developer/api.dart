@@ -103,7 +103,6 @@ final class DeveloperSerialization implements SerializationStrategy {
     if (jsonObject is! Map) {
       throw unhandledFormat('CountTokensResponse', jsonObject);
     }
-    if (jsonObject.isEmpty) return CountTokensResponse(0);
     final totalTokens = switch (jsonObject) {
       {'totalTokens': final int totalTokens} => totalTokens,
       {'totalTokens': final Object _} => throw unhandledFormat(
@@ -123,9 +122,6 @@ final class DeveloperSerialization implements SerializationStrategy {
       ),
       _ => null,
     };
-    if (totalTokens == null && promptTokensDetails == null) {
-      throw unhandledFormat('CountTokensResponse', jsonObject);
-    }
     return CountTokensResponse(
       totalTokens ?? 0,
       promptTokensDetails: promptTokensDetails,
