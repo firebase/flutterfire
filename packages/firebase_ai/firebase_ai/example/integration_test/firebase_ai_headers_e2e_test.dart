@@ -23,41 +23,40 @@ void main() {
   if (!kIsWeb) {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(
-            const MethodChannel('plugins.flutter.io/firebase_ai'),
-            (MethodCall call) async {
-      if (call.method == 'getPlatformHeaders') {
-        return <String, String>{
-          'X-Android-Package': 'com.example.test',
-          'X-Android-Cert': '12345',
-          'x-ios-bundle-identifier': 'com.example.test',
-        };
-      }
-      return null;
-    });
+          const MethodChannel('plugins.flutter.io/firebase_ai'),
+          (MethodCall call) async {
+            if (call.method == 'getPlatformHeaders') {
+              return <String, String>{
+                'X-Android-Package': 'com.example.test',
+                'X-Android-Cert': '12345',
+                'x-ios-bundle-identifier': 'com.example.test',
+              };
+            }
+            return null;
+          },
+        );
   }
 
   group('platform security headers', () {
     const _channel = MethodChannel('plugins.flutter.io/firebase_ai');
-    testWidgets(
-      'returns non-empty headers on mobile platforms',
-      skip: kIsWeb,
-      (WidgetTester tester) async {
-        final headers = await _channel.invokeMapMethod<String, String>(
-          'getPlatformHeaders',
-        );
+    testWidgets('returns non-empty headers on mobile platforms', skip: kIsWeb, (
+      WidgetTester tester,
+    ) async {
+      final headers = await _channel.invokeMapMethod<String, String>(
+        'getPlatformHeaders',
+      );
 
-        expect(
-          headers,
-          isNotNull,
-          reason: 'Native plugin should return platform headers',
-        );
-        expect(
-          headers,
-          isNotEmpty,
-          reason: 'Native plugin should return non-empty platform headers',
-        );
-      },
-    );
+      expect(
+        headers,
+        isNotNull,
+        reason: 'Native plugin should return platform headers',
+      );
+      expect(
+        headers,
+        isNotEmpty,
+        reason: 'Native plugin should return non-empty platform headers',
+      );
+    });
 
     testWidgets(
       'returns correct Android headers',
@@ -81,7 +80,8 @@ void main() {
 
     testWidgets(
       'returns correct iOS/macOS headers',
-      skip: kIsWeb ||
+      skip:
+          kIsWeb ||
           (defaultTargetPlatform != TargetPlatform.iOS &&
               defaultTargetPlatform != TargetPlatform.macOS),
       (WidgetTester tester) async {
@@ -99,19 +99,15 @@ void main() {
       },
     );
 
-    testWidgets(
-      'returns empty headers on web',
-      skip: !kIsWeb,
-      (WidgetTester tester) async {
-        // On web, no native plugin is registered, so the channel call
-        // should throw a MissingPluginException.
-        expect(
-          () => _channel.invokeMapMethod<String, String>(
-            'getPlatformHeaders',
-          ),
-          throwsA(isA<MissingPluginException>()),
-        );
-      },
-    );
+    testWidgets('returns empty headers on web', skip: !kIsWeb, (
+      WidgetTester tester,
+    ) async {
+      // On web, no native plugin is registered, so the channel call
+      // should throw a MissingPluginException.
+      expect(
+        () => _channel.invokeMapMethod<String, String>('getPlatformHeaders'),
+        throwsA(isA<MissingPluginException>()),
+      );
+    });
   });
 }

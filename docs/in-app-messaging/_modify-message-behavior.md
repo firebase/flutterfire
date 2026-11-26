@@ -48,9 +48,8 @@ In your campaigns, you can specify custom data in a series of key/value pairs.
 When users interact with messages, this data is available for you to, for example,
 display a promo code.
 
-To do so, you will have to use the platform-native APIs.
-See the documentation for [iOS](/docs/in-app-messaging/modify-message-behavior?platform=ios#use_campaign_custom_metadata)
-and [Android](/docs/in-app-messaging/modify-message-behavior?platform=android#use_campaign_custom_metadata).
+When you opt in to [custom Flutter display](/docs/in-app-messaging/customize-messages?platform=flutter),
+those key/value pairs are available on `InAppMessage.data`.
 
 
 ## Temporarily disable in-app messages

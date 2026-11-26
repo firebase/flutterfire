@@ -1,3 +1,15 @@
+## 1.4.0
+
+ - **FEAT**(android): migrate plugins to built-in Kotlin on Flutter 3.44 ([#18922](https://github.com/firebase/flutterfire/issues/18922)). ([1abe0561](https://github.com/firebase/flutterfire/commit/1abe05614d03f22782f597f847c1fc9c8c57f016))
+
+## 1.3.79
+
+ - **FIX**(_flutterfire_internals): tolerate null and non-string values in PlatformException.details (CORE-1) ([#18815](https://github.com/firebase/flutterfire/issues/18815)). ([be29a18d](https://github.com/firebase/flutterfire/commit/be29a18de7ad2de226ac30a26fbaa8c3d7f8212f))
+
+## 1.3.78
+
+ - Update a dependency to the latest release.
+
 ## 1.3.77
 
  - **FIX**(database,windows): fix transaction threwing and native error codes dropped ([#18559](https://github.com/firebase/flutterfire/issues/18559)). ([12f5f32b](https://github.com/firebase/flutterfire/commit/12f5f32b20ad379e7923fd1c22a66ce22f869bf5))

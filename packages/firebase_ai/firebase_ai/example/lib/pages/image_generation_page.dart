@@ -13,9 +13,10 @@
 // limitations under the License.
 
 import 'dart:typed_data';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:firebase_ai/firebase_ai.dart';
 
+import '../constants.dart';
 import '../widgets/message_widget.dart';
 
 class ImageGenerationPage extends StatefulWidget {
@@ -54,7 +55,7 @@ class _ImageGenerationPageState extends State<ImageGenerationPage> {
         : FirebaseAI.googleAI();
 
     _model = aiClient.generativeModel(
-      model: 'gemini-2.5-flash-image',
+      model: ExampleModels.flashImage,
       generationConfig: GenerationConfig(
         responseModalities: [ResponseModalities.text, ResponseModalities.image],
       ),
@@ -106,7 +107,8 @@ class _ImageGenerationPageState extends State<ImageGenerationPage> {
       setState(() {
         _messages.add(
           MessageData(
-            text: (textResponse ?? '') +
+            text:
+                (textResponse ?? '') +
                 (imageBytes != null
                     ? '\nGenerated Image:'
                     : 'No picture generated'),
@@ -132,9 +134,7 @@ class _ImageGenerationPageState extends State<ImageGenerationPage> {
       builder: (context) {
         return AlertDialog(
           title: const Text('Something went wrong'),
-          content: SingleChildScrollView(
-            child: SelectableText(message),
-          ),
+          content: SingleChildScrollView(child: SelectableText(message)),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
@@ -149,9 +149,7 @@ class _ImageGenerationPageState extends State<ImageGenerationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
+      appBar: AppBar(title: Text(widget.title)),
       body: Padding(
         padding: const EdgeInsets.all(8),
         child: Column(
@@ -194,9 +192,7 @@ class _ImageGenerationPageState extends State<ImageGenerationPage> {
                             ),
                           ),
                           items: [
-                            const DropdownMenuItem(
-                              child: Text('Default'),
-                            ),
+                            const DropdownMenuItem(child: Text('Default')),
                             ...ImageAspectRatio.values.map(
                               (e) => DropdownMenuItem(
                                 value: e,
@@ -224,9 +220,7 @@ class _ImageGenerationPageState extends State<ImageGenerationPage> {
                             ),
                           ),
                           items: [
-                            const DropdownMenuItem(
-                              child: Text('Default'),
-                            ),
+                            const DropdownMenuItem(child: Text('Default')),
                             ...ImageSize.values.map(
                               (e) => DropdownMenuItem(
                                 value: e,

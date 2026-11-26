@@ -14,20 +14,20 @@ class UserInfo {
 
   @protected
   UserInfo.fromJson(Map<dynamic, dynamic> data)
-      : _data = InternalUserInfo(
-          uid: data['uid'] as String,
-          email: data['email'] as String?,
-          displayName: data['displayName'] as String?,
-          photoUrl: data['photoUrl'] as String?,
-          phoneNumber: data['phoneNumber'] as String?,
-          isAnonymous: data['isAnonymous'] as bool,
-          isEmailVerified: data['isEmailVerified'] as bool,
-          providerId: data['providerId'] as String?,
-          tenantId: data['tenantId'] as String?,
-          refreshToken: data['refreshToken'] as String?,
-          creationTimestamp: data['creationTimestamp'] as int?,
-          lastSignInTimestamp: data['lastSignInTimestamp'] as int?,
-        );
+    : _data = InternalUserInfo(
+        uid: data['uid'] as String,
+        email: data['email'] as String?,
+        displayName: data['displayName'] as String?,
+        photoUrl: data['photoUrl'] as String?,
+        phoneNumber: data['phoneNumber'] as String?,
+        isAnonymous: data['isAnonymous'] as bool,
+        isEmailVerified: data['isEmailVerified'] as bool,
+        providerId: data['providerId'] as String?,
+        tenantId: data['tenantId'] as String?,
+        refreshToken: data['refreshToken'] as String?,
+        creationTimestamp: data['creationTimestamp'] as int?,
+        lastSignInTimestamp: data['lastSignInTimestamp'] as int?,
+      );
 
   final InternalUserInfo _data;
 

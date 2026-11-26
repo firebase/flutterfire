@@ -32,11 +32,11 @@ void main() {
             User? user;
             UserCredential userCredential;
 
-            userCredential =
-                await FirebaseAuth.instance.createUserWithEmailAndPassword(
-              email: email,
-              password: testPassword,
-            );
+            userCredential = await FirebaseAuth.instance
+                .createUserWithEmailAndPassword(
+                  email: email,
+                  password: testPassword,
+                );
             user = userCredential.user;
 
             // Test
@@ -46,46 +46,50 @@ void main() {
             expect(token?.length, greaterThan(24));
           });
 
-          test('should return a token using `getIdToken()` after sign in',
-              () async {
-            // Demonstrate fix for this issue works: https://github.com/firebase/flutterfire/issues/11297
-            String email = generateRandomEmail();
+          test(
+            'should return a token using `getIdToken()` after sign in',
+            () async {
+              // Demonstrate fix for this issue works: https://github.com/firebase/flutterfire/issues/11297
+              String email = generateRandomEmail();
 
-            final userCredential =
-                await FirebaseAuth.instance.createUserWithEmailAndPassword(
-              email: email,
-              password: testPassword,
-            );
+              final userCredential = await FirebaseAuth.instance
+                  .createUserWithEmailAndPassword(
+                    email: email,
+                    password: testPassword,
+                  );
 
-            String? token = await userCredential.user!.getIdToken(true);
+              String? token = await userCredential.user!.getIdToken(true);
 
-            expect(token?.length, greaterThan(24));
-          });
+              expect(token?.length, greaterThan(24));
+            },
+          );
 
-          test('should return a token using `getIdTokenResult()` after sign in',
-              () async {
-            // Demonstrate fix for this issue works: https://github.com/firebase/flutterfire/issues/11297
-            String email = generateRandomEmail();
+          test(
+            'should return a token using `getIdTokenResult()` after sign in',
+            () async {
+              // Demonstrate fix for this issue works: https://github.com/firebase/flutterfire/issues/11297
+              String email = generateRandomEmail();
 
-            final userCredential =
-                await FirebaseAuth.instance.createUserWithEmailAndPassword(
-              email: email,
-              password: testPassword,
-            );
+              final userCredential = await FirebaseAuth.instance
+                  .createUserWithEmailAndPassword(
+                    email: email,
+                    password: testPassword,
+                  );
 
-            IdTokenResult result =
-                await userCredential.user!.getIdTokenResult(true);
+              IdTokenResult result = await userCredential.user!
+                  .getIdTokenResult(true);
 
-            expect(result.token?.length, greaterThan(24));
-          });
+              expect(result.token?.length, greaterThan(24));
+            },
+          );
 
           test('should catch error', () async {
             // Setup
-            final userCredential =
-                await FirebaseAuth.instance.createUserWithEmailAndPassword(
-              email: email,
-              password: testPassword,
-            );
+            final userCredential = await FirebaseAuth.instance
+                .createUserWithEmailAndPassword(
+                  email: email,
+                  password: testPassword,
+                );
             final user = userCredential.user!;
 
             // needed for method to throw an error
@@ -101,8 +105,35 @@ void main() {
             }
             fail('should have thrown an error');
           });
+
+          test(
+            'should return user-disabled when a forced refresh is refused',
+            () async {
+              // Demonstrate fix for https://github.com/firebase/flutterfire/issues/18955
+              final userCredential = await FirebaseAuth.instance
+                  .createUserWithEmailAndPassword(
+                    email: generateRandomEmail(),
+                    password: testPassword,
+                  );
+              final user = userCredential.user;
+              if (user == null) {
+                fail('User should not be null');
+              }
+
+              await emulatorDisableUser(user.uid);
+
+              try {
+                await user.getIdToken(true);
+              } on FirebaseAuthException catch (e) {
+                expect(e.code, 'user-disabled');
+                return;
+              }
+              fail('should have thrown a FirebaseAuthException');
+            },
+          );
         },
-        skip: !kIsWeb &&
+        skip:
+            !kIsWeb &&
             (defaultTargetPlatform == TargetPlatform.windows ||
                 defaultTargetPlatform == TargetPlatform.macOS),
       );
@@ -112,11 +143,11 @@ void main() {
           'should return a valid IdTokenResult Object',
           () async {
             // Setup
-            final userCredential =
-                await FirebaseAuth.instance.createUserWithEmailAndPassword(
-              email: email,
-              password: testPassword,
-            );
+            final userCredential = await FirebaseAuth.instance
+                .createUserWithEmailAndPassword(
+                  email: email,
+                  password: testPassword,
+                );
             final user = userCredential.user!;
 
             // Test
@@ -130,7 +161,8 @@ void main() {
             expect(idTokenResult.token!.length, greaterThan(24));
             expect(idTokenResult.signInProvider, equals('password'));
           },
-          skip: !kIsWeb &&
+          skip:
+              !kIsWeb &&
               (defaultTargetPlatform == TargetPlatform.windows ||
                   defaultTargetPlatform == TargetPlatform.macOS),
         );
@@ -144,13 +176,15 @@ void main() {
             await FirebaseAuth.instance.signInAnonymously();
             final currentUID = FirebaseAuth.instance.currentUser!.uid;
 
-            final linkedUserCredential =
-                await FirebaseAuth.instance.currentUser!.linkWithCredential(
-              EmailAuthProvider.credential(
-                email: email,
-                password: testPassword,
-              ),
-            );
+            final linkedUserCredential = await FirebaseAuth
+                .instance
+                .currentUser!
+                .linkWithCredential(
+                  EmailAuthProvider.credential(
+                    email: email,
+                    password: testPassword,
+                  ),
+                );
 
             final linkedUser = linkedUserCredential.user!;
             expect(linkedUser.email, equals(email));
@@ -162,39 +196,41 @@ void main() {
             expect(linkedUser.isAnonymous, isFalse);
           });
 
-          test('should error on link anon <-> email if email already exists',
-              () async {
-            // Setup
+          test(
+            'should error on link anon <-> email if email already exists',
+            () async {
+              // Setup
 
-            await FirebaseAuth.instance.createUserWithEmailAndPassword(
-              email: email,
-              password: testPassword,
-            );
-            await FirebaseAuth.instance.signInAnonymously();
-
-            // Test
-            try {
-              await FirebaseAuth.instance.currentUser!.linkWithCredential(
-                EmailAuthProvider.credential(
-                  email: email,
-                  password: testPassword,
-                ),
+              await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                email: email,
+                password: testPassword,
               );
-            } on FirebaseAuthException catch (e) {
-              // Assertions
-              expect(e.code, 'email-already-in-use');
-              expect(
-                e.message,
-                'The email address is already in use by another account.',
-              );
+              await FirebaseAuth.instance.signInAnonymously();
 
-              // clean up
-              await FirebaseAuth.instance.currentUser!.delete();
-              return;
-            }
+              // Test
+              try {
+                await FirebaseAuth.instance.currentUser!.linkWithCredential(
+                  EmailAuthProvider.credential(
+                    email: email,
+                    password: testPassword,
+                  ),
+                );
+              } on FirebaseAuthException catch (e) {
+                // Assertions
+                expect(e.code, 'email-already-in-use');
+                expect(
+                  e.message,
+                  'The email address is already in use by another account.',
+                );
 
-            fail('should have thrown an error');
-          });
+                // clean up
+                await FirebaseAuth.instance.currentUser!.delete();
+                return;
+              }
+
+              fail('should have thrown an error');
+            },
+          );
 
           test(
             'should link anonymous account <-> phone account',
@@ -230,8 +266,9 @@ void main() {
               await FirebaseAuth.instance.currentUser!.linkWithCredential(
                 PhoneAuthProvider.credential(
                   verificationId: storedVerificationId,
-                  smsCode:
-                      (await emulatorPhoneVerificationCode(testPhoneNumber))!,
+                  smsCode: (await emulatorPhoneVerificationCode(
+                    testPhoneNumber,
+                  ))!,
                 ),
               );
               expect(FirebaseAuth.instance.currentUser, equals(isA<User>()));
@@ -252,11 +289,13 @@ void main() {
                 equals(isA<UserInfo>()),
               );
               expect(FirebaseAuth.instance.currentUser!.isAnonymous, isFalse);
-              await FirebaseAuth.instance.currentUser
-                  ?.unlink(PhoneAuthProvider.PROVIDER_ID);
+              await FirebaseAuth.instance.currentUser?.unlink(
+                PhoneAuthProvider.PROVIDER_ID,
+              );
               await FirebaseAuth.instance.currentUser?.delete();
             },
-            skip: kIsWeb ||
+            skip:
+                kIsWeb ||
                 defaultTargetPlatform == TargetPlatform.macOS ||
                 defaultTargetPlatform == TargetPlatform.windows,
           ); // verifyPhoneNumber not supported on web.
@@ -289,26 +328,58 @@ void main() {
 
               fail('should have thrown an error');
             },
-            skip: defaultTargetPlatform == TargetPlatform.macOS ||
+            skip:
+                defaultTargetPlatform == TargetPlatform.macOS ||
                 defaultTargetPlatform == TargetPlatform.windows,
           );
         },
-        skip: !kIsWeb &&
+        skip:
+            !kIsWeb &&
             (defaultTargetPlatform == TargetPlatform.windows ||
                 defaultTargetPlatform == TargetPlatform.macOS),
       );
 
-      group(
-        'reauthenticateWithCredential()',
-        () {
-          test('should reauthenticate correctly', () async {
-            // Setup
-            await FirebaseAuth.instance.createUserWithEmailAndPassword(
-              email: email,
-              password: testPassword,
-            );
-            final initialUser = FirebaseAuth.instance.currentUser;
+      group('reauthenticateWithCredential()', () {
+        test('should reauthenticate correctly', () async {
+          // Setup
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+            email: email,
+            password: testPassword,
+          );
+          final initialUser = FirebaseAuth.instance.currentUser;
 
+          // Test
+          AuthCredential credential = EmailAuthProvider.credential(
+            email: email,
+            password: testPassword,
+          );
+          await FirebaseAuth.instance.currentUser!.reauthenticateWithCredential(
+            credential,
+          );
+
+          // Assertions
+          final currentUser = FirebaseAuth.instance.currentUser;
+          expect(currentUser, isNot(equals(null)));
+          expect(initialUser, isNot(equals(null)));
+          expect(currentUser?.email, equals(email));
+          expect(currentUser?.uid, equals(initialUser?.uid));
+        });
+
+        test('should throw user-mismatch ', () async {
+          // Setup
+          String emailAlready = generateRandomEmail();
+
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+            email: email,
+            password: testPassword,
+          );
+
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+            email: emailAlready,
+            password: testPassword,
+          );
+
+          try {
             // Test
             AuthCredential credential = EmailAuthProvider.credential(
               email: email,
@@ -316,119 +387,96 @@ void main() {
             );
             await FirebaseAuth.instance.currentUser!
                 .reauthenticateWithCredential(credential);
-
+          } on FirebaseAuthException catch (e) {
             // Assertions
-            final currentUser = FirebaseAuth.instance.currentUser;
-            expect(currentUser, isNot(equals(null)));
-            expect(initialUser, isNot(equals(null)));
-            expect(currentUser?.email, equals(email));
-            expect(currentUser?.uid, equals(initialUser?.uid));
-          });
-
-          test('should throw user-mismatch ', () async {
-            // Setup
-            String emailAlready = generateRandomEmail();
-
-            await FirebaseAuth.instance.createUserWithEmailAndPassword(
-              email: email,
-              password: testPassword,
-            );
-
-            await FirebaseAuth.instance.createUserWithEmailAndPassword(
-              email: emailAlready,
-              password: testPassword,
-            );
-
-            try {
-              // Test
-              AuthCredential credential = EmailAuthProvider.credential(
-                email: email,
-                password: testPassword,
-              );
-              await FirebaseAuth.instance.currentUser!
-                  .reauthenticateWithCredential(credential);
-            } on FirebaseAuthException catch (e) {
-              // Assertions
-              expect(e.code, equals('user-mismatch'));
-              expect(
-                e.message,
+            expect(e.code, equals('user-mismatch'));
+            expect(
+              e.message,
+              anyOf(
                 equals(
                   'The supplied credentials do not correspond to the previously signed in user.',
                 ),
-              );
-              await FirebaseAuth.instance.currentUser!.delete(); //clean up
-              return;
-            } catch (e) {
-              fail('should have thrown an FirebaseAuthException');
-            }
-
-            fail('should have thrown an error');
-          });
-
-          test('should throw user-not-found or user-mismatch ', () async {
-            // Setup
-            final userCredential =
-                await FirebaseAuth.instance.createUserWithEmailAndPassword(
-              email: email,
-              password: testPassword,
+                // Windows C++ SDK omits the trailing period.
+                equals(
+                  'The supplied credentials do not correspond to the previously signed in user',
+                ),
+              ),
             );
-            final user = userCredential.user;
+            await FirebaseAuth.instance.currentUser!.delete(); //clean up
+            return;
+          } catch (e) {
+            fail('should have thrown an FirebaseAuthException');
+          }
 
-            try {
-              // Test
-              AuthCredential credential = EmailAuthProvider.credential(
-                email: 'userdoesnotexist@foobar.com',
+          fail('should have thrown an error');
+        });
+
+        test('should throw user-not-found or user-mismatch ', () async {
+          // Setup
+          final userCredential = await FirebaseAuth.instance
+              .createUserWithEmailAndPassword(
+                email: email,
                 password: testPassword,
               );
-              await user!.reauthenticateWithCredential(credential);
-            } on FirebaseAuthException catch (e) {
-              // Platforms throw different errors. For now, leave them as is
-              // but in future we might want to edit them before sending to user.
-              if (e.code != 'user-mismatch' && e.code != 'user-not-found') {
-                fail('should have thrown a valid error code (got ${e.code}');
-              }
+          final user = userCredential.user;
 
-              return;
-            } catch (e) {
-              fail('should have thrown an FirebaseAuthException');
-            }
-
-            fail('should have thrown an error');
-          });
-
-          test('should throw wrong-password ', () async {
-            // Setup
-            await FirebaseAuth.instance.createUserWithEmailAndPassword(
-              email: email,
+          try {
+            // Test
+            AuthCredential credential = EmailAuthProvider.credential(
+              email: 'userdoesnotexist@foobar.com',
               password: testPassword,
             );
-
-            try {
-              // Test
-              AuthCredential credential = EmailAuthProvider.credential(
-                email: email,
-                password: 'WRONG_testPassword',
-              );
-              await FirebaseAuth.instance.currentUser!
-                  .reauthenticateWithCredential(credential);
-            } on FirebaseAuthException catch (e) {
-              // Assertions
-              expect(e.code, equals('wrong-password'));
-              expect(
-                e.message,
-                equals(
-                  'The password is invalid or the user does not have a password.',
-                ),
-              );
-              return;
-            } catch (e) {
-              fail('should have thrown an FirebaseAuthException');
+            await user!.reauthenticateWithCredential(credential);
+          } on FirebaseAuthException catch (e) {
+            // Platforms throw different errors. For now, leave them as is
+            // but in future we might want to edit them before sending to user.
+            if (e.code != 'user-mismatch' && e.code != 'user-not-found') {
+              fail('should have thrown a valid error code (got ${e.code}');
             }
 
-            fail('should have thrown an error');
-          });
+            return;
+          } catch (e) {
+            fail('should have thrown an FirebaseAuthException');
+          }
 
-          test('should throw wrong-password ', () async {
+          fail('should have thrown an error');
+        });
+
+        test('should throw wrong-password ', () async {
+          // Setup
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+            email: email,
+            password: testPassword,
+          );
+
+          try {
+            // Test
+            AuthCredential credential = EmailAuthProvider.credential(
+              email: email,
+              password: 'WRONG_testPassword',
+            );
+            await FirebaseAuth.instance.currentUser!
+                .reauthenticateWithCredential(credential);
+          } on FirebaseAuthException catch (e) {
+            // Assertions
+            expect(e.code, equals('wrong-password'));
+            expect(
+              e.message,
+              equals(
+                'The password is invalid or the user does not have a password.',
+              ),
+            );
+            return;
+          } catch (e) {
+            fail('should have thrown an FirebaseAuthException');
+          }
+
+          fail('should have thrown an error');
+        });
+
+        test(
+          'should throw wrong-password ',
+          () async {
             // Setup
             final email = generateRandomEmail();
             await FirebaseAuth.instance.createUserWithEmailAndPassword(
@@ -455,12 +503,15 @@ void main() {
                     ),
               ),
             );
-          });
-        },
-        skip: !kIsWeb &&
-            (defaultTargetPlatform == TargetPlatform.windows ||
-                defaultTargetPlatform == TargetPlatform.macOS),
-      );
+          },
+          // Exercises signInWithEmailAndPassword, not reauthenticateWithCredential.
+          // A test-level skip overrides the group skip, so include macOS here too.
+          skip:
+              !kIsWeb &&
+              (defaultTargetPlatform == TargetPlatform.windows ||
+                  defaultTargetPlatform == TargetPlatform.macOS),
+        );
+      }, skip: !kIsWeb && defaultTargetPlatform == TargetPlatform.macOS);
 
       group('reload()', () {
         test('should not error', () async {
@@ -499,12 +550,10 @@ void main() {
               FirebaseAuth.instance.currentUser!.photoURL,
               'http://photo.url/test.jpg',
             );
-            expect(
-              FirebaseAuth.instance.currentUser!.displayName,
-              isNull,
-            );
+            expect(FirebaseAuth.instance.currentUser!.displayName, isNull);
           },
-          skip: kIsWeb ||
+          skip:
+              kIsWeb ||
               defaultTargetPlatform == TargetPlatform.macOS ||
               defaultTargetPlatform == TargetPlatform.windows,
         );
@@ -520,12 +569,10 @@ void main() {
             // User created without photoURL — reload should not crash
             await FirebaseAuth.instance.currentUser!.reload();
 
-            expect(
-              FirebaseAuth.instance.currentUser!.photoURL,
-              isNull,
-            );
+            expect(FirebaseAuth.instance.currentUser!.photoURL, isNull);
           },
-          skip: kIsWeb ||
+          skip:
+              kIsWeb ||
               defaultTargetPlatform == TargetPlatform.macOS ||
               defaultTargetPlatform == TargetPlatform.windows,
         );
@@ -562,20 +609,23 @@ void main() {
 
               // Test
               try {
-                await FirebaseAuth.instance.currentUser!
-                    .sendEmailVerification(actionCodeSettings);
+                await FirebaseAuth.instance.currentUser!.sendEmailVerification(
+                  actionCodeSettings,
+                );
               } catch (error) {
                 fail('$error');
               }
               expect(FirebaseAuth.instance.currentUser, isNotNull);
             },
             // macOS skipped because it needs keychain sharing entitlement. See: https://github.com/firebase/flutterfire/issues/9538
-            skip: kIsWeb ||
+            skip:
+                kIsWeb ||
                 defaultTargetPlatform == TargetPlatform.macOS ||
                 defaultTargetPlatform == TargetPlatform.windows,
           );
         },
-        skip: !kIsWeb &&
+        skip:
+            !kIsWeb &&
             (defaultTargetPlatform == TargetPlatform.windows ||
                 defaultTargetPlatform == TargetPlatform.macOS),
       );
@@ -591,8 +641,9 @@ void main() {
               email: email,
               password: testPassword,
             );
-            await FirebaseAuth.instance.currentUser!
-                .linkWithCredential(credential);
+            await FirebaseAuth.instance.currentUser!.linkWithCredential(
+              credential,
+            );
 
             // verify user is linked
             final linkedUser = FirebaseAuth.instance.currentUser;
@@ -601,8 +652,9 @@ void main() {
             expect(linkedUser?.providerData.length, equals(1));
 
             // Test
-            await FirebaseAuth.instance.currentUser!
-                .unlink(EmailAuthProvider.PROVIDER_ID);
+            await FirebaseAuth.instance.currentUser!.unlink(
+              EmailAuthProvider.PROVIDER_ID,
+            );
 
             // Assertions
             final unlinkedUser = FirebaseAuth.instance.currentUser;
@@ -610,60 +662,67 @@ void main() {
             expect(unlinkedUser?.providerData.length, equals(0));
           });
 
-          test('should throw error if provider id given does not exist',
-              () async {
-            // Setup
-            await FirebaseAuth.instance.signInAnonymously();
+          test(
+            'should throw error if provider id given does not exist',
+            () async {
+              // Setup
+              await FirebaseAuth.instance.signInAnonymously();
 
-            AuthCredential credential = EmailAuthProvider.credential(
-              email: email,
-              password: testPassword,
-            );
-            await FirebaseAuth.instance.currentUser!
-                .linkWithCredential(credential);
-
-            // verify user is linked
-            final linkedUser = FirebaseAuth.instance.currentUser;
-            expect(linkedUser?.email, email);
-
-            // Test
-            try {
-              await FirebaseAuth.instance.currentUser!.unlink('invalid');
-            } on FirebaseAuthException catch (e) {
-              expect(e.code, 'no-such-provider');
-              expect(
-                e.message,
-                'User was not linked to an account with the given provider.',
+              AuthCredential credential = EmailAuthProvider.credential(
+                email: email,
+                password: testPassword,
               );
-              return;
-            } catch (e) {
-              fail('should have thrown an FirebaseAuthException error');
-            }
-            fail('should have thrown an error');
-          });
-
-          test('should throw error if user does not have this provider linked',
-              () async {
-            // Setup
-            await FirebaseAuth.instance.signInAnonymously();
-            // Test
-            try {
-              await FirebaseAuth.instance.currentUser!
-                  .unlink(EmailAuthProvider.PROVIDER_ID);
-            } on FirebaseAuthException catch (e) {
-              expect(e.code, 'no-such-provider');
-              expect(
-                e.message,
-                'User was not linked to an account with the given provider.',
+              await FirebaseAuth.instance.currentUser!.linkWithCredential(
+                credential,
               );
-              return;
-            } catch (e) {
-              fail('should have thrown an FirebaseAuthException error');
-            }
-            fail('should have thrown an error');
-          });
+
+              // verify user is linked
+              final linkedUser = FirebaseAuth.instance.currentUser;
+              expect(linkedUser?.email, email);
+
+              // Test
+              try {
+                await FirebaseAuth.instance.currentUser!.unlink('invalid');
+              } on FirebaseAuthException catch (e) {
+                expect(e.code, 'no-such-provider');
+                expect(
+                  e.message,
+                  'User was not linked to an account with the given provider.',
+                );
+                return;
+              } catch (e) {
+                fail('should have thrown an FirebaseAuthException error');
+              }
+              fail('should have thrown an error');
+            },
+          );
+
+          test(
+            'should throw error if user does not have this provider linked',
+            () async {
+              // Setup
+              await FirebaseAuth.instance.signInAnonymously();
+              // Test
+              try {
+                await FirebaseAuth.instance.currentUser!.unlink(
+                  EmailAuthProvider.PROVIDER_ID,
+                );
+              } on FirebaseAuthException catch (e) {
+                expect(e.code, 'no-such-provider');
+                expect(
+                  e.message,
+                  'User was not linked to an account with the given provider.',
+                );
+                return;
+              } catch (e) {
+                fail('should have thrown an FirebaseAuthException error');
+              }
+              fail('should have thrown an error');
+            },
+          );
         },
-        skip: !kIsWeb &&
+        skip:
+            !kIsWeb &&
             (defaultTargetPlatform == TargetPlatform.windows ||
                 defaultTargetPlatform == TargetPlatform.macOS),
       );
@@ -675,8 +734,10 @@ void main() {
             String pass = '${testPassword}1';
             String pass2 = '${testPassword}2';
             // Setup
-            await FirebaseAuth.instance
-                .createUserWithEmailAndPassword(email: email, password: pass);
+            await FirebaseAuth.instance.createUserWithEmailAndPassword(
+              email: email,
+              password: pass,
+            );
 
             // Update user password
             await FirebaseAuth.instance.currentUser!.updatePassword(pass2);
@@ -685,8 +746,10 @@ void main() {
             await FirebaseAuth.instance.signOut();
 
             // Log in with the new password
-            await FirebaseAuth.instance
-                .signInWithEmailAndPassword(email: email, password: pass2);
+            await FirebaseAuth.instance.signInWithEmailAndPassword(
+              email: email,
+              password: pass2,
+            );
 
             // Assertions
             expect(FirebaseAuth.instance.currentUser, isA<Object>());
@@ -713,126 +776,120 @@ void main() {
             fail('should have thrown an error');
           });
         },
-        skip: !kIsWeb &&
+        skip:
+            !kIsWeb &&
             (defaultTargetPlatform == TargetPlatform.windows ||
                 defaultTargetPlatform == TargetPlatform.macOS),
       );
 
-      group(
-        'refreshToken',
-        () {
-          test(
-            'should throw an unsupported error on non web platforms',
-            () async {
-              // Setup
-              await FirebaseAuth.instance.signInAnonymously();
+      group('refreshToken', () {
+        test(
+          'should throw an unsupported error on non web platforms',
+          () async {
+            // Setup
+            await FirebaseAuth.instance.signInAnonymously();
 
-              // Test
-              FirebaseAuth.instance.currentUser!.refreshToken;
+            // Test
+            FirebaseAuth.instance.currentUser!.refreshToken;
 
-              // Assertions
-              expect(
-                FirebaseAuth.instance.currentUser!.refreshToken,
-                isNull,
-              );
-            },
-            // macOS skipped because it needs keychain sharing entitlement. See: https://github.com/firebase/flutterfire/issues/9538
-            // iOS supports it
-            skip: kIsWeb ||
-                defaultTargetPlatform == TargetPlatform.macOS ||
-                defaultTargetPlatform == TargetPlatform.iOS,
+            // Assertions
+            expect(FirebaseAuth.instance.currentUser!.refreshToken, isNull);
+          },
+          // macOS skipped because it needs keychain sharing entitlement. See: https://github.com/firebase/flutterfire/issues/9538
+          // iOS supports it
+          skip:
+              kIsWeb ||
+              defaultTargetPlatform == TargetPlatform.macOS ||
+              defaultTargetPlatform == TargetPlatform.iOS,
+        );
+
+        test('should return a token on web', () async {
+          // Setup
+          await FirebaseAuth.instance.signInAnonymously();
+
+          // Test
+          FirebaseAuth.instance.currentUser!.refreshToken;
+
+          // Assertions
+          expect(
+            FirebaseAuth.instance.currentUser!.refreshToken,
+            isA<String>(),
           );
-
-          test(
-            'should return a token on web',
-            () async {
-              // Setup
-              await FirebaseAuth.instance.signInAnonymously();
-
-              // Test
-              FirebaseAuth.instance.currentUser!.refreshToken;
-
-              // Assertions
-              expect(
-                FirebaseAuth.instance.currentUser!.refreshToken,
-                isA<String>(),
-              );
-              expect(
-                FirebaseAuth.instance.currentUser!.refreshToken!.isEmpty,
-                isFalse,
-              );
-            },
-            skip: !kIsWeb,
+          expect(
+            FirebaseAuth.instance.currentUser!.refreshToken!.isEmpty,
+            isFalse,
           );
-        },
-        skip: !kIsWeb && defaultTargetPlatform == TargetPlatform.windows,
-      );
+        }, skip: !kIsWeb);
+      }, skip: !kIsWeb && defaultTargetPlatform == TargetPlatform.windows);
 
       group(
         'user.metadata',
         () {
           test(
-              "should have the properties 'lastSignInTime' & 'creationTime' which are ISO strings",
-              () async {
-            // Setup
-            await FirebaseAuth.instance.createUserWithEmailAndPassword(
-              email: generateRandomEmail(),
-              password: testPassword,
-            );
-            final user = FirebaseAuth.instance.currentUser;
+            "should have the properties 'lastSignInTime' & 'creationTime' which are ISO strings",
+            () async {
+              // Setup
+              await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                email: generateRandomEmail(),
+                password: testPassword,
+              );
+              final user = FirebaseAuth.instance.currentUser;
 
-            // Test
-            final metadata = user?.metadata;
+              // Test
+              final metadata = user?.metadata;
 
-            // Assertions
-            expect(metadata?.lastSignInTime, isA<DateTime>());
-            expect(metadata?.lastSignInTime!.year, DateTime.now().year);
-            expect(metadata?.creationTime, isA<DateTime>());
-            expect(metadata?.creationTime!.year, DateTime.now().year);
-          });
+              // Assertions
+              expect(metadata?.lastSignInTime, isA<DateTime>());
+              expect(metadata?.lastSignInTime!.year, DateTime.now().year);
+              expect(metadata?.creationTime, isA<DateTime>());
+              expect(metadata?.creationTime!.year, DateTime.now().year);
+            },
+          );
         },
-        skip: !kIsWeb &&
+        skip:
+            !kIsWeb &&
             (defaultTargetPlatform == TargetPlatform.windows ||
                 defaultTargetPlatform == TargetPlatform.macOS),
       );
 
       group('updateDisplayName', () {
-        test('updates the user displayName without impacting the photoURL',
-            () async {
-          // First create a user with a photo
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
-            email: email,
-            password: testPassword,
-          );
-          await FirebaseAuth.instance.currentUser!
-              .updateDisplayName('Mona Lisa');
-          await FirebaseAuth.instance.currentUser!.updatePhotoURL(
-            'http://photo.url/test.jpg',
-          );
-          await FirebaseAuth.instance.currentUser!.reload();
+        test(
+          'updates the user displayName without impacting the photoURL',
+          () async {
+            // First create a user with a photo
+            await FirebaseAuth.instance.createUserWithEmailAndPassword(
+              email: email,
+              password: testPassword,
+            );
+            await FirebaseAuth.instance.currentUser!.updateDisplayName(
+              'Mona Lisa',
+            );
+            await FirebaseAuth.instance.currentUser!.updatePhotoURL(
+              'http://photo.url/test.jpg',
+            );
+            await FirebaseAuth.instance.currentUser!.reload();
 
-          expect(
-            FirebaseAuth.instance.currentUser!.photoURL,
-            'http://photo.url/test.jpg',
-          );
-          expect(
-            FirebaseAuth.instance.currentUser!.displayName,
-            'Mona Lisa',
-          );
+            expect(
+              FirebaseAuth.instance.currentUser!.photoURL,
+              'http://photo.url/test.jpg',
+            );
+            expect(FirebaseAuth.instance.currentUser!.displayName, 'Mona Lisa');
 
-          await FirebaseAuth.instance.currentUser!
-              .updateDisplayName('John Smith');
-          await FirebaseAuth.instance.currentUser!.reload();
+            await FirebaseAuth.instance.currentUser!.updateDisplayName(
+              'John Smith',
+            );
+            await FirebaseAuth.instance.currentUser!.reload();
 
-          expect(
-            FirebaseAuth.instance.currentUser!.photoURL,
-            'http://photo.url/test.jpg',
-          );
-          expect(
-            FirebaseAuth.instance.currentUser!.displayName,
-            'John Smith',
-          );
-        });
+            expect(
+              FirebaseAuth.instance.currentUser!.photoURL,
+              'http://photo.url/test.jpg',
+            );
+            expect(
+              FirebaseAuth.instance.currentUser!.displayName,
+              'John Smith',
+            );
+          },
+        );
 
         test(
           'can set the displayName to null',
@@ -842,39 +899,34 @@ void main() {
               email: email,
               password: testPassword,
             );
-            await FirebaseAuth.instance.currentUser!
-                .updateDisplayName('Mona Lisa');
+            await FirebaseAuth.instance.currentUser!.updateDisplayName(
+              'Mona Lisa',
+            );
             await FirebaseAuth.instance.currentUser!.reload();
 
             // Just checking that the user indeed had a name before we set it to null
-            expect(
-              FirebaseAuth.instance.currentUser!.displayName,
-              isNotNull,
-            );
+            expect(FirebaseAuth.instance.currentUser!.displayName, isNotNull);
 
             await FirebaseAuth.instance.currentUser!.updateDisplayName(null);
             await FirebaseAuth.instance.currentUser!.reload();
 
-            expect(
-              FirebaseAuth.instance.currentUser!.displayName,
-              isNull,
-            );
+            expect(FirebaseAuth.instance.currentUser!.displayName, isNull);
             // Skip apple CI because of https://github.com/firebase/firebase-ios-sdk/issues/8149
             // Using `kIsWeb` because `Platform` is not available on web
           },
           // setting `displayName` on web throws an error
-          skip: kIsWeb ||
+          skip:
+              kIsWeb ||
               defaultTargetPlatform == TargetPlatform.iOS ||
               defaultTargetPlatform == TargetPlatform.macOS ||
               defaultTargetPlatform == TargetPlatform.windows,
         );
       });
 
-      group(
-        'updatePhotoURL',
-        () {
-          test('updates the photoURL without impacting the displayName',
-              () async {
+      group('updatePhotoURL', () {
+        test(
+          'updates the photoURL without impacting the displayName',
+          () async {
             // First create a user with a photo
             await FirebaseAuth.instance.createUserWithEmailAndPassword(
               email: email,
@@ -892,10 +944,7 @@ void main() {
               FirebaseAuth.instance.currentUser!.photoURL,
               'http://photo.url/test.jpg',
             );
-            expect(
-              FirebaseAuth.instance.currentUser!.displayName,
-              'Mona Lisa',
-            );
+            expect(FirebaseAuth.instance.currentUser!.displayName, 'Mona Lisa');
 
             await FirebaseAuth.instance.currentUser!.updatePhotoURL(
               'http://photo.url/dash.jpg',
@@ -906,47 +955,39 @@ void main() {
               FirebaseAuth.instance.currentUser!.photoURL,
               'http://photo.url/dash.jpg',
             );
-            expect(
-              FirebaseAuth.instance.currentUser!.displayName,
-              'Mona Lisa',
+            expect(FirebaseAuth.instance.currentUser!.displayName, 'Mona Lisa');
+          },
+        );
+
+        test(
+          'can set the photoURL to null',
+          () async {
+            // First create a user with a photo
+            await FirebaseAuth.instance.createUserWithEmailAndPassword(
+              email: email,
+              password: testPassword,
             );
-          });
+            await FirebaseAuth.instance.currentUser!.updatePhotoURL(
+              'http://photo.url/test.jpg',
+            );
+            await FirebaseAuth.instance.currentUser!.reload();
 
-          test(
-            'can set the photoURL to null',
-            () async {
-              // First create a user with a photo
-              await FirebaseAuth.instance.createUserWithEmailAndPassword(
-                email: email,
-                password: testPassword,
-              );
-              await FirebaseAuth.instance.currentUser!.updatePhotoURL(
-                'http://photo.url/test.jpg',
-              );
-              await FirebaseAuth.instance.currentUser!.reload();
+            // Just checking that the user indeed had a photo before we set it to null
+            expect(FirebaseAuth.instance.currentUser!.photoURL, isNotNull);
 
-              // Just checking that the user indeed had a photo before we set it to null
-              expect(
-                FirebaseAuth.instance.currentUser!.photoURL,
-                isNotNull,
-              );
+            await FirebaseAuth.instance.currentUser!.updatePhotoURL(null);
+            await FirebaseAuth.instance.currentUser!.reload();
 
-              await FirebaseAuth.instance.currentUser!.updatePhotoURL(null);
-              await FirebaseAuth.instance.currentUser!.reload();
-
-              expect(
-                FirebaseAuth.instance.currentUser!.photoURL,
-                isNull,
-              );
-            },
-            // setting `photoURL` on web throws an error
-            // macOS skipped because it needs keychain sharing entitlement. See: https://github.com/firebase/flutterfire/issues/9538
-            skip: kIsWeb ||
-                defaultTargetPlatform == TargetPlatform.macOS ||
-                defaultTargetPlatform == TargetPlatform.windows,
-          );
-        },
-      );
+            expect(FirebaseAuth.instance.currentUser!.photoURL, isNull);
+          },
+          // setting `photoURL` on web throws an error
+          // macOS skipped because it needs keychain sharing entitlement. See: https://github.com/firebase/flutterfire/issues/9538
+          skip:
+              kIsWeb ||
+              defaultTargetPlatform == TargetPlatform.macOS ||
+              defaultTargetPlatform == TargetPlatform.windows,
+        );
+      });
 
       group('updatePhoneNumber()', () {
         test(
@@ -979,7 +1020,8 @@ void main() {
 
             fail('should have thrown an error');
           },
-          skip: kIsWeb ||
+          skip:
+              kIsWeb ||
               defaultTargetPlatform == TargetPlatform.macOS ||
               defaultTargetPlatform == TargetPlatform.windows,
         );
@@ -990,11 +1032,11 @@ void main() {
         () {
           test('should delete a user', () async {
             // Setup
-            UserCredential userCredential =
-                await FirebaseAuth.instance.createUserWithEmailAndPassword(
-              email: email,
-              password: testPassword,
-            );
+            UserCredential userCredential = await FirebaseAuth.instance
+                .createUserWithEmailAndPassword(
+                  email: email,
+                  password: testPassword,
+                );
             final user = userCredential.user;
 
             // Test
@@ -1004,46 +1046,53 @@ void main() {
             expect(FirebaseAuth.instance.currentUser, equals(null));
             await FirebaseAuth.instance
                 .createUserWithEmailAndPassword(
-              email: email,
-              password: testPassword,
-            )
+                  email: email,
+                  password: testPassword,
+                )
                 .then((UserCredential userCredential) {
-              expect(FirebaseAuth.instance.currentUser!.email, equals(email));
-              return;
-            }).catchError((Object error) {
-              fail('Should have successfully created user after deletion');
-            });
+                  expect(
+                    FirebaseAuth.instance.currentUser!.email,
+                    equals(email),
+                  );
+                  return;
+                })
+                .catchError((Object error) {
+                  fail('Should have successfully created user after deletion');
+                });
           });
 
-          test('should throw an error on delete when no user is signed in',
-              () async {
-            // Setup
-            UserCredential userCredential =
-                await FirebaseAuth.instance.createUserWithEmailAndPassword(
-              email: email,
-              password: testPassword,
-            );
-            final user = userCredential.user;
+          test(
+            'should throw an error on delete when no user is signed in',
+            () async {
+              // Setup
+              UserCredential userCredential = await FirebaseAuth.instance
+                  .createUserWithEmailAndPassword(
+                    email: email,
+                    password: testPassword,
+                  );
+              final user = userCredential.user;
 
-            await FirebaseAuth.instance.signOut();
+              await FirebaseAuth.instance.signOut();
 
-            try {
-              // Test
-              await user!.delete();
-            } on FirebaseAuthException catch (e) {
-              // Assertions
-              expect(e.code, 'no-current-user');
-              expect(e.message, 'No user currently signed in.');
+              try {
+                // Test
+                await user!.delete();
+              } on FirebaseAuthException catch (e) {
+                // Assertions
+                expect(e.code, 'no-current-user');
+                expect(e.message, 'No user currently signed in.');
 
-              return;
-            } catch (e) {
-              fail('Should have thrown an FirebaseAuthException error');
-            }
+                return;
+              } catch (e) {
+                fail('Should have thrown an FirebaseAuthException error');
+              }
 
-            fail('Should have thrown an error');
-          });
+              fail('Should have thrown an error');
+            },
+          );
         },
-        skip: !kIsWeb &&
+        skip:
+            !kIsWeb &&
             (defaultTargetPlatform == TargetPlatform.windows ||
                 defaultTargetPlatform == TargetPlatform.macOS),
       );

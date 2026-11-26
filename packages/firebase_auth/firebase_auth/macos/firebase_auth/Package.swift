@@ -7,19 +7,18 @@
 
 import PackageDescription
 
-let libraryVersion = "6.6.1"
-let firebaseSdkVersion: Version = "12.18.0"
+let libraryVersion = "7.1.0"
 
 let package = Package(
   name: "firebase_auth",
   platforms: [
-    .macOS("10.15")
+    .macOS("11.0")
   ],
   products: [
     .library(name: "firebase-auth", targets: ["firebase_auth"])
   ],
   dependencies: [
-    .package(url: "https://github.com/firebase/firebase-ios-sdk", exact: firebaseSdkVersion),
+    .package(url: "https://github.com/firebase/firebase-ios-sdk", from: "13.2.0"),
     .package(name: "firebase_core", path: "../firebase_core"),
     .package(name: "FlutterFramework", path: "../FlutterFramework"),
   ],

@@ -22,17 +22,16 @@ class FirebaseAppInstallationsWeb extends FirebaseAppInstallationsPlatform {
 
   /// Stub initializer to allow the [registerWith] to create an instance without
   /// registering the web delegates or listeners.
-  FirebaseAppInstallationsWeb._()
-      : _webInstallations = null,
-        super(null);
+  FirebaseAppInstallationsWeb._() : _webInstallations = null, super(null);
 
   /// Instance of installations from the web plugin.
   installations_interop.Installations? _webInstallations;
 
   /// Lazily initialize [_webFunctions] on first method call
   installations_interop.Installations get _delegate {
-    return _webInstallations ??= installations_interop
-        .getInstallationsInstance(core_interop.app(app?.name));
+    return _webInstallations ??= installations_interop.getInstallationsInstance(
+      core_interop.app(app?.name),
+    );
   }
 
   /// Create the default instance of the [FirebaseAppInstallationsPlatform] as a [FirebaseAppInstallationsWeb]

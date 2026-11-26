@@ -58,7 +58,6 @@ void main() async {
       case 'firebase_database':
       case 'firebase_in_app_messaging':
       case 'firebase_messaging':
-      case 'firebase_ml_model_downloader':
       case 'firebase_performance':
       case 'firebase_remote_config':
       case 'firebase_storage':

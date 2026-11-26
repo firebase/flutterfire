@@ -13,11 +13,8 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 /// can be determined by calling [size()].
 class QuerySnapshotPlatform extends PlatformInterface {
   /// Create a [QuerySnapshotPlatform]
-  QuerySnapshotPlatform(
-    this.docs,
-    this.docChanges,
-    this.metadata,
-  ) : super(token: _token);
+  QuerySnapshotPlatform(this.docs, this.docChanges, this.metadata)
+    : super(token: _token);
 
   static final Object _token = Object();
 

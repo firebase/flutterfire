@@ -12,9 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:firebase_ai/firebase_ai.dart';
 
+import '../constants.dart';
 import '../utils/function_call_utils.dart';
 import '../widgets/message_widget.dart';
 
@@ -61,12 +62,8 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
           description:
               'The name of the city and its state for which to get the weather. Only cities in the USA are supported.',
           properties: {
-            'city': Schema.string(
-              description: 'The city of the location.',
-            ),
-            'state': Schema.string(
-              description: 'The state of the location.',
-            ),
+            'city': Schema.string(description: 'The city of the location.'),
+            'state': Schema.string(description: 'The state of the location.'),
           },
         ),
         'date': Schema.string(
@@ -80,9 +77,7 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
       name: 'findRestaurants',
       description: 'Find restaurants of a certain cuisine in a given location.',
       parameters: {
-        'cuisine': Schema.string(
-          description: 'The cuisine of the restaurant.',
-        ),
+        'cuisine': Schema.string(description: 'The cuisine of the restaurant.'),
         'location': Schema.string(
           description:
               'The location to search for restaurants. e.g. San Francisco, CA',
@@ -116,8 +111,9 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
       description:
           'Plans a complex vacation itinerary combining flights, hotels, and activities.',
       parameters: {
-        'destination':
-            Schema.string(description: 'The city or country to travel to.'),
+        'destination': Schema.string(
+          description: 'The city or country to travel to.',
+        ),
         'travelers': Schema.integer(
           description: 'Number of travelers.',
           minimum: 1,
@@ -127,8 +123,9 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
           enumValues: ['ECONOMY', 'BUSINESS', 'FIRST'],
           description: 'The preferred travel class.',
         ),
-        'budget':
-            Schema.number(description: 'Total budget for the trip in USD.'),
+        'budget': Schema.number(
+          description: 'Total budget for the trip in USD.',
+        ),
         'activities': Schema.array(
           items: Schema.string(),
           description: 'A list of preferred activities.',
@@ -240,44 +237,43 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
         : FirebaseAI.googleAI();
 
     _functionCallModel = aiClient.generativeModel(
-      model: 'gemini-3.1-flash-lite',
+      model: ExampleModels.flashLite,
       generationConfig: generationConfig,
       tools: [
         Tool.functionDeclarations([fetchWeatherTool]),
       ],
     );
     _autoFunctionCallModel = aiClient.generativeModel(
-      model: 'gemini-3.1-flash-lite',
+      model: ExampleModels.flashLite,
       generationConfig: generationConfig,
       tools: [
         Tool.functionDeclarations([_autoFetchWeatherTool]),
       ],
     );
     _parallelAutoFunctionCallModel = aiClient.generativeModel(
-      model: 'gemini-3.1-flash-lite',
+      model: ExampleModels.flashLite,
       generationConfig: generationConfig,
       tools: [
-        Tool.functionDeclarations(
-          [_autoFindRestaurantsTool, _autoGetRestaurantMenuTool],
-        ),
+        Tool.functionDeclarations([
+          _autoFindRestaurantsTool,
+          _autoGetRestaurantMenuTool,
+        ]),
       ],
     );
     _codeExecutionModel = aiClient.generativeModel(
-      model: 'gemini-3.1-flash-lite',
+      model: ExampleModels.flashLite,
       generationConfig: generationConfig,
-      tools: [
-        Tool.codeExecution(),
-      ],
+      tools: [Tool.codeExecution()],
     );
     _complexSchemaModel = aiClient.generativeModel(
-      model: 'gemini-3.1-flash-lite',
+      model: ExampleModels.flashLite,
       generationConfig: generationConfig,
       tools: [
         Tool.functionDeclarations([_autoPlanVacationTool]),
       ],
     );
     _refDefJsonSchemaModel = aiClient.generativeModel(
-      model: 'gemini-3.1-flash-lite',
+      model: ExampleModels.flashLite,
       generationConfig: generationConfig,
       tools: [
         Tool.functionDeclarations([_autoProcessTransactionTool]),
@@ -291,19 +287,17 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
     'Get the weather conditions for a specific city on a specific date.',
     parameters: {
       'location': Schema.object(
-        description: 'The name of the city and its state for which to get '
+        description:
+            'The name of the city and its state for which to get '
             'the weather. Only cities in the USA are supported.',
         properties: {
-          'city': Schema.string(
-            description: 'The city of the location.',
-          ),
-          'state': Schema.string(
-            description: 'The state of the location.',
-          ),
+          'city': Schema.string(description: 'The city of the location.'),
+          'state': Schema.string(description: 'The state of the location.'),
         },
       ),
       'date': Schema.string(
-        description: 'The date for which to get the weather. '
+        description:
+            'The date for which to get the weather. '
             'Date must be in the format: YYYY-MM-DD.',
       ),
     },
@@ -342,9 +336,7 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
+      appBar: AppBar(title: Text(widget.title)),
       body: Padding(
         padding: const EdgeInsets.all(8),
         child: Column(
@@ -375,10 +367,7 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(
-                vertical: 25,
-                horizontal: 15,
-              ),
+              padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 15),
               child: Column(
                 children: [
                   Row(
@@ -403,8 +392,9 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
                     children: [
                       Expanded(
                         child: ElevatedButton(
-                          onPressed:
-                              !_loading ? _testAutoFunctionCalling : null,
+                          onPressed: !_loading
+                              ? _testAutoFunctionCalling
+                              : null,
                           child: const Text('Auto Function Calling'),
                         ),
                       ),
@@ -424,16 +414,18 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
                     children: [
                       Expanded(
                         child: ElevatedButton(
-                          onPressed:
-                              !_loading ? _testStreamFunctionCalling : null,
+                          onPressed: !_loading
+                              ? _testStreamFunctionCalling
+                              : null,
                           child: const Text('Stream FC'),
                         ),
                       ),
                       const SizedBox(width: 8),
                       Expanded(
                         child: ElevatedButton(
-                          onPressed:
-                              !_loading ? _testAutoStreamFunctionCalling : null,
+                          onPressed: !_loading
+                              ? _testAutoStreamFunctionCalling
+                              : null,
                           child: const Text('Auto Stream FC'),
                         ),
                       ),
@@ -472,8 +464,9 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
 
   Future<void> _testAutoFunctionCalling({bool parallel = false}) async {
     await _runTest(() async {
-      final model =
-          parallel ? _parallelAutoFunctionCallModel : _autoFunctionCallModel;
+      final model = parallel
+          ? _parallelAutoFunctionCallModel
+          : _autoFunctionCallModel;
       final prompt = parallel
           ? 'Find me a good vegetarian restaurant in San Francisco and get its menu.'
           : 'What is the weather like in Boston, MA on 10/02 in year 2024?';
@@ -490,8 +483,9 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
 
       final thought = response.thoughtSummary;
       if (thought != null) {
-        _messages
-            .add(MessageData(text: thought, fromUser: false, isThought: true));
+        _messages.add(
+          MessageData(text: thought, fromUser: false, isThought: true),
+        );
       }
 
       // The SDK should have handled the function call automatically.
@@ -620,14 +614,13 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
       setState(() {});
 
       // Send the message to the generative model.
-      var response = await functionCallChat.sendMessage(
-        Content.text(prompt),
-      );
+      var response = await functionCallChat.sendMessage(Content.text(prompt));
 
       final thought = response.thoughtSummary;
       if (thought != null) {
-        _messages
-            .add(MessageData(text: thought, fromUser: false, isThought: true));
+        _messages.add(
+          MessageData(text: thought, fromUser: false, isThought: true),
+        );
       }
 
       final functionCalls = response.functionCalls.toList();
@@ -651,19 +644,22 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
   Future<void> _testCodeExecution() async {
     await _runTest(() async {
       final codeExecutionChat = _codeExecutionModel.startChat();
-      const prompt = 'What is the sum of the first 50 prime numbers? '
+      const prompt =
+          'What is the sum of the first 50 prime numbers? '
           'Generate and run code for the calculation, and make sure you get all 50.';
 
       _messages.add(MessageData(text: prompt, fromUser: true));
       setState(() {});
 
-      final response =
-          await codeExecutionChat.sendMessage(Content.text(prompt));
+      final response = await codeExecutionChat.sendMessage(
+        Content.text(prompt),
+      );
 
       final thought = response.thoughtSummary;
       if (thought != null) {
-        _messages
-            .add(MessageData(text: thought, fromUser: false, isThought: true));
+        _messages.add(
+          MessageData(text: thought, fromUser: false, isThought: true),
+        );
       }
 
       final buffer = StringBuffer();
@@ -684,12 +680,7 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
       }
 
       if (buffer.isNotEmpty) {
-        _messages.add(
-          MessageData(
-            text: buffer.toString(),
-            fromUser: false,
-          ),
-        );
+        _messages.add(MessageData(text: buffer.toString(), fromUser: false));
       }
     });
   }
@@ -707,8 +698,9 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
 
       final thought = response.thoughtSummary;
       if (thought != null) {
-        _messages
-            .add(MessageData(text: thought, fromUser: false, isThought: true));
+        _messages.add(
+          MessageData(text: thought, fromUser: false, isThought: true),
+        );
       }
 
       if (response.text case final text?) {
@@ -732,8 +724,9 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
 
       final thought = response.thoughtSummary;
       if (thought != null) {
-        _messages
-            .add(MessageData(text: thought, fromUser: false, isThought: true));
+        _messages.add(
+          MessageData(text: thought, fromUser: false, isThought: true),
+        );
       }
 
       if (response.text case final text?) {
@@ -750,9 +743,7 @@ class _FunctionCallingPageState extends State<FunctionCallingPage> {
       builder: (context) {
         return AlertDialog(
           title: const Text('Something went wrong'),
-          content: SingleChildScrollView(
-            child: SelectableText(message),
-          ),
+          content: SingleChildScrollView(child: SelectableText(message)),
           actions: [
             TextButton(
               onPressed: () {

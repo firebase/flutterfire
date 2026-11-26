@@ -67,6 +67,7 @@ class Pipeline {
     final optionsMap = options != null
         ? {
             'indexMode': options.indexMode.name,
+            if (options.atomic) 'atomic': true,
           }
         : null;
     final platformSnapshot = await _delegate.execute(options: optionsMap);
@@ -172,10 +173,7 @@ class Pipeline {
     if (selectable29 != null) selectables.add(selectable29);
     if (selectable30 != null) selectables.add(selectable30);
     final stage = _AddFieldsStage(selectables);
-    return Pipeline._(
-      _firestore,
-      _delegate.addStage(stage.toMap()),
-    );
+    return Pipeline._(_firestore, _delegate.addStage(stage.toMap()));
   }
 
   /// Performs aggregation operations on the documents from previous stages.
@@ -258,10 +256,7 @@ class Pipeline {
     if (aggregateFunction30 != null) functions.add(aggregateFunction30);
 
     final stage = _AggregateStage(functions);
-    return Pipeline._(
-      _firestore,
-      _delegate.addStage(stage.toMap()),
-    );
+    return Pipeline._(_firestore, _delegate.addStage(stage.toMap()));
   }
 
   /// Performs optionally grouped aggregation operations on the documents from previous stages.
@@ -310,10 +305,7 @@ class Pipeline {
       aggregateStage,
       options ?? AggregateOptions(),
     );
-    return Pipeline._(
-      _firestore,
-      _delegate.addStage(stage.toMap()),
-    );
+    return Pipeline._(_firestore, _delegate.addStage(stage.toMap()));
   }
 
   /// Returns a set of distinct values from the inputs to this stage.
@@ -392,10 +384,7 @@ class Pipeline {
     if (expression30 != null) expressions.add(expression30);
 
     final stage = _DistinctStage(expressions);
-    return Pipeline._(
-      _firestore,
-      _delegate.addStage(stage.toMap()),
-    );
+    return Pipeline._(_firestore, _delegate.addStage(stage.toMap()));
   }
 
   /// Performs a vector similarity search.
@@ -406,6 +395,12 @@ class Pipeline {
   /// compare vectors (e.g. [DistanceMeasure.cosine]). Use [limit] to return
   /// only the first N documents.
   ///
+  /// [distanceField] is the Firestore field name added to each result. That
+  /// field holds the calculated distance from [vectorValue]. A dot in the
+  /// name separates path segments, as it does for any other Firestore field
+  /// name. Omit it to return the nearest documents without the numeric
+  /// distance.
+  ///
   /// Example:
   /// ```dart
   /// firestore.pipeline().collection('books').findNearest(
@@ -413,6 +408,7 @@ class Pipeline {
   ///   [0.1, 0.2, 0.3],
   ///   DistanceMeasure.cosine,
   ///   limit: 10,
+  ///   distanceField: 'distance',
   /// );
   /// ```
   Pipeline findNearest(
@@ -420,17 +416,16 @@ class Pipeline {
     List<double> vectorValue,
     DistanceMeasure distanceMeasure, {
     int? limit,
+    String? distanceField,
   }) {
     final stage = _FindNearestStage(
       vectorField,
       vectorValue,
       distanceMeasure,
       limit: limit,
+      distanceField: distanceField,
     );
-    return Pipeline._(
-      _firestore,
-      _delegate.addStage(stage.toMap()),
-    );
+    return Pipeline._(_firestore, _delegate.addStage(stage.toMap()));
   }
 
   /// Adds a search stage to this pipeline.
@@ -452,10 +447,7 @@ class Pipeline {
     }
 
     final stage = _SearchStage(searchStage);
-    return Pipeline._(
-      _firestore,
-      _delegate.addStage(stage.toMap()),
-    );
+    return Pipeline._(_firestore, _delegate.addStage(stage.toMap()));
   }
 
   /// Limits the maximum number of documents returned by previous stages to
@@ -472,10 +464,7 @@ class Pipeline {
   /// ```
   Pipeline limit(int limit) {
     final stage = _LimitStage(limit);
-    return Pipeline._(
-      _firestore,
-      _delegate.addStage(stage.toMap()),
-    );
+    return Pipeline._(_firestore, _delegate.addStage(stage.toMap()));
   }
 
   /// Skips the first [offset] documents from the results of previous stages.
@@ -492,10 +481,7 @@ class Pipeline {
   /// ```
   Pipeline offset(int offset) {
     final stage = _OffsetStage(offset);
-    return Pipeline._(
-      _firestore,
-      _delegate.addStage(stage.toMap()),
-    );
+    return Pipeline._(_firestore, _delegate.addStage(stage.toMap()));
   }
 
   /// Removes fields from outputs of previous stages.
@@ -569,10 +555,7 @@ class Pipeline {
     if (fieldPath30 != null) fieldPaths.add(fieldPath30);
 
     final stage = _RemoveFieldsStage(fieldPaths);
-    return Pipeline._(
-      _firestore,
-      _delegate.addStage(stage.toMap()),
-    );
+    return Pipeline._(_firestore, _delegate.addStage(stage.toMap()));
   }
 
   /// Fully overwrites each document with the value of the given expression.
@@ -589,10 +572,7 @@ class Pipeline {
   /// ```
   Pipeline replaceWith(Expression expression) {
     final stage = _ReplaceWithStage(expression);
-    return Pipeline._(
-      _firestore,
-      _delegate.addStage(stage.toMap()),
-    );
+    return Pipeline._(_firestore, _delegate.addStage(stage.toMap()));
   }
 
   /// Performs a pseudo-random sampling of the input documents.
@@ -609,10 +589,7 @@ class Pipeline {
   /// ```
   Pipeline sample(PipelineSample sample) {
     final stage = _SampleStage(sample);
-    return Pipeline._(
-      _firestore,
-      _delegate.addStage(stage.toMap()),
-    );
+    return Pipeline._(_firestore, _delegate.addStage(stage.toMap()));
   }
 
   /// Selects or creates a set of fields from the outputs of previous stages.
@@ -692,10 +669,7 @@ class Pipeline {
     if (expression30 != null) expressions.add(expression30);
 
     final stage = _SelectStage(expressions);
-    return Pipeline._(
-      _firestore,
-      _delegate.addStage(stage.toMap()),
-    );
+    return Pipeline._(_firestore, _delegate.addStage(stage.toMap()));
   }
 
   /// Sorts the documents from previous stages based on one or more orderings.
@@ -776,10 +750,7 @@ class Pipeline {
     if (order30 != null) orderings.add(order30);
 
     final stage = _SortStage(orderings);
-    return Pipeline._(
-      _firestore,
-      _delegate.addStage(stage.toMap()),
-    );
+    return Pipeline._(_firestore, _delegate.addStage(stage.toMap()));
   }
 
   /// Takes a specified array from the input documents and outputs a document
@@ -799,10 +770,7 @@ class Pipeline {
   /// ```
   Pipeline unnest(Selectable expression, [String? indexField]) {
     final stage = _UnnestStage(expression, indexField);
-    return Pipeline._(
-      _firestore,
-      _delegate.addStage(stage.toMap()),
-    );
+    return Pipeline._(_firestore, _delegate.addStage(stage.toMap()));
   }
 
   /// Performs a union of all documents from this pipeline and [pipeline],
@@ -819,10 +787,7 @@ class Pipeline {
   /// ```
   Pipeline union(Pipeline pipeline) {
     final stage = _UnionStage(pipeline);
-    return Pipeline._(
-      _firestore,
-      _delegate.addStage(stage.toMap()),
-    );
+    return Pipeline._(_firestore, _delegate.addStage(stage.toMap()));
   }
 
   /// Filters the documents from previous stages to only include those matching
@@ -844,9 +809,134 @@ class Pipeline {
   /// ```
   Pipeline where(BooleanExpression expression) {
     final stage = _WhereStage(expression);
-    return Pipeline._(
-      _firestore,
-      _delegate.addStage(stage.toMap()),
-    );
+    return Pipeline._(_firestore, _delegate.addStage(stage.toMap()));
+  }
+
+  /// Deletes each input document at its `__name__` path.
+  ///
+  /// This must be the last stage in the pipeline. A later stage, such as
+  /// [limit], is rejected by the backend.
+  ///
+  /// Currently supported on web only. On other platforms, [execute] throws
+  /// [UnsupportedError].
+  ///
+  /// Example:
+  /// ```dart
+  /// firestore
+  ///     .pipeline()
+  ///     .collection('books')
+  ///     .where(Expression.field('genre').equal('Science Fiction'))
+  ///     .delete();
+  /// ```
+  Pipeline delete() {
+    final stage = _DeleteStage();
+    return Pipeline._(_firestore, _delegate.addStage(stage.toMap()));
+  }
+
+  /// Updates each input document at its `__name__` path.
+  ///
+  /// [transformedFields] are [AliasedExpression]s applied before the write.
+  /// A bare [Expression.field] is not a field name here; call [Expression.as].
+  /// When omitted, each input document is written back from its current
+  /// fields. This stage does not create missing documents.
+  ///
+  /// This must be the last stage in the pipeline. A later stage, such as
+  /// [limit], is rejected by the backend.
+  ///
+  /// Currently supported on web only. On other platforms, [execute] throws
+  /// [UnsupportedError].
+  ///
+  /// Example:
+  /// ```dart
+  /// firestore.pipeline().collection('books').update([
+  ///   Expression.field('rating').as('score'),
+  /// ]);
+  /// ```
+  Pipeline update([List<AliasedExpression> transformedFields = const []]) {
+    final stage = _UpdateStage(transformedFields);
+    return Pipeline._(_firestore, _delegate.addStage(stage.toMap()));
+  }
+
+  /// Inserts each input document.
+  ///
+  /// The write fails if a document already exists at the target path.
+  ///
+  /// The target path depends on [collectionPath] and [documentId]:
+  ///
+  /// * Neither set: the input document's `__name__` path. The write fails
+  ///   when that field is missing.
+  /// * [collectionPath] only: that collection. The input document id is
+  ///   reused when `__name__` is present, and a new id is generated when it
+  ///   is not.
+  /// * [documentId] only: the input document's parent collection, using the
+  ///   id from [documentId]. The input document must have a `__name__` field.
+  /// * Both set: [collectionPath], using the id from [documentId].
+  ///
+  /// [documentId] is evaluated for each document: a field path is
+  /// [Expression.field], and a fixed id is [Expression.constant].
+  ///
+  /// This must be the last stage in the pipeline. A later stage, such as
+  /// [limit], is rejected by the backend.
+  ///
+  /// Currently supported on web only. On other platforms, [execute] throws
+  /// [UnsupportedError].
+  Pipeline insert({String? collectionPath, Expression? documentId}) {
+    _checkCollectionPath(collectionPath);
+    final stage = _InsertStage(collectionPath, documentId);
+    return Pipeline._(_firestore, _delegate.addStage(stage.toMap()));
+  }
+
+  /// Inserts each input document, or replaces it when the target already exists.
+  ///
+  /// An existing document is replaced entirely. Fields that are not in the
+  /// written document are removed. [additionalFields] are [AliasedExpression]s
+  /// merged onto each input document before the write. A bare
+  /// [Expression.field] is not a field name here; call [Expression.as].
+  ///
+  /// The target path depends on [collectionPath] and [documentId]:
+  ///
+  /// * Neither set: the input document's `__name__` path. The write fails
+  ///   when that field is missing.
+  /// * [collectionPath] only: that collection. The input document id is
+  ///   reused when `__name__` is present, and a new id is generated when it
+  ///   is not.
+  /// * Both set: [collectionPath], using the id from [documentId].
+  ///
+  /// [documentId] without [collectionPath] is rejected. Unlike [insert], an
+  /// id on its own is not a target. [documentId] is evaluated for each
+  /// document: a field path is [Expression.field], and a fixed id is
+  /// [Expression.constant].
+  ///
+  /// This must be the last stage in the pipeline. A later stage, such as
+  /// [limit], is rejected by the backend.
+  ///
+  /// Currently supported on web only. On other platforms, [execute] throws
+  /// [UnsupportedError].
+  Pipeline upsert({
+    String? collectionPath,
+    Expression? documentId,
+    List<AliasedExpression> additionalFields = const [],
+  }) {
+    if (documentId != null && collectionPath == null) {
+      throw ArgumentError(
+        'upsert() requires collectionPath when documentId is set.',
+      );
+    }
+    _checkCollectionPath(collectionPath);
+    final stage = _UpsertStage(collectionPath, documentId, additionalFields);
+    return Pipeline._(_firestore, _delegate.addStage(stage.toMap()));
+  }
+}
+
+void _checkCollectionPath(String? collectionPath) {
+  if (collectionPath == null) {
+    return;
+  }
+  if (collectionPath.isEmpty) {
+    throw ArgumentError('A collection path must be a non-empty string.');
+  } else if (collectionPath.contains('//')) {
+    throw ArgumentError('A collection path must not contain "//".');
+  } else if (!isValidCollectionPath(collectionPath)) {
+    throw ArgumentError('A collection path must point to a valid collection.');
   }
 }

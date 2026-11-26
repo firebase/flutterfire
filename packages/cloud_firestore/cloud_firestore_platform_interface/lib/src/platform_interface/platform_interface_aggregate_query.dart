@@ -39,9 +39,7 @@ abstract class AggregateQueryPlatform extends PlatformInterface {
   }
 
   /// Returns an [AggregateQuerySnapshotPlatform] with the sum of the values of the documents that match the query.
-  AggregateQueryPlatform sum(
-    String field,
-  ) {
+  AggregateQueryPlatform sum(String field) {
     throw UnimplementedError('sum() is not implemented');
   }
 

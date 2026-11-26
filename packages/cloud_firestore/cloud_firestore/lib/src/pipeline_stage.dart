@@ -22,9 +22,7 @@ final class _CollectionPipelineStage extends PipelineStage {
   Map<String, dynamic> toMap() {
     return {
       'stage': name,
-      'args': {
-        'path': collectionPath,
-      },
+      'args': {'path': collectionPath},
     };
   }
 }
@@ -42,13 +40,7 @@ final class _DocumentsPipelineStage extends PipelineStage {
   Map<String, dynamic> toMap() {
     return {
       'stage': name,
-      'args': documents
-          .map(
-            (doc) => {
-              'path': doc.path,
-            },
-          )
-          .toList(),
+      'args': documents.map((doc) => {'path': doc.path}).toList(),
     };
   }
 }
@@ -62,9 +54,7 @@ final class _DatabasePipelineStage extends PipelineStage {
 
   @override
   Map<String, dynamic> toMap() {
-    return {
-      'stage': name,
-    };
+    return {'stage': name};
   }
 }
 
@@ -81,9 +71,7 @@ final class _CollectionGroupPipelineStage extends PipelineStage {
   Map<String, dynamic> toMap() {
     return {
       'stage': name,
-      'args': {
-        'path': collectionPath,
-      },
+      'args': {'path': collectionPath},
     };
   }
 }
@@ -101,9 +89,7 @@ final class _AddFieldsStage extends PipelineStage {
   Map<String, dynamic> toMap() {
     return {
       'stage': name,
-      'args': {
-        'expressions': expressions.map((expr) => expr.toMap()).toList(),
-      },
+      'args': {'expressions': expressions.map((expr) => expr.toMap()).toList()},
     };
   }
 }
@@ -122,8 +108,9 @@ final class _AggregateStage extends PipelineStage {
     return {
       'stage': name,
       'args': {
-        'aggregate_functions':
-            aggregateFunctions.map((func) => func.toMap()).toList(),
+        'aggregate_functions': aggregateFunctions
+            .map((func) => func.toMap())
+            .toList(),
       },
     };
   }
@@ -145,10 +132,7 @@ final class _AggregateStageWithOptions extends PipelineStage {
     final optionsMap = options?.toMap();
     return {
       'stage': name,
-      'args': {
-        'aggregate_stage': map,
-        'options': optionsMap,
-      },
+      'args': {'aggregate_stage': map, 'options': optionsMap},
     };
   }
 }
@@ -166,9 +150,7 @@ final class _DistinctStage extends PipelineStage {
   Map<String, dynamic> toMap() {
     return {
       'stage': name,
-      'args': {
-        'expressions': expressions.map((expr) => expr.toMap()).toList(),
-      },
+      'args': {'expressions': expressions.map((expr) => expr.toMap()).toList()},
     };
   }
 }
@@ -179,12 +161,14 @@ final class _FindNearestStage extends PipelineStage {
   final List<double> vectorValue;
   final DistanceMeasure distanceMeasure;
   final int? limit;
+  final String? distanceField;
 
   _FindNearestStage(
     this.vectorField,
     this.vectorValue,
     this.distanceMeasure, {
     this.limit,
+    this.distanceField,
   });
 
   @override
@@ -203,6 +187,10 @@ final class _FindNearestStage extends PipelineStage {
     if (limit != null) {
       map['args']['limit'] = limit;
     }
+    final outputField = distanceField;
+    if (outputField != null && outputField.isNotEmpty) {
+      map['args']['distance_field'] = outputField;
+    }
     return map;
   }
 }
@@ -218,10 +206,7 @@ final class _SearchStage extends PipelineStage {
 
   @override
   Map<String, dynamic> toMap() {
-    return {
-      'stage': name,
-      'args': searchStage.toMap(),
-    };
+    return {'stage': name, 'args': searchStage.toMap()};
   }
 }
 
@@ -238,9 +223,7 @@ final class _LimitStage extends PipelineStage {
   Map<String, dynamic> toMap() {
     return {
       'stage': name,
-      'args': {
-        'limit': limit,
-      },
+      'args': {'limit': limit},
     };
   }
 }
@@ -258,9 +241,7 @@ final class _OffsetStage extends PipelineStage {
   Map<String, dynamic> toMap() {
     return {
       'stage': name,
-      'args': {
-        'offset': offset,
-      },
+      'args': {'offset': offset},
     };
   }
 }
@@ -278,9 +259,7 @@ final class _RemoveFieldsStage extends PipelineStage {
   Map<String, dynamic> toMap() {
     return {
       'stage': name,
-      'args': {
-        'field_paths': fieldPaths,
-      },
+      'args': {'field_paths': fieldPaths},
     };
   }
 }
@@ -298,9 +277,7 @@ final class _ReplaceWithStage extends PipelineStage {
   Map<String, dynamic> toMap() {
     return {
       'stage': name,
-      'args': {
-        'expression': expression.toMap(),
-      },
+      'args': {'expression': expression.toMap()},
     };
   }
 }
@@ -316,10 +293,7 @@ final class _SampleStage extends PipelineStage {
 
   @override
   Map<String, dynamic> toMap() {
-    return {
-      'stage': name,
-      'args': sample.toMap(),
-    };
+    return {'stage': name, 'args': sample.toMap()};
   }
 }
 
@@ -336,9 +310,7 @@ final class _SelectStage extends PipelineStage {
   Map<String, dynamic> toMap() {
     return {
       'stage': name,
-      'args': {
-        'expressions': expressions.map((expr) => expr.toMap()).toList(),
-      },
+      'args': {'expressions': expressions.map((expr) => expr.toMap()).toList()},
     };
   }
 }
@@ -361,8 +333,9 @@ final class _SortStage extends PipelineStage {
             .map(
               (o) => {
                 'expression': o.expression.toMap(),
-                'order_direction':
-                    o.direction == OrderDirection.asc ? 'asc' : 'desc',
+                'order_direction': o.direction == OrderDirection.asc
+                    ? 'asc'
+                    : 'desc',
               },
             )
             .toList(),
@@ -385,9 +358,7 @@ final class _UnnestStage extends PipelineStage {
   Map<String, dynamic> toMap() {
     final map = <String, dynamic>{
       'stage': name,
-      'args': <String, dynamic>{
-        'expression': expression.toMap(),
-      },
+      'args': <String, dynamic>{'expression': expression.toMap()},
     };
     if (indexField != null) {
       map['args']['index_field'] = indexField;
@@ -409,11 +380,164 @@ final class _UnionStage extends PipelineStage {
   Map<String, dynamic> toMap() {
     return {
       'stage': name,
+      'args': {'pipeline': pipeline.stages},
+    };
+  }
+}
+
+final class _DeleteStage extends PipelineStage {
+  @override
+  String get name => 'delete';
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {'stage': name, 'args': <String, dynamic>{}};
+  }
+}
+
+final class _UpdateStage extends PipelineStage {
+  final List<AliasedExpression> transformedFields;
+
+  _UpdateStage(this.transformedFields);
+
+  @override
+  String get name => 'update';
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      'stage': name,
       'args': {
-        'pipeline': pipeline.stages,
+        'expressions': transformedFields.map((field) => field.toMap()).toList(),
       },
     };
   }
+}
+
+final class _InsertStage extends PipelineStage {
+  final String? collectionPath;
+  final Expression? documentId;
+
+  _InsertStage(this.collectionPath, this.documentId);
+
+  @override
+  String get name => 'insert';
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      'stage': name,
+      'args': _writeTargetArgs(collectionPath, documentId),
+    };
+  }
+}
+
+final class _UpsertStage extends PipelineStage {
+  final String? collectionPath;
+  final Expression? documentId;
+  final List<AliasedExpression> additionalFields;
+
+  _UpsertStage(this.collectionPath, this.documentId, this.additionalFields);
+
+  @override
+  String get name => 'upsert';
+
+  @override
+  Map<String, dynamic> toMap() {
+    final args = _writeTargetArgs(collectionPath, documentId);
+    if (additionalFields.isNotEmpty) {
+      args['additional_fields'] = additionalFields
+          .map((field) => field.toMap())
+          .toList();
+    }
+    return {'stage': name, 'args': args};
+  }
+}
+
+Map<String, dynamic> _writeTargetArgs(
+  String? collectionPath,
+  Expression? documentId,
+) {
+  final args = <String, dynamic>{};
+  if (collectionPath != null) {
+    args['collection'] = collectionPath;
+  }
+  if (documentId != null) {
+    args['document_id'] = documentId.toMap();
+  }
+  return args;
+}
+
+final class _LiteralsPipelineStage extends PipelineStage {
+  final List<Map<String, Object?>> documents;
+
+  _LiteralsPipelineStage(this.documents);
+
+  @override
+  String get name => 'literals';
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      'stage': name,
+      'args': {'documents': documents.map(_encodeLiteralDocument).toList()},
+    };
+  }
+}
+
+Map<String, dynamic> _encodeLiteralDocument(Map<String, Object?> document) {
+  return document.map(
+    (key, value) => MapEntry(key, _encodeLiteralField(value)),
+  );
+}
+
+Map<String, dynamic> _encodeLiteralField(Object? value) {
+  if (value is AliasedExpression) {
+    throw ArgumentError(
+      'literals() does not accept an aliased expression. '
+      'The map key is the field name; pass the expression without .as().',
+    );
+  }
+  if (value is Expression) {
+    return {'kind': 'expression', 'expression': value.toMap()};
+  }
+  return {'kind': 'value', 'value': _encodeLiteralValue(value)};
+}
+
+Object? _encodeLiteralValue(Object? value) {
+  if (value is Expression) {
+    throw ArgumentError(
+      'literals() only supports Expression values as top-level document fields.',
+    );
+  }
+  if (value is DocumentReference) {
+    return value._delegate;
+  }
+  if (value == null ||
+      value is String ||
+      value is num ||
+      value is bool ||
+      value is DateTime ||
+      value is Timestamp ||
+      value is GeoPoint ||
+      value is Blob ||
+      value is VectorValue ||
+      value is Uint8List) {
+    return value;
+  }
+  if (value is Map) {
+    return value.map(
+      (key, nested) => MapEntry(key.toString(), _encodeLiteralValue(nested)),
+    );
+  }
+  if (value is List) {
+    return value.map(_encodeLiteralValue).toList();
+  }
+  throw ArgumentError(
+    'literals() value must be null, String, num, bool, DateTime, Timestamp, '
+    'GeoPoint, Blob, Uint8List, DocumentReference, VectorValue, List, Map, '
+    'or a top-level Expression. Got: ${value.runtimeType}',
+  );
 }
 
 /// Stage for filtering documents
@@ -429,9 +553,7 @@ final class _WhereStage extends PipelineStage {
   Map<String, dynamic> toMap() {
     return {
       'stage': name,
-      'args': {
-        'expression': expression.toMap(),
-      },
+      'args': {'expression': expression.toMap()},
     };
   }
 }

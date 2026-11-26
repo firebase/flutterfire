@@ -79,14 +79,6 @@ jobs:
       package-path: 'packages/firebase_performance/firebase_performance'
       package-scope: 'firebase_performance*'
       cache-key-suffix: 'performance'
-      # CocoaPods for now: Flutter's experimental SPM integration kept failing
-      # to resolve this example's plugin siblings ("Could not resolve package
-      # dependencies ... ios/firebase_core does not exist"). Dropping the Xcode
-      # 26.2 pin (see `reusable_e2e_ios.yaml`) is the likely fix, but one
-      # variable at a time - these two rejoin SPM once the default-Xcode runs
-      # prove clean. iOS SPM coverage is unaffected meanwhile: storage,
-      # database, firestore and auth still build under it.
-      ios-spm: false
       native-config-args: '--live-tier-plist=performance'
       inject-config-secrets: true
       use-firebase-emulators: false

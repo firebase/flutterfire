@@ -72,9 +72,11 @@ export 'src/live_api.dart'
         GoingAwayNotice,
         LiveGenerationConfig,
         LiveServerMessage,
+        LiveServerSetupComplete,
         LiveServerContent,
         LiveServerToolCall,
         LiveServerToolCallCancellation,
+        LiveServerVoiceActivity,
         LiveServerResponse,
         RealtimeInputConfig,
         Sensitivity,
@@ -82,7 +84,8 @@ export 'src/live_api.dart'
         SessionResumptionUpdate,
         SlidingWindow,
         Transcription,
-        TurnCoverage;
+        TurnCoverage,
+        VoiceActivityType;
 export 'src/live_session.dart' show LiveSession;
 export 'src/mime_types.dart' show FirebaseAIMimeTypes;
 export 'src/schema.dart' show JSONSchema, Schema, SchemaType;
@@ -95,7 +98,11 @@ export 'src/server_template/template_tool.dart'
         TemplateTool,
         TemplateToolConfig;
 export 'src/speech_config.dart'
-    show SpeechConfig, MultiSpeakerVoiceConfig, SpeakerVoiceConfig;
+    show
+        SpeechConfig,
+        SpeechMetadata,
+        MultiSpeakerVoiceConfig,
+        SpeakerVoiceConfig;
 export 'src/tool.dart'
     show
         AutoFunctionDeclaration,

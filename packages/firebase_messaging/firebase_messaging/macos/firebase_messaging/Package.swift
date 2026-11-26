@@ -7,19 +7,18 @@
 
 import PackageDescription
 
-let libraryVersion = "16.6.0"
-let firebaseSdkVersion: Version = "12.18.0"
+let libraryVersion = "17.1.0"
 
 let package = Package(
   name: "firebase_messaging",
   platforms: [
-    .macOS("10.15")
+    .macOS("11.0")
   ],
   products: [
     .library(name: "firebase-messaging", targets: ["firebase_messaging"])
   ],
   dependencies: [
-    .package(url: "https://github.com/firebase/firebase-ios-sdk", exact: firebaseSdkVersion),
+    .package(url: "https://github.com/firebase/firebase-ios-sdk", from: "13.2.0"),
     .package(name: "firebase_core", path: "../firebase_core"),
     .package(name: "FlutterFramework", path: "../FlutterFramework"),
   ],

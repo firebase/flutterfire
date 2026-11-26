@@ -79,8 +79,8 @@ Future<void> main() async {
   await Firebase.initializeApp();
   await FirebaseAppCheck.instance.activate(
     // You can also use a `ReCaptchaEnterpriseProvider` provider instance as an
-    // argument for `webProvider`
-    webProvider: ReCaptchaV3Provider('recaptcha-v3-site-key'),
+    // argument for `providerWeb`
+    providerWeb: ReCaptchaV3Provider('recaptcha-v3-site-key'),
     // Default provider for Android is the Play Integrity provider. You can use the "providerAndroid" parameter to choose
     // your preferred provider. Choose from:
     // 1. AndroidDebugProvider for debug environments
@@ -91,8 +91,13 @@ Future<void> main() async {
     // 1. AppleDebugProvider for debug environments
     // 2. AppleDeviceCheckProvider
     // 3. AppleAppAttestProvider
-    // 4. AppleAppAttestProviderWithDeviceCheckFallback (App Attest provider is only available on iOS 14.0+, macOS 14.0+)
+    // 4. AppleAppAttestWithDeviceCheckFallbackProvider (App Attest provider is only available on iOS 14.0+, macOS 14.0+)
     providerApple: AppleAppAttestProvider(),
+    // Default provider for Windows is the debug provider. Use `providerWindows`
+    // to choose:
+    // 1. WindowsDebugProvider for development (pass a console-registered token)
+    // 2. WindowsCustomProvider for production token minting via your backend
+    providerWindows: WindowsDebugProvider(debugToken: 'your-debug-token'),
   );
   runApp(App());
 }

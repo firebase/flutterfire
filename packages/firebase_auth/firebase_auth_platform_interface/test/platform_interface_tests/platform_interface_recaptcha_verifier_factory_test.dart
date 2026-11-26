@@ -16,8 +16,10 @@ void main() {
     });
 
     test('Constructor', () {
-      expect(recaptchaVerifierFactoryPlatform,
-          isA<RecaptchaVerifierFactoryPlatform>());
+      expect(
+        recaptchaVerifierFactoryPlatform,
+        isA<RecaptchaVerifierFactoryPlatform>(),
+      );
       expect(recaptchaVerifierFactoryPlatform, isA<PlatformInterface>());
     });
 
@@ -47,7 +49,8 @@ void main() {
       test('calls successfully', () {
         try {
           RecaptchaVerifierFactoryPlatform.verifyExtends(
-              recaptchaVerifierFactoryPlatform);
+            recaptchaVerifierFactoryPlatform,
+          );
           return;
         } catch (_) {
           fail('thrown an unexpected exception');

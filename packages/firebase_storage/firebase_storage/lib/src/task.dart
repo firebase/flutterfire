@@ -24,8 +24,9 @@ abstract class Task implements Future<TaskSnapshot> {
   /// If you do not need to know about on-going stream events, you can instead
   /// await this [Task] directly.
   Stream<TaskSnapshot> get snapshotEvents {
-    return _delegate.snapshotEvents
-        .map((snapshotDelegate) => TaskSnapshot._(storage, snapshotDelegate));
+    return _delegate.snapshotEvents.map(
+      (snapshotDelegate) => TaskSnapshot._(storage, snapshotDelegate),
+    );
   }
 
   /// The latest [TaskSnapshot] for this task.
@@ -56,18 +57,21 @@ abstract class Task implements Future<TaskSnapshot> {
       _delegate.onComplete.asStream().map((_) => snapshot);
 
   @override
-  Future<TaskSnapshot> catchError(Function onError,
-      {bool Function(Object error)? test}) async {
+  Future<TaskSnapshot> catchError(
+    Function onError, {
+    bool Function(Object error)? test,
+  }) async {
     await _delegate.onComplete.catchError(onError, test: test);
     return snapshot;
   }
 
   @override
-  Future<S> then<S>(FutureOr<S> Function(TaskSnapshot) onValue,
-          {Function? onError}) =>
-      _delegate.onComplete.then((_) {
-        return onValue(snapshot);
-      }, onError: onError);
+  Future<S> then<S>(
+    FutureOr<S> Function(TaskSnapshot) onValue, {
+    Function? onError,
+  }) => _delegate.onComplete.then((_) {
+    return onValue(snapshot);
+  }, onError: onError);
 
   @override
   Future<TaskSnapshot> whenComplete(FutureOr Function() action) async {
@@ -76,21 +80,22 @@ abstract class Task implements Future<TaskSnapshot> {
   }
 
   @override
-  Future<TaskSnapshot> timeout(Duration timeLimit,
-          {FutureOr<TaskSnapshot> Function()? onTimeout}) =>
-      _delegate.onComplete
-          .then((_) => snapshot)
-          .timeout(timeLimit, onTimeout: onTimeout);
+  Future<TaskSnapshot> timeout(
+    Duration timeLimit, {
+    FutureOr<TaskSnapshot> Function()? onTimeout,
+  }) => _delegate.onComplete
+      .then((_) => snapshot)
+      .timeout(timeLimit, onTimeout: onTimeout);
 }
 
 /// A class which indicates an on-going upload task.
 class UploadTask extends Task {
   UploadTask._(FirebaseStorage storage, TaskPlatform delegate)
-      : super._(storage, delegate);
+    : super._(storage, delegate);
 }
 
 /// A class which indicates an on-going download task.
 class DownloadTask extends Task {
   DownloadTask._(FirebaseStorage storage, TaskPlatform delegate)
-      : super._(storage, delegate);
+    : super._(storage, delegate);
 }

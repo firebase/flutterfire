@@ -16,11 +16,11 @@ const String kTestStorageBucket = 'flutterfire-e2e-tests.appspot.com';
 const _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
 Random _random = Random();
 String _getRandomString(int length) => String.fromCharCodes(
-      Iterable.generate(
-        length,
-        (_) => _chars.codeUnitAt(_random.nextInt(_chars.length)),
-      ),
-    );
+  Iterable.generate(
+    length,
+    (_) => _chars.codeUnitAt(_random.nextInt(_chars.length)),
+  ),
+);
 
 String get testEmulatorHost {
   if (defaultTargetPlatform == TargetPlatform.android && !kIsWeb) {
@@ -92,8 +92,9 @@ Uint8List createBlob(String content) {
 Future<FirebaseApp> testInitializeSecondaryApp({
   bool withDefaultBucket = true,
 }) async {
-  final String testAppName =
-      withDefaultBucket ? 'testapp' : 'testapp-no-bucket';
+  final String testAppName = withDefaultBucket
+      ? 'testapp'
+      : 'testapp-no-bucket';
 
   FirebaseOptions testAppOptions;
   if (!kIsWeb &&

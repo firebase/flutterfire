@@ -4,7 +4,7 @@
 
 import 'dart:async';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
@@ -61,9 +61,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Firebase Core example app'),
-        ),
+        appBar: AppBar(title: const Text('Firebase Core example app')),
         body: Padding(
           padding: const EdgeInsets.all(20),
           child: Column(
@@ -85,10 +83,7 @@ class MyApp extends StatelessWidget {
                 onPressed: initializeSecondary,
                 child: const Text('Initialize secondary app'),
               ),
-              ElevatedButton(
-                onPressed: apps,
-                child: const Text('List apps'),
-              ),
+              ElevatedButton(onPressed: apps, child: const Text('List apps')),
               ElevatedButton(
                 onPressed: options,
                 child: const Text('List default options'),

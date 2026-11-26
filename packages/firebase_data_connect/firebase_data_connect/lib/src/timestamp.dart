@@ -45,13 +45,14 @@ class Timestamp {
   }
 
   String toJson() {
-    String secondsStr =
-        DateTime.fromMillisecondsSinceEpoch(seconds * 1000, isUtc: true)
-            .toIso8601String();
+    String secondsStr = DateTime.fromMillisecondsSinceEpoch(
+      seconds * 1000,
+      isUtc: true,
+    ).toIso8601String();
     if (nanoseconds == 0) {
       return secondsStr;
     }
-    String nanoStr = nanoseconds.toString().padRight(9, '0');
+    String nanoStr = nanoseconds.toString().padLeft(9, '0');
     return '${secondsStr.substring(0, 19)}.${nanoStr}Z';
   }
 

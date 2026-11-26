@@ -16,7 +16,9 @@ import '../interop/firestore.dart' as firestore_interop;
 class DecodeUtility {
   /// Decodes the values on an incoming Map to their proper types.
   static Map<String, dynamic>? decodeMapData(
-      Map<String, dynamic>? data, FirebaseFirestorePlatform firestore) {
+    Map<String, dynamic>? data,
+    FirebaseFirestorePlatform firestore,
+  ) {
     if (data == null) {
       return null;
     }
@@ -25,7 +27,9 @@ class DecodeUtility {
 
   /// Decodes the values on an incoming Array to their proper types.
   static List<dynamic>? decodeArrayData(
-      List<dynamic>? data, FirebaseFirestorePlatform firestore) {
+    List<dynamic>? data,
+    FirebaseFirestorePlatform firestore,
+  ) {
     if (data == null) {
       return null;
     }
@@ -34,22 +38,28 @@ class DecodeUtility {
 
   /// Decodes an incoming value to its proper type.
   static dynamic valueDecode(
-      dynamic value, FirebaseFirestorePlatform firestore) {
+    dynamic value,
+    FirebaseFirestorePlatform firestore,
+  ) {
     // Cannot be done with Dart 3.2 constraints
     // ignore: invalid_runtime_check_with_js_interop_types
     if (value is JSObject &&
         value.instanceof(GeoPointConstructor as JSFunction)) {
-      return GeoPoint((value as GeoPointJsImpl).latitude.toDartDouble,
-          (value as GeoPointJsImpl).longitude.toDartDouble);
+      return GeoPoint(
+        (value as GeoPointJsImpl).latitude.toDartDouble,
+        (value as GeoPointJsImpl).longitude.toDartDouble,
+      );
       // Cannot be done with Dart 3.2 constraints
       // ignore: invalid_runtime_check_with_js_interop_types
     } else if (value is JSObject &&
         value.instanceof(VectorValueConstructor as JSFunction)) {
-      return VectorValue((value as VectorValueJsImpl)
-          .toArray()
-          .toDart
-          .map((JSAny? e) => (e! as JSNumber).toDartDouble)
-          .toList());
+      return VectorValue(
+        (value as VectorValueJsImpl)
+            .toArray()
+            .toDart
+            .map((JSAny? e) => (e! as JSNumber).toDartDouble)
+            .toList(),
+      );
     } else if (value is DateTime) {
       return Timestamp.fromDate(value);
       // Cannot be done with Dart 3.2 constraints

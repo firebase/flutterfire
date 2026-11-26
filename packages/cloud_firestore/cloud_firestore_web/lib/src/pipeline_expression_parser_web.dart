@@ -8,7 +8,8 @@ import 'dart:js_interop_unsafe';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart'
-    show Blob, GeoPoint, Timestamp, VectorValue;
+    show Blob, DocumentReferencePlatform, GeoPoint, Timestamp, VectorValue;
+import 'package:cloud_firestore_web/src/document_reference_web.dart';
 import 'package:cloud_firestore_web/src/interop/firestore_interop.dart'
     as interop;
 import 'package:cloud_firestore_web/src/interop/utils/utils.dart';
@@ -59,11 +60,13 @@ class PipelineExpressionParserWeb {
         if (expressions == null || expressions.isEmpty) {
           throw UnsupportedError('concat requires at least one expression');
         }
-        interop.ExpressionJsImpl result =
-            toExpression(expressions[0] as Map<String, dynamic>);
+        interop.ExpressionJsImpl result = toExpression(
+          expressions[0] as Map<String, dynamic>,
+        );
         for (var i = 1; i < expressions.length; i++) {
-          result = result
-              .concat(toExpression(expressions[i] as Map<String, dynamic>));
+          result = result.concat(
+            toExpression(expressions[i] as Map<String, dynamic>),
+          );
         }
         return result;
       case 'length':
@@ -127,13 +130,15 @@ class PipelineExpressionParserWeb {
         );
       case 'document_id':
         final pathArg = argsMap[_kExpression];
-        return _pipelines
-            .documentId(toExpression(pathArg as Map<String, dynamic>));
+        return _pipelines.documentId(
+          toExpression(pathArg as Map<String, dynamic>),
+        );
       case 'document_id_from_ref':
         final path = argsMap['doc_ref'] as String?;
         if (path == null || path.isEmpty) {
           throw ArgumentError(
-              "document_id_from_ref requires a non-empty 'doc_ref' path");
+            "document_id_from_ref requires a non-empty 'doc_ref' path",
+          );
         }
         final docRef = interop.doc(_jsFirestore as JSAny, path.toJS);
         return _pipelines.documentId(docRef);
@@ -148,12 +153,10 @@ class PipelineExpressionParserWeb {
           final keyString = _constantStringFromExpression(keyExprMap);
           if (keyString == null) {
             throw UnsupportedError(
-                'mapGet on web only supports a constant string key ');
+              'mapGet on web only supports a constant string key ',
+            );
           }
-          return _pipelines.mapGet(
-            _expr(argsMap, 'map'),
-            keyString.toJS,
-          );
+          return _pipelines.mapGet(_expr(argsMap, 'map'), keyString.toJS);
         }
       case 'map_keys':
         return _pipelines.mapKeys(_expr(argsMap, _kExpression));
@@ -195,7 +198,8 @@ class PipelineExpressionParserWeb {
         final arrays = argsMap['arrays'] as List<dynamic>?;
         if (arrays == null || arrays.length < 2) {
           throw UnsupportedError(
-              'array_concat_multiple requires at least two arrays');
+            'array_concat_multiple requires at least two arrays',
+          );
         }
         var arrResult = _pipelines.arrayConcat(
           toExpression(arrays[0] as Map<String, dynamic>),
@@ -261,7 +265,8 @@ class PipelineExpressionParserWeb {
         final kv = argsMap['key_values'] as List<dynamic>?;
         if (kv == null || kv.isEmpty || kv.length.isOdd) {
           throw UnsupportedError(
-              'map_set requires key_values with even length');
+            'map_set requires key_values with even length',
+          );
         }
         var cur = _expr(argsMap, 'map') as interop.ExpressionJsImpl;
         for (var i = 0; i < kv.length; i += 2) {
@@ -283,9 +288,9 @@ class PipelineExpressionParserWeb {
       case 'string_replace_one':
         return (_expr(argsMap, _kExpression) as interop.ExpressionJsImpl)
             .stringReplaceOne(
-          _expr(argsMap, 'find'),
-          _expr(argsMap, 'replacement'),
-        );
+              _expr(argsMap, 'find'),
+              _expr(argsMap, 'replacement'),
+            );
       case 'string_index_of':
         return (_expr(argsMap, _kExpression) as interop.ExpressionJsImpl)
             .stringIndexOf(_expr(argsMap, 'search'));
@@ -375,8 +380,9 @@ class PipelineExpressionParserWeb {
         }
       case 'array_filter':
         {
-          final filter =
-              toBooleanExpression(argsMap['filter'] as Map<String, dynamic>);
+          final filter = toBooleanExpression(
+            argsMap['filter'] as Map<String, dynamic>,
+          );
           if (filter == null) {
             throw UnsupportedError('array_filter requires a boolean filter');
           }
@@ -386,16 +392,16 @@ class PipelineExpressionParserWeb {
       case 'array_transform':
         return (_expr(argsMap, _kExpression) as interop.ExpressionJsImpl)
             .arrayTransform(
-          (argsMap['element_alias'] as String).toJS,
-          _expr(argsMap, 'transform'),
-        );
+              (argsMap['element_alias'] as String).toJS,
+              _expr(argsMap, 'transform'),
+            );
       case 'array_transform_with_index':
         return (_expr(argsMap, _kExpression) as interop.ExpressionJsImpl)
             .arrayTransformWithIndex(
-          (argsMap['element_alias'] as String).toJS,
-          (argsMap['index_alias'] as String).toJS,
-          _expr(argsMap, 'transform'),
-        );
+              (argsMap['element_alias'] as String).toJS,
+              (argsMap['index_alias'] as String).toJS,
+              _expr(argsMap, 'transform'),
+            );
       case 'timestamp_diff':
         return _pipelines.timestampDiff(
           _expr(argsMap, 'end'),
@@ -434,7 +440,8 @@ class PipelineExpressionParserWeb {
           final exprMaps = argsMap['expressions'] as List<dynamic>?;
           if (exprMaps == null || exprMaps.length < 2) {
             throw UnsupportedError(
-                'coalesce requires at least two expressions');
+              'coalesce requires at least two expressions',
+            );
           }
           final first = toExpression(exprMaps[0] as Map<String, dynamic>);
           final second = toExpression(exprMaps[1] as Map<String, dynamic>);
@@ -474,9 +481,7 @@ class PipelineExpressionParserWeb {
   /// The Firebase JS pipeline API represents boolean expressions as values
   /// where needed (e.g. aliased add_fields); [toBooleanExpression] already
   /// constructs the correct interop objects.
-  interop.ExpressionJsImpl _expressionFromBooleanMap(
-    Map<String, dynamic> map,
-  ) {
+  interop.ExpressionJsImpl _expressionFromBooleanMap(Map<String, dynamic> map) {
     final boolExpr = toBooleanExpression(map);
     if (boolExpr == null) {
       final n = map[_kName] as String? ?? '?';
@@ -515,10 +520,10 @@ class PipelineExpressionParserWeb {
       }
     }
     return (_pipelines.switchOnJs as JSObject)
-        .callMethodVarArgs<interop.ExpressionJsImpl>(
-      'apply'.toJS,
-      [_pipelines, allArgs.toJS],
-    );
+        .callMethodVarArgs<interop.ExpressionJsImpl>('apply'.toJS, [
+          _pipelines,
+          allArgs.toJS,
+        ]);
   }
 
   // ── Boolean expressions ───────────────────────────────────────────────────
@@ -532,22 +537,34 @@ class PipelineExpressionParserWeb {
     switch (name) {
       case 'equal':
         return _pipelines.equal(
-            _expr(argsMap, _kLeft), _expr(argsMap, _kRight));
+          _expr(argsMap, _kLeft),
+          _expr(argsMap, _kRight),
+        );
       case 'not_equal':
         return _pipelines.notEqual(
-            _expr(argsMap, _kLeft), _expr(argsMap, _kRight));
+          _expr(argsMap, _kLeft),
+          _expr(argsMap, _kRight),
+        );
       case 'greater_than':
         return _pipelines.greaterThan(
-            _expr(argsMap, _kLeft), _expr(argsMap, _kRight));
+          _expr(argsMap, _kLeft),
+          _expr(argsMap, _kRight),
+        );
       case 'greater_than_or_equal':
         return _pipelines.greaterThanOrEqual(
-            _expr(argsMap, _kLeft), _expr(argsMap, _kRight));
+          _expr(argsMap, _kLeft),
+          _expr(argsMap, _kRight),
+        );
       case 'less_than':
         return _pipelines.lessThan(
-            _expr(argsMap, _kLeft), _expr(argsMap, _kRight));
+          _expr(argsMap, _kLeft),
+          _expr(argsMap, _kRight),
+        );
       case 'less_than_or_equal':
         return _pipelines.lessThanOrEqual(
-            _expr(argsMap, _kLeft), _expr(argsMap, _kRight));
+          _expr(argsMap, _kLeft),
+          _expr(argsMap, _kRight),
+        );
       case 'and':
       case 'or':
       case 'xor':
@@ -617,7 +634,8 @@ class PipelineExpressionParserWeb {
         throw FirebaseException(
           plugin: 'cloud_firestore',
           code: 'unsupported-boolean-expression',
-          message: "The boolean expression '$name' is not supported on the web "
+          message:
+              "The boolean expression '$name' is not supported on the web "
               'platform. The Firebase JS SDK may not expose this expression.',
         );
     }
@@ -649,8 +667,9 @@ class PipelineExpressionParserWeb {
     if (name == _kAlias) {
       final alias = argsMap[_kAlias] as String;
       final expression = argsMap[_kExpression];
-      return toExpression(expression as Map<String, dynamic>)
-          .asAlias(alias.toJS);
+      return toExpression(
+        expression as Map<String, dynamic>,
+      ).asAlias(alias.toJS);
     }
     return toExpression(map);
   }
@@ -659,6 +678,66 @@ class PipelineExpressionParserWeb {
   JSAny toAddFieldsOptions(List<dynamic> expressions) =>
       interop.AddFieldsOptionsJsImpl()
         ..fields = _toSelectableList(expressions).toJS;
+
+  JSAny toLiteralsDocuments(List<dynamic> documents) {
+    final objects = documents.map((document) {
+      final fields = document as Map;
+      final object = JSObject();
+      for (final entry in fields.entries) {
+        final tagged = Map<String, dynamic>.from(entry.value as Map);
+        final JSAny? jsValue;
+        if (tagged['kind'] == 'expression') {
+          jsValue = toExpression(
+            Map<String, dynamic>.from(tagged['expression'] as Map),
+          );
+        } else {
+          jsValue = _literalValueToJs(tagged['value']);
+        }
+        object.setProperty(entry.key.toString().toJS, jsValue);
+      }
+      return object;
+    }).toList();
+    return objects.toJS;
+  }
+
+  JSAny toUpdateOptions(Map<String, dynamic> map) {
+    final options = interop.UpdateStageOptionsJsImpl();
+    final expressions = map['expressions'] as List<dynamic>?;
+    if (expressions != null && expressions.isNotEmpty) {
+      options.transformedFields = _toSelectableList(expressions).toJS;
+    }
+    return options;
+  }
+
+  JSAny toInsertOptions(Map<String, dynamic> map) {
+    final options = interop.InsertStageOptionsJsImpl();
+    _applyWriteTarget(options, map);
+    return options;
+  }
+
+  JSAny toUpsertOptions(Map<String, dynamic> map) {
+    final options = interop.UpsertStageOptionsJsImpl();
+    _applyWriteTarget(options, map);
+    final additionalFields = map['additional_fields'] as List<dynamic>?;
+    if (additionalFields != null && additionalFields.isNotEmpty) {
+      options.additionalFields = _toSelectableList(additionalFields).toJS;
+    }
+    return options;
+  }
+
+  void _applyWriteTarget(JSObject options, Map<String, dynamic> map) {
+    final collection = map['collection'] as String?;
+    if (collection != null) {
+      options.setProperty('collection'.toJS, collection.toJS);
+    }
+    final documentId = map['document_id'];
+    if (documentId is Map) {
+      options.setProperty(
+        'documentIdExpression'.toJS,
+        toExpression(Map<String, dynamic>.from(documentId)),
+      );
+    }
+  }
 
   /// Converts select stage expressions to JS SelectStageOptions.
   JSAny toSelectOptions(List<dynamic> expressions) =>
@@ -682,7 +761,8 @@ class PipelineExpressionParserWeb {
   ///
   /// Expects [map] to contain an [aggregate_functions] list.
   interop.AggregateStageOptionsJsImpl toAggregateOptionsFromFunctions(
-      Map<String, dynamic> map) {
+    Map<String, dynamic> map,
+  ) {
     final list = map['aggregate_functions'] as List<dynamic>;
     return _buildAccumulators(list);
   }
@@ -692,7 +772,8 @@ class PipelineExpressionParserWeb {
   /// Expects [map] to contain an [aggregate_stage] map with [accumulators]
   /// and optionally [groups].
   interop.AggregateStageOptionsJsImpl toAggregateOptionsFromStageAndOptions(
-      Map<String, dynamic> map) {
+    Map<String, dynamic> map,
+  ) {
     final stage = map['aggregate_stage'] as Map<String, dynamic>;
     final list = stage['accumulators'] as List<dynamic>;
     final groups = stage['groups'] as List<dynamic>?;
@@ -746,7 +827,8 @@ class PipelineExpressionParserWeb {
 
   /// Converts find_nearest args to JS FindNearestStageOptions.
   interop.FindNearestStageOptionsJsImpl toFindNearestOptions(
-      Map<String, dynamic> map) {
+    Map<String, dynamic> map,
+  ) {
     final vectorField =
         (map['vector_field'] as String?) ?? (map[_kField] as String?);
     final vectorValue = map['vector_value'] as List<dynamic>?;
@@ -812,6 +894,30 @@ class PipelineExpressionParserWeb {
 
   // ── Private helpers ───────────────────────────────────────────────────────
 
+  JSAny? _literalValueToJs(Object? value) {
+    if (value is Uint8List) {
+      return interop.BytesJsImpl.fromUint8Array(value.toJS) as JSAny;
+    }
+    if (value is DocumentReferenceWeb) {
+      return interop.doc(value.firestoreWeb.jsObject as JSAny, value.path.toJS)
+          as JSAny;
+    }
+    if (value is DocumentReferencePlatform) {
+      return interop.doc(_jsFirestore as JSAny, value.path.toJS) as JSAny;
+    }
+    if (value is Map) {
+      final object = JSObject();
+      value.forEach((key, nested) {
+        object.setProperty(key.toString().toJS, _literalValueToJs(nested));
+      });
+      return object;
+    }
+    if (value is List) {
+      return value.map(_literalValueToJs).toList().toJS;
+    }
+    return _constantValueToJs(value);
+  }
+
   /// Converts a [Constant] value to the correct JS type for the pipelines API.
   ///
   /// Each Dart type accepted by [Constant] is mapped to the corresponding
@@ -826,7 +932,9 @@ class PipelineExpressionParserWeb {
     if (value is double) return value.toJS;
     if (value is DateTime) {
       return interop.TimestampJsImpl.fromMillis(
-          value.millisecondsSinceEpoch.toJS) as JSAny;
+            value.millisecondsSinceEpoch.toJS,
+          )
+          as JSAny;
     }
 
     if (value is Timestamp) {
@@ -874,11 +982,8 @@ class PipelineExpressionParserWeb {
   JSAny _expr(Map<String, dynamic> argsMap, String key) =>
       toExpression(argsMap[key] as Map<String, dynamic>);
 
-  JSAny _jsArrayContains(Map<String, dynamic> argsMap) =>
-      _pipelines.arrayContains(
-        _expr(argsMap, 'array'),
-        _expr(argsMap, 'element'),
-      );
+  JSAny _jsArrayContains(Map<String, dynamic> argsMap) => _pipelines
+      .arrayContains(_expr(argsMap, 'array'), _expr(argsMap, 'element'));
 
   JSAny? _jsArrayContainsAny(Map<String, dynamic> argsMap) {
     final valuesMaps = argsMap['values'] as List<dynamic>?;
@@ -933,13 +1038,14 @@ class PipelineExpressionParserWeb {
   interop.ExpressionJsImpl _binaryArithmetic(
     Map<String, dynamic> argsMap,
     interop.ExpressionJsImpl Function(
-            interop.ExpressionJsImpl left, interop.ExpressionJsImpl right)
-        op,
-  ) =>
-      op(
-        toExpression(argsMap[_kLeft] as Map<String, dynamic>),
-        toExpression(argsMap[_kRight] as Map<String, dynamic>),
-      );
+      interop.ExpressionJsImpl left,
+      interop.ExpressionJsImpl right,
+    )
+    op,
+  ) => op(
+    toExpression(argsMap[_kLeft] as Map<String, dynamic>),
+    toExpression(argsMap[_kRight] as Map<String, dynamic>),
+  );
 
   JSAny? _buildFilterExpression(Map<String, dynamic> argsMap) {
     final operator = argsMap['operator'] as String?;
@@ -959,8 +1065,10 @@ class PipelineExpressionParserWeb {
   }
 
   List<JSAny> _toSelectableList(List<dynamic> expressions) => expressions
-      .map((e) =>
-          toSelectable(e is Map<String, dynamic> ? e : <String, dynamic>{}))
+      .map(
+        (e) =>
+            toSelectable(e is Map<String, dynamic> ? e : <String, dynamic>{}),
+      )
       .whereType<JSAny>()
       .toList();
 
@@ -972,9 +1080,11 @@ class PipelineExpressionParserWeb {
       if (expr == null) continue;
       final exprJs = toExpression(expr as Map<String, dynamic>);
       final dir = orderingMap['order_direction'] as String?;
-      list.add(dir == 'desc'
-          ? _pipelines.descending(exprJs)
-          : _pipelines.ascending(exprJs));
+      list.add(
+        dir == 'desc'
+            ? _pipelines.descending(exprJs)
+            : _pipelines.ascending(exprJs),
+      );
     }
     return list;
   }
@@ -1009,15 +1119,18 @@ class PipelineExpressionParserWeb {
     if (alias == null || aggregateFn == null) return null;
     final fnName = aggregateFn[_kName] as String?;
     if (fnName == null) return null;
-    final expressionMap = (aggregateFn[_kArgs]
-        as Map<String, dynamic>?)?[_kExpression] as Map<String, dynamic>?;
+    final expressionMap =
+        (aggregateFn[_kArgs] as Map<String, dynamic>?)?[_kExpression]
+            as Map<String, dynamic>?;
     final exprJs = expressionMap != null ? toExpression(expressionMap) : null;
     return _buildAggregateFunction(fnName, exprJs)?.asAlias(alias.toJS);
   }
 
   /// Builds one JS aggregate function from a serialized [name] and optional [exprJs].
   interop.AggregateFunctionJsImpl? _buildAggregateFunction(
-      String name, JSAny? exprJs) {
+    String name,
+    JSAny? exprJs,
+  ) {
     switch (name) {
       case 'count_all':
         return _pipelines.countAll();

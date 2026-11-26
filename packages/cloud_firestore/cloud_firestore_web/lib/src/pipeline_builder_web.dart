@@ -19,12 +19,16 @@ interop.PipelineJsImpl buildPipelineFromStages(
   final source = jsFirestore.pipeline();
   final first = stages.first;
   final stageName = first['stage'] as String?;
+  final converter = PipelineExpressionParserWeb(interop.pipelines, jsFirestore);
 
   // Build source stage
   interop.PipelineJsImpl pipeline = _applySourceStage(
-      source as interop.PipelineSourceJsImpl, jsFirestore, stageName, first);
-
-  final converter = PipelineExpressionParserWeb(interop.pipelines, jsFirestore);
+    source as interop.PipelineSourceJsImpl,
+    jsFirestore,
+    stageName,
+    first,
+    converter,
+  );
 
   // Apply remaining stages
   for (var i = 1; i < stages.length; i++) {
@@ -38,24 +42,41 @@ interop.PipelineJsImpl _applySourceStage(
   interop.FirestoreJsImpl jsFirestore,
   String? stageName,
   Map<String, dynamic> first,
+  PipelineExpressionParserWeb converter,
 ) {
   final args = first['args'];
   return switch (stageName) {
-    'collection' => source
-        .collection(((args as Map<String, dynamic>)['path']! as String).toJS),
+    'collection' => source.collection(
+      ((args as Map<String, dynamic>)['path']! as String).toJS,
+    ),
     'collection_group' => source.collectionGroup(
-        ((args as Map<String, dynamic>)['path']! as String).toJS),
+      ((args as Map<String, dynamic>)['path']! as String).toJS,
+    ),
     'database' => source.database(),
     'documents' => source.documents(
-        (args as List<dynamic>)
-            .map((e) => (e as Map<String, dynamic>)['path']! as String)
-            .map((p) => interop.doc(jsFirestore as JSAny, p.toJS))
-            .toList()
-            .toJS,
-      ),
+      (args as List<dynamic>)
+          .map((e) => (e as Map<String, dynamic>)['path']! as String)
+          .map((p) => interop.doc(jsFirestore as JSAny, p.toJS))
+          .toList()
+          .toJS,
+    ),
+    'literals' => source.literals(
+      converter.toLiteralsDocuments(_requiredLiteralDocuments(args)),
+    ),
     _ => throw UnsupportedError(
-        'Pipeline source stage "$stageName" is not supported on web.'),
+      'Pipeline source stage "$stageName" is not supported on web.',
+    ),
   };
+}
+
+List<dynamic> _requiredLiteralDocuments(Object? args) {
+  final documents = args is Map<String, dynamic> ? args['documents'] : null;
+  if (documents is! List || documents.isEmpty) {
+    throw ArgumentError(
+      'A literals stage requires a non-empty documents list.',
+    );
+  }
+  return documents;
 }
 
 interop.PipelineJsImpl _applyStage(
@@ -78,8 +99,9 @@ interop.PipelineJsImpl _applyStage(
     case 'where':
       final expression = map['expression'];
       if (expression == null) return pipeline;
-      final condition =
-          converter.toBooleanExpression(expression as Map<String, dynamic>);
+      final condition = converter.toBooleanExpression(
+        expression as Map<String, dynamic>,
+      );
       if (condition == null) {
         throw UnsupportedError(
           'Pipeline where() on web: could not parse the condition expression.',
@@ -105,8 +127,9 @@ interop.PipelineJsImpl _applyStage(
     case 'aggregate':
       return pipeline.aggregate(converter.toAggregateOptionsFromFunctions(map));
     case 'aggregate_with_options':
-      return pipeline
-          .aggregate(converter.toAggregateOptionsFromStageAndOptions(map));
+      return pipeline.aggregate(
+        converter.toAggregateOptionsFromStageAndOptions(map),
+      );
     case 'sample':
       return pipeline.sample(converter.toSampleOptions(args));
     case 'unnest':
@@ -119,16 +142,27 @@ interop.PipelineJsImpl _applyStage(
       final expression = map['expression'];
       if (expression == null) return pipeline;
       return pipeline.replaceWith(
-          converter.toReplaceWithOptions(expression as Map<String, dynamic>));
+        converter.toReplaceWithOptions(expression as Map<String, dynamic>),
+      );
     case 'find_nearest':
       return pipeline.findNearest(converter.toFindNearestOptions(map));
     case 'search':
       return pipeline.search(converter.toSearchOptions(map));
     case 'union':
       final pipelineStages = map['pipeline'] as List<Map<String, dynamic>>;
-      final otherPipeline =
-          buildPipelineFromStages(jsFirestore, pipelineStages);
+      final otherPipeline = buildPipelineFromStages(
+        jsFirestore,
+        pipelineStages,
+      );
       return pipeline.union(otherPipeline);
+    case 'delete':
+      return pipeline.delete(interop.DeleteStageOptionsJsImpl());
+    case 'update':
+      return pipeline.update(converter.toUpdateOptions(map));
+    case 'insert':
+      return pipeline.insert(converter.toInsertOptions(map));
+    case 'upsert':
+      return pipeline.upsert(converter.toUpsertOptions(map));
     default:
       throw FirebaseException(
         plugin: 'cloud_firestore',

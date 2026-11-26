@@ -7,13 +7,13 @@
 
 import PackageDescription
 
-let libraryVersionString = "4.14.0"
-let firebaseSdkVersion: Version = "12.18.0"
+let libraryVersionString = "5.2.0"
+let firebaseSdkVersion: Version = "13.2.0"
 
 let package = Package(
   name: "firebase_core",
   platforms: [
-    .macOS("10.15")
+    .macOS("11.0")
   ],
   products: [
     .library(name: "firebase-core", targets: ["firebase_core", "firebase_core_objc"])

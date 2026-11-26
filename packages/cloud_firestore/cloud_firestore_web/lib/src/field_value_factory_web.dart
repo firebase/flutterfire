@@ -13,14 +13,18 @@ import 'utils/encode_utility.dart';
 /// instances that are [jsify] friendly.
 class FieldValueFactoryWeb extends FieldValueFactoryPlatform {
   @override
-  FieldValueWeb arrayRemove(List elements) =>
-      FieldValueWeb(firestore_interop.FieldValue.arrayRemove(
-          EncodeUtility.valueEncode(elements)));
+  FieldValueWeb arrayRemove(List elements) => FieldValueWeb(
+    firestore_interop.FieldValue.arrayRemove(
+      EncodeUtility.valueEncode(elements),
+    ),
+  );
 
   @override
-  FieldValueWeb arrayUnion(List elements) =>
-      FieldValueWeb(firestore_interop.FieldValue.arrayUnion(
-          EncodeUtility.valueEncode(elements)));
+  FieldValueWeb arrayUnion(List elements) => FieldValueWeb(
+    firestore_interop.FieldValue.arrayUnion(
+      EncodeUtility.valueEncode(elements),
+    ),
+  );
 
   @override
   FieldValueWeb delete() =>
@@ -29,6 +33,14 @@ class FieldValueFactoryWeb extends FieldValueFactoryPlatform {
   @override
   FieldValueWeb increment(num value) =>
       FieldValueWeb(firestore_interop.FieldValue.increment(value));
+
+  @override
+  FieldValueWeb minimum(num value) =>
+      FieldValueWeb(firestore_interop.FieldValue.minimum(value));
+
+  @override
+  FieldValueWeb maximum(num value) =>
+      FieldValueWeb(firestore_interop.FieldValue.maximum(value));
 
   @override
   FieldValueWeb serverTimestamp() =>

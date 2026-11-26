@@ -30,10 +30,7 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
   MethodChannelDatabaseReference({
     required DatabasePlatform database,
     required List<String> pathComponents,
-  }) : super(
-          database: database,
-          pathComponents: pathComponents,
-        );
+  }) : super(database: database, pathComponents: pathComponents);
 
   /// Gets the Pigeon app object from the database
   DatabasePigeonFirebaseApp get _pigeonApp {
@@ -133,10 +130,7 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
     try {
       await _api.databaseReferenceSetPriority(
         _pigeonApp,
-        DatabaseReferenceRequest(
-          path: path,
-          priority: priority,
-        ),
+        DatabaseReferenceRequest(path: path, priority: priority),
       );
     } catch (e, s) {
       convertPlatformException(e, s);
@@ -197,9 +191,6 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
 
   @override
   OnDisconnectPlatform onDisconnect() {
-    return MethodChannelOnDisconnect(
-      database: database,
-      ref: this,
-    );
+    return MethodChannelOnDisconnect(database: database, ref: this);
   }
 }

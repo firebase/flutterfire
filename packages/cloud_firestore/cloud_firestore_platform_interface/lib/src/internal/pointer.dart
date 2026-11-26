@@ -14,8 +14,10 @@ import 'package:meta/meta.dart';
 class Pointer {
   /// Create instance of [Pointer]
   Pointer(String path)
-      : components =
-            path.split('/').where((element) => element.isNotEmpty).toList();
+    : components = path
+          .split('/')
+          .where((element) => element.isNotEmpty)
+          .toList();
 
   /// The Firestore normalized path of the [Pointer].
   String get path {

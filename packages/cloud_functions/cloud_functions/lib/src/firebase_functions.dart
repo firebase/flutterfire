@@ -10,8 +10,8 @@ part of '../cloud_functions.dart';
 /// You can get an instance by calling [FirebaseFunctions.instance].
 class FirebaseFunctions extends FirebasePlugin {
   FirebaseFunctions._({required this.app, String? region})
-      : _region = region ??= 'us-central1',
-        super(app.name, 'plugins.flutter.io/firebase_functions');
+    : _region = region ??= 'us-central1',
+      super(app.name, 'plugins.flutter.io/firebase_functions');
 
   // Cached and lazily loaded instance of [FirebaseFunctionsPlatform] to avoid
   // creating a [MethodChannelFirebaseFunctions] when not needed or creating an
@@ -22,8 +22,10 @@ class FirebaseFunctions extends FirebasePlugin {
   /// [FirebaseFunctions] instance. This is useful for testing purposes only.
   @visibleForTesting
   FirebaseFunctionsPlatform get delegate {
-    return _delegatePackingProperty ??=
-        FirebaseFunctionsPlatform.instanceFor(app: app, region: _region);
+    return _delegatePackingProperty ??= FirebaseFunctionsPlatform.instanceFor(
+      app: app,
+      region: _region,
+    );
   }
 
   /// The [FirebaseApp] for this current [FirebaseFunctions] instance.
@@ -33,9 +35,7 @@ class FirebaseFunctions extends FirebasePlugin {
 
   /// Returns an instance using the default [FirebaseApp] and region.
   static FirebaseFunctions get instance {
-    return FirebaseFunctions.instanceFor(
-      app: Firebase.app(),
-    );
+    return FirebaseFunctions.instanceFor(app: Firebase.app());
   }
 
   /// Returns an instance using a specified [FirebaseApp] & region.
@@ -48,8 +48,10 @@ class FirebaseFunctions extends FirebasePlugin {
       return _cachedInstances[cachedKey]!;
     }
 
-    FirebaseFunctions newInstance =
-        FirebaseFunctions._(app: app, region: region);
+    FirebaseFunctions newInstance = FirebaseFunctions._(
+      app: app,
+      region: region,
+    );
     _cachedInstances[cachedKey] = newInstance;
 
     return newInstance;
@@ -59,13 +61,37 @@ class FirebaseFunctions extends FirebasePlugin {
 
   String? _origin;
 
+  /// Whether Auth, FCM, and App Check tokens may be sent over plain HTTP to a
+  /// non-loopback host.
+  ///
+  /// This mirrors `Functions.allowInsecureTokenAttachment` on the Firebase
+  /// Apple SDK. Set it before calling a function on a local emulator from a
+  /// physical device:
+  ///
+  /// ```dart
+  /// FirebaseFunctions.instance.allowInsecureTokenAttachment = true;
+  /// FirebaseFunctions.instance.useFunctionsEmulator('192.168.1.10', 5001);
+  /// ```
+  ///
+  /// Only Apple debug builds honor this value. `flutter run` is a debug build.
+  /// Profile and release builds compile the Apple SDK without the property, so
+  /// the value is ignored there. Android and web already attach these tokens,
+  /// so the value has no effect on those platforms, and setting it to `false`
+  /// does not withhold tokens on Android or web.
+  ///
+  /// Sending tokens over plain HTTP exposes them on the local network. Enable
+  /// this only for a local emulator.
+  bool get allowInsecureTokenAttachment =>
+      delegate.allowInsecureTokenAttachment;
+
+  set allowInsecureTokenAttachment(bool value) {
+    delegate.allowInsecureTokenAttachment = value;
+  }
+
   /// A reference to the Callable HTTPS trigger with the given name.
   ///
   /// Should be the name of the Callable function in Firebase
-  HttpsCallable httpsCallable(
-    String name, {
-    HttpsCallableOptions? options,
-  }) {
+  HttpsCallable httpsCallable(String name, {HttpsCallableOptions? options}) {
     assert(name.isNotEmpty);
     options ??= HttpsCallableOptions();
     return HttpsCallable._(delegate.httpsCallable(_origin, name, options));
@@ -81,27 +107,29 @@ class FirebaseFunctions extends FirebasePlugin {
     final uri = Uri.parse(url);
     options ??= HttpsCallableOptions();
     return HttpsCallable._(
-        delegate.httpsCallableWithUri(_origin, uri, options));
+      delegate.httpsCallableWithUri(_origin, uri, options),
+    );
   }
 
   /// A reference to the Callable HTTPS trigger with the given Uri.
   ///
   /// Should be Uri of the 2nd gen Callable function in Firebase.
-  HttpsCallable httpsCallableFromUri(
-    Uri uri, {
-    HttpsCallableOptions? options,
-  }) {
+  HttpsCallable httpsCallableFromUri(Uri uri, {HttpsCallableOptions? options}) {
     options ??= HttpsCallableOptions();
     return HttpsCallable._(
-        delegate.httpsCallableWithUri(_origin, uri, options));
+      delegate.httpsCallableWithUri(_origin, uri, options),
+    );
   }
 
   /// Changes this instance to point to a Cloud Functions emulator running locally.
   ///
   /// Set the [host] of the local emulator, such as "localhost"
   /// Set the [port] of the local emulator, such as "5001" (port 5001 is default for functions package)
-  void useFunctionsEmulator(String host, int port,
-      {bool automaticHostMapping = true}) {
+  void useFunctionsEmulator(
+    String host,
+    int port, {
+    bool automaticHostMapping = true,
+  }) {
     String mappedHost = host;
     // Android considers localhost as 10.0.2.2 - automatically handle this for users.
     if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {

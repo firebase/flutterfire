@@ -68,7 +68,9 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
       final secondElement = currentUser[1]!;
       currentUser = InternalUserDetails.decode([firstElement, secondElement]);
     }
-    return FirebaseAuthPlatform.instance.delegateFor(app: app).setInitialValues(
+    return FirebaseAuthPlatform.instance
+        .delegateFor(app: app)
+        .setInitialValues(
           languageCode: pluginConstants['APP_LANGUAGE_CODE'],
           currentUser: currentUser,
         );
@@ -241,9 +243,6 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   /// - **network-request-failed**:
   ///  - Thrown if there was a network request error, for example the user
   ///    doesn't have internet connection
-  /// - **operation-not-allowed**:
-  ///  - Thrown if email/password accounts are not enabled. Enable
-  ///    email/password accounts in the Firebase Console, under the Auth tab.
   Future<UserCredentialPlatform> createUserWithEmailAndPassword(
     String email,
     String password,
@@ -555,8 +554,8 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   ///    [email enumeration protection](https://cloud.google.com/identity-platform/docs/admin/email-enumeration-protection)
   ///    enabled (the default since September 2023), this replaces
   ///    **user-not-found** and **wrong-password** to prevent revealing
-  ///    whether an account exists. On the Firebase emulator, the code may
-  ///    appear as **INVALID_LOGIN_CREDENTIALS**.
+  ///    whether an account exists. Older versions of the native SDKs
+  ///    reported **invalid-login-credentials** instead.
   /// - **operation-not-allowed**:
   ///  - Thrown if email/password accounts are not enabled. Enable
   ///    email/password accounts in the Firebase Console, under the Auth tab.
@@ -727,7 +726,8 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   /// Authorization code can be retrieved on the user credential i.e. userCredential.additionalUserInfo.authorizationCode
   Future<void> revokeTokenWithAuthorizationCode(String authorizationCode) {
     throw UnimplementedError(
-        'revokeTokenWithAuthorizationCode() is not implemented');
+      'revokeTokenWithAuthorizationCode() is not implemented',
+    );
   }
 
   /// Android only. Revokes the provided accessToken. Currently supports revoking Apple-issued accessToken only.

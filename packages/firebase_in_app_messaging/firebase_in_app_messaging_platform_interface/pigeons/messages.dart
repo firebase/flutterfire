@@ -19,14 +19,155 @@ import 'package:pigeon/pigeon.dart';
     copyrightHeader: 'pigeons/copyright.txt',
   ),
 )
+/// How an in-app message was dismissed.
+enum FiamDismissType {
+  /// The message was swiped away. Only reported on iOS, for banner messages.
+  swipe,
+
+  /// The user tapped a button to close the message.
+  clickedCancel,
+
+  /// The message was dismissed automatically. Only reported on iOS, for banner
+  /// messages.
+  auto,
+
+  /// The way the message was dismissed is unknown. Always reported on Android,
+  /// which does not expose a dismiss type.
+  unknown,
+}
+
+/// Metadata of the campaign an in-app message belongs to.
+class FiamCampaignMetadata {
+  const FiamCampaignMetadata({
+    required this.campaignId,
+    required this.campaignName,
+    required this.isTestMessage,
+  });
+
+  final String campaignId;
+  final String campaignName;
+  final bool isTestMessage;
+}
+
+/// The action attached to the button a user tapped on an in-app message.
+class FiamAction {
+  const FiamAction({this.actionUrl, this.buttonText});
+
+  final String? actionUrl;
+  final String? buttonText;
+}
+
+/// Styled text from a campaign, used by custom Flutter display.
+class FiamText {
+  const FiamText({required this.text, this.hexColor});
+
+  final String text;
+  final String? hexColor;
+}
+
+/// A campaign action forwarded for custom Flutter display.
+class FiamDisplayAction {
+  const FiamDisplayAction({
+    required this.id,
+    this.actionUrl,
+    this.buttonText,
+    this.buttonTextHexColor,
+    this.buttonBackgroundHexColor,
+  });
+
+  final String id;
+  final String? actionUrl;
+  final String? buttonText;
+  final String? buttonTextHexColor;
+  final String? buttonBackgroundHexColor;
+}
+
+/// Full campaign payload forwarded instead of native templates.
+class FiamDisplayMessage {
+  const FiamDisplayMessage({
+    required this.campaignMetadata,
+    required this.messageType,
+    this.title,
+    this.body,
+    this.imageUrl,
+    this.landscapeImageUrl,
+    this.backgroundHexColor,
+    this.action,
+    this.primaryAction,
+    this.secondaryAction,
+    this.data,
+  });
+
+  final FiamCampaignMetadata campaignMetadata;
+
+  /// One of BANNER, MODAL, CARD, IMAGE_ONLY, UNKNOWN.
+  final String messageType;
+  final FiamText? title;
+  final FiamText? body;
+  final String? imageUrl;
+  final String? landscapeImageUrl;
+  final String? backgroundHexColor;
+  final FiamDisplayAction? action;
+  final FiamDisplayAction? primaryAction;
+  final FiamDisplayAction? secondaryAction;
+  final Map<String?, String?>? data;
+}
+
 @HostApi(dartHostTestHandler: 'TestFirebaseInAppMessagingHostApi')
 abstract class FirebaseInAppMessagingHostApi {
-  @async
+  @asyncCallback
   void triggerEvent(String appName, String eventName);
 
-  @async
+  @asyncCallback
   void setMessagesSuppressed(String appName, bool suppress);
 
-  @async
+  @asyncCallback
   void setAutomaticDataCollectionEnabled(String appName, bool enabled);
+
+  /// Attaches the native message lifecycle listeners that forward events to
+  /// [FirebaseInAppMessagingFlutterApi]. Calling this more than once is a no-op.
+  @asyncCallback
+  void addEventListeners(String appName);
+
+  @asyncCallback
+  void setCustomDisplayEnabled(String appName, bool enabled);
+
+  @asyncCallback
+  void reportImpression(String campaignId);
+
+  @asyncCallback
+  void reportClick(String campaignId, String actionId);
+
+  @asyncCallback
+  void reportDismiss(String campaignId, String dismissType);
+
+  @asyncCallback
+  void reportDisplayError(String campaignId, String reason);
+}
+
+@FlutterApi()
+abstract class FirebaseInAppMessagingFlutterApi {
+  @asyncCallback
+  void onMessageClicked(
+    FiamCampaignMetadata campaignMetadata,
+    FiamAction action,
+  );
+
+  @asyncCallback
+  void onMessageImpression(FiamCampaignMetadata campaignMetadata);
+
+  @asyncCallback
+  void onMessageDismissed(
+    FiamCampaignMetadata campaignMetadata,
+    FiamDismissType dismissType,
+  );
+
+  @asyncCallback
+  void onMessageDisplayError(
+    FiamCampaignMetadata campaignMetadata,
+    String? errorMessage,
+  );
+
+  @asyncCallback
+  void onMessageDisplay(FiamDisplayMessage message);
 }

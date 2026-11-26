@@ -44,8 +44,10 @@ void main() {
 
       // Verify properties
       expect(autoDeclaration.name, 'greetUser');
-      expect(autoDeclaration.description,
-          'Greets a user with their name and calculates age plus ten.');
+      expect(
+        autoDeclaration.description,
+        'Greets a user with their name and calculates age plus ten.',
+      );
       expect(autoDeclaration.callable, myFunction);
 
       // Verify toJson output (should match FunctionDeclaration's toJson)
@@ -64,16 +66,20 @@ void main() {
       });
 
       // Optionally, test invoking the callable directly (simulating client execution)
-      final result =
-          await autoDeclaration.callable({'name': 'Alice', 'age': 30});
+      final result = await autoDeclaration.callable({
+        'name': 'Alice',
+        'age': 30,
+      });
       expect(result, {'result': 'Hello, Alice!', 'age_plus_ten': 40});
     });
 
     test('AutoFunctionDeclaration with optional parameters', () async {
       Future<Map<String, Object?>> optionalParamFunction(
-          Map<String, Object?> args) async {
-        final greeting =
-            args['name'] != null ? 'Hello, ${args['name']}!' : 'Hello!';
+        Map<String, Object?> args,
+      ) async {
+        final greeting = args['name'] != null
+            ? 'Hello, ${args['name']}!'
+            : 'Hello!';
 
         return {'message': greeting};
       }
@@ -114,9 +120,7 @@ void main() {
     });
 
     test('AutoFunctionDeclaration with JSONSchema', () async {
-      final parametersSchema = {
-        'count': JSONSchema.integer(),
-      };
+      final parametersSchema = {'count': JSONSchema.integer()};
 
       final autoDeclaration = AutoFunctionDeclaration(
         name: 'testSchema',
@@ -139,9 +143,7 @@ void main() {
     });
 
     test('FunctionDeclaration with JSONSchema', () {
-      final parametersSchema = {
-        'count': JSONSchema.integer(),
-      };
+      final parametersSchema = {'count': JSONSchema.integer()};
 
       final declaration = FunctionDeclaration(
         'testSchema',
@@ -163,32 +165,31 @@ void main() {
     });
 
     test(
-        'FunctionDeclaration mixing Schema and JSONSchema throws TypeError on toJson',
-        () {
-      final mixedParametersSchema = {
-        'count': Schema.integer(),
-        'mixed': JSONSchema.string(),
-      };
+      'FunctionDeclaration mixing Schema and JSONSchema throws TypeError on toJson',
+      () {
+        final mixedParametersSchema = {
+          'count': Schema.integer(),
+          'mixed': JSONSchema.string(),
+        };
 
-      final declaration = FunctionDeclaration(
-        'testMixedSchema',
-        'Tests mixed schemas.',
-        parameters: mixedParametersSchema,
-      );
+        final declaration = FunctionDeclaration(
+          'testMixedSchema',
+          'Tests mixed schemas.',
+          parameters: mixedParametersSchema,
+        );
 
-      expect(declaration.toJson, throwsA(isA<TypeError>()));
-    });
+        expect(declaration.toJson, throwsA(isA<TypeError>()));
+      },
+    );
 
     test('FunctionDeclaration with JSONSchema defs and ref', () {
       final parametersSchema = {
         'metadataContainer': JSONSchema.object(
-          properties: {
-            'metadata': JSONSchema.ref('#/metadata_schema'),
-          },
+          properties: {'metadata': JSONSchema.ref('#/metadata_schema')},
           defs: {
-            'metadata_schema': JSONSchema.object(properties: {
-              'id': JSONSchema.string(),
-            }),
+            'metadata_schema': JSONSchema.object(
+              properties: {'id': JSONSchema.string()},
+            ),
           },
         ),
       };
@@ -218,9 +219,9 @@ void main() {
                     'id': {'type': 'string'},
                   },
                   'required': ['id'],
-                }
-              }
-            }
+                },
+              },
+            },
           },
           'required': ['metadataContainer'],
         },
@@ -283,8 +284,8 @@ void main() {
               },
               'required': ['param1'],
             },
-          }
-        ]
+          },
+        ],
       });
     });
 
@@ -292,34 +293,26 @@ void main() {
 
     test('Tool.googleSearch()', () {
       final tool = Tool.googleSearch();
-      expect(tool.toJson(), {
-        'googleSearch': {},
-      });
+      expect(tool.toJson(), {'googleSearch': {}});
     });
 
     // Test Tool.codeExecution()
 
     test('Tool.codeExecution()', () {
       final tool = Tool.codeExecution();
-      expect(tool.toJson(), {
-        'codeExecution': {},
-      });
+      expect(tool.toJson(), {'codeExecution': {}});
     });
 
     // Test Tool.urlContext()
     test('Tool.urlContext()', () {
       final tool = Tool.urlContext();
-      expect(tool.toJson(), {
-        'urlContext': {},
-      });
+      expect(tool.toJson(), {'urlContext': {}});
     });
 
     // Test Tool.googleMaps()
     test('Tool.googleMaps()', () {
       final tool = Tool.googleMaps();
-      expect(tool.toJson(), {
-        'googleMaps': {},
-      });
+      expect(tool.toJson(), {'googleMaps': {}});
     });
 
     // Test ToolConfig
@@ -370,10 +363,11 @@ void main() {
     });
 
     test('RetrievalConfig.toJson() with partial fields', () {
-      final config1 =
-          RetrievalConfig(latLng: LatLng(latitude: 1.2, longitude: 2.1));
+      final config1 = RetrievalConfig(
+        latLng: LatLng(latitude: 1.2, longitude: 2.1),
+      );
       expect(config1.toJson(), {
-        'latLng': {'latitude': 1.2, 'longitude': 2.1}
+        'latLng': {'latitude': 1.2, 'longitude': 2.1},
       });
 
       final config2 = RetrievalConfig(languageCode: 'fr');

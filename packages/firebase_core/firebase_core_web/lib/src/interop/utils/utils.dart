@@ -14,29 +14,43 @@ import 'package:web/web.dart' as web;
 
 import 'func.dart';
 
+// Hot restart exists only in debug mode. This must match Flutter's
+// kDebugMode (`!dart.vm.product && !dart.vm.profile`). Profile builds leave
+// dart.vm.product false, so gating on product mode alone still stores JS
+// unsubscribe functions on window. Plugins then share the key 'no-op'
+// outside debug and cancel the previous listener on the next subscription.
+// See https://github.com/firebase/flutterfire/issues/18728.
 // ignore: do_not_use_environment
-const bool _kDebugMode = !bool.fromEnvironment('dart.vm.product');
+const bool _kReleaseMode = bool.fromEnvironment('dart.vm.product');
+
+// ignore: do_not_use_environment
+const bool _kProfileMode = bool.fromEnvironment('dart.vm.profile');
+
+const bool _kDebugMode = !_kReleaseMode && !_kProfileMode;
 
 /// Handles the [Future] object with the provided [mapper] function.
-JSPromise handleFutureWithMapper<T, S>(
-  Future<T> future,
-  Func1<T, S> mapper,
-) {
-  return JSPromise((JSFunction resolve, JSFunction reject) {
-    future.then<void>((T value) {
-      final Object? target = mapper(value);
-      final JSAny? jsVal = target?.jsify();
-      resolve.callAsFunction(resolve, jsVal);
-    }, onError: (Object error, StackTrace stackTrace) {
-      final errorConstructor =
-          globalContext.getProperty('Error'.toJS)! as JSFunction;
-      final wrapper = errorConstructor
-          .callAsConstructor<JSObject>('Dart exception: $error'.toJS);
-      wrapper['error'] = error.toJSBox;
-      wrapper['stack'] = stackTrace.toString().toJS;
-      reject.callAsFunction(reject, wrapper);
-    });
-  }.toJS);
+JSPromise handleFutureWithMapper<T, S>(Future<T> future, Func1<T, S> mapper) {
+  return JSPromise(
+    (JSFunction resolve, JSFunction reject) {
+      future.then<void>(
+        (T value) {
+          final Object? target = mapper(value);
+          final JSAny? jsVal = target?.jsify();
+          resolve.callAsFunction(resolve, jsVal);
+        },
+        onError: (Object error, StackTrace stackTrace) {
+          final errorConstructor =
+              globalContext.getProperty('Error'.toJS)! as JSFunction;
+          final wrapper = errorConstructor.callAsConstructor<JSObject>(
+            'Dart exception: $error'.toJS,
+          );
+          wrapper['error'] = error.toJSBox;
+          wrapper['stack'] = stackTrace.toString().toJS;
+          reject.callAsFunction(reject, wrapper);
+        },
+      );
+    }.toJS,
+  );
 }
 
 // No way to unsubscribe from event listeners on hot reload so we set on the windows object

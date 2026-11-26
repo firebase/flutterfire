@@ -143,10 +143,10 @@ class AudioInput extends ChangeNotifier {
     _amplitudeSubscription = _recorder
         .onAmplitudeChanged(const Duration(milliseconds: 100))
         .listen((amp) {
-      _amplitudeStreamController?.add(
-        wf.Amplitude(current: amp.current, max: amp.max),
-      );
-    });
+          _amplitudeStreamController?.add(
+            wf.Amplitude(current: amp.current, max: amp.max),
+          );
+        });
     amplitudeStream = _amplitudeStreamController?.stream;
 
     isRecording = true;
