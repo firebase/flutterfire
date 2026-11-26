@@ -16,57 +16,68 @@ To get started with Cloud Firestore for Flutter, please [see the documentation](
 
 To use this plugin, please visit the [Firestore Usage documentation](https://firebase.google.com/docs/firestore/manage-data/add-data)
 
-## Using Cloud Firestore with Isolates
+### Using Cloud Firestore with isolates
 
-Cloud Firestore (like most FlutterFire plugins) talks to native code through
-platform channels. Those channels are only available on the **main isolate**.
+Cloud Firestore relies on `EventChannel` for streaming and callback-driven APIs:
 
-That means you **cannot** call Firestore APIs inside `compute()`,
-`Isolate.run()`, or a background isolate spawned with `Isolate.spawn()`:
+- `DocumentReference.snapshots()`, `Query.snapshots()`, and `CollectionReference.snapshots()`
+- `FirebaseFirestore.snapshotsInSync()`
+- `FirebaseFirestore.runTransaction()`
+- `FirebaseFirestore.loadBundle()`
 
-```dart
-// ❌ This will fail — Firestore cannot use platform channels off the main isolate.
-await compute((_) async {
-  final snapshot = await FirebaseFirestore.instance.collection('users').get();
-  return snapshot.docs.length;
-}, null);
-```
+Flutter's `BackgroundIsolateBinaryMessenger` only supports Dart-to-host messages and does not support host-to-Dart handlers (`BinaryMessenger.setMessageHandler`, tracked in [flutter/flutter#119207](https://github.com/flutter/flutter/issues/119207)). Listening to an `EventChannel`-backed stream (`snapshots()`, `snapshotsInSync()`, or `loadBundle().stream`) or running `runTransaction()` from a background isolate fails with an `UnsupportedError`.
 
-### Recommended pattern
+One-off Dart-to-host calls (such as `get()`, `set()`, `update()`, `delete()`, `WriteBatch.commit()`, and aggregate queries) do not use `EventChannel`. However, each Dart isolate maintains its own `firebase_core` app registry; calling `Firebase.initializeApp()` from a background isolate while Firebase is already initialized on the root isolate triggers native core reinitialization (`didReinitializeFirebaseCore`) on native platforms. On Android, iOS, and macOS, the Cloud Firestore plugin handles that callback by cancelling active snapshot listeners and terminating existing `FirebaseFirestore` instances on the root isolate (the Windows implementation does not register a reinitialization handler). On web, Dart isolates and `BackgroundIsolateBinaryMessenger` are not supported.
 
-1. **Fetch on the main isolate** (where Firebase is initialized).
-2. Convert results to **plain Dart data** (`Map` / `List` / your own model).
-3. **Process** that data in a background isolate if the work is CPU-heavy.
+#### Recommended pattern
+
+Keep Firestore reads, writes, and listeners on the root isolate, convert the document fields you need into plain Dart values (or your own immutable model), and send only that data to `Isolate.run()` or `compute()` for CPU-heavy work:
 
 ```dart
-// ✅ Fetch on the main isolate
-final snapshot =
-    await FirebaseFirestore.instance.collection('products').get();
+import 'dart:isolate';
 
-// Pass only sendable data into the isolate
-final raw = snapshot.docs.map((doc) => doc.data()).toList();
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-final processed = await Isolate.run(() {
-  // Heavy CPU work only — no Firebase / plugin calls here
-  return raw.map((data) {
-    final price = (data['price'] as num?)?.toDouble() ?? 0;
-    return price * 1.2; // example transform
+Future<List<Map<String, Object?>>> loadProducts() async {
+  final snapshot =
+      await FirebaseFirestore.instance.collection('products').get();
+
+  final rawProducts = snapshot.docs.map((doc) {
+    final data = doc.data();
+    final location = data['location'] as GeoPoint?;
+    final updatedAt = data['updatedAt'] as Timestamp?;
+    final category = data['category'] as DocumentReference?;
+
+    return <String, Object?>{
+      'id': doc.id,
+      'price': (data['price'] as num?)?.toDouble() ?? 0.0,
+      'latitude': location?.latitude,
+      'longitude': location?.longitude,
+      'updatedAtMs': updatedAt?.millisecondsSinceEpoch,
+      'categoryPath': category?.path,
+    };
   }).toList();
-});
+
+  return Isolate.run(() {
+    return rawProducts.map((product) {
+      final price = product['price']! as double;
+      return <String, Object?>{
+        ...product,
+        'priceWithTax': price * 1.2,
+      };
+    }).toList();
+  });
+}
 ```
 
-### Why DocumentSnapshot / QuerySnapshot are not enough
+#### Avoid sending snapshots or raw `doc.data()` across isolates
 
-`DocumentSnapshot`, `QueryDocumentSnapshot`, and similar types are **not** safe
-to send across isolates. Always extract `data()` (or map to your own immutable
-model) before calling `Isolate.run` / `compute`.
+- `DocumentSnapshot`, `QueryDocumentSnapshot`, and `QuerySnapshot` hold references to `FirebaseFirestore` and `PlatformInterface` delegates, which are bound to the isolate that created them.
+- `doc.data()` is not guaranteed to contain only plain Dart primitives. It can contain Firestore-specific objects such as `DocumentReference` (which carries the same `FirebaseFirestore` and platform-delegate references as a snapshot) as well as value types like `GeoPoint`, `Timestamp`, `Blob`, and `VectorValue`.
 
-### Streams and listeners
+Explicitly map document fields into plain Dart values (or your own immutable model) before crossing the isolate boundary (for example: `ref.path`, `point.latitude`/`point.longitude`, `timestamp.millisecondsSinceEpoch`, `blob.bytes`, or `vector.toArray()`). This avoids sending `DocumentReference` instances across isolates and keeps the isolate payload self-contained and serializable.
 
-Realtime listeners (`snapshots()`) must also be attached on the main isolate.
-If you need background work per event, map each event to plain data first, then
-offload processing.
-
+For realtime updates, attach `snapshots()` listeners on the root isolate, convert each event's documents into plain Dart values, and offload heavy processing to `Isolate.run()` (or a long-lived worker isolate if events arrive frequently).
 
 ## Issues and feedback
 
