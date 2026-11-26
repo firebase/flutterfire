@@ -46,7 +46,8 @@ Future<List<Map<String, Object?>>> loadProducts() async {
     final data = doc.data();
     final location = data['location'] as GeoPoint?;
     final updatedAt = data['updatedAt'] as Timestamp?;
-    final category = data['category'] as DocumentReference?;
+    final category =
+        data['category'] as DocumentReference<Map<String, dynamic>>?;
 
     return <String, Object?>{
       'id': doc.id,
