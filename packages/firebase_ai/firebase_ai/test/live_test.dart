@@ -13,6 +13,7 @@
 // limitations under the License.
 import 'dart:convert';
 
+import 'package:firebase_ai/firebase_ai.dart' as public_api;
 import 'package:firebase_ai/src/api.dart';
 import 'package:firebase_ai/src/content.dart';
 import 'package:firebase_ai/src/error.dart';
@@ -22,6 +23,14 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('LiveAPI Tests', () {
+    test('setup completion can be identified through the public API', () {
+      final public_api.LiveServerResponse response = parseServerResponse({
+        'setupComplete': {},
+      });
+
+      expect(response.message, isA<public_api.LiveServerSetupComplete>());
+    });
+
     test('SpeechConfig toJson() returns correct JSON', () {
       final speechConfigWithVoice = SpeechConfig(voiceName: 'Aoede');
       expect(speechConfigWithVoice.toJson(), {

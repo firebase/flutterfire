@@ -72,6 +72,7 @@ export 'src/live_api.dart'
         GoingAwayNotice,
         LiveGenerationConfig,
         LiveServerMessage,
+        LiveServerSetupComplete,
         LiveServerContent,
         LiveServerToolCall,
         LiveServerToolCallCancellation,

@@ -298,6 +298,7 @@ extension type IdTokenResultImpl._(JSObject _) implements JSObject {
   external JSString get expirationTime;
   external JSString get issuedAtTime;
   external JSString? get signInProvider;
+  external JSString? get signInSecondFactor;
   external JSString get token;
 }
 
