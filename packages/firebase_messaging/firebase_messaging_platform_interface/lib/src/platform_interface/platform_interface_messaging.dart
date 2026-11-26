@@ -191,8 +191,11 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
   /// notification permission. On Apple platforms it reads the token the SDK
   /// has cached. On Android the SDK's token read returns the stored token and
   /// registers one only when none is stored, as the Instance ID read the
-  /// native Functions SDK uses does. On web the token is read only when
-  /// notification permission is already granted.
+  /// native Functions SDK uses does, and the answer is `null` when the
+  /// manifest enables the installation ID
+  /// (`firebase_messaging_installation_id_enabled`), as native Functions
+  /// then sends no token. On web the token is read only when notification
+  /// permission is already granted.
   Future<String?> getCachedToken() {
     throw UnimplementedError('getCachedToken() is not implemented');
   }

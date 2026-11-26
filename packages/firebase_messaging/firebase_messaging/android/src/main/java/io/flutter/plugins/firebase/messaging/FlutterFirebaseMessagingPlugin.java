@@ -11,6 +11,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -56,6 +57,10 @@ public class FlutterFirebaseMessagingPlugin
         ActivityAware {
 
   private static final String TAG = "FLTFireMsgPlugin";
+
+  /** Manifest meta-data of apps that send to the installation ID; native Functions reads it too. */
+  @VisibleForTesting
+  static final String INSTALLATION_ID_ENABLED_KEY = "firebase_messaging_installation_id_enabled";
 
   // Messages sent to Dart before it has set up its handler on the channel, e.g. the token or a
   // message received while the engine starts. Flutter only keeps one by default.
@@ -206,6 +211,42 @@ public class FlutterFirebaseMessagingPlugin
         });
 
     return taskCompletionSource.getTask();
+  }
+
+  private Task<Map<String, Object>> getCachedToken() {
+    // An app that sends to the installation ID must not get a legacy token: fetching one creates a
+    // second registration and FCM rejects sends to the installation ID, so native Functions sends
+    // no token for such apps. Otherwise the SDK has no read that returns only a stored token:
+    // getToken() returns the stored token when it is valid and registers one otherwise, as the
+    // Instance ID read native Functions uses does. Neither asks for notification permission.
+    if (installationIdEnabled(ContextHolder.getApplicationContext())) {
+      Map<String, Object> noToken = new HashMap<>();
+      noToken.put("token", null);
+      return Tasks.forResult(noToken);
+    }
+    return getToken();
+  }
+
+  /** Whether the manifest enables the installation ID; a manifest that can't be read doesn't. */
+  @VisibleForTesting
+  static boolean installationIdEnabled(@Nullable Context context) {
+    if (context == null) {
+      return false;
+    }
+    try {
+      ApplicationInfo info =
+          context
+              .getPackageManager()
+              .getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
+      return info.metaData != null
+          && Boolean.TRUE.equals(
+              BackgroundHandlerStartDecision.manifestValue(
+                  info.metaData.get(INSTALLATION_ID_ENABLED_KEY)));
+    } catch (PackageManager.NameNotFoundException exception) {
+      Log.w(
+          TAG, "Could not read " + INSTALLATION_ID_ENABLED_KEY + " from the manifest.", exception);
+      return false;
+    }
   }
 
   private Task<Void> register() {
@@ -616,11 +657,7 @@ public class FlutterFirebaseMessagingPlugin
         methodCallTask = getToken();
         break;
       case "Messaging#getCachedToken":
-        // The SDK has no read that returns only a stored token: getToken()
-        // returns the stored token when it is valid and registers one
-        // otherwise, as the Instance ID read the native Functions SDK uses
-        // does. Neither asks for notification permission.
-        methodCallTask = getToken();
+        methodCallTask = getCachedToken();
         break;
       case "Messaging#register":
         methodCallTask = register();

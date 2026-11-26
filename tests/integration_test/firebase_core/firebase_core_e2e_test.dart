@@ -199,6 +199,11 @@ void main() {
             // CI's browser never grants notification permission.
             expect(token, isNull);
           }
+          if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
+            // The tests app enables the installation ID in its manifest, so
+            // no legacy token may be fetched for it.
+            expect(token, isNull);
+          }
         }, skip: !kIsWeb && defaultTargetPlatform == TargetPlatform.windows);
       });
     });

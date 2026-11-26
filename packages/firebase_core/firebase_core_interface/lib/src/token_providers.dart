@@ -69,7 +69,11 @@ abstract interface class MessagingTokenProvider implements FirebaseService {
   ///
   /// Never prompts for notification permission. On Apple platforms this is a
   /// cached read only; on Android and web it may register a token when none
-  /// is stored, as native Functions does. Never throws, unlike
+  /// is stored, as native Functions does. On Android the answer is `null`
+  /// when the manifest enables the installation ID
+  /// (`firebase_messaging_installation_id_enabled`), as native Functions
+  /// does: fetching a legacy token then creates a second registration, and
+  /// FCM rejects sends to the installation ID. Never throws, unlike
   /// [AuthTokenProvider.getIdToken]: when the token can't be read the answer
   /// is `null`, as the FCM header is best-effort in the native Functions
   /// SDKs too. Messaging serves the default app only, in FlutterFire as in
