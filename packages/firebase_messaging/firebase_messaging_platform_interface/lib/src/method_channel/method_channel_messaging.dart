@@ -369,6 +369,21 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
   }
 
   @override
+  Future<String?> getCachedToken() async {
+    // No APNs check: a missing APNs token just means no FCM token is cached.
+    try {
+      Map<String, String?>? data = await channel
+          .invokeMapMethod<String, String>('Messaging#getCachedToken', {
+            'appName': app.name,
+          });
+
+      return data?['token'];
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
+    }
+  }
+
+  @override
   @Deprecated('Use register() and onRegistered instead.')
   Future<String?> getToken({
     String? vapidKey, // not used yet; web only property

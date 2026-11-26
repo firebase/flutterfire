@@ -7,6 +7,8 @@ import 'dart:js_interop';
 
 import 'package:firebase_app_check_platform_interface/firebase_app_check_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart'
+    show AppCheckTokenProvider, registerFirebaseServiceFactory;
 import 'package:firebase_core_web/firebase_core_web.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
@@ -17,6 +19,7 @@ import 'src/internals.dart';
 import 'src/interop/app_check.dart' as app_check_interop;
 
 import 'src/firebase_app_check_version.dart';
+import 'src/firebase_app_check_web_token_provider.dart';
 
 class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
   static const String _libraryName = 'flutter-fire-app-check';
@@ -27,7 +30,7 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
 
   /// Stub initializer to allow the [registerWith] to create an instance without
   /// registering the web delegates or listeners.
-  FirebaseAppCheckWeb._() : _webAppCheck = null, super(appInstance: null);
+  FirebaseAppCheckWeb._() : super(appInstance: null);
 
   /// The entry point for the [FirebaseAuthWeb] class.
   FirebaseAppCheckWeb({required FirebaseApp app}) : super(appInstance: app);
@@ -93,6 +96,10 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
     );
 
     FirebaseAppCheckPlatform.instance = FirebaseAppCheckWeb.instance;
+    // Other Firebase packages get App Check tokens from here.
+    registerFirebaseServiceFactory<AppCheckTokenProvider>(
+      FirebaseAppCheckWebTokenProvider.new,
+    );
   }
 
   /// Initializes a stub instance to allow the class to be registered.
@@ -108,17 +115,21 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
     return 'FlutterFire-$appName-recaptchaSiteKey';
   }
 
-  /// instance of AppCheck from the web plugin
-  app_check_interop.AppCheck? _webAppCheck;
+  /// The activated JS App Check instance of each app, shared by every
+  /// delegate for that app: the one `FirebaseAppCheck` holds, the one
+  /// `registerWith` activates from storage, and the app's
+  /// `AppCheckTokenProvider`.
+  static final Map<String, app_check_interop.AppCheck> _webAppChecks = {};
 
-  /// Lazily initialize [_webAppCheck] on first method call
+  /// The app's JS App Check instance; activation creates it.
   app_check_interop.AppCheck? get _delegate {
-    if (_webAppCheck == null) {
+    final webAppCheck = _webAppChecks[app.name];
+    if (webAppCheck == null) {
       throw Exception(
         "Before using other Firebase App Check APIs, FirebaseAppCheck.instance.activate() must be called first once you've initialized your Firebase app.",
       );
     }
-    return _webAppCheck;
+    return webAppCheck;
   }
 
   @override
@@ -129,6 +140,11 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
   @override
   FirebaseAppCheckWeb setInitialValues() {
     return this;
+  }
+
+  @override
+  Future<void> dispose() async {
+    _webAppChecks.remove(app.name);
   }
 
   @override
@@ -169,10 +185,15 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
 
     // activate API no longer exists, recaptcha key has to be passed on initialization of app-check instance.
     return convertWebExceptions<Future<void>>(() async {
-      _webAppCheck ??= app_check_interop.getAppCheckInstance(
-        core_interop.app(app.name),
-        providerWeb,
-      );
+      final webAppCheck =
+          _webAppChecks[app.name] ??
+          app_check_interop.getAppCheckInstance(
+            core_interop.app(app.name),
+            providerWeb,
+          );
+      if (webAppCheck != null) {
+        _webAppChecks[app.name] = webAppCheck;
+      }
       _initialiseStreamController();
     });
   }

@@ -11,6 +11,8 @@ import 'package:firebase_auth_platform_interface/firebase_auth_platform_interfac
 import 'package:firebase_auth_web/src/firebase_auth_web_multi_factor.dart';
 import 'package:firebase_auth_web/src/utils/web_utils.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart'
+    show AuthTokenProvider, registerFirebaseServiceFactory;
 import 'package:firebase_core_web/firebase_core_web.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
@@ -23,6 +25,7 @@ import 'src/firebase_auth_version.dart';
 import 'src/auth_emulator.dart';
 import 'src/firebase_auth_web_confirmation_result.dart';
 import 'src/firebase_auth_web_recaptcha_verifier_factory.dart';
+import 'src/firebase_auth_web_token_provider.dart';
 import 'src/firebase_auth_web_user.dart';
 import 'src/firebase_auth_web_user_credential.dart';
 import 'src/interop/auth.dart' as auth_interop;
@@ -107,6 +110,10 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       },
     );
     FirebaseAuthPlatform.instance = FirebaseAuthWeb.instance;
+    // Other Firebase packages get the signed-in user's ID token from here.
+    registerFirebaseServiceFactory<AuthTokenProvider>(
+      FirebaseAuthWebTokenProvider.new,
+    );
     PhoneMultiFactorGeneratorPlatform.instance = PhoneMultiFactorGeneratorWeb();
     TotpMultiFactorGeneratorPlatform.instance = TotpMultiFactorGeneratorWeb();
     RecaptchaVerifierFactoryPlatform.instance =

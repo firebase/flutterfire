@@ -97,14 +97,53 @@ class FirebaseApp {
     );
   }
 
-  /// Returns a registered service instance for this app.
+  /// Returns the service registered for this app as [T], or creates it from
+  /// the factory registered with `registerFirebaseServiceFactory`, or `null`
+  /// when there is neither.
   T? getService<T extends FirebaseService>() {
-    return _registries[name]?[T]?.service as T?;
+    final registered = _registries[name]?[T]?.service;
+    if (registered != null) {
+      return registered as T;
+    }
+    final factory = _serviceFactories[T];
+    if (factory == null) {
+      return null;
+    }
+    final service = factory.create(this) as T;
+    final registry = _registries.putIfAbsent(name, () => {});
+    registry[T] = _RegisteredFirebaseService(
+      service,
+      factory.disposer(service),
+    );
+    return service;
   }
 }
 
 /// A marker interface for Firebase services that can be registered in [FirebaseApp].
 abstract class FirebaseService {}
+
+final Map<Type, _FirebaseServiceFactory> _serviceFactories = {};
+
+/// Registers how to create a [T] for any [FirebaseApp] that has none
+/// registered.
+///
+/// For Firebase packages that must be reachable through
+/// [FirebaseApp.getService] before the app has used them, such as the Auth
+/// implementation handing out the token of a user restored from a previous
+/// launch. Plugin registrants call this before `main`, when no [FirebaseApp]
+/// exists yet. Not for app code.
+///
+/// [create] runs on the first `getService<T>()` on an app, and the result is
+/// registered for that app as if by [FirebaseApp.registerService], so later
+/// lookups return the same instance and [FirebaseApp.delete] calls [dispose]
+/// on it. A service registered with [FirebaseApp.registerService] always takes
+/// precedence.
+void registerFirebaseServiceFactory<T extends FirebaseService>(
+  T Function(FirebaseApp app) create, {
+  Future<void> Function(T service)? dispose,
+}) {
+  _serviceFactories[T] = _FirebaseServiceFactory<T>(create, dispose);
+}
 
 class _RegisteredFirebaseService {
   _RegisteredFirebaseService(this.service, this._dispose);
@@ -114,5 +153,20 @@ class _RegisteredFirebaseService {
 
   Future<void> dispose() async {
     await _dispose?.call();
+  }
+}
+
+class _FirebaseServiceFactory<T extends FirebaseService> {
+  _FirebaseServiceFactory(this.create, this._dispose);
+
+  final T Function(FirebaseApp app) create;
+  final Future<void> Function(T service)? _dispose;
+
+  /// The dispose callback for [service], bound the way
+  /// [FirebaseApp.registerService] binds its own, or `null` when the factory
+  /// registered none.
+  Future<void> Function()? disposer(FirebaseService service) {
+    final dispose = _dispose;
+    return dispose == null ? null : () => dispose(service as T);
   }
 }

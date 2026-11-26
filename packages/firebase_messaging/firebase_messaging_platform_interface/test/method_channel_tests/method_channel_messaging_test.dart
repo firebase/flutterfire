@@ -37,6 +37,8 @@ void main() {
           case 'Messaging#getAPNSToken':
           case 'Messaging#getToken':
             return {'token': 'test_token'};
+          case 'Messaging#getCachedToken':
+            return {'token': 'cached_token'};
           case 'Messaging#hasPermission':
           case 'Messaging#requestPermission':
           case 'Messaging#getNotificationSettings':
@@ -165,6 +167,19 @@ void main() {
       ]);
     });
 
+    test('getCachedToken', () async {
+      final token = await messaging.getCachedToken();
+
+      expect(token, 'cached_token');
+      // check native method was called
+      expect(log, <Matcher>[
+        isMethodCall(
+          'Messaging#getCachedToken',
+          arguments: <String, dynamic>{'appName': defaultFirebaseAppName},
+        ),
+      ]);
+    });
+
     test('getNotificationSettings', () async {
       final settings = await messaging.getNotificationSettings();
       expect(settings, isA<NotificationSettings>());
@@ -226,6 +241,8 @@ void main() {
             case 'Messaging#getAPNSToken':
             case 'Messaging#getToken':
               return {'token': 'test_token'};
+            case 'Messaging#getCachedToken':
+              return {'token': 'cached_token'};
             case 'Messaging#hasPermission':
             case 'Messaging#requestPermission':
             case 'Messaging#getNotificationSettings':
@@ -294,6 +311,8 @@ void main() {
             case 'Messaging#getAPNSToken':
             case 'Messaging#getToken':
               return {'token': 'test_token'};
+            case 'Messaging#getCachedToken':
+              return {'token': 'cached_token'};
             case 'Messaging#hasPermission':
             case 'Messaging#requestPermission':
             case 'Messaging#getNotificationSettings':
