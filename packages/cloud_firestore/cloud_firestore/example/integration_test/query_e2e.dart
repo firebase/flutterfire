@@ -244,6 +244,25 @@ void runQueryTests() {
       });
 
       test(
+        'can repeatedly listen after cancelling an active listener',
+        () async {
+          final collection = await initializeTest(
+            'query-snapshot-cancel-repeat',
+          );
+          final document = collection.doc('counter');
+          final stream = collection.snapshots();
+
+          for (var i = 0; i < 20; i++) {
+            await document.set({'value': i});
+            final snapshot = await stream.first.timeout(
+              const Duration(seconds: 10),
+            );
+            expect(snapshot.docs.single.data(), {'value': i});
+          }
+        },
+      );
+
+      test(
         'cancelling before the first snapshot does not leave a listener attached',
         () async {
           final collection = await initializeTest('query-snapshot-cancel-race');
