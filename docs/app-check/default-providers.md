@@ -137,6 +137,30 @@ This limitation is easiest to miss on a simulator, where the Apple SDK
 already defaults to the debug provider. See
 [flutterfire#18613](https://github.com/firebase/flutterfire/issues/18613).
 
+### Leaving out the reCAPTCHA Enterprise SDK on iOS {:#without-recaptcha}
+
+With Swift Package Manager, the iOS plugin adds the
+[reCAPTCHA Enterprise SDK](https://github.com/GoogleCloudPlatform/recaptcha-enterprise-mobile-sdk)
+so that `AppleReCaptchaProvider` works without extra setup. If your app uses
+another Apple provider, set the `FIREBASE_APP_CHECK_WITHOUT_RECAPTCHA`
+environment variable to `true` when building to leave the SDK out of the app:
+
+```bash
+FIREBASE_APP_CHECK_WITHOUT_RECAPTCHA=true flutter build ios
+```
+
+If the project was already built, clear the Xcode build state after turning
+the variable on or off by running `flutter clean --include-xcode-workspace`
+(on Flutter versions before 3.50, `flutter clean`). Otherwise Xcode reuses the
+previous package graph: the build fails with a `Missing package product` error
+for reCAPTCHA Enterprise after turning it on, and leaves the SDK out of the app
+after turning it off.
+
+With CocoaPods, the plugin does not add the SDK; to use
+`AppleReCaptchaProvider`, add `pod 'RecaptchaEnterprise'` to your app's
+`Podfile`. Without the SDK, `AppleReCaptchaProvider` configures no provider
+and App Check token requests fail.
+
 ## Next steps
 
 Once the App Check library is installed in your app, start distributing the
