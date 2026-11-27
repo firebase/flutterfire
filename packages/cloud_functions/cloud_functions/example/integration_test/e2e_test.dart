@@ -247,6 +247,28 @@ void main() {
         final result = await customRegionCallable();
         expect(result.data, equals('europe-west1'));
       });
+      test(
+        'accepts a custom domain',
+        () async {
+          final projectId = Firebase.app().options.projectId;
+          // A custom domain builds "<custom-domain>/<function-name>". Point it
+          // at the Functions emulator's v1 base path so the custom-domain
+          // branch is exercised end to end without a live project.
+          final instance = FirebaseFunctions.instanceFor(
+            region: 'http://localhost:5001/$projectId/us-central1',
+          );
+          final customDomainCallable = instance.httpsCallable(
+            kTestFunctionDefaultRegion,
+          );
+          final result = await customDomainCallable();
+          expect(result.data, equals('null'));
+        },
+        // The custom-domain branch is new on Apple platforms; Android and web
+        // already supported this argument.
+        skip: kIsWeb ||
+            (defaultTargetPlatform != TargetPlatform.iOS &&
+                defaultTargetPlatform != TargetPlatform.macOS),
+      );
     });
 
     group('HttpsCallableOptions', () {

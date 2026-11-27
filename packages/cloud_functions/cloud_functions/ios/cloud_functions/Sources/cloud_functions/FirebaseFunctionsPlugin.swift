@@ -97,7 +97,7 @@ public class FirebaseFunctionsPlugin: NSObject, FLTFirebasePluginProtocol, Flutt
 
     let app = FLTFirebasePlugin.firebaseAppNamed(appName)!
 
-    let functions = Functions.functions(app: app, region: region ?? "")
+    let functions = makeFunctions(app: app, region: region)
 
     #if DEBUG
       functions.allowInsecureTokenAttachment =
@@ -153,6 +153,18 @@ public class FirebaseFunctionsPlugin: NSObject, FLTFirebasePluginProtocol, Flutt
     let appName = arguments["appName"] as? String ?? ""
     let region = arguments["region"] as? String
     let app = FLTFirebasePlugin.firebaseAppNamed(appName)!
+    return makeFunctions(app: app, region: region)
+  }
+
+  /// Creates the Functions client for an app, honouring the same
+  /// region-or-custom-domain convention the Android and web SDKs use:
+  /// an `http(s)://` value is a custom domain, anything else a region.
+  private func makeFunctions(app: FirebaseApp, region: String?) -> Functions {
+    if let region = region,
+      region.hasPrefix("https://") || region.hasPrefix("http://")
+    {
+      return Functions.functions(app: app, customDomain: region)
+    }
     return Functions.functions(app: app, region: region ?? "")
   }
 
