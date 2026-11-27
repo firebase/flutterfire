@@ -1036,12 +1036,9 @@ static const NSInteger kFLTFirebaseMessagingChannelBufferSize = 64;
     }
   }
 
-  if ([permissions[@"announcement"] isEqual:@(YES)]) {
-    if (@available(iOS 13.0, *)) {
-      // TODO not available in iOS9 deployment target - enable once iOS10+ deployment target
-      // specified in podspec. options |= UNAuthorizationOptionAnnouncement;
-    }
-  }
+  // UNAuthorizationOptionAnnouncement was deprecated in iOS 15.0 ("Announcement authorization is
+  // always included") and is unavailable on macOS, so `permissions[@"announcement"]` is not passed
+  // to `requestAuthorizationWithOptions:`.
 
   if ([permissions[@"carPlay"] isEqual:@(YES)]) {
     options |= UNAuthorizationOptionCarPlay;
@@ -1220,17 +1217,16 @@ static const NSInteger kFLTFirebaseMessagingChannelBufferSize = 64;
     }
   }
 
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "OCSimplifyInspectionLegacy"
+#if TARGET_OS_OSX
+  settingsDictionary[@"announcement"] = @-1;
+#else
   if (@available(iOS 13.0, *)) {
-    // TODO not available in iOS9 deployment target - enable once iOS10+ deployment target specified
-    // in podspec. settingsDictionary[@"announcement"] =
-    //   [FLTFirebaseMessagingPlugin NSNumberForUNNotificationSetting:settings.announcementSetting];
-    settingsDictionary[@"announcement"] = @-1;
+    settingsDictionary[@"announcement"] =
+        [FLTFirebaseMessagingPlugin NSNumberForUNNotificationSetting:settings.announcementSetting];
   } else {
     settingsDictionary[@"announcement"] = @-1;
   }
-#pragma clang diagnostic pop
+#endif
 
   if (@available(iOS 12.0, *)) {
     settingsDictionary[@"criticalAlert"] =
