@@ -27,7 +27,8 @@ class Timestamp {
       throw Exception('Invalid Date provided!');
     }
     DateTime dateTime = DateTime.parse(date);
-    seconds = dateTime.millisecondsSinceEpoch ~/ 1000;
+    // Round down; `~/` would put fractional times before 1970 a second late.
+    seconds = (dateTime.millisecondsSinceEpoch / 1000).floor();
     String nanoStr = '';
     int dotIdx = date.indexOf('.');
     if (dotIdx > -1) {
