@@ -39,6 +39,7 @@ class FirebaseAuthPlugin : public flutter::Plugin,
   FirebaseAuthPlugin& operator=(const FirebaseAuthPlugin&) = delete;
 
   // Parser functions
+  static InternalIdTokenResult ParseIdTokenResult(const std::string& token);
   static std::string GetAuthErrorCode(AuthError authError);
   static FlutterError ParseError(const firebase::FutureBase& future);
 
