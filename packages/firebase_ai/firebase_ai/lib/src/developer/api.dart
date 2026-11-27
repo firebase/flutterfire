@@ -100,10 +100,32 @@ final class DeveloperSerialization implements SerializationStrategy {
   @override
   CountTokensResponse parseCountTokensResponse(Object jsonObject) {
     if (jsonObject case {'error': final Object error}) throw parseError(error);
-    if (jsonObject case {'totalTokens': final int totalTokens}) {
-      return CountTokensResponse(totalTokens);
+    if (jsonObject is! Map) {
+      throw unhandledFormat('CountTokensResponse', jsonObject);
     }
-    throw unhandledFormat('CountTokensResponse', jsonObject);
+    final totalTokens = switch (jsonObject) {
+      {'totalTokens': final int totalTokens} => totalTokens,
+      {'totalTokens': _} => throw unhandledFormat(
+        'CountTokensResponse',
+        jsonObject,
+      ),
+      _ => null,
+    };
+    final promptTokensDetails = switch (jsonObject) {
+      {'promptTokensDetails': final List<Object?> details} =>
+        parseUsageMetadata({
+          'promptTokensDetails': details,
+        }).promptTokensDetails,
+      {'promptTokensDetails': _} => throw unhandledFormat(
+        'CountTokensResponse',
+        jsonObject,
+      ),
+      _ => null,
+    };
+    return CountTokensResponse(
+      totalTokens ?? 0,
+      promptTokensDetails: promptTokensDetails,
+    );
   }
 
   @override
