@@ -1149,6 +1149,10 @@ class FirestoreMessagesPigeonCodecReader: FirebaseFirestoreReader {
 
 class FirestoreMessagesPigeonCodecWriter: FirebaseFirestoreWriter {
   override func writeValue(_ value: Any) {
+    if value is NSString || value is NSNumber || value is String {
+      super.writeValue(value)
+      return
+    }
     if let value = value as? DocumentChangeType {
       super.writeByte(129)
       super.writeValue(value.rawValue)

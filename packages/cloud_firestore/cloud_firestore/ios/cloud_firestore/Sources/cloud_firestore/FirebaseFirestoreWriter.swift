@@ -22,6 +22,35 @@ private let kStandardFieldMap: UInt8 = 13
 
 class FirebaseFirestoreWriter: FlutterStandardWriter {
   override func writeValue(_ value: Any) {
+    if value is NSString || value is String {
+      super.writeValue(value)
+      return
+    }
+    if let number = value as? NSNumber {
+      if number == NSNumber(value: Double.infinity) {
+        writeByte(FirestoreDataType.infinity.rawValue)
+        return
+      }
+      if number == NSNumber(value: -Double.infinity) {
+        writeByte(FirestoreDataType.negativeInfinity.rawValue)
+        return
+      }
+      if number.description.lowercased() == "nan" {
+        writeByte(FirestoreDataType.nan.rawValue)
+        return
+      }
+      super.writeValue(value)
+      return
+    }
+    if let map = value as? [String?: Any?] {
+      writeByte(kStandardFieldMap)
+      writeSize(UInt32(map.count))
+      for (key, item) in map {
+        writeValue(key as Any)
+        writeValue(item as Any)
+      }
+      return
+    }
     if let date = value as? Date {
       writeByte(FirestoreDataType.dateTime.rawValue)
       var ms = Int64(date.timeIntervalSince1970 * 1000.0)
@@ -71,20 +100,6 @@ class FirebaseFirestoreWriter: FlutterStandardWriter {
         writeValue(key)
         writeValue(item)
       }
-    } else if let number = value as? NSNumber {
-      if number == NSNumber(value: Double.infinity) {
-        writeByte(FirestoreDataType.infinity.rawValue)
-        return
-      }
-      if number == NSNumber(value: -Double.infinity) {
-        writeByte(FirestoreDataType.negativeInfinity.rawValue)
-        return
-      }
-      if number.description.lowercased() == "nan" {
-        writeByte(FirestoreDataType.nan.rawValue)
-        return
-      }
-      super.writeValue(value)
     } else if let blob = value as? Data {
       writeByte(FirestoreDataType.blob.rawValue)
       writeSize(UInt32(blob.count))
