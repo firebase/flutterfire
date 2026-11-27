@@ -160,7 +160,9 @@ public class FirebaseFunctionsPlugin: NSObject, FLTFirebasePluginProtocol, Flutt
   /// region-or-custom-domain convention the Android and web SDKs use:
   /// an `http(s)://` value is a custom domain, anything else a region.
   private func makeFunctions(app: FirebaseApp, region: String?) -> Functions {
-    if let region = region, region.hasPrefix("http") {
+    if let region = region,
+      region.hasPrefix("https://") || region.hasPrefix("http://")
+    {
       return Functions.functions(app: app, customDomain: region)
     }
     return Functions.functions(app: app, region: region ?? "")
