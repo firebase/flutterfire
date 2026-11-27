@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_auth_web/src/auth_emulator.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -59,33 +60,33 @@ void main() {
   group('shouldReusePersistedAuthEmulator', () {
     const stored = 'http://localhost:9099';
 
-    test('reuses stored origin on localhost in debug', () {
+    test('reuses stored origin on localhost when persistence is on', () {
       expect(
         shouldReusePersistedAuthEmulator(
           hostname: 'localhost',
-          isDebugMode: true,
+          persistOrigin: true,
           storedOrigin: stored,
         ),
         isTrue,
       );
     });
 
-    test('reuses stored origin on 127.0.0.1 in debug', () {
+    test('reuses stored origin on 127.0.0.1 when persistence is on', () {
       expect(
         shouldReusePersistedAuthEmulator(
           hostname: '127.0.0.1',
-          isDebugMode: true,
+          persistOrigin: true,
           storedOrigin: stored,
         ),
         isTrue,
       );
     });
 
-    test('reuses stored origin on [::1] in debug', () {
+    test('reuses stored origin on [::1] when persistence is on', () {
       expect(
         shouldReusePersistedAuthEmulator(
           hostname: '[::1]',
-          isDebugMode: true,
+          persistOrigin: true,
           storedOrigin: stored,
         ),
         isTrue,
@@ -96,7 +97,7 @@ void main() {
       expect(
         shouldReusePersistedAuthEmulator(
           hostname: 'example.com',
-          isDebugMode: true,
+          persistOrigin: true,
           storedOrigin: stored,
         ),
         isFalse,
@@ -107,18 +108,18 @@ void main() {
       expect(
         shouldReusePersistedAuthEmulator(
           hostname: '127.0.0.1',
-          isDebugMode: true,
+          persistOrigin: true,
           storedOrigin: null,
         ),
         isFalse,
       );
     });
 
-    test('does not reuse outside debug', () {
+    test('does not reuse when persistence is off', () {
       expect(
         shouldReusePersistedAuthEmulator(
           hostname: 'localhost',
-          isDebugMode: false,
+          persistOrigin: false,
           storedOrigin: stored,
         ),
         isFalse,
@@ -134,12 +135,12 @@ void main() {
   });
 
   group('debugAuthEmulatorOrigin', () {
-    test('does not touch storage outside debug', () {
+    test('does not touch storage when persistence is off', () {
       var localReads = 0;
       var sessionReads = 0;
       expect(
         debugAuthEmulatorOrigin(
-          isDebugMode: false,
+          persistOrigin: false,
           readLocal: () {
             localReads++;
             return 'http://localhost:9099';
@@ -158,7 +159,7 @@ void main() {
     test('returns null when storage throws', () {
       expect(
         debugAuthEmulatorOrigin(
-          isDebugMode: true,
+          persistOrigin: true,
           readLocal: () => throw StateError('blocked'),
           readSession: () => 'http://localhost:9099',
         ),
@@ -169,7 +170,7 @@ void main() {
     test('reads a refused connect from sessionStorage before localStorage', () {
       expect(
         debugAuthEmulatorOrigin(
-          isDebugMode: true,
+          persistOrigin: true,
           readLocal: () => 'http://localhost:9099',
           readSession: () => 'http://127.0.0.1:9099',
         ),
@@ -179,24 +180,27 @@ void main() {
   });
 
   group('rememberDebugAuthEmulatorOrigin', () {
-    test('does not write outside debug', () {
+    test('does not write when persistence is off', () {
       var writes = 0;
       rememberDebugAuthEmulatorOrigin(
-        isDebugMode: false,
+        persistOrigin: false,
         write: () => writes++,
       );
       expect(writes, 0);
     });
 
-    test('writes once in debug', () {
+    test('writes once when persistence is on', () {
       var writes = 0;
-      rememberDebugAuthEmulatorOrigin(isDebugMode: true, write: () => writes++);
+      rememberDebugAuthEmulatorOrigin(
+        persistOrigin: true,
+        write: () => writes++,
+      );
       expect(writes, 1);
     });
 
     test('swallows a write that throws', () {
       rememberDebugAuthEmulatorOrigin(
-        isDebugMode: true,
+        persistOrigin: true,
         write: () => throw StateError('blocked'),
       );
     });
@@ -298,32 +302,38 @@ void main() {
   });
 
   group('shouldThrowDebugEmulatorConnectFailure', () {
-    test('throws in debug when this instance is on production', () {
-      expect(
-        shouldThrowDebugEmulatorConnectFailure(
-          isDebugMode: true,
-          requestedOrigin: 'http://localhost:9099',
-          connectedOrigin: null,
-        ),
-        isTrue,
-      );
-    });
+    test(
+      'throws when persistence is on and this instance is on production',
+      () {
+        expect(
+          shouldThrowDebugEmulatorConnectFailure(
+            persistOrigin: true,
+            requestedOrigin: 'http://localhost:9099',
+            connectedOrigin: null,
+          ),
+          isTrue,
+        );
+      },
+    );
 
-    test('throws in debug when this instance is on a different emulator', () {
-      expect(
-        shouldThrowDebugEmulatorConnectFailure(
-          isDebugMode: true,
-          requestedOrigin: 'http://127.0.0.1:9100',
-          connectedOrigin: 'http://localhost:9099',
-        ),
-        isTrue,
-      );
-    });
+    test(
+      'throws when persistence is on and this instance is on a different emulator',
+      () {
+        expect(
+          shouldThrowDebugEmulatorConnectFailure(
+            persistOrigin: true,
+            requestedOrigin: 'http://127.0.0.1:9100',
+            connectedOrigin: 'http://localhost:9099',
+          ),
+          isTrue,
+        );
+      },
+    );
 
-    test('does not throw outside debug', () {
+    test('does not throw when persistence is off', () {
       expect(
         shouldThrowDebugEmulatorConnectFailure(
-          isDebugMode: false,
+          persistOrigin: false,
           requestedOrigin: 'http://localhost:9099',
           connectedOrigin: null,
         ),
@@ -334,11 +344,122 @@ void main() {
     test('does not throw when this instance is already on that origin', () {
       expect(
         shouldThrowDebugEmulatorConnectFailure(
-          isDebugMode: true,
+          persistOrigin: true,
           requestedOrigin: 'http://localhost:9099',
           connectedOrigin: 'http://localhost:9099',
         ),
         isFalse,
+      );
+    });
+  });
+
+  group('applyPersistedAuthEmulatorOrigin', () {
+    late bool previous;
+
+    setUp(() {
+      previous = FirebaseAuthPlatform.persistWebEmulatorOrigin;
+    });
+
+    tearDown(() {
+      FirebaseAuthPlatform.persistWebEmulatorOrigin = previous;
+    });
+
+    test('does not read storage or connect when persistence is off', () {
+      FirebaseAuthPlatform.persistWebEmulatorOrigin = false;
+      var reads = 0;
+      var connects = 0;
+      applyPersistedAuthEmulatorOrigin(
+        appName: '[DEFAULT]',
+        hostname: 'localhost',
+        readLocal: (_) {
+          reads++;
+          return 'http://localhost:9099';
+        },
+        readSession: (_) {
+          reads++;
+          return null;
+        },
+        connect: (_) => connects++,
+        connectedOrigin: () => null,
+        rememberReached: (_) {},
+        log: (_) {},
+      );
+      expect(reads, 0);
+      expect(connects, 0);
+    });
+
+    test('connects a stored loopback origin when persistence is on', () {
+      FirebaseAuthPlatform.persistWebEmulatorOrigin = true;
+      String? connected;
+      String? remembered;
+      final logs = <String>[];
+      applyPersistedAuthEmulatorOrigin(
+        appName: '[DEFAULT]',
+        hostname: '127.0.0.1',
+        readLocal: (key) {
+          expect(key, '[DEFAULT]-firebaseEmulatorOrigin');
+          return 'http://localhost:9099';
+        },
+        readSession: (_) => null,
+        connect: (origin) => connected = origin,
+        connectedOrigin: () => connected,
+        rememberReached: (origin) => remembered = origin,
+        log: logs.add,
+      );
+      expect(connected, 'http://localhost:9099');
+      expect(remembered, 'http://localhost:9099');
+      expect(logs.single, contains('http://localhost:9099'));
+      expect(logs.single, contains('emulator setting'));
+    });
+
+    test('does not connect a stored origin on a non-loopback host', () {
+      FirebaseAuthPlatform.persistWebEmulatorOrigin = true;
+      var connects = 0;
+      applyPersistedAuthEmulatorOrigin(
+        appName: '[DEFAULT]',
+        hostname: 'example.com',
+        readLocal: (_) => 'http://localhost:9099',
+        readSession: (_) => null,
+        connect: (_) => connects++,
+        connectedOrigin: () => null,
+        rememberReached: (_) {},
+        log: (_) {},
+      );
+      expect(connects, 0);
+    });
+
+    test('logs a too-late connect and does not rethrow', () {
+      FirebaseAuthPlatform.persistWebEmulatorOrigin = true;
+      final logs = <String>[];
+      var remembered = 0;
+      applyPersistedAuthEmulatorOrigin(
+        appName: '[DEFAULT]',
+        hostname: 'localhost',
+        readLocal: (_) => 'http://localhost:9099',
+        readSession: (_) => null,
+        connect: (_) => throw StateError('sooner'),
+        connectedOrigin: () => 'http://127.0.0.1:9099',
+        rememberReached: (_) => remembered++,
+        log: logs.add,
+      );
+      expect(remembered, 0);
+      expect(logs.single, contains('http://127.0.0.1:9099'));
+    });
+
+    test('rethrows a connect error that is not a too-late refusal', () {
+      FirebaseAuthPlatform.persistWebEmulatorOrigin = true;
+      expect(
+        () => applyPersistedAuthEmulatorOrigin(
+          appName: '[DEFAULT]',
+          hostname: 'localhost',
+          readLocal: (_) => 'http://localhost:9099',
+          readSession: (_) => null,
+          connect: (_) => throw StateError('blocked'),
+          connectedOrigin: () => null,
+          rememberReached: (_) {},
+          log: (_) {},
+        ),
+        throwsStateError,
       );
     });
   });

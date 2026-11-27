@@ -80,6 +80,22 @@ class FirebaseAuth extends FirebasePlugin implements FirebaseService {
     return _delegate.languageCode;
   }
 
+  /// Whether web Auth keeps the emulator origin across reloads and browser
+  /// restarts.
+  ///
+  /// Defaults to [kDebugMode]. Debug builds reapply a stored origin before a
+  /// persisted user is restored. Profile and release builds do not, unless
+  /// this is set to `true` before `Firebase.initializeApp`.
+  ///
+  /// The page must be served from localhost, 127.0.0.1, or [::1]. Android,
+  /// Apple, and Windows ignore this value.
+  static bool get persistWebEmulatorOrigin =>
+      FirebaseAuthPlatform.persistWebEmulatorOrigin;
+
+  static set persistWebEmulatorOrigin(bool value) {
+    FirebaseAuthPlatform.persistWebEmulatorOrigin = value;
+  }
+
   /// Changes this instance to point to an Auth emulator running locally.
   ///
   /// Set the [host] of the local emulator, such as "localhost"

@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
+
 /// Loopback hosts where a persisted Auth emulator origin may be reapplied
 /// during plugin initialization after a full page reload.
 bool isAuthEmulatorDebugHost(String hostname) {
@@ -25,16 +27,17 @@ String? persistedAuthEmulatorOrigin({
   return sessionOrigin ?? localOrigin;
 }
 
-/// Origin stored for a debug launch, or null.
+/// Stored emulator origin when [persistOrigin] is true, or null.
 ///
-/// Release builds do not read storage. A blocked page throws SecurityError
-/// from localStorage and sessionStorage, which must not fail startup.
+/// When [persistOrigin] is false, storage is not read. A blocked page throws
+/// SecurityError from localStorage and sessionStorage, which must not fail
+/// startup.
 String? debugAuthEmulatorOrigin({
-  required bool isDebugMode,
+  required bool persistOrigin,
   required String? Function() readLocal,
   required String? Function() readSession,
 }) {
-  if (!isDebugMode) {
+  if (!persistOrigin) {
     return null;
   }
   try {
@@ -47,15 +50,15 @@ String? debugAuthEmulatorOrigin({
   }
 }
 
-/// Writes the emulator origin in debug builds.
+/// Writes the emulator origin when [persistOrigin] is true.
 ///
 /// A blocked page throws SecurityError from localStorage. That must not fail
 /// a connect that already succeeded.
 void rememberDebugAuthEmulatorOrigin({
-  required bool isDebugMode,
+  required bool persistOrigin,
   required void Function() write,
 }) {
-  if (!isDebugMode) {
+  if (!persistOrigin) {
     return;
   }
   try {
@@ -67,10 +70,10 @@ void rememberDebugAuthEmulatorOrigin({
 /// origin before Auth finishes restoring a persisted user.
 bool shouldReusePersistedAuthEmulator({
   required String hostname,
-  required bool isDebugMode,
+  required bool persistOrigin,
   required String? storedOrigin,
 }) {
-  return isDebugMode &&
+  return persistOrigin &&
       storedOrigin != null &&
       isAuthEmulatorDebugHost(hostname);
 }
@@ -113,9 +116,61 @@ String authEmulatorConnectTooLateMessage({
 }
 
 bool shouldThrowDebugEmulatorConnectFailure({
-  required bool isDebugMode,
+  required bool persistOrigin,
   required String requestedOrigin,
   required String? connectedOrigin,
 }) {
-  return isDebugMode && connectedOrigin != requestedOrigin;
+  return persistOrigin && connectedOrigin != requestedOrigin;
+}
+
+/// Reapplies a stored emulator origin before Auth restores a persisted user.
+///
+/// No-op unless [FirebaseAuthPlatform.persistWebEmulatorOrigin] is true, [hostname]
+/// is a loopback host, and storage holds an origin.
+void applyPersistedAuthEmulatorOrigin({
+  required String appName,
+  required String hostname,
+  required String? Function(String storageKey) readLocal,
+  required String? Function(String storageKey) readSession,
+  required void Function(String origin) connect,
+  required String? Function() connectedOrigin,
+  required void Function(String origin) rememberReached,
+  required void Function(String message) log,
+}) {
+  final String storageKey = authEmulatorOriginStorageKey(appName);
+  final bool persistOrigin = FirebaseAuthPlatform.persistWebEmulatorOrigin;
+  final String? emulatorOrigin = debugAuthEmulatorOrigin(
+    persistOrigin: persistOrigin,
+    readLocal: () => readLocal(storageKey),
+    readSession: () => readSession(storageKey),
+  );
+  if (!shouldReusePersistedAuthEmulator(
+        hostname: hostname,
+        persistOrigin: persistOrigin,
+        storedOrigin: emulatorOrigin,
+      ) ||
+      emulatorOrigin == null) {
+    return;
+  }
+  try {
+    connect(emulatorOrigin);
+    rememberReached(emulatorOrigin);
+    log(
+      'Using previously configured Auth emulator at $emulatorOrigin for $appName.\n'
+      'This emulator setting is kept after the browser closes.\n'
+      "To use production Auth, clear this site's storage and restart without the emulator.",
+    );
+  } catch (e) {
+    if (e.toString().contains('sooner')) {
+      log(
+        authEmulatorConnectTooLateMessage(
+          appName: appName,
+          requestedOrigin: emulatorOrigin,
+          connectedOrigin: connectedOrigin(),
+        ),
+      );
+    } else {
+      rethrow;
+    }
+  }
 }

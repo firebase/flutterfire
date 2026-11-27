@@ -14,7 +14,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_web/firebase_core_web.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
-import 'package:flutter/foundation.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:web/web.dart' as web;
 
@@ -57,49 +56,24 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       ensurePluginInitialized: (firebaseApp) async {
         final authDelegate = auth_interop.getAuthInstance(firebaseApp);
         // Re-apply a persisted emulator origin before Auth restores the user.
-        // Must include 127.0.0.1 — Chrome often uses that instead of localhost.
-        final String storageKey = authEmulatorOriginStorageKey(
-          firebaseApp.name,
-        );
-        final String? emulatorOrigin = debugAuthEmulatorOrigin(
-          isDebugMode: kDebugMode,
-          readLocal: () => web.window.localStorage.getItem(storageKey),
-          readSession: () => web.window.sessionStorage.getItem(storageKey),
-        );
-        if (shouldReusePersistedAuthEmulator(
-              hostname: web.window.location.hostname,
-              isDebugMode: kDebugMode,
-              storedOrigin: emulatorOrigin,
-            ) &&
-            emulatorOrigin != null) {
-          try {
-            authDelegate.useAuthEmulator(emulatorOrigin);
+        applyPersistedAuthEmulatorOrigin(
+          appName: firebaseApp.name,
+          hostname: web.window.location.hostname,
+          readLocal: (storageKey) =>
+              web.window.localStorage.getItem(storageKey),
+          readSession: (storageKey) =>
+              web.window.sessionStorage.getItem(storageKey),
+          connect: authDelegate.useAuthEmulator,
+          connectedOrigin: () => authDelegate.emulatorOrigin,
+          rememberReached: (origin) {
             _rememberAuthEmulatorOrigin(
               firebaseApp.name,
-              emulatorOrigin,
+              origin,
               reachedEmulator: true,
             );
-            // ignore: avoid_print
-            print(
-              'Using previously configured Auth emulator at $emulatorOrigin for ${firebaseApp.name}.\n'
-              'This debug setting is kept after the browser closes.\n'
-              "To use production Auth, clear this site's storage and restart without the emulator.",
-            );
-          } catch (e) {
-            if (e.toString().contains('sooner')) {
-              // ignore: avoid_print
-              print(
-                authEmulatorConnectTooLateMessage(
-                  appName: firebaseApp.name,
-                  requestedOrigin: emulatorOrigin,
-                  connectedOrigin: authDelegate.emulatorOrigin,
-                ),
-              );
-            } else {
-              rethrow;
-            }
-          }
-        }
+          },
+          log: _logAuthEmulator,
+        );
         await guardAuthExceptions(
           authDelegate.onWaitInitState,
           auth: authDelegate,
@@ -570,7 +544,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       }
       final String? connectedOrigin = delegate.emulatorOrigin;
       if (shouldThrowDebugEmulatorConnectFailure(
-        isDebugMode: kDebugMode,
+        persistOrigin: _persistWebEmulatorOrigin,
         requestedOrigin: origin,
         connectedOrigin: connectedOrigin,
       )) {
@@ -583,7 +557,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
           ),
         );
       }
-      if (kDebugMode) {
+      if (_persistWebEmulatorOrigin) {
         // ignore: avoid_print
         print(
           authEmulatorConnectTooLateMessage(
@@ -667,13 +641,21 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   }
 }
 
+bool get _persistWebEmulatorOrigin =>
+    FirebaseAuthPlatform.persistWebEmulatorOrigin;
+
+void _logAuthEmulator(String message) {
+  // ignore: avoid_print
+  print(message);
+}
+
 void _rememberAuthEmulatorOrigin(
   String appName,
   String origin, {
   required bool reachedEmulator,
 }) {
   rememberDebugAuthEmulatorOrigin(
-    isDebugMode: kDebugMode,
+    persistOrigin: _persistWebEmulatorOrigin,
     write: () {
       final String storageKey = authEmulatorOriginStorageKey(appName);
       if (!reachedEmulator) {

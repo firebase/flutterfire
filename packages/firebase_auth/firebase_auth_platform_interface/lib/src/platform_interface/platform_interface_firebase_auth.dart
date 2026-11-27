@@ -7,7 +7,7 @@ import 'dart:async';
 
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:meta/meta.dart';
+import 'package:flutter/foundation.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import '../method_channel/method_channel_firebase_auth.dart';
@@ -144,6 +144,15 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   void sendAuthChangesEvent(String appName, UserPlatform? userPlatform) {
     throw UnimplementedError('sendAuthChangesEvent() is not implemented');
   }
+
+  /// Whether web Auth keeps a previously configured emulator origin and
+  /// reapplies it during `Firebase.initializeApp`.
+  ///
+  /// Defaults to [kDebugMode]. Debug builds restore the origin. Profile and
+  /// release builds do not, unless this is set to `true` before
+  /// `Firebase.initializeApp`. The page must be served from a loopback host.
+  /// Android, Apple, and Windows ignore this value.
+  static bool persistWebEmulatorOrigin = kDebugMode;
 
   /// Changes this instance to point to an Auth emulator running locally.
   ///
