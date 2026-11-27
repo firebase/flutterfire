@@ -170,5 +170,39 @@ void setupDataSnapshotTests() {
       expect(children[1].value, 2);
       expect(children[2].value, 3);
     });
+
+    test('children returns the children for a nested list snapshot', () async {
+      final ref = getRef('nested-list-children');
+      await ref.set({
+        'items': ['first', 'second', 'third'],
+      });
+      final s = await ref.get();
+
+      final children = s.child('items').children.toList();
+      expect(children.map((c) => c.key).toList(), ['0', '1', '2']);
+      expect(children.map((c) => c.value).toList(), [
+        'first',
+        'second',
+        'third',
+      ]);
+    });
+
+    test(
+      'children skips null slots for a nested holed list snapshot',
+      () async {
+        final ref = getRef('nested-holed-list-children');
+        await ref.set({
+          'items': [null, 'bar', 'baz'],
+        });
+        final s = await ref.get();
+
+        final items = s.child('items');
+        expect(items.value, [null, 'bar', 'baz']);
+
+        final children = items.children.toList();
+        expect(children.map((c) => c.key).toList(), ['1', '2']);
+        expect(children.map((c) => c.value).toList(), ['bar', 'baz']);
+      },
+    );
   });
 }

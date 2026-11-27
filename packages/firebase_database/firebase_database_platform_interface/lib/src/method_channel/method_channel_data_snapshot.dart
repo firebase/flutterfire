@@ -91,10 +91,10 @@ List<String> _childKeysFromValue(Object? value) {
   if (value is Map) {
     childChildKeys = List<String>.from(value.keys.toList());
   } else if (value is List) {
-    childChildKeys = List<String>.generate(
-      value.length,
-      (int index) => '${index - 1}',
-    );
+    childChildKeys = <String>[
+      for (int index = 0; index < value.length; index++)
+        if (value[index] != null) '$index',
+    ];
   }
   return childChildKeys;
 }
