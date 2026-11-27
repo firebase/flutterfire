@@ -289,5 +289,72 @@ void main() {
         );
       });
     });
+
+    group('convertToNotificationSettings', () {
+      test('converts all fields including announcement states', () {
+        final enabledSettings = convertToNotificationSettings({
+          'authorizationStatus': 1,
+          'alert': 1,
+          'announcement': 1,
+          'badge': 1,
+          'carPlay': 0,
+          'criticalAlert': 1,
+          'lockScreen': 1,
+          'notificationCenter': 1,
+          'showPreviews': 1,
+          'sound': 1,
+          'timeSensitive': 1,
+          'providesAppNotificationSettings': 1,
+        });
+
+        expect(
+          enabledSettings.authorizationStatus,
+          AuthorizationStatus.authorized,
+        );
+        expect(enabledSettings.alert, AppleNotificationSetting.enabled);
+        expect(enabledSettings.announcement, AppleNotificationSetting.enabled);
+        expect(enabledSettings.badge, AppleNotificationSetting.enabled);
+        expect(enabledSettings.carPlay, AppleNotificationSetting.disabled);
+        expect(enabledSettings.criticalAlert, AppleNotificationSetting.enabled);
+        expect(enabledSettings.lockScreen, AppleNotificationSetting.enabled);
+        expect(
+          enabledSettings.notificationCenter,
+          AppleNotificationSetting.enabled,
+        );
+        expect(enabledSettings.showPreviews, AppleShowPreviewSetting.always);
+        expect(enabledSettings.sound, AppleNotificationSetting.enabled);
+        expect(enabledSettings.timeSensitive, AppleNotificationSetting.enabled);
+        expect(
+          enabledSettings.providesAppNotificationSettings,
+          AppleNotificationSetting.enabled,
+        );
+
+        final disabledSettings = convertToNotificationSettings({
+          'authorizationStatus': 0,
+          'announcement': 0,
+        });
+        expect(
+          disabledSettings.authorizationStatus,
+          AuthorizationStatus.denied,
+        );
+        expect(
+          disabledSettings.announcement,
+          AppleNotificationSetting.disabled,
+        );
+
+        final notSupportedSettings = convertToNotificationSettings({
+          'authorizationStatus': -1,
+          'announcement': -1,
+        });
+        expect(
+          notSupportedSettings.authorizationStatus,
+          AuthorizationStatus.notDetermined,
+        );
+        expect(
+          notSupportedSettings.announcement,
+          AppleNotificationSetting.notSupported,
+        );
+      });
+    });
   });
 }

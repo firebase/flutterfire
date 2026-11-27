@@ -172,6 +172,7 @@ void main() {
         settings.authorizationStatus,
         equals(AuthorizationStatus.authorized),
       );
+      expect(settings.announcement, equals(AppleNotificationSetting.disabled));
 
       // check native method was called
       expect(log, <Matcher>[
@@ -211,6 +212,10 @@ void main() {
         expect(
           settings.authorizationStatus,
           equals(AuthorizationStatus.notDetermined),
+        );
+        expect(
+          settings.announcement,
+          equals(AppleNotificationSetting.notSupported),
         );
 
         // Restore original handler
