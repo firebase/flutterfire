@@ -391,6 +391,32 @@ void main() {
       );
     });
 
+    group('notification delegation', () {
+      test(
+        'can disable and enable notification delegation on Android',
+        () async {
+          final originalValue = await messaging
+              .isNotificationDelegationEnabled();
+          try {
+            await messaging.setNotificationDelegationEnabled(false);
+            expect(await messaging.isNotificationDelegationEnabled(), isFalse);
+
+            await messaging.setNotificationDelegationEnabled(true);
+            final expected = sdkInt != null && sdkInt! >= 29;
+            expect(await messaging.isNotificationDelegationEnabled(), expected);
+          } finally {
+            await messaging.setNotificationDelegationEnabled(originalValue);
+          }
+        },
+        skip: kIsWeb || defaultTargetPlatform != TargetPlatform.android,
+      );
+
+      test('returns false and is a no-op on non-Android platforms', () async {
+        await messaging.setNotificationDelegationEnabled(true);
+        expect(await messaging.isNotificationDelegationEnabled(), isFalse);
+      }, skip: !kIsWeb && defaultTargetPlatform == TargetPlatform.android);
+    });
+
     test('a background message with no registered handler does not start '
         'the background service', () async {
       final probe = await probeBackgroundDelivery(

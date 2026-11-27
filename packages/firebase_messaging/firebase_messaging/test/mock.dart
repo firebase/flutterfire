@@ -169,6 +169,24 @@ class MockFirebaseMessaging extends Mock
   }
 
   @override
+  Future<void> setNotificationDelegationEnabled(bool? enabled) {
+    return super.noSuchMethod(
+      Invocation.method(#setNotificationDelegationEnabled, [enabled]),
+      returnValue: Future<void>.value(),
+      returnValueForMissingStub: Future<void>.value(),
+    );
+  }
+
+  @override
+  Future<bool> isNotificationDelegationEnabled() {
+    return super.noSuchMethod(
+      Invocation.method(#isNotificationDelegationEnabled, []),
+      returnValue: Future<bool>.value(false),
+      returnValueForMissingStub: Future<bool>.value(false),
+    );
+  }
+
+  @override
   Stream<String> get onTokenRefresh {
     return super.noSuchMethod(
       Invocation.getter(#onTokenRefresh),

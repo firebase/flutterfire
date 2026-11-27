@@ -5,6 +5,7 @@
 
 @TestOn('chrome')
 import 'package:firebase_messaging_platform_interface/firebase_messaging_platform_interface.dart';
+import 'package:firebase_messaging_web/firebase_messaging_web.dart';
 import 'package:firebase_messaging_web/src/utils.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -68,6 +69,19 @@ void main() {
         randomNotification.authorizationStatus,
         AuthorizationStatus.notDetermined,
       );
+    });
+  });
+
+  group('$FirebaseMessagingWeb', () {
+    test('setNotificationDelegationEnabled() completes as a no-op', () async {
+      final webMessaging = FirebaseMessagingWeb();
+      await webMessaging.setNotificationDelegationEnabled(true);
+      await webMessaging.setNotificationDelegationEnabled(false);
+    });
+
+    test('isNotificationDelegationEnabled() returns false', () async {
+      final webMessaging = FirebaseMessagingWeb();
+      expect(await webMessaging.isNotificationDelegationEnabled(), isFalse);
     });
   });
 }

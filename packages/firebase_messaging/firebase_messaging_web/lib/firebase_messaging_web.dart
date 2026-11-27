@@ -218,6 +218,17 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
   }
 
   @override
+  Future<void> setNotificationDelegationEnabled(bool enabled) async {
+    // Noop out on web - notification delegation is Android only.
+    return;
+  }
+
+  @override
+  Future<bool> isNotificationDelegationEnabled() async {
+    return false;
+  }
+
+  @override
   Future<void> setForegroundNotificationPresentationOptions({
     required bool alert,
     required bool badge,

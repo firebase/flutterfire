@@ -239,6 +239,32 @@ void main() {
       }
       fail('Should have thrown an [UnimplementedError]');
     });
+
+    test('throws if setNotificationDelegationEnabled()', () async {
+      try {
+        await firebaseMessagingPlatform.setNotificationDelegationEnabled(true);
+      } on UnimplementedError catch (e) {
+        expect(
+          e.message,
+          equals('setNotificationDelegationEnabled() is not implemented'),
+        );
+        return;
+      }
+      fail('Should have thrown an [UnimplementedError]');
+    });
+
+    test('throws if isNotificationDelegationEnabled()', () async {
+      try {
+        await firebaseMessagingPlatform.isNotificationDelegationEnabled();
+      } on UnimplementedError catch (e) {
+        expect(
+          e.message,
+          equals('isNotificationDelegationEnabled() is not implemented'),
+        );
+        return;
+      }
+      fail('Should have thrown an [UnimplementedError]');
+    });
   });
 }
 

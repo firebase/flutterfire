@@ -23,6 +23,7 @@ interface ErrorCallback {
 
 class FlutterFirebaseMessagingUtils {
   static final String IS_AUTO_INIT_ENABLED = "isAutoInitEnabled";
+  static final String IS_NOTIFICATION_DELEGATION_ENABLED = "isNotificationDelegationEnabled";
   static final String SHARED_PREFERENCES_KEY = "io.flutter.firebase.messaging.callback";
   static final String EXTRA_REMOTE_MESSAGE = "notification";
   static final int JOB_ID = 2020;
