@@ -78,6 +78,11 @@ jobs:
           # too, even though only web consumes it. Erring towards running an
           # extra job beats needing a glob that can express "every package
           # except the web ones".
+          #
+          # `macos` also matches `packages/*/*/ios/**`: each plugin's `macos/`
+          # sources are symlinks into `ios/`, and git reports an edit at the
+          # link target, so a Swift change shared by both platforms only shows
+          # up there.
           filters: |
             shared: &shared
               - 'packages/*/*/lib/**'
@@ -103,6 +108,7 @@ jobs:
             macos:
               - *shared
               - 'packages/*/*/macos/**'
+              - 'packages/*/*/ios/**'
               - 'packages/*/*/darwin/**'
               - '${{ inputs.app-path }}/macos/**'
             web:
