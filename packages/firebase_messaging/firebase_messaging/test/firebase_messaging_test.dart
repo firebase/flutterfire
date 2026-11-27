@@ -352,6 +352,38 @@ void main() {
         verify(kMockMessagingPlatform.setAutoInitEnabled(true));
       });
     });
+
+    group('setNotificationDelegationEnabled', () {
+      test('verify delegate method is called with correct args', () async {
+        when(
+          kMockMessagingPlatform.setNotificationDelegationEnabled(any),
+        ).thenAnswer((_) => Future<void>.value());
+
+        await messaging!.setNotificationDelegationEnabled(false);
+        verify(kMockMessagingPlatform.setNotificationDelegationEnabled(false));
+
+        await messaging!.setNotificationDelegationEnabled(true);
+        verify(kMockMessagingPlatform.setNotificationDelegationEnabled(true));
+      });
+    });
+
+    group('isNotificationDelegationEnabled', () {
+      test('verify delegate method is called', () async {
+        when(
+          kMockMessagingPlatform.isNotificationDelegationEnabled(),
+        ).thenAnswer((_) => Future<bool>.value(true));
+
+        expect(await messaging!.isNotificationDelegationEnabled(), isTrue);
+        verify(kMockMessagingPlatform.isNotificationDelegationEnabled());
+
+        when(
+          kMockMessagingPlatform.isNotificationDelegationEnabled(),
+        ).thenAnswer((_) => Future<bool>.value(false));
+
+        expect(await messaging!.isNotificationDelegationEnabled(), isFalse);
+        verify(kMockMessagingPlatform.isNotificationDelegationEnabled());
+      });
+    });
     group('subscribeToTopic', () {
       // setUp(() {
       //   when(kMockMessagingPlatform.subscribeToTopic(''))

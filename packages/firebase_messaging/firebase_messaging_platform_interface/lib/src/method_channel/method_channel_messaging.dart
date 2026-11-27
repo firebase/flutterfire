@@ -544,4 +544,39 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
       convertPlatformException(e, stack);
     }
   }
+
+  @override
+  Future<void> setNotificationDelegationEnabled(bool enabled) async {
+    // Notification delegation is only available on Android.
+    if (kIsWeb || defaultTargetPlatform != TargetPlatform.android) {
+      return;
+    }
+    try {
+      await channel.invokeMapMethod(
+        'Messaging#setNotificationDelegationEnabled',
+        {'appName': app.name, 'enabled': enabled},
+      );
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
+    }
+  }
+
+  @override
+  Future<bool> isNotificationDelegationEnabled() async {
+    // Notification delegation is only available on Android.
+    if (kIsWeb || defaultTargetPlatform != TargetPlatform.android) {
+      return false;
+    }
+    try {
+      Map<String, dynamic>? data = await channel
+          .invokeMapMethod<String, dynamic>(
+            'Messaging#isNotificationDelegationEnabled',
+            {'appName': app.name},
+          );
+
+      return data!['isNotificationDelegationEnabled'] as bool;
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
+    }
+  }
 }

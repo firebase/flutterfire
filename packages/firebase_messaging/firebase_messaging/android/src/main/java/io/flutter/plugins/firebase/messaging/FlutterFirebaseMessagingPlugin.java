@@ -89,6 +89,37 @@ public class FlutterFirebaseMessagingPlugin
 
   FlutterFirebasePermissionManager permissionManager;
 
+  @VisibleForTesting
+  interface NotificationDelegationHandler {
+    Task<Void> setEnabled(Map<String, Object> arguments, boolean enabled);
+
+    boolean isEnabled(Map<String, Object> arguments);
+  }
+
+  private final NotificationDelegationHandler delegationHandler;
+
+  public FlutterFirebaseMessagingPlugin() {
+    this(
+        new NotificationDelegationHandler() {
+          @Override
+          public Task<Void> setEnabled(Map<String, Object> arguments, boolean enabled) {
+            return FlutterFirebaseMessagingUtils.getFirebaseMessagingForArguments(arguments)
+                .setNotificationDelegationEnabled(enabled);
+          }
+
+          @Override
+          public boolean isEnabled(Map<String, Object> arguments) {
+            return FlutterFirebaseMessagingUtils.getFirebaseMessagingForArguments(arguments)
+                .isNotificationDelegationEnabled();
+          }
+        });
+  }
+
+  @VisibleForTesting
+  FlutterFirebaseMessagingPlugin(NotificationDelegationHandler delegationHandler) {
+    this.delegationHandler = delegationHandler;
+  }
+
   // Sends a message to Dart. Messages sent before Dart has set up its handler on the channel wait
   // in a buffer that only keeps one by default, so it is enlarged with every message rather than
   // once at registration: engines created with `new FlutterEngine(...)` register plugins before
@@ -338,6 +369,42 @@ public class FlutterFirebaseMessagingPlugin
             Boolean enabled = (Boolean) Objects.requireNonNull(arguments.get("enabled"));
             firebaseMessaging.setDeliveryMetricsExportToBigQuery(enabled);
             taskCompletionSource.setResult(null);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
+        });
+
+    return taskCompletionSource.getTask();
+  }
+
+  private Task<Void> setNotificationDelegationEnabled(Map<String, Object> arguments) {
+    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            Boolean enabled = (Boolean) Objects.requireNonNull(arguments.get("enabled"));
+            Tasks.await(delegationHandler.setEnabled(arguments, enabled));
+            taskCompletionSource.setResult(null);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
+        });
+
+    return taskCompletionSource.getTask();
+  }
+
+  private Task<Map<String, Object>> isNotificationDelegationEnabled(Map<String, Object> args) {
+    TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            Map<String, Object> result = new HashMap<>();
+            result.put(
+                FlutterFirebaseMessagingUtils.IS_NOTIFICATION_DELEGATION_ENABLED,
+                delegationHandler.isEnabled(args));
+            taskCompletionSource.setResult(result);
           } catch (Exception e) {
             taskCompletionSource.setException(e);
           }
@@ -635,6 +702,12 @@ public class FlutterFirebaseMessagingPlugin
         break;
       case "Messaging#setDeliveryMetricsExportToBigQuery":
         methodCallTask = setDeliveryMetricsExportToBigQuery(call.arguments());
+        break;
+      case "Messaging#setNotificationDelegationEnabled":
+        methodCallTask = setNotificationDelegationEnabled(call.arguments());
+        break;
+      case "Messaging#isNotificationDelegationEnabled":
+        methodCallTask = isNotificationDelegationEnabled(call.arguments());
         break;
       case "Messaging#requestPermission":
         if (Build.VERSION.SDK_INT >= 33) {

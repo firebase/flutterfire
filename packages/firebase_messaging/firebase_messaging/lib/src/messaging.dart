@@ -335,6 +335,27 @@ class FirebaseMessaging extends FirebasePlugin {
     return _delegate.setDeliveryMetricsExportToBigQuery(enabled);
   }
 
+  /// Enables or disables notification delegation for Android.
+  ///
+  /// When enabled on Android 10 (API level 29) and higher, Google Play services
+  /// can display FCM notification messages on the app's behalf. Disabling
+  /// delegation ensures incoming messages are delivered directly to the app's
+  /// messaging service.
+  ///
+  /// On Android devices below API level 29, and on non-Android platforms, this
+  /// method completes as a no-op.
+  Future<void> setNotificationDelegationEnabled(bool enabled) {
+    return _delegate.setNotificationDelegationEnabled(enabled);
+  }
+
+  /// Returns whether notification delegation is currently enabled on Android.
+  ///
+  /// Returns `false` on Android devices below API level 29 and on non-Android
+  /// platforms.
+  Future<bool> isNotificationDelegationEnabled() {
+    return _delegate.isNotificationDelegationEnabled();
+  }
+
   /// Sets the presentation options for Apple notifications when received in
   /// the foreground.
   ///

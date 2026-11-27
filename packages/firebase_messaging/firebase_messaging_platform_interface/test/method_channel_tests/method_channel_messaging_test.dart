@@ -473,6 +473,171 @@ void main() {
         ),
       ]);
     });
+
+    group('setNotificationDelegationEnabled', () {
+      test('sets to true on Android', () async {
+        await messaging.setNotificationDelegationEnabled(true);
+
+        expect(log, <Matcher>[
+          isMethodCall(
+            'Messaging#setNotificationDelegationEnabled',
+            arguments: <String, dynamic>{
+              'appName': defaultFirebaseAppName,
+              'enabled': true,
+            },
+          ),
+        ]);
+      });
+
+      test('sets to false on Android', () async {
+        await messaging.setNotificationDelegationEnabled(false);
+
+        expect(log, <Matcher>[
+          isMethodCall(
+            'Messaging#setNotificationDelegationEnabled',
+            arguments: <String, dynamic>{
+              'appName': defaultFirebaseAppName,
+              'enabled': false,
+            },
+          ),
+        ]);
+      });
+
+      test('is a no-op on non-Android platforms', () async {
+        debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+        await messaging.setNotificationDelegationEnabled(false);
+
+        debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
+        await messaging.setNotificationDelegationEnabled(true);
+
+        expect(log, isEmpty);
+      });
+
+      test('converts PlatformException to FirebaseException', () async {
+        handleMethodCall((call) async {
+          log.add(call);
+          throw PlatformException(
+            code: 'unknown',
+            message: 'Delegation update failed',
+            details: <String, dynamic>{
+              'code': 'unknown',
+              'message': 'Delegation update failed',
+            },
+          );
+        });
+        addTearDown(() {
+          handleMethodCall((call) async {
+            log.add(call);
+            return <String, dynamic>{};
+          });
+        });
+
+        await expectLater(
+          () => messaging.setNotificationDelegationEnabled(false),
+          throwsA(
+            isA<FirebaseException>()
+                .having((e) => e.plugin, 'plugin', 'firebase_messaging')
+                .having((e) => e.code, 'code', 'unknown'),
+          ),
+        );
+      });
+    });
+
+    group('isNotificationDelegationEnabled', () {
+      test('returns true on Android when enabled', () async {
+        handleMethodCall((call) async {
+          log.add(call);
+          if (call.method == 'Messaging#isNotificationDelegationEnabled') {
+            return <String, dynamic>{'isNotificationDelegationEnabled': true};
+          }
+          return <String, dynamic>{};
+        });
+        addTearDown(() {
+          handleMethodCall((call) async {
+            log.add(call);
+            return <String, dynamic>{};
+          });
+        });
+
+        final enabled = await messaging.isNotificationDelegationEnabled();
+
+        expect(enabled, isTrue);
+        expect(log, <Matcher>[
+          isMethodCall(
+            'Messaging#isNotificationDelegationEnabled',
+            arguments: <String, dynamic>{'appName': defaultFirebaseAppName},
+          ),
+        ]);
+      });
+
+      test('returns false on Android when disabled', () async {
+        handleMethodCall((call) async {
+          log.add(call);
+          if (call.method == 'Messaging#isNotificationDelegationEnabled') {
+            return <String, dynamic>{'isNotificationDelegationEnabled': false};
+          }
+          return <String, dynamic>{};
+        });
+        addTearDown(() {
+          handleMethodCall((call) async {
+            log.add(call);
+            return <String, dynamic>{};
+          });
+        });
+
+        final enabled = await messaging.isNotificationDelegationEnabled();
+
+        expect(enabled, isFalse);
+        expect(log, <Matcher>[
+          isMethodCall(
+            'Messaging#isNotificationDelegationEnabled',
+            arguments: <String, dynamic>{'appName': defaultFirebaseAppName},
+          ),
+        ]);
+      });
+
+      test(
+        'returns false without calling native on non-Android platforms',
+        () async {
+          debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+          expect(await messaging.isNotificationDelegationEnabled(), isFalse);
+
+          debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
+          expect(await messaging.isNotificationDelegationEnabled(), isFalse);
+
+          expect(log, isEmpty);
+        },
+      );
+
+      test('converts PlatformException to FirebaseException', () async {
+        handleMethodCall((call) async {
+          log.add(call);
+          throw PlatformException(
+            code: 'unknown',
+            message: 'Delegation query failed',
+            details: <String, dynamic>{
+              'code': 'unknown',
+              'message': 'Delegation query failed',
+            },
+          );
+        });
+        addTearDown(() {
+          handleMethodCall((call) async {
+            log.add(call);
+            return <String, dynamic>{};
+          });
+        });
+
+        await expectLater(
+          () => messaging.isNotificationDelegationEnabled(),
+          throwsA(
+            isA<FirebaseException>()
+                .having((e) => e.plugin, 'plugin', 'firebase_messaging')
+                .having((e) => e.code, 'code', 'unknown'),
+          ),
+        );
+      });
+    });
   });
 }
 
