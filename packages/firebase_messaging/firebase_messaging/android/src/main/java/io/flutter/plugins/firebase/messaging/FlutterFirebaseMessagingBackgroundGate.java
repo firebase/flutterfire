@@ -10,6 +10,8 @@ import android.content.pm.PackageManager;
 import android.util.Log;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
+import androidx.core.os.BundleCompat;
+import java.io.Serializable;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -95,7 +97,8 @@ final class FlutterFirebaseMessagingBackgroundGate {
       if (info.metaData == null || !info.metaData.containsKey(METADATA_KEY)) {
         return null;
       }
-      return BackgroundHandlerStartDecision.manifestValue(info.metaData.get(METADATA_KEY));
+      return BackgroundHandlerStartDecision.manifestValue(
+          BundleCompat.getSerializable(info.metaData, METADATA_KEY, Serializable.class));
     } catch (PackageManager.NameNotFoundException exception) {
       Log.w(TAG, "Could not read " + METADATA_KEY + " from the manifest.", exception);
       return null;
