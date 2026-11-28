@@ -688,7 +688,7 @@ class BidiSessionController extends ChangeNotifier {
     if (isSessionActive && _session != null) {
       developer.log('Simulating GoingAwayNotice locally');
       _handleLiveServerMessage(
-        LiveServerResponse(message: const GoingAwayNotice(timeLeft: '10')),
+        const LiveServerResponse(message: GoingAwayNotice(timeLeft: '10')),
       );
     }
   }
