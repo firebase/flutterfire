@@ -161,6 +161,9 @@ class FirebaseMessaging extends FirebasePlugin {
   /// Removes access to an FCM token previously authorized.
   ///
   /// Messages sent by the server to this token will fail.
+  ///
+  /// On Android, iOS and macOS, this fails once registration by FID is enabled
+  /// for [register].
   @Deprecated('Use unregister() and onUnregistered instead.')
   Future<void> deleteToken() {
     return _delegate.deleteToken();
@@ -181,6 +184,18 @@ class FirebaseMessaging extends FirebasePlugin {
   /// Once registration completes, [onRegistered] provides the Firebase
   /// Installation ID (FID) that can be used as the direct-send target for this
   /// app instance.
+  ///
+  /// On Android, iOS and macOS, registration by FID is turned off by default,
+  /// and this method fails until the app enables it:
+  ///
+  /// * Android: add
+  ///   `<meta-data android:name="firebase_messaging_installation_id_enabled" android:value="true" />`
+  ///   inside `<application>` in `AndroidManifest.xml`.
+  /// * iOS and macOS: set `FirebaseMessagingInstallationIdEnabled` to `true`
+  ///   in `Info.plist`.
+  ///
+  /// Enabling it turns off the token API on those platforms: [getToken] and
+  /// [deleteToken] then fail.
   Future<void> register({String? vapidKey, String? serviceWorkerScriptPath}) {
     return _delegate.register(
       vapidKey: vapidKey,
@@ -192,6 +207,9 @@ class FirebaseMessaging extends FirebasePlugin {
   ///
   /// Once unregistration completes, [onUnregistered] provides the Firebase
   /// Installation ID (FID) that is no longer active for direct-send messaging.
+  ///
+  /// Like [register], this fails on Android, iOS and macOS unless registration
+  /// by FID is enabled in the app; see [register] for the setting.
   Future<void> unregister() {
     return _delegate.unregister();
   }
@@ -219,6 +237,9 @@ class FirebaseMessaging extends FirebasePlugin {
   /// On web, a custom messaging service worker can be registered with
   /// [serviceWorkerScriptPath]. This must point to a JavaScript file in the
   /// root of the app's `web` directory.
+  ///
+  /// On Android, iOS and macOS, this fails once registration by FID is enabled
+  /// for [register].
   @Deprecated('Use register() and onRegistered instead.')
   Future<String?> getToken({
     String? vapidKey,
