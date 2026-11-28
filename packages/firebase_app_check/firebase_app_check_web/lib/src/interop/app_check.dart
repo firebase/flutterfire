@@ -14,6 +14,35 @@ import 'app_check_interop.dart' as app_check_interop;
 
 export 'app_check_interop.dart';
 
+/// Configures the global `FIREBASE_APPCHECK_DEBUG_TOKEN` variable used by the
+/// Firebase JS SDK when initializing a debug App Check provider.
+///
+/// An explicit non-empty [debugToken] overrides any existing global value;
+/// otherwise an existing non-empty string on `globalContext` is preserved
+/// instead of overwriting it with `true`.
+@visibleForTesting
+void configureWebDebugTokenGlobal(String? debugToken) {
+  if (debugToken != null && debugToken.isNotEmpty) {
+    globalContext.setProperty(
+      'FIREBASE_APPCHECK_DEBUG_TOKEN'.toJS,
+      debugToken.toJS,
+    );
+    return;
+  }
+
+  final existing = globalContext.getProperty<JSAny?>(
+    'FIREBASE_APPCHECK_DEBUG_TOKEN'.toJS,
+  );
+  if (existing != null &&
+      existing.isDefinedAndNotNull &&
+      existing.isA<JSString>() &&
+      (existing as JSString).toDart.isNotEmpty) {
+    return;
+  }
+
+  globalContext.setProperty('FIREBASE_APPCHECK_DEBUG_TOKEN'.toJS, true.toJS);
+}
+
 /// Given an AppJSImp, return the AppCheck instance.
 AppCheck? getAppCheckInstance([App? app, WebProvider? provider]) {
   app_check_interop.ReCaptchaProvider? jsProvider;
@@ -23,17 +52,7 @@ AppCheck? getAppCheckInstance([App? app, WebProvider? provider]) {
   } else if (provider is WebDebugProvider) {
     // Set the debug token global before initializing App Check.
     // The Firebase JS SDK reads this and creates a DebugProvider internally.
-    if (provider.debugToken != null) {
-      globalContext.setProperty(
-        'FIREBASE_APPCHECK_DEBUG_TOKEN'.toJS,
-        provider.debugToken!.toJS,
-      );
-    } else {
-      globalContext.setProperty(
-        'FIREBASE_APPCHECK_DEBUG_TOKEN'.toJS,
-        true.toJS,
-      );
-    }
+    configureWebDebugTokenGlobal(provider.debugToken);
     // A provider is still required by initializeAppCheck, but the debug
     // token global overrides it.
     jsProvider = app_check_interop.ReCaptchaV3Provider('debug'.toJS);
